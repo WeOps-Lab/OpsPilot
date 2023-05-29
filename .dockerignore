@@ -1,0 +1,5 @@
+.rasa/
+.env
+venv
+.idea
+models

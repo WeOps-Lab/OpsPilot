@@ -1,0 +1,7 @@
+version: "3.1"
+
+stories:
+#  - story: 问好
+#    steps:
+#      - intent: greet
+#      - action: utter_greet

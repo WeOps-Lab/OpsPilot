@@ -1,0 +1,17 @@
+version: "3.1"
+stories:
+  - story: 重启服务器
+    steps:
+      - intent: reboot_device
+
+      - action: reboot_server_form
+      - active_loop: reboot_server_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+
+      - action: utter_sure_restart_server
+      - or:
+          - intent: affirm
+          - intent: deny
+      - action: action_reboot_server

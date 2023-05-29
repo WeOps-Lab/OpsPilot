@@ -1,0 +1,41 @@
+version: "3.1"
+
+intents:
+  - reboot_device
+
+actions:
+  - action_reboot_server
+
+
+entities:
+  - reboot_server
+  - sure_reboot_server
+
+slots:
+  reboot_server:
+    type: text
+    influence_conversation: true
+    mappings:
+      - entity: reboot_server
+        type: from_entity
+        conditions:
+          - active_loop: reboot_server_form
+
+  sure_reboot_server:
+    type: bool
+    influence_conversation: true
+    mappings:
+      - entity: sure_reboot_server
+        type: from_entity
+        conditions:
+          - active_loop: sure_reboot_server_form
+
+forms:
+  reboot_server_form:
+    ignored_intents: [ ]
+    required_slots:
+      - reboot_server
+  sure_reboot_server_form:
+    ignored_intents: [ ]
+    required_slots:
+      - sure_reboot_server

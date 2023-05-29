@@ -1,0 +1,19 @@
+version: "3.1"
+
+rules:
+#  - rule: 激活重启服务器表单
+#    steps:
+#      - intent: reboot_device
+#      - action: reboot_server_form
+#      - active_loop: reboot_server_form
+#
+#  - rule: 提交重启服务器表单
+#    condition:
+#      - active_loop: reboot_server_form
+#    steps:
+#      - action: reboot_server_form
+#      - active_loop: null
+#      - slot_was_set:
+#          - requested_slot: null
+#      - action: utter_reboot_server
+#      - action: action_reset_all_slot
