@@ -4,3 +4,7 @@ transformers==4.29.1
 openai==0.27.6
 logzero==1.7.0
 python-dotenv==0.21.1
+jenkinsapi==0.3.13
+spacy==3.5.3
+spacy-pkuseg==0.0.32
+zh-core-web-md==3.5.0

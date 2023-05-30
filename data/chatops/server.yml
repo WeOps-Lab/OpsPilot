@@ -1,4 +1,5 @@
 version: "3.1"
+
 nlu:
   - regex: reboot_server
     examples: |
@@ -29,3 +30,35 @@ nlu:
       - 请重新启动一下服务器
       - 能否请你重新启动服务器
       - 能否请你重新启动一下服务器
+
+responses:
+  utter_ask_reboot_server:
+    - text: "你想重启哪台服务器呢？"
+
+  utter_ask_sure_restart_server:
+    - text: "请确认是否需要重启[{reboot_server}]服务器"
+
+  utter_sure_restart_server:
+    - text: "是否需要重启[{reboot_server}]服务器？"
+      buttons:
+        - title: "确认"
+          payload: /affirm
+        - title: "取消"
+          payload: /deny
+
+stories:
+  - story: 重启服务器
+    steps:
+      - intent: reboot_device
+
+      - action: reboot_server_form
+      - active_loop: reboot_server_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+
+      - action: utter_sure_restart_server
+      - or:
+          - intent: affirm
+          - intent: deny
+      - action: action_reboot_server

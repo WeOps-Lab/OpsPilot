@@ -4,34 +4,37 @@ language: zh
 
 pipeline:
   - name: "compoments.jieba_tokenizer.JiebaTokenizer"
-  - name: LanguageModelFeaturizer
-    model_name: "bert"
-    model_weight: "bert-base-chinese"
-    cache_dir: cache/bert-base-chinese
-  - name: RegexFeaturizer
-    use_word_boundaries: false
+
   - name: RegexEntityExtractor
     case_sensitive: False
     use_lookup_tables: True
     use_regexes: True
     use_word_boundaries: True
-  - name: CountVectorsFeaturizer
-  - name: EntitySynonymMapper
+
+  - name: RegexFeaturizer
+    use_word_boundaries: false
+  - name: LanguageModelFeaturizer
+    model_name: "bert"
+    model_weight: "bert-base-chinese"
+    cache_dir: cache/bert-base-chinese
+
   - name: DIETClassifier
-    epochs: 100
+    epochs: 300
     constrain_similarities: true
+
+  - name: EntitySynonymMapper
   - name: ResponseSelector
   - name: FallbackClassifier
-    threshold: 0.9
+    threshold: 0.92
 
 policies:
   - name: MemoizationPolicy
-#  - name: UnexpecTEDIntentPolicy
-#    max_history: 5
-#    epochs: 100
+  #  - name: UnexpecTEDIntentPolicy
+  #    max_history: 5
+  #    epochs: 100
   - name: TEDPolicy
     max_history: 5
-    epochs: 100
+    epochs: 300
     constrain_similarities: true
   - name: RulePolicy
     core_fallback_threshold: 0.8

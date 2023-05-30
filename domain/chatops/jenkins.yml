@@ -1,0 +1,31 @@
+version: "3.1"
+
+intents:
+  - EXTERNAL_jenkins_reminder
+  - build_jenkins_pipeline
+
+actions:
+  - action_jenkins_reminder
+  - action_jenkins_notify
+  - action_find_jenkins_pipeline
+
+
+entities:
+  - jenkins_pipeline_name
+
+slots:
+  jenkins_pipeline_name:
+    type: text
+    influence_conversation: true
+    mappings:
+      - entity: jenkins_pipeline_name
+        type: from_entity
+        conditions:
+          - active_loop: jenkins_pipeline_form
+
+
+forms:
+  jenkins_pipeline_form:
+    ignored_intents: [ ]
+    required_slots:
+      - jenkins_pipeline_name

@@ -7,3 +7,4 @@ __pycache__
 graph.html
 cache/
 story_graph.dot
+.pytest_cache
