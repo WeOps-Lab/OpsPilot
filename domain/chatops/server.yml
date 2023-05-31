@@ -5,7 +5,7 @@ intents:
 
 actions:
   - action_reboot_server
-
+  - action_reset_reboot_server_slot
 
 entities:
   - reboot_server
@@ -13,7 +13,7 @@ entities:
 slots:
   reboot_server:
     type: text
-    influence_conversation: false
+    influence_conversation: true
     mappings:
       - entity: reboot_server
         type: from_entity

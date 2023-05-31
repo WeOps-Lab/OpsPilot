@@ -29,7 +29,7 @@ nlu:
       - 不好意思，我不想这样做
       - 不，谢谢
       - 不要这样
-      
+
 
   - intent: greet
     examples: |

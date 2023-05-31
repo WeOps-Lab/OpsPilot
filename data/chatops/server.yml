@@ -35,6 +35,8 @@ responses:
   utter_ask_reboot_server:
     - text: "你想重启哪台服务器呢？"
 
+  utter_reboot_server_canceled:
+    - text: "服务器重启任务已经取消"
   utter_ask_sure_restart_server:
     - text: "请确认是否需要重启[{reboot_server}]服务器"
 
@@ -47,18 +49,39 @@ responses:
           payload: /deny
 
 stories:
-  - story: 重启服务器
+  - story: 重启服务器-确认重启
     steps:
       - intent: reboot_device
-
       - action: reboot_server_form
       - active_loop: reboot_server_form
       - active_loop: null
       - slot_was_set:
           - requested_slot: null
-
       - action: utter_sure_restart_server
-      - or:
-          - intent: affirm
-          - intent: deny
+      - intent: affirm
       - action: action_reboot_server
+      - action: action_reset_reboot_server_slot
+
+  - story: 重启服务器-取消重启
+    steps:
+      - intent: reboot_device
+      - action: reboot_server_form
+      - active_loop: reboot_server_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: utter_sure_restart_server
+      - intent: deny
+      - action: utter_reboot_server_canceled
+      - action: action_reset_reboot_server_slot
+
+  - story: 重启服务器-中途取消
+    steps:
+      - intent: reboot_device
+      - action: reboot_server_form
+      - active_loop: reboot_server_form
+      - intent: deny
+      - action: utter_reboot_server_canceled
+      - action: action_deactivate_loop
+      - action: action_reset_reboot_server_slot
+      - active_loop: null

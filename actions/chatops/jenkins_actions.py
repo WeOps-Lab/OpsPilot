@@ -23,21 +23,23 @@ class ActionFindJenkinsPipeline(Action):
             domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
         jenkins_pipeline_name = tracker.get_slot('jenkins_pipeline_name')
-        dispatcher.utter_message(f"查找[{jenkins_pipeline_name}]流水线")
+        dispatcher.utter_message(f"检查[{jenkins_pipeline_name}]流水线是否存在......")
+
         job_exist = find_jenkins_job(jenkins_pipeline_name)
         if job_exist:
+            logger.info(f'流水线[{jenkins_pipeline_name}]存在，继续执行后续任务')
             return []
         else:
             dispatcher.utter_message(f"没有找到[{jenkins_pipeline_name}]流水线,请重新输入流水线名称")
 
             return [
-                UserUtteranceReverted(),
-                FollowupAction('jenkins_pipeline_form'),
-                ActiveLoop('jenkins_pipeline_form'),
                 SlotSet('jenkins_pipeline_name', None),
                 SlotSet('jenkins_job_name', None),
                 SlotSet('jenkins_job_buildnumber', None),
                 SlotSet('requested_slot', 'jenkins_pipeline_name'),
+                UserUtteranceReverted(),
+                FollowupAction('jenkins_pipeline_form'),
+                ActiveLoop('jenkins_pipeline_form'),
             ]
 
 
