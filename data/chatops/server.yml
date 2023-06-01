@@ -49,7 +49,7 @@ responses:
           payload: /deny
 
 stories:
-  - story: 重启服务器-确认重启
+  - story: 重启服务器
     steps:
       - intent: reboot_device
       - action: reboot_server_form
@@ -58,19 +58,16 @@ stories:
       - slot_was_set:
           - requested_slot: null
       - action: utter_sure_restart_server
+      - checkpoint: check_sure_reboot_server
+  - story: 确认重启服务器
+    steps:
+      - checkpoint: check_sure_reboot_server
       - intent: affirm
       - action: action_reboot_server
       - action: action_reset_reboot_server_slot
-
-  - story: 重启服务器-取消重启
+  - story: 取消重启服务器
     steps:
-      - intent: reboot_device
-      - action: reboot_server_form
-      - active_loop: reboot_server_form
-      - active_loop: null
-      - slot_was_set:
-          - requested_slot: null
-      - action: utter_sure_restart_server
+      - checkpoint: check_sure_reboot_server
       - intent: deny
       - action: utter_reboot_server_canceled
       - action: action_reset_reboot_server_slot
