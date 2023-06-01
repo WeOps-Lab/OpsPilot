@@ -1,0 +1,15 @@
+stories:
+  - story: 重启服务器
+    steps:
+      - user: |
+          重启服务器
+        intent: reboot_device
+      - action: reboot_server_form
+      - active_loop: reboot_server_form
+      - user: |
+          [1.1.1.1](reboot_server)
+        intent: reboot_device
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: utter_sure_restart_server
