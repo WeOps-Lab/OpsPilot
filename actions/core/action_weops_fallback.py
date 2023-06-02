@@ -1,7 +1,8 @@
 from typing import Any, Text, Dict, List
 
+from markdownify import markdownify as md
 from rasa_sdk import Action, Tracker
-from rasa_sdk.events import AllSlotsReset, UserUtteranceReverted, ConversationPaused, Restarted, ActionReverted
+from rasa_sdk.events import UserUtteranceReverted
 from rasa_sdk.executor import CollectingDispatcher
 
 from actions.utils.azure_utils import query_chatgpt
@@ -21,7 +22,7 @@ class ActionWeOpsFallback(Action):
             result = query_chatgpt([
                 {"role": "user", "content": tracker.latest_message['text']},
             ])
-            dispatcher.utter_message(text=result)
+            dispatcher.utter_message(text=md(result))
             return [UserUtteranceReverted()]
         else:
             print("FallBack")
