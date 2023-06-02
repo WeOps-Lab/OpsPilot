@@ -1,0 +1,8 @@
+version: "3.1"
+
+responses:
+  utter_demo:
+    - text: "触发[{jenkins_pipeline_name}]流水线"
+
+  utter_ask_jenkins_pipeline_name:
+    - text: "你想构建哪个流水线呢？"
