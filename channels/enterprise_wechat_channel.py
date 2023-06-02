@@ -1,18 +1,16 @@
-import asyncio
+import inspect
 import inspect
 import json
+from typing import Text, Dict, Any, Optional, Callable, Awaitable
 
-from sanic import Sanic, Blueprint, response
-from sanic.request import Request
-from sanic.response import HTTPResponse
-from typing import Text, Dict, Any, Optional, Callable, Awaitable, NoReturn
-
-import rasa.utils.endpoints
 from rasa.core.channels.channel import (
     InputChannel,
     CollectingOutputChannel,
     UserMessage,
 )
+from sanic import Blueprint, response
+from sanic.request import Request
+from sanic.response import HTTPResponse
 
 
 class EnterpriseWechatChannel(InputChannel):
