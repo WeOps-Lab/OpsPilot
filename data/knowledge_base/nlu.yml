@@ -1,0 +1,32 @@
+version: "3.1"
+nlu:
+  - intent: query_knowledge_base
+    examples: |
+      - 有哪些[服务器](object_type)
+      - 列出[服务器](object_type)
+      
+      - [服务器](object_type)[10.11.25.50](bk_server)的[用户名](attribute)
+      - [服务器](object_type)[192.168.31.226](bk_server)的[用户名](attribute)
+      - [服务器](object_type)[112.121.121.121](bk_server)的[业务](attribute)
+      - [服务器](object_type)[11.10.33.31](bk_server)上的[业务](attribute)
+      - [服务器](object_type)[172.12.12.11](bk_server)上跑的[业务](attribute)
+      - [服务器](object_type)[10.11.25.50](bk_server)承载的[业务](attribute)
+      
+
+  - regex: bk_server
+    examples: |
+      - (?:(?:1[0-9][0-9]\.)|(?:2[0-4][0-9]\.)|(?:25[0-5]\.)|(?:[1-9][0-9]\.)|(?:[0-9]\.)){3}(?:(?:1[0-9][0-9])|(?:2[0-4][0-9])|(?:25[0-5])|(?:[1-9][0-9])|(?:[0-9]))
+
+
+  - synonym: "bk_server_username"
+    examples: |
+      - 用户名
+      - 服务器用户名
+
+  - synonym: "bk_server_business"
+    examples: |
+      - 业务
+
+  - synonym: "bk_server"
+    examples: |
+      - 服务器

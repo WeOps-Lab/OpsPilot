@@ -7,6 +7,9 @@ run:
 actions:
 	rasa run actions --auto-reload
 
+tensorboard:
+	tensorboard --logdir ./tensorboard
+
 clean:
 	rm -rf models/
 	rm -Rf .rasa

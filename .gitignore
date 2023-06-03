@@ -9,3 +9,5 @@ cache/
 story_graph.dot
 .pytest_cache
 results
+libs
+tensorboard

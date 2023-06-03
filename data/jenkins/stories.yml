@@ -18,3 +18,4 @@ stories:
 
       # 触发Jenkins流水线
       - action: action_jenkins_reminder
+      - action: action_reset_all_slot

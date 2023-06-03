@@ -19,13 +19,17 @@ pipeline:
     cache_dir: cache/bert-base-chinese
 
   - name: DIETClassifier
-    epochs: 500
+    epochs: 1000
     constrain_similarities: true
+    evaluate_on_number_of_examples: 0
+    evaluate_every_number_of_epochs: 300
+    tensorboard_log_directory: "./tensorboard"
+    tensorboard_log_level: "epoch"
 
   - name: EntitySynonymMapper
   - name: ResponseSelector
   - name: FallbackClassifier
-    threshold: 0.92
+    threshold: 0.90
 
 policies:
   - name: MemoizationPolicy
@@ -34,8 +38,12 @@ policies:
   #    epochs: 100
   - name: TEDPolicy
     max_history: 5
-    epochs: 500
+    epochs: 1000
     constrain_similarities: true
+    evaluate_on_number_of_examples: 0
+    evaluate_every_number_of_epochs: 300
+    tensorboard_log_directory: "./tensorboard"
+    tensorboard_log_level: "epoch"
   - name: RulePolicy
     core_fallback_threshold: 0.8
     core_fallback_action_name: "action_weops_fallback"

@@ -16,13 +16,13 @@ stories:
       - checkpoint: check_sure_reboot_server
       - intent: affirm
       - action: action_reboot_server
-      - action: action_reset_reboot_server_slot
+      - action: action_reset_all_slot
   - story: 取消重启服务器
     steps:
       - checkpoint: check_sure_reboot_server
       - intent: deny
       - action: utter_reboot_server_canceled
-      - action: action_reset_reboot_server_slot
+      - action: action_reset_all_slot
 
   - story: 重启服务器-中途取消
     steps:
@@ -32,5 +32,5 @@ stories:
       - intent: deny
       - action: utter_reboot_server_canceled
       - action: action_deactivate_loop
-      - action: action_reset_reboot_server_slot
+      - action: action_reset_all_slot
       - active_loop: null

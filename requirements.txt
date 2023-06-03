@@ -7,3 +7,4 @@ python-dotenv==0.21.1
 jenkinsapi==0.3.13
 markdownify==0.11.6
 chatette==1.6.3
+neo4j==5.9.0

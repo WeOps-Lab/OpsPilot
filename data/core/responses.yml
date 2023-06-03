@@ -23,5 +23,5 @@ responses:
     - text: "WeOps还没学会这个问题的解决方法~"
 
   utter_ask_rephrase:
-    - text: "抱歉系统没能明白您的话，请您重新表述一次"
+    - text: "WeOps没有找到你需要的信息......"
 

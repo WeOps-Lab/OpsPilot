@@ -1,0 +1,56 @@
+version: "3.1"
+intents:
+  - query_knowledge_base:
+      use_entities: [ ]
+
+actions:
+  - action_response_query
+
+entities:
+  - object_type
+  - mention
+  - attribute
+
+  - bk_server
+
+slots:
+  object_type:
+    type: any
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: object_type
+  mention:
+    type: any
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: mention
+  attribute:
+    type: list
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: attribute
+  knowledge_base_last_object:
+      type: any
+      mappings:
+        - type: custom
+  knowledge_base_last_object_type:
+    type: any
+    mappings:
+      - type: custom
+  knowledge_base_listed_objects:
+    type: any
+    mappings:
+      - type: custom
+  knowledge_base_objects:
+    type: any
+    mappings:
+      - type: custom
+
+  bk_server:
+    type: any
+    mappings:
+      - type: from_entity
+        entity: bk_server
