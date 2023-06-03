@@ -1,5 +1,7 @@
 # RasaOps
 
+<img src="https://wedoc.canway.net/imgs/img/嘉为蓝鲸.jpg" >
+
 RasaOps是一个基于Rasa和ChatGPT的机器人，基于Rasa 提供NLU的能力，当无法识别的情况下，会转交给ChatGPT进行问答
 
 ## 支持的能力
