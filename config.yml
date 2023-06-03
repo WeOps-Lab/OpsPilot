@@ -13,10 +13,18 @@ pipeline:
 
   - name: RegexFeaturizer
     use_word_boundaries: false
+
   - name: LanguageModelFeaturizer
     model_name: "bert"
     model_weight: "bert-base-chinese"
     cache_dir: cache/bert-base-chinese
+
+  - name: LexicalSyntacticFeaturizer
+  - name: CountVectorsFeaturizer
+  - name: CountVectorsFeaturizer
+    analyzer: char_wb
+    min_ngram: 1
+    max_ngram: 4
 
   - name: DIETClassifier
     epochs: 300
@@ -28,6 +36,8 @@ pipeline:
 
   - name: EntitySynonymMapper
   - name: ResponseSelector
+    epochs: 300
+    retrieval_intent: chitchat
   - name: FallbackClassifier
     threshold: 0.90
 

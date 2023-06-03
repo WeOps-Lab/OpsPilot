@@ -4,7 +4,6 @@ nlu:
     examples: |
       - 有哪些[服务器](object_type)
       - 列出[服务器](object_type)
-      
       - [服务器](object_type)[10.11.25.50](bk_server)的[用户名](attribute)
       - [服务器](object_type)[192.168.31.226](bk_server)的[用户名](attribute)
       - [服务器](object_type)[112.121.121.121](bk_server)的[业务](attribute)

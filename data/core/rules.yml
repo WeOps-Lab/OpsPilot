@@ -2,22 +2,12 @@ version: "3.1"
 
 rules:
 
-  - rule: 介绍自己
-    conversation_start: true
-    steps:
-      - intent: greet
-      - action: utter_startup
-
   - rule: 无法判断需要执行的任务，FallBack到WeOps业务逻辑
     steps:
       - intent: nlu_fallback
       - action: action_weops_fallback
-
-
-  - rule: 用户询问是不是一个机器人
-    steps:
-      - intent: bot_challenge
-      - action: utter_iamabot
+#      - action: action_two_stage_fallback
+#      - active_loop: action_two_stage_fallback
 
   - rule: 问好
     steps:
@@ -28,3 +18,8 @@ rules:
     steps:
       - intent: goodbye
       - action: utter_goodbye
+
+  - rule: respond to chitchat
+    steps:
+      - intent: chitchat
+      - action: utter_chitchat

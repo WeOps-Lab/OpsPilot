@@ -1,7 +1,7 @@
 version: "3.1"
 
 intents:
-  - bot_challenge
+  - chitchat
   - greet
   - goodbye
   - deny

@@ -48,10 +48,14 @@ nlu:
       - 结束
 
 
-  - intent: bot_challenge
+  - intent: chitchat/ask_bot
     examples: |
       - 你是机器人吗?
       - 你是真人吗?
       - 我是和机器人在聊天吗?
       - 我是和真人在聊天吗?
 
+  - intent: chitchat/ask_weather
+    examples: |
+      - 今天天气怎么样
+      - 今天天气好吗
