@@ -19,10 +19,10 @@ pipeline:
     cache_dir: cache/bert-base-chinese
 
   - name: DIETClassifier
-    epochs: 1000
+    epochs: 300
     constrain_similarities: true
     evaluate_on_number_of_examples: 0
-    evaluate_every_number_of_epochs: 300
+    evaluate_every_number_of_epochs: 100
     tensorboard_log_directory: "./tensorboard"
     tensorboard_log_level: "epoch"
 
@@ -38,10 +38,10 @@ policies:
   #    epochs: 100
   - name: TEDPolicy
     max_history: 5
-    epochs: 1000
+    epochs: 300
     constrain_similarities: true
     evaluate_on_number_of_examples: 0
-    evaluate_every_number_of_epochs: 300
+    evaluate_every_number_of_epochs: 100
     tensorboard_log_directory: "./tensorboard"
     tensorboard_log_level: "epoch"
   - name: RulePolicy
