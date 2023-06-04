@@ -17,7 +17,8 @@ def query_chatgpt(system_message, user_message):
         logger.info('开始请求Azuer ChatGPT.......')
         llm = AzureChatOpenAI(openai_api_base=os.getenv('AZURE_OPENAI_ENDPOINT'),
                               openai_api_key=os.getenv('AZURE_OPENAI_KEY'),
-                              deployment_name="GPT35", temperature=0.7, openai_api_version="2023-05-15")
+                              deployment_name=os.getenv('AZURE_OPENAI_MODEL_NAME'), temperature=0.7,
+                              openai_api_version="2023-05-15")
         system_message_prompt = SystemMessagePromptTemplate.from_template(system_message)
         human_template = "{text}"
         human_message_prompt = HumanMessagePromptTemplate.from_template(human_template)

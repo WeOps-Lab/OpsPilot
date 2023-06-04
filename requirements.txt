@@ -10,3 +10,4 @@ chatette==1.6.3
 neo4j==5.9.0
 langchain==0.0.189
 tiktoken==0.4.0
+scrapy==2.9.0
