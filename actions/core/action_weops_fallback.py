@@ -19,9 +19,7 @@ class ActionWeOpsFallback(Action):
         print(tracker.latest_message['text'])
         if tracker.active_loop_name is None:
             dispatcher.utter_message(text='WeOps正在思考中........')
-            result = query_chatgpt([
-                {"role": "user", "content": tracker.latest_message['text']},
-            ])
+            result = query_chatgpt('扮演专业的运维工程师', tracker.latest_message['text'])
             dispatcher.utter_message(text=md(result))
             return [UserUtteranceReverted()]
         else:
