@@ -2,7 +2,9 @@
 
 <img src="https://wedoc.canway.net/imgs/img/嘉为蓝鲸.jpg" >
 
-RasaOps是一个基于Rasa和ChatGPT的机器人，基于Rasa 提供NLU的能力，当无法识别的情况下，会转交给ChatGPT进行问答
+RasaOps是一个基于Rasa和LLM技术的ChatBot，为运维系统提供ChatOps/LMOps的能力
+
+<img src="./docs/images/chatbot.png" >
 
 ## 支持的能力
 

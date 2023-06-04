@@ -1,5 +1,12 @@
 import os
-import openai
+from langchain.chat_models import AzureChatOpenAI
+from langchain import LLMChain
+from langchain.prompts.chat import (
+    ChatPromptTemplate,
+    SystemMessagePromptTemplate,
+    HumanMessagePromptTemplate,
+)
+
 from logzero import logger
 
 

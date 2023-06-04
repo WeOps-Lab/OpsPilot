@@ -1,4 +1,4 @@
-rasa==3.5.8
+rasa==3.5.10
 jieba==0.42.1
 transformers==4.29.1
 openai==0.27.6
@@ -8,3 +8,5 @@ jenkinsapi==0.3.13
 markdownify==0.11.6
 chatette==1.6.3
 neo4j==5.9.0
+langchain==0.0.27
+tiktoken==0.4.0

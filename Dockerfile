@@ -1,4 +1,4 @@
-FROM python:3.7.16
+FROM python:3.10
 WORKDIR /apps
 ADD ./actions ./actions
 ADD ./cache ./cache
