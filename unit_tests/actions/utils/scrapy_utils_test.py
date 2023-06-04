@@ -1,15 +1,14 @@
 from actions.utils.azure_utils import query_chatgpt
-from actions.utils.scrapy_utils import fetch_website
+from actions.utils.scrapy.scrapy_utils import call_oschina_news_spider
 
 
 def test_fetch_website():
-    print(fetch_website(url="https://www.oschina.net/news/industry",
-                        title_path='//*[@id="newsList"]/div[1]/div/div/h3/div/text()'))
+    print(call_oschina_news_spider())
 
 
 def test_fetch_website_with_gpt():
-    result = fetch_website(url="https://www.oschina.net/news/industry",
-                           title_path='//*[@id="newsList"]/div[1]/div/div/h3/div/text()')
+    result = call_oschina_news_spider(url="https://www.oschina.net/news/industry",
+                                      title_path='//*[@id="newsList"]/div[1]/div/div/h3/div/text()')
     promt = '扮演专业的开发工程师，你现在正在阅读今天的头条信息，以下是你获取到的新闻标题:\n'
     for i in result:
         promt += f'标题:{i["title"]}\n'
