@@ -12,6 +12,8 @@ RasaOps是一个基于Rasa和LLM技术的ChatBot，为运维系统提供ChatOps/
 * 知识问答能力: 支持基于语意的知识问答
 * 知识库检索能力：支持从Neo4J，本地知识库
 * 与LLM进行整合，支持使用ChatGPT进行问答
+* 添加LangChain支持，能够让Chatbot进行联网检索
+* 添加Scrapy支持，能够让Chatbot进行准确的联网信息搜集
 
 ### 场景
 * 重启服务器
