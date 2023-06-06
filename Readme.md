@@ -25,7 +25,7 @@ OpsPilot是一个基于Rasa和LLM技术的ChatBot，为运维系统提供ChatOps
 * Jenkins流水线构建，支持失败的时候使用LLM进行异常分析
 
 
-<img src="https://wedoc.canway.net/imgs/img/小嘉.jpg" width="30%" height="30%">
+<img src="./docs/images/canway.jpeg" width="30%" height="30%">
 
 > 更多问题欢迎添加“小嘉”微信，加入官方沟通群
  
