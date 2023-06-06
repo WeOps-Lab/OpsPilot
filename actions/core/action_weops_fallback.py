@@ -1,7 +1,8 @@
+import os
 from typing import Any, Text, Dict, List
 
 from markdownify import markdownify as md
-from rasa_sdk import Action, Tracker
+from rasa_sdk import Action, Tracker, logger
 from rasa_sdk.events import UserUtteranceReverted
 from rasa_sdk.executor import CollectingDispatcher
 
@@ -16,12 +17,20 @@ class ActionWeOpsFallback(Action):
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        print(tracker.latest_message['text'])
+        user_msg = tracker.latest_message['text']
+        system_prompt = os.getenv('FALLBACK_PROMPT')
+        run_mode = os.getenv('RUN_MODE')
+
+        logger.info(f'无法识别用户的意图，进入默认Fallback，用户输入的信息为:{user_msg}')
+        
         if tracker.active_loop_name is None:
-            dispatcher.utter_message(text='WeOps正在思考中........')
-            result = query_chatgpt('扮演专业的运维工程师', tracker.latest_message['text'])
-            dispatcher.utter_message(text=md(result))
-            return [UserUtteranceReverted()]
+            if run_mode == 'DEV':
+                dispatcher.utter_message(text='WeOps Debug Fallback')
+                return [UserUtteranceReverted()]
+            else:
+                dispatcher.utter_message(text='WeOps助理正在思考中........')
+                result = query_chatgpt(system_prompt, user_msg)
+                dispatcher.utter_message(text=md(result))
+                return [UserUtteranceReverted()]
         else:
-            print("FallBack")
             return []

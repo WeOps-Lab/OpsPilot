@@ -1,4 +1,5 @@
 .env
+_trial_temp
 venv
 .idea
 .rasa
