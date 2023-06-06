@@ -25,24 +25,16 @@ OpsPilot是一个基于Rasa和LLM技术的ChatBot，为运维系统提供ChatOps
 
 ### 参数说明
 
-| 参数                      | 说明                        | 可选配置                     |
-|-------------------------|---------------------------|--------------------------|
-| FALLBACK_LLM            | 当OpsPilot无法处理的时候，使用LLM进行回复 | AZURE_OPENAI(微软云ChatGPT) |
-| FALLBACK_PROMPT         | 默认回复的PROMT                ||                          |
-| AZURE_OPENAI_MODEL_NAME | Azure OpenAI上部署的模型名称      ||
-| AZURE_OPENAI_ENDPOINT   | Azure OpenAI上部署模型的终结点     ||
-| AZURE_OPENAI_KEY        | Azure OpenAI上部署模型使用的秘钥    ||
-
-# 版本说明
-
-## V0.1
-
-* **OpsPilot框架初次搭建完成**
-* 支持触发Jenkins流水线，在失败后支持使用LLM进行根因分析
-* 支持Chitchat的能力，能够进行本地知识问答
-* 支持使用本地知识库/Neo4J 进行服务器属性查询
-* 支持执行重启服务器意图识别
-* 支持Rasa Webchat对接
-* 支持中文意图识别
-* 支持调用Azure ChatGPT能力
-* ........
+| 参数                      | 说明                             | 可选配置                     |
+|-------------------------|--------------------------------|--------------------------|
+| FALLBACK_LLM            | 当OpsPilot无法处理的时候，使用LLM进行回复     | AZURE_OPENAI(微软云ChatGPT) |
+| FALLBACK_PROMPT         | 默认回复的PROMT                     |                          |                          |
+| AZURE_OPENAI_MODEL_NAME | Azure OpenAI上部署的模型名称           |                          |
+| AZURE_OPENAI_ENDPOINT   | Azure OpenAI上部署模型的终结点          |                          |
+| AZURE_OPENAI_KEY        | Azure OpenAI上部署模型使用的秘钥         |                          |
+| JENKINS_URL             | Jenkins URL,启用Jenkins自动化能力需要配置 |                          |
+| JENKINS_USERNAME        | Jenkins 用户名,启用Jenkins自动化能力需要配置 |                          |
+| JENKINS_PASSWORD        | Jenkins 密码,启用Jenkins自动化能力需要配置  |                          |
+| BING_SEARCH_URL         | Bing Search端点                  |                          |
+| BIND_SEARCH_KEY         | Bing Search密码                  |                          |
+| RUN_MODE                | 是否以开发模式运行                      |                          |
