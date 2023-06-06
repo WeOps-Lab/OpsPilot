@@ -10,3 +10,5 @@ intents:
 actions:
   - action_reset_all_slot
   - action_weops_fallback
+  - action_pre_weops_fallback
+  - action_post_weops_fallback

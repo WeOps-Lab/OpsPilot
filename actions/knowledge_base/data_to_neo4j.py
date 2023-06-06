@@ -64,32 +64,32 @@ class MusicDatabase(object):
         )
         return result.single()
 
-
-if __name__ == "__main__":
-    with open("../../data/knowledge_base/data.json") as fd:
-        data = json.load(fd)
-    db = MusicDatabase("bolt://localhost:7687", "neo4j", "neo4j")
-
-    def get_singer_data(singer: str, attribute: str) -> str:
-        for item in data["singer"]:
-            if item["name"] == singer:
-                return item[attribute]
-
-        raise ValueError("value not found")
-
-    singer_id = 0
-    album_id = 0
-    for item in data["song"]:
-        db.write_data(
-            singer_id,
-            item["singer"],
-            get_singer_data(item["singer"], "gender"),
-            get_singer_data(item["singer"], "birthday"),
-            item["id"],
-            item["name"],
-            album_id,
-            item["album"],
-        )
-        singer_id += 1
-        album_id += 1
-    db.close()
+#
+# if __name__ == "__main__":
+#     with open("../../data/knowledge_base/data.json") as fd:
+#         data = json.load(fd)
+#     db = MusicDatabase("bolt://localhost:7687", "neo4j", "neo4j")
+#
+#     def get_singer_data(singer: str, attribute: str) -> str:
+#         for item in data["singer"]:
+#             if item["name"] == singer:
+#                 return item[attribute]
+#
+#         raise ValueError("value not found")
+#
+#     singer_id = 0
+#     album_id = 0
+#     for item in data["song"]:
+#         db.write_data(
+#             singer_id,
+#             item["singer"],
+#             get_singer_data(item["singer"], "gender"),
+#             get_singer_data(item["singer"], "birthday"),
+#             item["id"],
+#             item["name"],
+#             album_id,
+#             item["album"],
+#         )
+#         singer_id += 1
+#         album_id += 1
+#     db.close()

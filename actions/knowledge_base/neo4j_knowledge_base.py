@@ -288,43 +288,43 @@ class Neo4jKnowledgeBase(KnowledgeBase):
 
         return result
 
-
-if __name__ == "__main__":
-    import asyncio
-
-    kb = Neo4jKnowledgeBase("bolt://localhost:7687", "neo4j", "43215678")
-    loop = asyncio.get_event_loop()
-
-    result = loop.run_until_complete(kb.get_objects("singer", [], 5))
-    print(result)
-
-    result = loop.run_until_complete(
-        kb.get_objects("singer", [{"name": "name", "value": "周杰伦"}], 5)
-    )
-    print(result)
-
-    result = loop.run_until_complete(
-        kb.get_objects(
-            "song",
-            [{"name": "name", "value": "晴天"}, {"name": "album", "value": "叶惠美"}],
-            5,
-        )
-    )
-    print(result)
-
-    result = loop.run_until_complete(kb.get_object("singer", "0"))
-    print(result)
-
-    result = loop.run_until_complete(kb.get_object("singer", "周杰伦"))
-    print(result)
-
-    result = loop.run_until_complete(kb.get_object("song", "晴天"))
-    print(result)
-
-    result = loop.run_until_complete(kb.get_attributes_of_object("singer"))
-    print(result)
-
-    result = loop.run_until_complete(kb.get_attributes_of_object("song"))
-    print(result)
-
-    loop.close()
+#
+# if __name__ == "__main__":
+#     import asyncio
+#
+#     kb = Neo4jKnowledgeBase("bolt://localhost:7687", "neo4j", "43215678")
+#     loop = asyncio.get_event_loop()
+#
+#     result = loop.run_until_complete(kb.get_objects("singer", [], 5))
+#     print(result)
+#
+#     result = loop.run_until_complete(
+#         kb.get_objects("singer", [{"name": "name", "value": "周杰伦"}], 5)
+#     )
+#     print(result)
+#
+#     result = loop.run_until_complete(
+#         kb.get_objects(
+#             "song",
+#             [{"name": "name", "value": "晴天"}, {"name": "album", "value": "叶惠美"}],
+#             5,
+#         )
+#     )
+#     print(result)
+#
+#     result = loop.run_until_complete(kb.get_object("singer", "0"))
+#     print(result)
+#
+#     result = loop.run_until_complete(kb.get_object("singer", "周杰伦"))
+#     print(result)
+#
+#     result = loop.run_until_complete(kb.get_object("song", "晴天"))
+#     print(result)
+#
+#     result = loop.run_until_complete(kb.get_attributes_of_object("singer"))
+#     print(result)
+#
+#     result = loop.run_until_complete(kb.get_attributes_of_object("song"))
+#     print(result)
+#
+#     loop.close()
