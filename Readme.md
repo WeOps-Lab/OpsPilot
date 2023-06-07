@@ -33,7 +33,8 @@ export AZURE_OPENAI_KEY=
 cd ./support-files/
 docker-compose up -d
 ```
-> 更多问题欢迎添加“小嘉”微信，加入官方沟通群
+
+> 场景化模型处于闭源状态，需要的小伙伴可以通过添加“小嘉”微信，加入官方沟通群，获取专业的场景化模型哦
  
 ### 常见问题
 
