@@ -1,7 +1,0 @@
-version: "3.1"
-rules:
-  - rule: 处理知识图谱查询
-    steps:
-      - intent: query_knowledge_base
-      - action: action_response_query
-      - action: action_reset_all_slot

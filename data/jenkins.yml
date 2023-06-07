@@ -1,0 +1,55 @@
+version: "3.1"
+
+nlu:
+  - regex: jenkins_pipeline_name
+    examples: |
+      - [^\u4e00-\u9fa5]+
+
+  - intent: build_jenkins_pipeline
+    examples: |
+      - 构建[WeOps](jenkins_pipeline_name)流水线
+      - 构建[WeOps](jenkins_pipeline_name)
+      - 开始[WeOps](jenkins_pipeline_name)构建
+      - 执行[WeOps](jenkins_pipeline_name)构建
+      - [WeOps](jenkins_pipeline_name)流水线构建
+      - [WeOps](jenkins_pipeline_name)构建任务
+      - [WeOps](jenkins_pipeline_name)构建
+      - 启动[WeOps](jenkins_pipeline_name)构建
+      - 触发[WeOps](jenkins_pipeline_name)构建
+      - [WeOps](jenkins_pipeline_name)流水线开始构建
+      - 开始构建[WeOps](jenkins_pipeline_name)
+      - 执行构建任务[WeOps](jenkins_pipeline_name)
+
+
+responses:
+  utter_demo:
+    - text: "触发[{jenkins_pipeline_name}]流水线"
+
+  utter_ask_jenkins_pipeline_name:
+    - text: "你想构建哪个流水线呢？"
+
+rules:
+  - rule: 触发Jenkins任务状态轮询
+    steps:
+      - intent: EXTERNAL_jenkins_reminder
+      - action: action_jenkins_notify
+
+stories:
+  - story: 触发Jenkins流水线构建
+    steps:
+      # 触发Jenkins流水线构建意图
+      - intent: build_jenkins_pipeline
+
+      # 询问用户需要触发什么流水线
+      - action: jenkins_pipeline_form
+      - active_loop: jenkins_pipeline_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+
+      # 查看Jenkins的流水线是否存在
+      - action: action_find_jenkins_pipeline
+
+      # 触发Jenkins流水线
+      - action: action_jenkins_reminder
+      - action: action_reset_all_slot
