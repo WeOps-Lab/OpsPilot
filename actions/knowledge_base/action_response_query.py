@@ -64,11 +64,11 @@ class MyKnowledgeBaseAction(ActionQueryKnowledgeBase):
             )
         else:
             print("using InMemoryKnowledgeBase")
-            knowledge_base = InMemoryKnowledgeBase("./data/knowledge_base/data.json")
+            knowledge_base = InMemoryKnowledgeBase("./actions/knowledge_base/data/data.json")
 
         super().__init__(knowledge_base)
 
-        self.en_to_zh = EnToZh("./data/knowledge_base/en_to_zh.json")
+        self.en_to_zh = EnToZh("./actions/knowledge_base/data/en_to_zh.json")
 
     async def utter_objects(
             self,
