@@ -8,11 +8,15 @@ services:
       - ./conf/credentials.yml:/apps/credentials.yml
       - ./conf/endpoints.yml:/apps/endpoints.yml
     command:
-      - rasa run --enable-api --cors "*" --debug
+      - rasa 
+      - run 
+      - --enable-api 
+      - --cors 
+      - "*"
 
   ops-pilot-action-server:
     image: ccr.ccs.tencentyun.com/megalab/ops-pilot
-    container_name: ops-pilot
+    container_name: ops-pilot-action-server
     restart: always
     environment:
       - AZURE_OPENAI_MODEL_NAME=
@@ -23,5 +27,7 @@ services:
       - ./conf/credentials.yml:/apps/credentials.yml
       - ./conf/endpoints.yml:/apps/endpoints.yml
     command:
-      - rasa run actions
+      - rasa 
+      - run 
+      - actions
 
