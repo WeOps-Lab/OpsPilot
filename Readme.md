@@ -29,6 +29,20 @@ OpsPilot是一个基于Rasa和LLM技术的ChatBot，为运维系统提供ChatOps
 
 > 更多问题欢迎添加“小嘉”微信，加入官方沟通群
  
+### 常见问题
+
+#### 如何启用WebSocket的JWT验证
+
+修改`credentials.yml`,添加`jwt_key`、`jwt_method`配置即可
+
+```
+socketio:
+  user_message_evt: user_uttered
+  bot_message_evt: bot_uttered
+  session_persistence: true
+  jwt_key: key
+  jwt_method: HS256
+```
 
 ### 参数说明
 
