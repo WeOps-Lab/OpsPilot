@@ -13,6 +13,8 @@ services:
       - --enable-api 
       - --cors 
       - "*"
+    ports:
+      - 5005:5005    
 
   ops-pilot-action-server:
     image: ccr.ccs.tencentyun.com/megalab/ops-pilot
