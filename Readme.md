@@ -23,6 +23,8 @@ OpsPilot是一个基于Rasa和LLM技术的ChatBot，为运维系统提供ChatOps
 * Jenkins流水线构建，支持失败的时候使用LLM进行异常分析
 
 
+> 场景化模型处于闭源状态，需要的小伙伴可以通过添加“小嘉”微信，加入官方沟通群，获取专业的场景化模型哦
+> 
 <img src="./docs/images/canway.jpeg" width="30%" height="30%">
 
 ### 部署
@@ -34,7 +36,7 @@ cd ./support-files/
 docker-compose up -d
 ```
 
-> 场景化模型处于闭源状态，需要的小伙伴可以通过添加“小嘉”微信，加入官方沟通群，获取专业的场景化模型哦
+
  
 ### 常见问题
 
