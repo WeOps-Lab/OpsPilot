@@ -5,8 +5,8 @@ from pydantic import BaseSettings
 
 
 class ServerSettings(BaseSettings):
-    fallback_llm: str
-    fallback_prompt: str
+    fallback_llm: str = 'AZURE_OPENAI'
+    fallback_prompt: str = '扮演专业的运维工程师'
 
     azure_openai_model_name: Optional[str] = None
     azure_openai_endpoint: Optional[str] = None
@@ -19,7 +19,7 @@ class ServerSettings(BaseSettings):
     bing_search_url: Optional[str] = None
     bing_search_key: Optional[str] = None
 
-    run_mode: str
+    run_mode: str = 'Dev'
 
     class Config:
         env_file = '.env'

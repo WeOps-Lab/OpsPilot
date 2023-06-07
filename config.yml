@@ -27,7 +27,7 @@ pipeline:
     max_ngram: 4
 
   - name: DIETClassifier
-    epochs: 300
+    epochs: 1000
     constrain_similarities: true
     evaluate_on_number_of_examples: 0
     evaluate_every_number_of_epochs: 100
@@ -36,7 +36,7 @@ pipeline:
 
   - name: EntitySynonymMapper
   - name: ResponseSelector
-    epochs: 300
+    epochs: 1000
     retrieval_intent: chitchat
   - name: FallbackClassifier
     threshold: 0.90
