@@ -54,7 +54,7 @@ class ActionWeOpsFallback(Action):
             else:
                 try:
                     result = query_chatgpt(system_prompt, user_msg)
-                    dispatcher.utter_message(text=md(result))
+                    dispatcher.utter_message(text=result)
                 except Exception as e:
                     logger.exception('请求Azure OpenAI 服务异常')
                     dispatcher.utter_message(text='WeOps智能助理处于非常繁忙的状态，请稍后再试.')

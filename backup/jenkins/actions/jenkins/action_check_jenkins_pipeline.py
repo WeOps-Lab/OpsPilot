@@ -1,7 +1,7 @@
 from typing import Any, Dict, List, Text
 
 from rasa_sdk import Action, Tracker, logger
-from rasa_sdk.events import (ActiveLoop, FollowupAction, SlotSet, UserUtteranceReverted)
+from rasa_sdk.events import (SlotSet, UserUtteranceReverted, FollowupAction, ActiveLoop)
 from rasa_sdk.executor import CollectingDispatcher
 
 from actions.utils.jenkins_utils import (find_jenkins_job)
@@ -9,7 +9,7 @@ from actions.utils.jenkins_utils import (find_jenkins_job)
 
 class ActionFindJenkinsPipeline(Action):
     def name(self) -> Text:
-        return "action_find_jenkins_pipeline"
+        return "action_check_jenkins_pipeline"
 
     async def run(
             self,
@@ -36,4 +36,3 @@ class ActionFindJenkinsPipeline(Action):
                 FollowupAction('jenkins_pipeline_form'),
                 ActiveLoop('jenkins_pipeline_form'),
             ]
-

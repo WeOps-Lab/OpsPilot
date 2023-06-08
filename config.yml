@@ -2,6 +2,7 @@ recipe: default.v1
 assistant_id: weops-chatbot
 language: zh
 
+
 pipeline:
   - name: "compoments.jieba_tokenizer.JiebaTokenizer"
 
@@ -27,7 +28,7 @@ pipeline:
     max_ngram: 4
 
   - name: DIETClassifier
-    epochs: 1000
+    epochs: 300
     constrain_similarities: true
     evaluate_on_number_of_examples: 0
     evaluate_every_number_of_epochs: 100
@@ -36,7 +37,7 @@ pipeline:
 
   - name: EntitySynonymMapper
   - name: ResponseSelector
-    epochs: 1000
+    epochs: 300
     retrieval_intent: chitchat
   - name: FallbackClassifier
     threshold: 0.90

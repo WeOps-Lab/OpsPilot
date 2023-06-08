@@ -1,0 +1,53 @@
+version: "3.1"
+
+nlu:
+  - lookup: jenkins_pipeline_name
+    examples: |
+      - built-in
+      - local
+      - 123
+      - Auto-Mate
+      - AutoMate-Pipeline
+      - AutoMate-Pipeline-Release
+      - autotest-daily
+      - BSM-CICD
+      - casbin-mesh
+      - Datainsight-CI
+      - grafana-agent-redis
+      - hallo-world
+      - Jenkins-Backup
+      - minio-backup
+      - mssql-exporter
+      - mysql-exporter
+      - oracle-exporter
+      - postgres-exporter
+      - Rasa-Sample
+      - redis-exporter
+      - SOPS-CICD
+      - sql_exporter
+      - test-ansible
+      - test-paybook
+      - UAC-CICD
+      - WeDoc-CICD
+      - WeOps-6.1.2-Package
+      - weops-activate
+      - WeOps-autotest
+      - WeOps-BE
+      - WeOps-BE-NEW
+      - WeOps-bugfix
+      - WeOps-CICD-PIPELINE
+      - WeOps-Collect-PIPELINE
+      - WeOps-ESM
+      - WeOps-FE-BigScreen
+      - WeOps-FE-ITSM
+      - WeOps-FE-MOBILE
+      - WeOps-FE-NEW
+      - weops-kafka-adapter
+      - WeOps-modules
+      - weops-msp
+      - WeOps-Proxy
+      - WeOps-RDP
+      - WeOps-Release
+      - 微软补丁
+      - 测试ansible
+

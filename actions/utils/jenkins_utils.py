@@ -39,6 +39,25 @@ def find_jenkins_job(job_name):
     return jenkins.has_job(job_name)
 
 
+def list_jenkins_job():
+    jenkins = get_jenkins_instance()
+    jobs = jenkins.get_jobs_list()
+    return jobs
+
+
+def search_jenkins_job(job_name):
+    jenkins = get_jenkins_instance()
+    jobs = jenkins.get_jobs_list()
+    if jobs is None:
+        return []
+    else:
+        matching_jobs = []
+        for job in jobs:
+            if job_name.lower() in job.lower():
+                matching_jobs.append(job)
+        return matching_jobs
+
+
 def trigger_jenkins_pipeline(job_name):
     jenkins = get_jenkins_instance()
     job = jenkins[job_name]

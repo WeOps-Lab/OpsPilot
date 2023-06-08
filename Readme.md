@@ -7,27 +7,18 @@ OpsPilot是一个基于Rasa和LLM技术的ChatBot，为运维系统提供ChatOps
 
 <img src="./docs/images/chatbot.png" >
 
-## 支持的能力
+## 使用场景
 
-### 能力
-* 与LLM进行整合，支持使用ChatGPT进行问答
-* 知识问答能力: 支持基于语意的知识问答
-* 知识库检索能力：支持从Neo4J，本地知识库
-* 添加LangChain支持，能够让Chatbot进行联网检索
-* 添加Scrapy支持，能够让Chatbot进行准确的联网信息搜集
+### Jenkins
 
-### 场景
-* 重启服务器
-* 检索服务器的信息
-* 查询服务器的属性
-* Jenkins流水线构建，支持失败的时候使用LLM进行异常分析
-
+* 列出Jenkins上的流水线
 
 > 场景化模型处于闭源状态，需要的小伙伴可以通过添加“小嘉”微信，加入官方沟通群，获取专业的场景化模型哦
-> 
+>
 <img src="./docs/images/canway.jpeg" width="30%" height="30%">
 
 ### 部署
+
 ```
 export AZURE_OPENAI_MODEL_NAME=
 export AZURE_OPENAI_ENDPOINT=
@@ -36,8 +27,6 @@ cd ./support-files/
 docker-compose up -d
 ```
 
-
- 
 ### 常见问题
 
 #### 如何启用WebSocket的JWT验证

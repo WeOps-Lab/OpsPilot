@@ -3,11 +3,15 @@ version: "3.1"
 intents:
   - EXTERNAL_jenkins_reminder
   - build_jenkins_pipeline
+  - list_jenkins_pipeline
+  - search_jenkins_pipeline
 
 actions:
   - action_jenkins_reminder
   - action_jenkins_notify
-  - action_find_jenkins_pipeline
+  - action_check_jenkins_pipeline
+  - action_list_jenkins_pipline
+  - action_search_jenkins_pipeline
 
 
 entities:
