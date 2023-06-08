@@ -17,7 +17,9 @@ class ActionWeOpsPreFallback(Action):
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        dispatcher.utter_message(text='WeOps助理正在思考中........')
+        user_msg = tracker.latest_message['text']
+        if user_msg != '':
+            dispatcher.utter_message(text='WeOps助理正在思考中........')
 
         return []
 
@@ -53,8 +55,9 @@ class ActionWeOpsFallback(Action):
                 return [UserUtteranceReverted()]
             else:
                 try:
-                    result = query_chatgpt(system_prompt, user_msg)
-                    dispatcher.utter_message(text=result)
+                    if user_msg != '':
+                        result = query_chatgpt(system_prompt, user_msg)
+                        dispatcher.utter_message(text=result)
                 except Exception as e:
                     logger.exception('请求Azure OpenAI 服务异常')
                     dispatcher.utter_message(text='WeOps智能助理处于非常繁忙的状态，请稍后再试.')
