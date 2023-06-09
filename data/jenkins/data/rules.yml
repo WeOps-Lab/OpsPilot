@@ -1,5 +1,6 @@
 version: "3.1"
 rules:
+
   - rule: 触发Jenkins任务状态轮询
     steps:
       - intent: EXTERNAL_jenkins_reminder

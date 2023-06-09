@@ -11,12 +11,14 @@ stories:
           - requested_slot: null
       - action: utter_sure_restart_server
       - checkpoint: check_sure_reboot_server
+
   - story: 确认重启服务器
     steps:
       - checkpoint: check_sure_reboot_server
       - intent: affirm
       - action: action_reboot_server
       - action: action_reset_all_slot
+
   - story: 取消重启服务器
     steps:
       - checkpoint: check_sure_reboot_server

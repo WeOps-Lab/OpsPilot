@@ -15,7 +15,7 @@ clean:
 	rm -Rf .rasa
 
 interactive:
-	rasa interactive
+	rasa interactive -d data
 
 prepare:
 	python -m spacy download zh_core_web_sm

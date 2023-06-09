@@ -1,5 +1,6 @@
 version: "3.1"
 stories:
+
   - story: 列出Jenkins流水线
     steps:
       - intent: list_jenkins_pipeline
@@ -8,7 +9,16 @@ stories:
   - story: 查找Jenkins流水线
     steps:
       - intent: search_jenkins_pipeline
+
+      # 询问用户需要查找什么流水线
+      - action: jenkins_pipeline_form
+      - active_loop: jenkins_pipeline_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+
       - action: action_search_jenkins_pipeline
+      - action: action_reset_all_slot
 
   - story: 触发Jenkins流水线构建
     steps:

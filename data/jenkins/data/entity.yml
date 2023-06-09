@@ -1,0 +1,12 @@
+version: "3.1"
+
+nlu:
+  - synonym: 查看
+    examples: |
+      - 查看
+      - 查找
+      - 看看
+
+  - regex: jenkins_pipeline_name
+    examples: |
+      - (?<=").*(?=")

@@ -18,12 +18,15 @@ class ActionSearchJenkinsPipeline(Action):
             domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
         jenkins_pipeline_name = tracker.get_slot('jenkins_pipeline_name')
-        jobs = search_jenkins_job(jenkins_pipeline_name)
-        if jobs is None:
-            dispatcher.utter_message(f'没有找到名字包含[{jenkins_pipeline_name}]的流水线')
+        if jenkins_pipeline_name is None:
+            dispatcher.utter_message('没有识别到流水线的名称，示例：查看"Demo"流水线')
         else:
-            message = f'找到名字包含[{jenkins_pipeline_name}]名称的流水线[{len(jobs)}]个，这里是我找到的流水线:'
-            dispatcher.utter_message(text=message)
-            for i in jobs:
-                dispatcher.utter_message(text=i)
+            jobs = search_jenkins_job(jenkins_pipeline_name)
+            if jobs is None:
+                dispatcher.utter_message(f'没有找到名字包含[{jenkins_pipeline_name}]的流水线')
+            else:
+                message = f'找到名字包含[{jenkins_pipeline_name}]名称的流水线[{len(jobs)}]个，这里是我找到的流水线:'
+                dispatcher.utter_message(text=message)
+                for i in jobs:
+                    dispatcher.utter_message(text=i)
         return []
