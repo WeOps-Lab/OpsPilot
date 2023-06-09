@@ -1,5 +1,5 @@
 train:
-	rasa train -d domain
+	rasa train -d data
 
 run:
 	SANIC_WORKERS=5 ACTION_SERVER_SANIC_WORKERS=5 rasa run --enable-api --cors "*" --debug

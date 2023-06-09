@@ -1,0 +1,17 @@
+version: "3.1"
+responses:
+  utter_ask_reboot_server:
+    - text: "你想重启哪台服务器呢？"
+
+  utter_reboot_server_canceled:
+    - text: "服务器重启任务已经取消"
+  utter_ask_sure_restart_server:
+    - text: "请确认是否需要重启[{reboot_server}]服务器"
+
+  utter_sure_restart_server:
+    - text: "是否需要重启[{reboot_server}]服务器？"
+      buttons:
+        - title: "确认"
+          payload: /affirm
+        - title: "取消"
+          payload: /deny
