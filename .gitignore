@@ -12,4 +12,5 @@ story_graph.dot
 results
 libs
 tensorboard
+.chroma
 train_data
