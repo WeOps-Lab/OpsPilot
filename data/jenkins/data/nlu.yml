@@ -4,15 +4,36 @@ nlu:
   - intent: list_jenkins_pipeline
     examples: |
       - 流水线列表
+      - 列出流水线列表
 
   - intent: search_jenkins_pipeline
     examples: |
-      - [查看]"[jenkins_pipeline_name](jenkins_pipeline_name)"流水线
-      - [查看]"[demo](jenkins_pipeline_name)"流水线
-      - [查看]"[微软](jenkins_pipeline_name)"流水线
-      - [查看]"[demo-1](jenkins_pipeline_name)"流水线
-
+      - 查看"[jenkins_pipeline_name](jenkins_pipeline_name)"流水线
+      - 查看"[demo](jenkins_pipeline_name)"流水线
+      - 查看"[微软](jenkins_pipeline_name)"流水线
+      - 查看"[demo-1](jenkins_pipeline_name)"流水线
+      - 查看"[123-demo-sample_dev](jenkins_pipeline_name)"流水线
+      - 查看"[rasa](jenkins_pipeline_name)"流水线
+      - 查看"[Jenkins-Pipeline-测试-1](jenkins_pipeline_name)"流水线
+      - 查看"[微软补丁](jenkins_pipeline_name)"流水线
+      - 查看"[abcdefghijklmnopqrstuvwsyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890-天气](jenkins_pipeline_name)"流水线
+      - 查看"[Oracle-Mate](jenkins_pipeline_name)"流水线
+      - 查看"[Oracle_Mate](jenkins_pipeline_name)"流水线
+      - 查看"[Oracle_Mate-2](jenkins_pipeline_name)"流水线
+      - 查看"[sample-xxx](jenkins_pipeline_name)"流水线
 
   - intent: build_jenkins_pipeline
     examples: |
-      - 构建[jenkins_pipeline_name](jenkins_pipeline_name)流水线
+      - 构建"[jenkins_pipeline_name](jenkins_pipeline_name)"流水线
+      - 构建"[demo](jenkins_pipeline_name)"流水线
+      - 构建"[微软](jenkins_pipeline_name)"流水线
+      - 构建"[demo-1](jenkins_pipeline_name)"流水线
+      - 构建"[123-demo-sample_dev](jenkins_pipeline_name)"流水线
+      - 构建"[rasa](jenkins_pipeline_name)"流水线
+      - 构建"[Jenkins-Pipeline-测试-1](jenkins_pipeline_name)"流水线
+      - 构建"[微软补丁](jenkins_pipeline_name)"流水线
+      - 构建"[abcdefghijklmnopqrstuvwsyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890-天气](jenkins_pipeline_name)"流水线
+      - 构建"[Oracle-Mate](jenkins_pipeline_name)"流水线
+      - 构建"[Oracle_Mate](jenkins_pipeline_name)"流水线
+      - 构建"[Oracle_Mate-2](jenkins_pipeline_name)"流水线
+      - 构建"[sample-xxx](jenkins_pipeline_name)"流水线

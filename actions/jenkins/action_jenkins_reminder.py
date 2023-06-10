@@ -22,12 +22,15 @@ class ActionJenkinsReminder(Action):
             tracker: Tracker,
             domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
-        jenkins_pipeline_name = tracker.get_slot('jenkins_pipeline_name')
-        dispatcher.utter_message(f"流水线[{jenkins_pipeline_name}]开始构建,任务正在排队构建......")
-        build_number = trigger_jenkins_pipeline(jenkins_pipeline_name)
+        jenkins_pipeline_names = list(
+            filter(lambda d: d['entity'] == 'jenkins_pipeline_name' and d['extractor'] == 'RegexEntityExtractor',
+                   tracker.latest_message['entities']))
+        value = jenkins_pipeline_names[0]['value']
+        dispatcher.utter_message(f"流水线[{value}]开始构建,任务正在排队构建......")
+        build_number = trigger_jenkins_pipeline(value)
 
         dispatcher.utter_message(
-            f"流水线[{jenkins_pipeline_name}]开始构建,构建号为:[{build_number}],任务构建完成后WeOps会通知你,请耐心等待......"
+            f"流水线[{value}]开始构建,构建号为:[{build_number}],任务构建完成后WeOps会通知你,请耐心等待......"
         )
 
         date = datetime.datetime.now() + datetime.timedelta(seconds=5)
@@ -36,7 +39,7 @@ class ActionJenkinsReminder(Action):
             trigger_date_time=date,
             entities={
                 "build_number": build_number,
-                "job_name": jenkins_pipeline_name
+                "job_name": value
             },
             name='jenkins_reminder',
             kill_on_user_message=False,
@@ -45,6 +48,6 @@ class ActionJenkinsReminder(Action):
         return [
             reminder,
             SlotSet('jenkins_pipeline_name', None),
-            SlotSet('jenkins_job_name', jenkins_pipeline_name),
+            SlotSet('jenkins_job_name', value),
             SlotSet('jenkins_job_buildnumber', build_number)
         ]

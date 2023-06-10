@@ -4,16 +4,16 @@ language: zh
 
 
 pipeline:
-  - name: "compoments.jieba_tokenizer.JiebaTokenizer"
-
-  - name: RegexEntityExtractor
-    case_sensitive: False
-    use_lookup_tables: True
-    use_regexes: True
-    use_word_boundaries: True
+  - name: "JiebaTokenizer"
+#    dictionary_path: "./dictionary"
+#    "intent_tokenization_flag": False
+#    "intent_split_symbol": "_"
+#    "token_pattern": None
 
   - name: RegexFeaturizer
     use_word_boundaries: false
+    case_sensitive: True
+    number_additional_patterns: 10
 
   - name: LanguageModelFeaturizer
     model_name: "bert"
@@ -35,7 +35,13 @@ pipeline:
     tensorboard_log_directory: "./tensorboard"
     tensorboard_log_level: "epoch"
 
-  - name: EntitySynonymMapper
+  - name: RegexEntityExtractor
+    case_sensitive: True
+    use_lookup_tables: True
+    use_regexes: True
+    use_word_boundaries: True
+#  - name: EntitySynonymMapper
+
   - name: ResponseSelector
     epochs: 300
     retrieval_intent: chitchat
