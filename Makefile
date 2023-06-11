@@ -19,3 +19,7 @@ interactive:
 
 prepare:
 	python -m spacy download zh_core_web_sm
+
+release:
+	docker build -t ccr.ccs.tencentyun.com/megalab/ops-pilot .
+	docker push ccr.ccs.tencentyun.com/megalab/ops-pilot
