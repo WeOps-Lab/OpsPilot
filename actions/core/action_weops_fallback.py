@@ -22,6 +22,17 @@ class ActionWeOpsFallback(Action):
 
         logger.info(f'无法识别用户的意图，进入默认Fallback，用户输入的信息为:{user_msg}')
 
+        events = list(filter(lambda x: x.get("event") == "user" and x.get("text"), tracker.events))
+        user_messages = []
+        for event in reversed(events):
+            if len(user_messages) >= 10:
+                break
+            user_messages.insert(0, event.get("text"))
+        user_prompt = ''
+        for user_message in user_messages:
+            user_prompt += user_message + '\n'
+        user_prompt += user_msg
+
         if tracker.active_loop_name is None:
             if run_mode == 'DEV':
                 dispatcher.utter_message(text='WeOps Debug Fallback')
@@ -29,7 +40,7 @@ class ActionWeOpsFallback(Action):
             else:
                 try:
                     if user_msg != '':
-                        result = query_chatgpt(system_prompt, user_msg)
+                        result = query_chatgpt(system_prompt, user_prompt)
                         dispatcher.utter_message(text=result)
                 except Exception as e:
                     logger.exception('请求Azure OpenAI 服务异常')
