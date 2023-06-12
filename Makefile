@@ -2,7 +2,9 @@ train:
 	rasa train -d data
 
 run:
-	SANIC_WORKERS=5 ACTION_SERVER_SANIC_WORKERS=5 rasa run --enable-api --cors "*" --debug
+	rasa run --enable-api --cors "*" --debug
+	#SANIC_WORKERS=5 ACTION_SERVER_SANIC_WORKERS=5
+
 
 actions:
 	rasa run actions --auto-reload

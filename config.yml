@@ -5,10 +5,10 @@ language: zh
 
 pipeline:
   - name: "JiebaTokenizer"
-#    dictionary_path: "./dictionary"
-#    "intent_tokenization_flag": False
-#    "intent_split_symbol": "_"
-#    "token_pattern": None
+  #    dictionary_path: "./dictionary"
+  #    "intent_tokenization_flag": False
+  #    "intent_split_symbol": "_"
+  #    "token_pattern": None
 
   - name: RegexFeaturizer
     use_word_boundaries: false
@@ -16,9 +16,9 @@ pipeline:
     number_additional_patterns: 10
 
   - name: LanguageModelFeaturizer
-    model_name: "bert"
-    model_weight: "bert-base-chinese"
-    cache_dir: cache/bert-base-chinese
+    model_name: "xlnet"
+    model_weights: "hfl/chinese-xlnet-base"
+    cache_dir: cache/models
 
   - name: LexicalSyntacticFeaturizer
   - name: CountVectorsFeaturizer
@@ -28,7 +28,7 @@ pipeline:
     max_ngram: 4
 
   - name: DIETClassifier
-    epochs: 300
+    epochs: 1000
     constrain_similarities: true
     evaluate_on_number_of_examples: 0
     evaluate_every_number_of_epochs: 100
@@ -40,11 +40,11 @@ pipeline:
     use_lookup_tables: True
     use_regexes: True
     use_word_boundaries: True
-#  - name: EntitySynonymMapper
+  #  - name: EntitySynonymMapper
 
   - name: ResponseSelector
-    epochs: 300
-    retrieval_intent: chitchat
+    epochs: 1000
+  #    retrieval_intent: chitchat
   - name: FallbackClassifier
     threshold: 0.90
 
@@ -55,7 +55,7 @@ policies:
   #    epochs: 100
   - name: TEDPolicy
     max_history: 5
-    epochs: 300
+    epochs: 1000
     constrain_similarities: true
     evaluate_on_number_of_examples: 0
     evaluate_every_number_of_epochs: 100

@@ -7,6 +7,7 @@ models
 __pycache__
 graph.html
 cache/
+weops
 story_graph.dot
 .pytest_cache
 results
@@ -14,3 +15,4 @@ libs
 tensorboard
 .chroma
 train_data
+data/OpsPilot-WeOps-Addon
