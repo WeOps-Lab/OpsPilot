@@ -17,7 +17,7 @@ pipeline:
 
   - name: LanguageModelFeaturizer
     model_name: "xlnet"
-    model_weights: "hfl/chinese-xlnet-base"
+    model_weights: "xlnet-base-cased"
     cache_dir: cache/models
 
   - name: LexicalSyntacticFeaturizer
