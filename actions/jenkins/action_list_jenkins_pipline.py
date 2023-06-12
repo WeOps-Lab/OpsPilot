@@ -4,6 +4,7 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 from markdownify import markdownify as md
 
+from actions.constant.server_settings import server_settings
 from actions.utils.jenkins_utils import list_jenkins_job
 
 
@@ -17,6 +18,10 @@ class ActionFindJenkinsPipeline(Action):
             tracker: Tracker,
             domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
+        if server_settings.jenkins_url is None:
+            dispatcher.utter_message('OpsPilot没有启用Jenkins自动化能力....')
+            return []
+
         results = list_jenkins_job()
         if len(results) > 10:
             message = f'Jenkins上的流水线共有[{len(results)}]个，这里是我列出来的其中十个:'

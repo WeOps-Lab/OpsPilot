@@ -5,6 +5,7 @@ from rasa_sdk import Action, Tracker, logger
 from rasa_sdk.events import (ReminderScheduled)
 from rasa_sdk.executor import CollectingDispatcher
 
+from actions.constant.server_settings import server_settings
 from actions.utils.jenkins_utils import (analyze_jenkins_build_console,
                                          get_jenkins_build_info)
 
@@ -19,6 +20,10 @@ class ActionJenkinsNotify(Action):
             tracker: Tracker,
             domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
+        if server_settings.jenkins_url is None:
+            dispatcher.utter_message('OpsPilot没有启用Jenkins自动化能力....')
+            return []
+
         entities = tracker.latest_message.get('entities')
         build_number = next(
             (x['value'] for x in entities if x['entity'] == 'build_number'),
@@ -55,4 +60,3 @@ class ActionJenkinsNotify(Action):
                 results = analyze_jenkins_build_console(job_name, build_number)
                 dispatcher.utter_message(f"分析建议:[{results}]")
             return []
-

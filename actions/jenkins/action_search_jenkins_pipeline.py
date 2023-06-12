@@ -4,6 +4,7 @@ from rasa_sdk import Action, Tracker, logger
 from rasa_sdk.events import (SlotSet, UserUtteranceReverted, FollowupAction, ActiveLoop)
 from rasa_sdk.executor import CollectingDispatcher
 
+from actions.constant.server_settings import server_settings
 from actions.utils.core_utils import get_regex_entities
 from actions.utils.jenkins_utils import (find_jenkins_job, search_jenkins_job)
 
@@ -18,6 +19,10 @@ class ActionSearchJenkinsPipeline(Action):
             tracker: Tracker,
             domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
+        if server_settings.jenkins_url is None:
+            dispatcher.utter_message('OpsPilot没有启用Jenkins自动化能力....')
+            return []
+
         jenkins_pipeline_names = get_regex_entities(tracker, 'jenkins_pipeline_name')
         if len(jenkins_pipeline_names) == 0:
             dispatcher.utter_message('没有识别到流水线的名称，示例：查看"demo"流水线')

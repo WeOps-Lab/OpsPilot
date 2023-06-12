@@ -14,7 +14,6 @@ class ActionWeOpsPreFallback(Action):
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         user_msg = tracker.latest_message['text']
         if user_msg != '':
-            dispatcher.utter_message(text='WeOps助理正在思考中........')
+            dispatcher.utter_message(text='OpsPilot正在思考中........')
 
         return []
-

@@ -6,6 +6,7 @@ from rasa_sdk.events import (ReminderScheduled,
                              SlotSet, UserUtteranceReverted, FollowupAction, ActiveLoop)
 from rasa_sdk.executor import CollectingDispatcher
 
+from actions.constant.server_settings import server_settings
 from actions.utils.core_utils import get_regex_entities
 from actions.utils.jenkins_utils import (analyze_jenkins_build_console,
                                          get_jenkins_build_info,
@@ -23,6 +24,10 @@ class ActionJenkinsReminder(Action):
             tracker: Tracker,
             domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
+        if server_settings.jenkins_url is None:
+            dispatcher.utter_message('OpsPilot没有启用Jenkins自动化能力....')
+            return []
+
         jenkins_pipeline_names = get_regex_entities(tracker, 'jenkins_pipeline_name')
         value = jenkins_pipeline_names[0]['value']
         dispatcher.utter_message(f"流水线[{value}]开始构建,任务正在排队构建......")
