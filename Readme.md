@@ -44,6 +44,11 @@ socketio:
   jwt_method: HS256
 ```
 
+### Mac如何安装requirements.txt
+```
+export HNSWLIB_NO_NATIVE=1  
+pip install -r requirements.txt
+```
 ### 参数说明
 
 | 参数                      | 说明                             | 可选配置                     |
