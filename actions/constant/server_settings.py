@@ -19,6 +19,8 @@ class ServerSettings(BaseSettings):
     bing_search_url: Optional[str] = None
     bing_search_key: Optional[str] = None
 
+    vec_db_path: Optional[str] = None
+
     run_mode: str = 'Dev'
 
     class Config:

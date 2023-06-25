@@ -45,10 +45,12 @@ socketio:
 ```
 
 ### Mac如何安装requirements.txt
+
 ```
 export HNSWLIB_NO_NATIVE=1  
 pip install -r requirements.txt
 ```
+
 ### 参数说明
 
 | 参数                      | 说明                             | 可选配置                     |
@@ -63,4 +65,5 @@ pip install -r requirements.txt
 | JENKINS_PASSWORD        | Jenkins 密码,启用Jenkins自动化能力需要配置  |                          |
 | BING_SEARCH_URL         | Bing Search端点                  |                          |
 | BIND_SEARCH_KEY         | Bing Search密码                  |                          |
+| VEC_DB_PATH             | 向量数据库的路径                       |
 | RUN_MODE                | 是否以开发模式运行                      |                          |

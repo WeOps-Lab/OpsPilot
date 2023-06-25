@@ -6,6 +6,7 @@ venv
 models
 __pycache__
 graph.html
+vec_db
 local_data
 cache/
 weops
