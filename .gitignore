@@ -6,8 +6,11 @@ venv
 models
 __pycache__
 graph.html
+local_data
 cache/
 weops
+docs-website
+.gitmodules
 story_graph.dot
 .pytest_cache
 results
