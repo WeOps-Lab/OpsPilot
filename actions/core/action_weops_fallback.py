@@ -1,14 +1,27 @@
 from typing import Any, Text, Dict, List
 
+from langchain.embeddings import HuggingFaceEmbeddings
+from langchain.vectorstores import Chroma
 from rasa_sdk import Action, Tracker, logger
 from rasa_sdk.events import UserUtteranceReverted
 from rasa_sdk.executor import CollectingDispatcher
 
 from actions.constant.server_settings import server_settings
 from actions.utils.azure_utils import query_chatgpt
+from actions.utils.langchain_utils import langchain_qa
 
 
 class ActionWeOpsFallback(Action):
+
+    def __init__(self) -> None:
+        super().__init__()
+        if server_settings.vec_db_path is not None:
+            embeddings = HuggingFaceEmbeddings(model_name='shibing624/text2vec-base-chinese',
+                                               cache_folder='cache/models',
+                                               encode_kwargs={
+                                                   'show_progress_bar': True
+                                               })
+            self.doc_search = Chroma(persist_directory=server_settings.vec_db_path, embedding_function=embeddings)
 
     def name(self) -> Text:
         return "action_weops_fallback"
@@ -28,20 +41,28 @@ class ActionWeOpsFallback(Action):
                 return [UserUtteranceReverted()]
             else:
                 try:
+                    if server_settings.azure_openai_endpoint is None:
+                        dispatcher.utter_message(text='WeOps智能助理联网检索能力没有打开,无法回答这个问题.')
+                        return [UserUtteranceReverted()]
+
                     events = list(filter(lambda x: x.get("event") == "user" and x.get("text"), tracker.events))
                     user_messages = []
                     for event in reversed(events):
                         if len(user_messages) >= 10:
                             break
                         user_messages.insert(0, event.get("text"))
-                    user_prompt = ''
-                    for user_message in user_messages:
-                        user_prompt += user_message + '\n'
-                    user_prompt += user_msg
 
-                    if user_prompt != '':
-                        result = query_chatgpt(system_prompt, user_prompt)
-                        dispatcher.utter_message(text=result)
+                    if server_settings.fallback_chat_mode == 'knowledgebase':
+                        result = langchain_qa(self.doc_search, user_messages[0])
+                    else:
+                        user_prompt = ''
+                        for user_message in user_messages:
+                            user_prompt += user_message + '\n'
+                        user_prompt += user_msg
+
+                        if user_prompt != '':
+                            result = query_chatgpt(system_prompt, user_prompt)
+                    dispatcher.utter_message(text=result)
                 except Exception as e:
                     logger.exception('请求Azure OpenAI 服务异常')
                     dispatcher.utter_message(text='WeOps智能助理处于非常繁忙的状态，请稍后再试.')

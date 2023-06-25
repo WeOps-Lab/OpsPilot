@@ -11,6 +11,8 @@ class ServerSettings(BaseSettings):
     azure_openai_model_name: Optional[str] = None
     azure_openai_endpoint: Optional[str] = None
     azure_openai_key: Optional[str] = None
+    azure_openai_api_version: Optional[str] = '2023-05-15'
+    azure_openai_api_temperature: Optional[float] = 0.7
 
     jenkins_url: Optional[str] = None
     jenkins_username: Optional[str] = None
@@ -22,6 +24,7 @@ class ServerSettings(BaseSettings):
     vec_db_path: Optional[str] = None
 
     run_mode: str = 'Dev'
+    fallback_chat_mode: str = 'knowledgebase'
 
     class Config:
         env_file = '.env'

@@ -11,8 +11,9 @@ def query_chatgpt(system_message, user_message):
 
     llm = AzureChatOpenAI(openai_api_base=server_settings.azure_openai_endpoint,
                           openai_api_key=server_settings.azure_openai_key,
-                          deployment_name=server_settings.azure_openai_model_name, temperature=0.7,
-                          openai_api_version="2023-05-15")
+                          deployment_name=server_settings.azure_openai_model_name,
+                          temperature=server_settings.azure_openai_api_temperature,
+                          openai_api_version=server_settings.azure_openai_api_version)
 
     system_message_prompt = SystemMessagePromptTemplate.from_template(system_message)
     human_template = "{text}"

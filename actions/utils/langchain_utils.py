@@ -8,7 +8,7 @@ from langchain.vectorstores import Chroma
 from langchain.text_splitter import CharacterTextSplitter
 from langchain import OpenAI, VectorDBQA, PromptTemplate, LLMChain
 from langchain.document_loaders import DirectoryLoader
-from langchain.chains import RetrievalQA, LLMRequestsChain
+from langchain.chains import RetrievalQA, LLMRequestsChain, ConversationalRetrievalChain
 
 from actions.constant.server_settings import server_settings
 
@@ -16,8 +16,9 @@ from actions.constant.server_settings import server_settings
 def langchain_qa(doc_search, query):
     llm = AzureChatOpenAI(openai_api_base=server_settings.azure_openai_endpoint,
                           openai_api_key=server_settings.azure_openai_key,
-                          deployment_name=server_settings.azure_openai_model_name, temperature=0.7,
-                          openai_api_version="2023-05-15")
+                          deployment_name=server_settings.azure_openai_model_name,
+                          temperature=server_settings.azure_openai_api_temperature,
+                          openai_api_version=server_settings.azure_openai_api_version)
 
     prompt_template = """Use the following pieces of context to answer the question at the end.
      If you don't know the answer, just say that you don't know, don't try to make up an answer.
@@ -30,6 +31,7 @@ def langchain_qa(doc_search, query):
         template=prompt_template, input_variables=["context", "question"]
     )
     chain_type_kwargs = {"prompt": PROMPT}
+
     qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=doc_search.as_retriever(),
                                      return_source_documents=True, chain_type_kwargs=chain_type_kwargs)
 
@@ -40,8 +42,9 @@ def langchain_qa(doc_search, query):
 def query_online(url, query):
     llm = AzureChatOpenAI(openai_api_base=server_settings.azure_openai_endpoint,
                           openai_api_key=server_settings.azure_openai_key,
-                          deployment_name=server_settings.azure_openai_model_name, temperature=0.7,
-                          openai_api_version="2023-05-15")
+                          deployment_name=server_settings.azure_openai_model_name,
+                          temperature=server_settings.azure_openai_api_temperature,
+                          openai_api_version=server_settings.azure_openai_api_version)
 
     template = """在 >>> 和 <<< 之间是网页的返回的HTML内容。
     

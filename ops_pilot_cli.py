@@ -22,6 +22,7 @@ class BootStrap(object):
                                                'show_progress_bar': True
                                            })
         doc_search = Chroma(persist_directory=vec_db_path, embedding_function=embeddings)
+
         while True:
             query = input("请输入问题（输入exit退出终端）：")
             if query == "exit":

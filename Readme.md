@@ -65,5 +65,6 @@ pip install -r requirements.txt
 | JENKINS_PASSWORD        | Jenkins 密码,启用Jenkins自动化能力需要配置  |                          |
 | BING_SEARCH_URL         | Bing Search端点                  |                          |
 | BIND_SEARCH_KEY         | Bing Search密码                  |                          |
-| VEC_DB_PATH             | 向量数据库的路径                       |
+| VEC_DB_PATH             | 向量数据库的路径                       |                          |
 | RUN_MODE                | 是否以开发模式运行                      |                          |
+| FALLBACK_CHAT_MODE      | LLM使用本地知识库模式还是闲聊模式             |                          |
