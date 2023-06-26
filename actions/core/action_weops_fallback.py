@@ -54,6 +54,7 @@ class ActionWeOpsFallback(Action):
 
                     if server_settings.fallback_chat_mode == 'knowledgebase':
                         result = langchain_qa(self.doc_search, user_messages[0])
+                        dispatcher.utter_message(text=result['result'])
                     else:
                         user_prompt = ''
                         for user_message in user_messages:
@@ -62,7 +63,7 @@ class ActionWeOpsFallback(Action):
 
                         if user_prompt != '':
                             result = query_chatgpt(system_prompt, user_prompt)
-                    dispatcher.utter_message(text=result)
+                        dispatcher.utter_message(text=result)
                 except Exception as e:
                     logger.exception('请求Azure OpenAI 服务异常')
                     dispatcher.utter_message(text='WeOps智能助理处于非常繁忙的状态，请稍后再试.')
