@@ -16,8 +16,8 @@ pipeline:
     number_additional_patterns: 10
 
   - name: LanguageModelFeaturizer
-    model_name: "xlnet"
-    model_weights: "xlnet-base-cased"
+    model_name: "bert"
+    model_weights: "bert-base-chinese"
     cache_dir: cache/models
 
   - name: LexicalSyntacticFeaturizer

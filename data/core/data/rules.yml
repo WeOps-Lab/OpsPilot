@@ -18,8 +18,3 @@ rules:
     steps:
       - intent: goodbye
       - action: utter_goodbye
-
-  - rule: respond to chitchat
-    steps:
-      - intent: chitchat
-      - action: utter_chitchat
