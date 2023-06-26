@@ -46,3 +46,10 @@ nlu:
       - 拜
       - 退出
       - 结束
+
+  - intent: out_of_scope
+    examples: |
+      - 今天天气怎么样
+      - 这个功能怎么用
+      - WeOps支持哪些功能
+      - 马斯克有没去参加笼中决斗

@@ -18,3 +18,8 @@ rules:
     steps:
       - intent: goodbye
       - action: utter_goodbye
+
+  - rule: out-of-scope
+    steps:
+      - intent: out_of_scope
+      - action: action_weops_fallback

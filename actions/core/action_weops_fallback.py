@@ -53,7 +53,8 @@ class ActionWeOpsFallback(Action):
                         user_messages.insert(0, event.get("text"))
 
                     if server_settings.fallback_chat_mode == 'knowledgebase':
-                        result = langchain_qa(self.doc_search, user_messages[0])
+                        result = langchain_qa(self.doc_search, user_msg)
+                        logger.info(result)
                         dispatcher.utter_message(text=result['result'])
                     else:
                         user_prompt = ''
@@ -63,6 +64,7 @@ class ActionWeOpsFallback(Action):
 
                         if user_prompt != '':
                             result = query_chatgpt(system_prompt, user_prompt)
+                        logger.info(result)
                         dispatcher.utter_message(text=result)
                 except Exception as e:
                     logger.exception('请求Azure OpenAI 服务异常')
