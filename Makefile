@@ -3,7 +3,7 @@ train:
 
 run:
 	rasa run --enable-api --cors "*" --debug
-	#SANIC_WORKERS=5 ACTION_SERVER_SANIC_WORKERS=5
+	#RASA_TELEMETRY_ENABLED=false  SANIC_WORKERS=5 ACTION_SERVER_SANIC_WORKERS=5
 
 
 actions:
