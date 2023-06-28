@@ -5,14 +5,13 @@ from pydantic import BaseSettings
 
 
 class ServerSettings(BaseSettings):
-    fallback_llm: str = 'AZURE_OPENAI'
+    fallback_llm: str = 'OPENAI'
     fallback_prompt: str = '扮演专业的运维工程师'
 
-    azure_openai_model_name: Optional[str] = None
-    azure_openai_endpoint: Optional[str] = None
-    azure_openai_key: Optional[str] = None
-    azure_openai_api_version: Optional[str] = '2023-05-15'
-    azure_openai_api_temperature: Optional[float] = 0.7
+    openai_model_name: Optional[str] = None
+    openai_endpoint: Optional[str] = None
+    openai_key: Optional[str] = None
+    openai_api_temperature: Optional[float] = 0.7
 
     jenkins_url: Optional[str] = None
     jenkins_username: Optional[str] = None

@@ -7,8 +7,7 @@ from rasa_sdk.events import UserUtteranceReverted
 from rasa_sdk.executor import CollectingDispatcher
 
 from actions.constant.server_settings import server_settings
-from actions.utils.azure_utils import query_chatgpt
-from actions.utils.langchain_utils import langchain_qa
+from actions.utils.langchain_utils import langchain_qa, query_chatgpt
 
 
 class ActionWeOpsFallback(Action):

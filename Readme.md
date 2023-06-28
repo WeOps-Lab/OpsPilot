@@ -53,18 +53,17 @@ pip install -r requirements.txt
 
 ### 参数说明
 
-| 参数                      | 说明                             | 可选配置                     |
-|-------------------------|--------------------------------|--------------------------|
-| FALLBACK_LLM            | 当OpsPilot无法处理的时候，使用LLM进行回复     | AZURE_OPENAI(微软云ChatGPT) |
-| FALLBACK_PROMPT         | 默认回复的PROMT                     |                          |                          |
-| AZURE_OPENAI_MODEL_NAME | Azure OpenAI上部署的模型名称           |                          |
-| AZURE_OPENAI_ENDPOINT   | Azure OpenAI上部署模型的终结点          |                          |
-| AZURE_OPENAI_KEY        | Azure OpenAI上部署模型使用的秘钥         |                          |
-| JENKINS_URL             | Jenkins URL,启用Jenkins自动化能力需要配置 |                          |
-| JENKINS_USERNAME        | Jenkins 用户名,启用Jenkins自动化能力需要配置 |                          |
-| JENKINS_PASSWORD        | Jenkins 密码,启用Jenkins自动化能力需要配置  |                          |
-| BING_SEARCH_URL         | Bing Search端点                  |                          |
-| BIND_SEARCH_KEY         | Bing Search密码                  |                          |
-| VEC_DB_PATH             | 向量数据库的路径                       |                          |
-| RUN_MODE                | 是否以开发模式运行                      |                          |
-| FALLBACK_CHAT_MODE      | LLM使用本地知识库模式还是闲聊模式             |                          |
+| 参数                 | 说明                             | 可选配置   |
+|--------------------|--------------------------------|--------|
+| FALLBACK_LLM       | 当OpsPilot无法处理的时候，使用LLM进行回复     | OPENAI |
+| FALLBACK_PROMPT    | 默认回复的PROMT                     |        |                          |
+| OPENAI_ENDPOINT    | OpenAI上部署模型的终结点                |        |
+| OPENAI_KEY         | OpenAI上部署模型使用的秘钥               |        |
+| JENKINS_URL        | Jenkins URL,启用Jenkins自动化能力需要配置 |        |
+| JENKINS_USERNAME   | Jenkins 用户名,启用Jenkins自动化能力需要配置 |        |
+| JENKINS_PASSWORD   | Jenkins 密码,启用Jenkins自动化能力需要配置  |        |
+| BING_SEARCH_URL    | Bing Search端点                  |        |
+| BIND_SEARCH_KEY    | Bing Search密码                  |        |
+| VEC_DB_PATH        | 向量数据库的路径                       |        |
+| RUN_MODE           | 是否以开发模式运行                      |        |
+| FALLBACK_CHAT_MODE | LLM使用本地知识库模式还是闲聊模式             |        |

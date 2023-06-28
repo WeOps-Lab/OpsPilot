@@ -1,7 +1,8 @@
 from langchain.agents import load_tools, AgentType, initialize_agent
-from langchain.chat_models import AzureChatOpenAI
+from langchain.chat_models import AzureChatOpenAI, ChatOpenAI
 from langchain.embeddings import HuggingFaceInstructEmbeddings, HuggingFaceEmbeddings
 from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.prompts import SystemMessagePromptTemplate, HumanMessagePromptTemplate, ChatPromptTemplate
 from langchain.tools import Tool
 from langchain.utilities import BingSearchAPIWrapper
 from langchain.vectorstores import Chroma
@@ -9,6 +10,7 @@ from langchain.text_splitter import CharacterTextSplitter
 from langchain import OpenAI, VectorDBQA, PromptTemplate, LLMChain
 from langchain.document_loaders import DirectoryLoader
 from langchain.chains import RetrievalQA, LLMRequestsChain, ConversationalRetrievalChain
+from rasa_sdk import logger
 
 from actions.constant.server_settings import server_settings
 
@@ -124,3 +126,20 @@ def chat_online(query):
                              format_instructions=FORMAT_INSTRUCTIONS
                              )
     return agent.run(query)
+
+
+def query_chatgpt(system_message, user_message):
+    logger.info(f'开始请求ChatGPT,system_prompt:[{system_message}],user_prompt:[{user_message}]')
+
+    llm = ChatOpenAI(openai_api_key=server_settings.openai_key,
+                     openai_api_base=server_settings.openai_endpoint,
+                     temperature=server_settings.openai_api_temperature)
+
+    system_message_prompt = SystemMessagePromptTemplate.from_template(system_message)
+    human_template = "{text}"
+    human_message_prompt = HumanMessagePromptTemplate.from_template(human_template)
+
+    chat_prompt = ChatPromptTemplate.from_messages([system_message_prompt, human_message_prompt])
+    chain = LLMChain(llm=llm, prompt=chat_prompt)
+    result = chain.run(user_message)
+    return result
