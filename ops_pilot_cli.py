@@ -68,7 +68,7 @@ class BootStrap(object):
         loader = DirectoryLoader(knowledge_path, glob=file_glob, show_progress=True)
         documents = loader.load()
 
-        text_splitter = SentenceTransformersTokenTextSplitter(model_name=model_name)
+        text_splitter = MarkdownTextSplitter()
         split_docs = text_splitter.split_documents(documents)
         embeddings = HuggingFaceEmbeddings(model_name=model_name, cache_folder=cache_folder,
                                            encode_kwargs={

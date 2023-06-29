@@ -34,7 +34,7 @@ def langchain_qa(doc_search, query):
 
     qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=doc_search.as_retriever(),
                                      return_source_documents=True, chain_type_kwargs=chain_type_kwargs)
-
+    qa.verbose = True
     result = qa({"query": query})
     return result
 

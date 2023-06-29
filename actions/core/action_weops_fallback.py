@@ -40,7 +40,7 @@ class ActionWeOpsFallback(Action):
                 return [UserUtteranceReverted()]
             else:
                 try:
-                    if server_settings.azure_openai_endpoint is None:
+                    if server_settings.openai_endpoint is None:
                         dispatcher.utter_message(text='WeOps智能助理联网检索能力没有打开,无法回答这个问题.')
                         return [UserUtteranceReverted()]
 
