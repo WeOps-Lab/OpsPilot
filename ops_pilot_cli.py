@@ -28,7 +28,7 @@ class BootStrap(object):
             if query == "exit":
                 break
             results = langchain_qa(doc_search, query)
-            print(results)
+            print(results['result'])
 
     def embed_website_knowledge(self, url: str,
                                 vec_db_path: str = 'vec_db', model_name: str = 'shibing624/text2vec-base-chinese',
