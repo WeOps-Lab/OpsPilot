@@ -3,7 +3,7 @@ from langchain.document_loaders import DirectoryLoader, RecursiveUrlLoader
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.text_splitter import MarkdownTextSplitter, TokenTextSplitter, SentenceTransformersTokenTextSplitter
 from langchain.vectorstores import Chroma
-
+import os
 from actions.utils.langchain_utils import langchain_qa
 
 
@@ -41,7 +41,7 @@ class BootStrap(object):
             model_name: Embedding所使用的模型名称
             cache_folder: Embedding所使用模型缓存的路径
         """
-        loader = RecursiveUrlLoader(url=url, show_progress=True)
+        loader = RecursiveUrlLoader(url=url)
         documents = loader.load()
 
         text_splitter = SentenceTransformersTokenTextSplitter(model_name=model_name)
@@ -79,4 +79,5 @@ class BootStrap(object):
 
 
 if __name__ == '__main__':
+    os.environ.setdefault('SENTENCE_TRANSFORMERS_HOME', './cache/models')
     fire.Fire(BootStrap)
