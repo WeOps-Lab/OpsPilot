@@ -1,7 +1,7 @@
 import fire
-from langchain.document_loaders import DirectoryLoader
+from langchain.document_loaders import DirectoryLoader, RecursiveUrlLoader
 from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.text_splitter import MarkdownTextSplitter
+from langchain.text_splitter import MarkdownTextSplitter, TokenTextSplitter, SentenceTransformersTokenTextSplitter
 from langchain.vectorstores import Chroma
 
 from actions.utils.langchain_utils import langchain_qa
@@ -30,9 +30,32 @@ class BootStrap(object):
             results = langchain_qa(doc_search, query)
             print(results)
 
-    def embed_knowledge(self, knowledge_path: str, file_glob: str = '**/*.md',
-                        vec_db_path: str = 'vec_db', model_name: str = 'shibing624/text2vec-base-chinese',
-                        cache_folder='cache/models'):
+    def embed_website_knowledge(self, url: str,
+                                vec_db_path: str = 'vec_db', model_name: str = 'shibing624/text2vec-base-chinese',
+                                cache_folder='cache/models'):
+        """
+        索引目标网站的信息，存放至Chroma的索引中
+        Args:
+            knowledge_path: 目标网站地址
+            vec_db_path: 向量数据库存放的路径
+            model_name: Embedding所使用的模型名称
+            cache_folder: Embedding所使用模型缓存的路径
+        """
+        loader = RecursiveUrlLoader(url=url, show_progress=True)
+        documents = loader.load()
+
+        text_splitter = SentenceTransformersTokenTextSplitter(model_name=model_name)
+        split_docs = text_splitter.split_documents(documents)
+        embeddings = HuggingFaceEmbeddings(model_name=model_name, cache_folder=cache_folder,
+                                           encode_kwargs={
+                                               'show_progress_bar': True
+                                           })
+        doc_search = Chroma.from_documents(split_docs, embeddings, persist_directory=vec_db_path)
+        doc_search.persist()
+
+    def embed_local_knowledge(self, knowledge_path: str, file_glob: str = '**/*.md',
+                              vec_db_path: str = 'vec_db', model_name: str = 'shibing624/text2vec-base-chinese',
+                              cache_folder='cache/models'):
         """
         索引目标路径下的文件，存放至Chroma的索引中
         Args:
@@ -45,7 +68,7 @@ class BootStrap(object):
         loader = DirectoryLoader(knowledge_path, glob=file_glob, show_progress=True)
         documents = loader.load()
 
-        text_splitter = MarkdownTextSplitter()
+        text_splitter = SentenceTransformersTokenTextSplitter(model_name=model_name)
         split_docs = text_splitter.split_documents(documents)
         embeddings = HuggingFaceEmbeddings(model_name=model_name, cache_folder=cache_folder,
                                            encode_kwargs={

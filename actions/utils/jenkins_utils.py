@@ -3,7 +3,7 @@ from jenkinsapi.utils.crumb_requester import CrumbRequester
 from rasa_sdk import logger
 
 from actions.constant.server_settings import server_settings
-from actions.utils.azure_utils import query_chatgpt
+from actions.utils.langchain_utils import query_chatgpt
 
 
 def get_jenkins_instance():
