@@ -32,8 +32,8 @@ nlu:
 
   - intent: greet
     examples: |
-      - 你好！
-      - 您好！
+      - 你好
+      - 您好
       - hello!
       - hi
       - 喂
@@ -41,8 +41,8 @@ nlu:
 
   - intent: goodbye
     examples: |
-      - 拜拜！
-      - 再见！
+      - 拜拜
+      - 再见
       - 拜
       - 退出
       - 结束
