@@ -46,7 +46,7 @@ pipeline:
     epochs: 1000
   #    retrieval_intent: chitchat
   - name: FallbackClassifier
-    threshold: 0.90
+    threshold: 0.89
 
 policies:
   - name: MemoizationPolicy
@@ -62,5 +62,5 @@ policies:
     tensorboard_log_directory: "./tensorboard"
     tensorboard_log_level: "epoch"
   - name: RulePolicy
-    core_fallback_threshold: 0.9
+    core_fallback_threshold: 0.89
     core_fallback_action_name: "action_weops_fallback"
