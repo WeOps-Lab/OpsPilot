@@ -11,4 +11,6 @@ def test_query_online():
 
 
 def test_query_chatgpt():
-    print(query_chatgpt("扮演专业的Python开发工程师", "如何学习Python"))
+    print(query_chatgpt("扮演专业的Python开发工程师", "Python最新的版本是多少"))
+
+

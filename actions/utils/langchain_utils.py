@@ -40,11 +40,9 @@ def langchain_qa(doc_search, query):
 
 
 def query_online(url, query):
-    llm = AzureChatOpenAI(openai_api_base=server_settings.azure_openai_endpoint,
-                          openai_api_key=server_settings.azure_openai_key,
-                          deployment_name=server_settings.azure_openai_model_name,
-                          temperature=server_settings.azure_openai_api_temperature,
-                          openai_api_version=server_settings.azure_openai_api_version)
+    llm = ChatOpenAI(openai_api_key=server_settings.openai_key,
+                     openai_api_base=server_settings.openai_endpoint,
+                     temperature=server_settings.openai_api_temperature)
 
     template = """在 >>> 和 <<< 之间是网页的返回的HTML内容。
     
@@ -72,6 +70,7 @@ def chat_online(query):
     llm = ChatOpenAI(openai_api_key=server_settings.openai_key,
                      openai_api_base=server_settings.openai_endpoint,
                      temperature=server_settings.openai_api_temperature)
+
     search = BingSearchAPIWrapper(bing_subscription_key=server_settings.bing_search_key,
                                   bing_search_url=server_settings.bing_search_url)
     tools = [
