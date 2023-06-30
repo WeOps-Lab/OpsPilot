@@ -10,3 +10,11 @@ stories:
     steps:
       - intent: goodbye
       - action: utter_goodbye
+
+
+  - story: 无法理解
+    steps:
+      - intent: out_of_scope
+      - action: action_pre_weops_fallback
+      - action: action_weops_fallback
+      - action: action_post_weops_fallback
