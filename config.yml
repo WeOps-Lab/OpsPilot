@@ -64,4 +64,3 @@ policies:
   - name: RulePolicy
     core_fallback_threshold: 0.9
     core_fallback_action_name: "action_weops_fallback"
-    enable_fallback_prediction: true

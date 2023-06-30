@@ -22,11 +22,10 @@ action_endpoint:
 #  password:
 #  db: rasa-ops
 
-#
-#tracker_store:
-#    type: SQL
-#    dialect: "postgresql"
-#    url: ""
-#    db: "rasa"
-#    username:
-#    password:
+tracker_store:
+    type: SQL
+    dialect: "sqlite"
+    url: ""
+    db: "rasa-tracker.db"
+    username:
+    password:

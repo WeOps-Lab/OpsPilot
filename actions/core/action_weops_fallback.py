@@ -34,6 +34,9 @@ class ActionWeOpsFallback(Action):
 
         logger.info(f'无法识别用户的意图，进入默认Fallback，用户输入的信息为:{user_msg}')
         logger.info(f'TOP3 Intent结果如下：{tracker.latest_message["intent_ranking"][0:3]}')
+
+        # TODO: 先从本地知识文件中检索可能的内容，直接回复，假如没有，转给GPT进行查找总结
+
         if tracker.active_loop_name is None:
             if run_mode == 'DEV':
                 dispatcher.utter_message(text='OpsPilot当前运行在开发模式，没有办法回复这些复杂的问题哦')

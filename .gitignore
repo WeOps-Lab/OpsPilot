@@ -20,3 +20,4 @@ tensorboard
 .chroma
 train_data
 data/OpsPilot-WeOps-Addon
+rasa-tracker.db

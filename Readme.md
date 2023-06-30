@@ -67,3 +67,9 @@ pip install -r requirements.txt
 | VEC_DB_PATH        | 向量数据库的路径                       |        |
 | RUN_MODE           | 是否以开发模式运行                      |        |
 | FALLBACK_CHAT_MODE | LLM使用本地知识库模式还是闲聊模式             |        |
+
+# 版本说明
+
+## 0.1
+
+* 完成基础框架搭建
