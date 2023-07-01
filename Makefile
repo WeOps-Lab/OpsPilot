@@ -2,8 +2,8 @@ train:
 	rasa train -d data
 
 run:
-	rasa run --enable-api --cors "*" --debug
-	#RASA_TELEMETRY_ENABLED=false  SANIC_WORKERS=5 ACTION_SERVER_SANIC_WORKERS=5
+	rasa run --enable-api --cors "*"
+	#RASA_TELEMETRY_ENABLED=false  SANIC_WORKERS=5 ACTION_SERVER_SANIC_WORKERS=5 --debug
 
 
 actions:
@@ -25,3 +25,7 @@ prepare:
 release:
 	docker build -t ccr.ccs.tencentyun.com/megalab/ops-pilot .
 	docker push ccr.ccs.tencentyun.com/megalab/ops-pilot
+
+valid:
+	rasa data split nlu -u data/
+	rasa test nlu --nlu data/   #--cross-validation --config config_1.yml config_2.yml --runs 4 --percentages 0 25 50 70 90
