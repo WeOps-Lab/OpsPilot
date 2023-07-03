@@ -2,7 +2,6 @@ recipe: default.v1
 assistant_id: weops-chatbot
 language: zh
 
-
 pipeline:
   - name: "JiebaTokenizer"
   #    dictionary_path: "./dictionary"
