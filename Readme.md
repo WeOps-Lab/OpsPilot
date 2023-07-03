@@ -7,6 +7,7 @@ OpsPilot是一个基于Rasa和LLM技术的ChatBot，为运维系统提供ChatOps
 
 <img src="./docs/images/chatbot.png" >
 
+
 ## 使用场景
 
 ### Jenkins
@@ -28,6 +29,15 @@ export AZURE_OPENAI_KEY=
 cd ./support-files/
 docker-compose up -d
 ```
+
+### 开发环境搭建
+Python:3.10
+```
+pip install -r ./requirements.txt
+pip install -r ./requirements-test.txt
+```
+
+常用指令参考Makefile
 
 ### 常见问题
 
