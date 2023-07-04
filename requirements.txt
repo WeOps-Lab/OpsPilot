@@ -20,3 +20,4 @@ sentence_transformers==2.2.2
 
 pgvector==0.1.8
 faiss-cpu==1.7.4
+pymysql==1.1.0

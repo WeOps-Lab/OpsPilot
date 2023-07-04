@@ -23,9 +23,9 @@ action_endpoint:
 #  db: rasa-ops
 
 tracker_store:
-    type: SQL
-    dialect: "sqlite"
-    url: ""
-    db: "rasa-tracker.db"
-    username:
-    password:
+  type: SQL
+  dialect: "sqlite"
+  url: ""
+  db: "rasa-tracker.db"
+  username:
+  password:
