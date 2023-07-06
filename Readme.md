@@ -7,15 +7,6 @@ OpsPilot是一个基于Rasa和LLM技术的ChatBot，为运维系统提供ChatOps
 
 <img src="./docs/images/chatbot.png" >
 
-
-## 使用场景
-
-### Jenkins
-
-* 列出Jenkins上的流水线
-* 构建指定流水线
-* 查找包含指定名称的流水线
-
 > 场景化模型处于闭源状态，需要的小伙伴可以通过添加“小嘉”微信，加入官方沟通群，获取专业的场景化模型哦
 >
 <img src="./docs/images/canway.jpeg" width="30%" height="30%">
@@ -31,7 +22,9 @@ docker-compose up -d
 ```
 
 ### 开发环境搭建
+
 Python:3.10
+
 ```
 pip install -r ./requirements.txt
 pip install -r ./requirements-test.txt
@@ -83,3 +76,6 @@ pip install -r requirements.txt
 ## 0.1
 
 * 完成基础框架搭建
+* 支持ChatGPT闲聊模式
+* 支持索引目标网站、本地PDF知识，完成本地知识问答
+* 支持基于Intent的运维能力整合
