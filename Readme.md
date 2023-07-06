@@ -2,39 +2,54 @@
 
 <img src="https://wedoc.canway.net/imgs/img/嘉为蓝鲸.jpg" >
 
+OpsPilot是一个基于Rasa和LLM技术的，专注于运维领域的AI领航员，主要提供以下能力：
 
-OpsPilot是一个基于Rasa和LLM技术的ChatBot，为运维系统提供ChatOps/LMOps的能力
+* 运维能力沉淀：通过将运维的知识、运维技能、排查动作进行沉淀，在解决问题的时候以领航员的形态，通过对话的方式指引用户解决运维问题
+* 本地知识问答：通过对本地知识、互联网知识进行索引，结合LLM的能力，回复用户的各种运维问题
+* LLM聊天：当问题超出OpsPilot能够处理的范围的时候，使用LLM的能力解决各种长尾问题
 
 <img src="./docs/images/chatbot.png" >
+
+# 场景化模型
 
 > 场景化模型处于闭源状态，需要的小伙伴可以通过添加“小嘉”微信，加入官方沟通群，获取专业的场景化模型哦
 >
 <img src="./docs/images/canway.jpeg" width="30%" height="30%">
 
-### 部署
+# 部署
 
 ```
-export AZURE_OPENAI_MODEL_NAME=
-export AZURE_OPENAI_ENDPOINT=
-export AZURE_OPENAI_KEY=
+export OPENAI_ENDPOINT=
+export OPENAI_KEY=
 cd ./support-files/
 docker-compose up -d
 ```
 
-### 开发环境搭建
+# 开发环境搭建
 
-Python:3.10
+使用 Python 3.10版本
 
 ```
+virtualenv venv -p python3.10
 pip install -r ./requirements.txt
 pip install -r ./requirements-test.txt
 ```
 
-常用指令参考Makefile
+启动OpsPilot NLU 服务
 
-### 常见问题
+```
+rasa run --enable-api --cors "*"
+```
 
-#### 如何启用WebSocket的JWT验证
+启动OpsPilot Actions服务
+
+```
+rasa run actions --auto-reload
+```
+
+# 常见问题
+
+## 如何启用WebSocket的JWT验证
 
 修改`credentials.yml`,添加`jwt_key`、`jwt_method`配置即可
 
@@ -47,14 +62,14 @@ socketio:
   jwt_method: HS256
 ```
 
-### Mac如何安装requirements.txt
+## Mac如何安装requirements.txt
 
 ```
 export HNSWLIB_NO_NATIVE=1  
 pip install -r requirements.txt
 ```
 
-### 参数说明
+# 参数说明
 
 | 参数                 | 说明                             | 可选配置   |
 |--------------------|--------------------------------|--------|
