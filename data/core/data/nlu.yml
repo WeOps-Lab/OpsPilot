@@ -13,6 +13,8 @@ nlu:
       - 好的没问题
       - 确认
       - 好的没错
+      - gpt 你还在吗
+      - Gpt 挂了没
 
   - intent: deny
     examples: |

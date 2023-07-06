@@ -141,23 +141,12 @@ class JiebaTokenizer(Tokenizer):
     # 对给定的消息属性进行分词，并返回分词后的 Token 列表。
     def tokenize(self, message: Message, attribute: Text) -> List[ExtendedToken]:
         """Tokenizes the text of the provided attribute of the incoming message."""
-        import jieba.posseg as pseg
+        import jieba
 
         text = message.get(attribute)
 
-        tokenized = pseg.cut(text)
-        tokens = []
-        current_position = 0
-        for word, flag in tokenized:
-            if word.strip() == "":
-                continue
-            word_start = text.find(word, current_position)
-            word_end = word_start + len(word)
-            tokens.append(ExtendedToken(word, word_start, word_end, pos=flag))
-            current_position = word_end
-
-        # for token in tokens:
-        #     print(f"Word: {token.text}, POS: {token.pos}")
+        tokenized = jieba.tokenize(text)
+        tokens = [Token(word, start) for (word, start, end) in tokenized if word.strip()]
 
         return self._apply_token_pattern(tokens)
 
