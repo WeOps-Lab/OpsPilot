@@ -23,6 +23,10 @@ services:
     environment:
       - OPENAI_ENDPOINT=${OPENAI_ENDPOINT}
       - OPENAI_KEY=${OPENAI_KEY}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_DB=${REDIS_DB}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
       - RUN_MODE=PROD
       - VEC_DB_PATH=vec_db
       - CHAT_MODE=knowledgebase
