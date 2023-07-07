@@ -1,12 +1,13 @@
 import os
 
 import fire
+from langchain.document_loaders import PyPDFium2Loader, UnstructuredFileLoader
 from langchain.document_loaders.recursive_url_loader import RecursiveUrlLoader
-from langchain.document_loaders import DirectoryLoader
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.text_splitter import MarkdownTextSplitter, SentenceTransformersTokenTextSplitter, \
     RecursiveCharacterTextSplitter
 from langchain.vectorstores import Chroma
+from tqdm import tqdm
 
 from actions.utils.langchain_utils import langchain_qa
 from actions.utils.redis_utils import RedisUtils
@@ -62,7 +63,7 @@ class BootStrap(object):
         doc_search = Chroma.from_documents(split_docs, embeddings, persist_directory=vec_db_path)
         doc_search.persist()
 
-    def embed_local_knowledge(self, knowledge_path: str, file_glob: str = '**/*.pdf',
+    def embed_local_knowledge(self, knowledge_path: str,
                               vec_db_path: str = 'vec_db', model_name: str = 'shibing624/text2vec-base-chinese',
                               cache_folder='cache/models'):
         """
@@ -74,16 +75,26 @@ class BootStrap(object):
             model_name: Embedding所使用的模型名称
             cache_folder: Embedding所使用模型缓存的路径
         """
-        loader = DirectoryLoader(knowledge_path, glob=file_glob, show_progress=True)
-        documents = loader.load()
+        knowledge_files = []
+        for root, dirs, files in os.walk(knowledge_path, topdown=False):
+            for name in files:
+                knowledge_files.append(os.path.join(root, name))
 
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=200)
-        split_docs = text_splitter.split_documents(documents)
+        knowledge_docs = []
+        for knowledge_file in tqdm(knowledge_files):
+            if knowledge_file.lower().endswith(".md"):
+                loader = UnstructuredFileLoader(knowledge_file, mode="elements")
+                text_splitter = MarkdownTextSplitter()
+                knowledge_docs += loader.load_and_split(text_splitter)
+            elif knowledge_file.lower().endswith(".pdf"):
+                loader = PyPDFium2Loader(knowledge_file)
+                text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+                knowledge_docs += loader.load_and_split(text_splitter)
         embeddings = HuggingFaceEmbeddings(model_name=model_name, cache_folder=cache_folder,
                                            encode_kwargs={
                                                'show_progress_bar': True
                                            })
-        doc_search = Chroma.from_documents(split_docs, embeddings, persist_directory=vec_db_path)
+        doc_search = Chroma.from_documents(knowledge_docs, embeddings, persist_directory=vec_db_path)
         doc_search.persist()
 
 
