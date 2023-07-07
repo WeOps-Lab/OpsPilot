@@ -95,7 +95,7 @@ pip install -r requirements.txt
 
 ## 0.2
 
-* [feature]Prompt配置存放至Redis中
+* Prompt配置存放至Redis中
 
 ## 0.1
 
