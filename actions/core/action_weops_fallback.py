@@ -1,5 +1,6 @@
 from typing import Any, Text, Dict, List
 
+import redis
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import Chroma
 from rasa_sdk import Action, Tracker, logger
@@ -21,6 +22,11 @@ class ActionWeOpsFallback(Action):
                                                    'show_progress_bar': True
                                                })
             self.doc_search = Chroma(persist_directory=server_settings.vec_db_path, embedding_function=embeddings)
+        redis_pool = redis.ConnectionPool(host=server_settings.redis_host,
+                                          port=server_settings.redis_port,
+                                          db=server_settings.redis_db,
+                                          password=server_settings.redis_password)
+        self.redis_client = redis.Redis(connection_pool=redis_pool)
 
     def name(self) -> Text:
         return "action_weops_fallback"
@@ -29,7 +35,7 @@ class ActionWeOpsFallback(Action):
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         user_msg = tracker.latest_message['text']
-        system_prompt = server_settings.fallback_prompt
+
         run_mode = server_settings.run_mode
 
         logger.info(f'无法识别用户的意图，进入默认Fallback，用户输入的信息为:{user_msg}')
@@ -55,7 +61,8 @@ class ActionWeOpsFallback(Action):
                         user_messages.insert(0, event.get("text"))
 
                     if server_settings.fallback_chat_mode == 'knowledgebase':
-                        result = langchain_qa(self.doc_search, user_msg)
+                        prompt_template = self.redis_client.get('prompt_template').decode('utf-8')
+                        result = langchain_qa(self.doc_search, prompt_template, user_msg)
                         logger.info(f'GPT本地知识问答:问题[{user_msg}],回复:[{result}]')
                         dispatcher.utter_message(text=result['result'])
                     else:
@@ -65,6 +72,7 @@ class ActionWeOpsFallback(Action):
                         user_prompt += user_msg
 
                         if user_prompt != '':
+                            system_prompt = self.redis_client.get('fallback_prompt').decode('utf-8')
                             result = query_chatgpt(system_prompt, user_prompt)
                         logger.info(f'GPT问答模式:问题[{user_msg}],回复:[{result}]')
                         dispatcher.utter_message(text=result)

@@ -1,6 +1,7 @@
 import os
 from typing import Optional
 
+import redis
 from pydantic import BaseSettings
 
 
@@ -21,6 +22,10 @@ class ServerSettings(BaseSettings):
     bing_search_key: Optional[str] = None
 
     vec_db_path: Optional[str] = None
+    redis_host: str
+    redis_port: int
+    redis_db: int
+    redis_password: str
 
     run_mode: str = 'Dev'
     fallback_chat_mode: str = 'knowledgebase'

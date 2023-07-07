@@ -33,6 +33,8 @@ docker-compose up -d
 virtualenv venv -p python3.10
 pip install -r ./requirements.txt
 pip install -r ./requirements-test.txt
+
+python ./ops_pilot_cli.py init_data
 ```
 
 启动OpsPilot NLU 服务
@@ -74,7 +76,6 @@ pip install -r requirements.txt
 | 参数                 | 说明                             | 可选配置   |
 |--------------------|--------------------------------|--------|
 | FALLBACK_LLM       | 当OpsPilot无法处理的时候，使用LLM进行回复     | OPENAI |
-| FALLBACK_PROMPT    | 默认回复的PROMT                     |        |                          |
 | OPENAI_ENDPOINT    | OpenAI上部署模型的终结点                |        |
 | OPENAI_KEY         | OpenAI上部署模型使用的秘钥               |        |
 | JENKINS_URL        | Jenkins URL,启用Jenkins自动化能力需要配置 |        |
@@ -85,8 +86,16 @@ pip install -r requirements.txt
 | VEC_DB_PATH        | 向量数据库的路径                       |        |
 | RUN_MODE           | 是否以开发模式运行                      |        |
 | FALLBACK_CHAT_MODE | LLM使用本地知识库模式还是闲聊模式             |        |
+| REDIS_HOST         | Redis IP地址                     |        |
+| REDIS_PORT         | Redis 端口号                      |        |
+| REDIS_DB           | Redis 数据库号                     |        |
+| REDIS_PASSWORD     | Redis 密码                       |        |
 
 # 版本说明
+
+## 0.2
+
+* [feature]Prompt配置存放至Redis中
 
 ## 0.1
 

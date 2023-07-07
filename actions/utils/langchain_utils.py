@@ -1,32 +1,20 @@
-from langchain.agents import load_tools, AgentType, initialize_agent
-from langchain.chat_models import AzureChatOpenAI, ChatOpenAI
-from langchain.embeddings import HuggingFaceInstructEmbeddings, HuggingFaceEmbeddings
-from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain import PromptTemplate, LLMChain
+from langchain.agents import AgentType, initialize_agent
+from langchain.chains import RetrievalQA, LLMRequestsChain
+from langchain.chat_models import ChatOpenAI
 from langchain.prompts import SystemMessagePromptTemplate, HumanMessagePromptTemplate, ChatPromptTemplate
 from langchain.tools import Tool
 from langchain.utilities import BingSearchAPIWrapper
-from langchain.vectorstores import Chroma
-from langchain.text_splitter import CharacterTextSplitter
-from langchain import OpenAI, VectorDBQA, PromptTemplate, LLMChain
-from langchain.document_loaders import DirectoryLoader
-from langchain.chains import RetrievalQA, LLMRequestsChain, ConversationalRetrievalChain
 from rasa_sdk import logger
 
 from actions.constant.server_settings import server_settings
 
 
-def langchain_qa(doc_search, query):
+def langchain_qa(doc_search, prompt_template, query):
     llm = ChatOpenAI(openai_api_key=server_settings.openai_key,
                      openai_api_base=server_settings.openai_endpoint,
                      temperature=server_settings.openai_api_temperature)
 
-    prompt_template = """Use the following pieces of context to answer the question at the end.
-     If you don't know the answer, just say that you don't know, don't try to make up an answer.
-
-    {context}
-
-    Question: {question}
-    Answer in Chinese:"""
     PROMPT = PromptTemplate(
         template=prompt_template, input_variables=["context", "question"]
     )
