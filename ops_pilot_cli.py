@@ -1,9 +1,11 @@
 import os
 
 import fire
-from langchain.document_loaders import DirectoryLoader, RecursiveUrlLoader
+from langchain.document_loaders.recursive_url_loader import RecursiveUrlLoader
+from langchain.document_loaders import DirectoryLoader
 from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.text_splitter import MarkdownTextSplitter, SentenceTransformersTokenTextSplitter
+from langchain.text_splitter import MarkdownTextSplitter, SentenceTransformersTokenTextSplitter, \
+    RecursiveCharacterTextSplitter
 from langchain.vectorstores import Chroma
 
 from actions.utils.langchain_utils import langchain_qa
@@ -60,7 +62,7 @@ class BootStrap(object):
         doc_search = Chroma.from_documents(split_docs, embeddings, persist_directory=vec_db_path)
         doc_search.persist()
 
-    def embed_local_knowledge(self, knowledge_path: str, file_glob: str = '**/*.md',
+    def embed_local_knowledge(self, knowledge_path: str, file_glob: str = '**/*.pdf',
                               vec_db_path: str = 'vec_db', model_name: str = 'shibing624/text2vec-base-chinese',
                               cache_folder='cache/models'):
         """
@@ -75,7 +77,7 @@ class BootStrap(object):
         loader = DirectoryLoader(knowledge_path, glob=file_glob, show_progress=True)
         documents = loader.load()
 
-        text_splitter = MarkdownTextSplitter()
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=200)
         split_docs = text_splitter.split_documents(documents)
         embeddings = HuggingFaceEmbeddings(model_name=model_name, cache_folder=cache_folder,
                                            encode_kwargs={

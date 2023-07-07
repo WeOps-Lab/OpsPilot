@@ -63,7 +63,10 @@ socketio:
   jwt_key: key
   jwt_method: HS256
 ```
-
+## 如何将docusaurus的网页转换成PDF文件
+```
+npx docusaurus-prince-pdf -u xxx
+```
 ## Mac如何安装requirements.txt
 
 ```

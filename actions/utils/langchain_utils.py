@@ -18,7 +18,7 @@ def langchain_qa(doc_search, prompt_template, query):
     PROMPT = PromptTemplate(
         template=prompt_template, input_variables=["context", "question"]
     )
-    chain_type_kwargs = {"prompt": PROMPT}
+    chain_type_kwargs = {"prompt": PROMPT, "verbose": True}
 
     qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=doc_search.as_retriever(),
                                      return_source_documents=True, chain_type_kwargs=chain_type_kwargs)
