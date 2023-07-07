@@ -9,24 +9,12 @@ from actions.constant.server_settings import server_settings
 from actions.utils.langchain_utils import langchain_qa
 import redis
 
+from actions.utils.redis_utils import RedisUtils
+
 
 class BootStrap(object):
     def init_data(self):
-        redis_pool = redis.ConnectionPool(host=server_settings.redis_host,
-                                          port=server_settings.redis_port,
-                                          db=server_settings.redis_db,
-                                          password=server_settings.redis_password)
-        redis_client = redis.Redis(connection_pool=redis_pool)
-        logger.info('初始化OpsPilot默认参数')
-        redis_client.set('fallback_prompt', '扮演专业的运维工程师')
-        redis_client.set('prompt_template', """Use the following pieces of context to answer the question at the end.
-     If you don't know the answer, just say that you don't know, don't try to make up an answer.
-
-    {context}
-
-    Question: {question}
-    Answer in Chinese:""")
-        logger.info('参数初始化完成')
+        RedisUtils.set_default_prompt()
 
     def query_embed_knowledge(self, model_name: str = 'shibing624/text2vec-base-chinese',
                               cache_folder='cache/models', vec_db_path: str = 'vec_db'):
@@ -48,7 +36,7 @@ class BootStrap(object):
                                           db=server_settings.redis_db,
                                           password=server_settings.redis_password)
         redis_client = redis.Redis(connection_pool=redis_pool)
-        prompt_template = redis_client.get('prompt_template').decode('utf-8')
+        prompt_template = RedisUtils.get_prompt_template()
         while True:
             query = input("请输入问题（输入exit退出终端）：")
             if query == "exit":

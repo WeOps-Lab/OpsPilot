@@ -9,6 +9,7 @@ from rasa_sdk.executor import CollectingDispatcher
 
 from actions.constant.server_settings import server_settings
 from actions.utils.langchain_utils import langchain_qa, query_chatgpt
+from actions.utils.redis_utils import RedisUtils
 
 
 class ActionWeOpsFallback(Action):
@@ -61,7 +62,7 @@ class ActionWeOpsFallback(Action):
                         user_messages.insert(0, event.get("text"))
 
                     if server_settings.fallback_chat_mode == 'knowledgebase':
-                        prompt_template = self.redis_client.get('prompt_template').decode('utf-8')
+                        prompt_template = RedisUtils.get_prompt_template()
                         result = langchain_qa(self.doc_search, prompt_template, user_msg)
                         logger.info(f'GPT本地知识问答:问题[{user_msg}],回复:[{result}]')
                         dispatcher.utter_message(text=result['result'])
@@ -72,7 +73,7 @@ class ActionWeOpsFallback(Action):
                         user_prompt += user_msg
 
                         if user_prompt != '':
-                            system_prompt = self.redis_client.get('fallback_prompt').decode('utf-8')
+                            system_prompt = RedisUtils.get_fallback_prompt()
                             result = query_chatgpt(system_prompt, user_prompt)
                         logger.info(f'GPT问答模式:问题[{user_msg}],回复:[{result}]')
                         dispatcher.utter_message(text=result)
