@@ -124,6 +124,8 @@ def query_chatgpt(system_message, user_message):
     human_message_prompt = HumanMessagePromptTemplate.from_template(human_template)
 
     chat_prompt = ChatPromptTemplate.from_messages([system_message_prompt, human_message_prompt])
+
     chain = LLMChain(llm=llm, prompt=chat_prompt)
+
     result = chain.run(user_message)
     return result

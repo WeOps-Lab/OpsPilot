@@ -9,7 +9,7 @@ markdownify==0.11.6
 
 neo4j==5.9.0
 
-langchain==0.0.218
+langchain==0.0.225
 typing-inspect==0.8.0
 typing_extensions==4.5.0
 tiktoken==0.4.0
@@ -21,3 +21,4 @@ sentence_transformers==2.2.2
 pgvector==0.1.8
 faiss-cpu==1.7.4
 pymysql==1.1.0
+gptcache==0.1.34

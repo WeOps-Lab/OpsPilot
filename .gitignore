@@ -22,3 +22,4 @@ train_data
 data/OpsPilot-WeOps-Addon
 rasa-tracker.db
 train_test_split
+langchain.db
