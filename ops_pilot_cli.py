@@ -1,7 +1,7 @@
 import os
 
 import fire
-from langchain.document_loaders import PyPDFium2Loader, UnstructuredFileLoader
+from langchain.document_loaders import PyPDFium2Loader, UnstructuredFileLoader, TextLoader, UnstructuredMarkdownLoader
 from langchain.document_loaders.recursive_url_loader import RecursiveUrlLoader
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.text_splitter import MarkdownTextSplitter, SentenceTransformersTokenTextSplitter, \
@@ -37,6 +37,7 @@ class BootStrap(object):
             query = input("请输入问题（输入exit退出终端）：")
             if query == "exit":
                 break
+            # print(doc_search.similarity_search(query,k=5))
             results = langchain_qa(doc_search, prompt_template, query)
             print(results['result'])
 
@@ -83,8 +84,8 @@ class BootStrap(object):
         knowledge_docs = []
         for knowledge_file in tqdm(knowledge_files):
             if knowledge_file.lower().endswith(".md"):
-                loader = UnstructuredFileLoader(knowledge_file, mode="elements")
-                text_splitter = MarkdownTextSplitter()
+                loader = UnstructuredMarkdownLoader(knowledge_file)
+                text_splitter = MarkdownTextSplitter(chunk_size=1000, chunk_overlap=0)
                 knowledge_docs += loader.load_and_split(text_splitter)
             elif knowledge_file.lower().endswith(".pdf"):
                 loader = PyPDFium2Loader(knowledge_file)
