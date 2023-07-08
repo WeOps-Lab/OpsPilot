@@ -14,13 +14,12 @@ def langchain_qa(doc_search, prompt_template, query):
     llm = ChatOpenAI(openai_api_key=server_settings.openai_key,
                      openai_api_base=server_settings.openai_endpoint,
                      temperature=server_settings.openai_api_temperature)
-
     PROMPT = PromptTemplate(
         template=prompt_template, input_variables=["context", "question"]
     )
     chain_type_kwargs = {"prompt": PROMPT, "verbose": True}
 
-    retriever = doc_search.as_retriever() #search_type="mmr"
+    retriever = doc_search.as_retriever()  # search_type="mmr"
     retriever.search_kwargs = {'k': 5}
     qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever,
                                      return_source_documents=True, chain_type_kwargs=chain_type_kwargs)

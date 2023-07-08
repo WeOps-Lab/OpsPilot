@@ -6,6 +6,9 @@ from langchain.vectorstores import Chroma
 from rasa_sdk import Action, Tracker, logger
 from rasa_sdk.events import UserUtteranceReverted
 from rasa_sdk.executor import CollectingDispatcher
+from whoosh import qparser
+from whoosh.index import open_dir
+from whoosh.qparser import QueryParser
 
 from actions.constant.server_settings import server_settings
 from actions.utils.langchain_utils import langchain_qa, query_chatgpt
@@ -28,6 +31,7 @@ class ActionWeOpsFallback(Action):
                                           db=server_settings.redis_db,
                                           password=server_settings.redis_password)
         self.redis_client = redis.Redis(connection_pool=redis_pool)
+        self.ix = open_dir("indexdir", indexname='doc_index')
 
     def name(self) -> Text:
         return "action_weops_fallback"
@@ -63,6 +67,17 @@ class ActionWeOpsFallback(Action):
 
                     if server_settings.fallback_chat_mode == 'knowledgebase':
                         prompt_template = RedisUtils.get_prompt_template()
+                        if '{index_context}' in prompt_template:
+                            with self.ix.searcher() as searcher:
+                                index_context = ''
+                                search_query = QueryParser("content", self.ix.schema, group=qparser.OrGroup).parse(
+                                    user_msg)
+                                query_result = searcher.search(search_query, limit=2)
+                                if len(query_result) > 0:
+                                    for result in query_result:
+                                        index_context += result['content'] + '\n'
+                            prompt_template = prompt_template.replace('{index_context}', index_context)
+
                         result = langchain_qa(self.doc_search, prompt_template, user_msg)
                         logger.info(f'GPT本地知识问答:问题[{user_msg}],回复:[{result}]')
                         dispatcher.utter_message(text=result['result'])
