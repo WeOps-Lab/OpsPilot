@@ -99,6 +99,7 @@ pip install -r requirements.txt
 ## 0.2
 
 * Prompt配置存放至Redis中
+* 采用倒排索引+语义检索两种模式，提升LLM推理准确率
 
 ## 0.1
 
