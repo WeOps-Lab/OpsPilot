@@ -1,27 +1,25 @@
 from __future__ import annotations
+
 import glob
 import logging
 import os
+import re
 import shutil
 from typing import Any, Dict, List, Optional, Text
-import re
 
 from rasa.engine.graph import ExecutionContext
 from rasa.engine.recipes.default_recipe import DefaultV1Recipe
 from rasa.engine.storage.resource import Resource
 from rasa.engine.storage.storage import ModelStorage
-
+from rasa.nlu.constants import TOKENS_NAMES, MESSAGE_ATTRIBUTES
 from rasa.nlu.tokenizers.tokenizer import Token, Tokenizer
-from rasa.shared.nlu.training_data.message import Message
-from rasa.shared.nlu.constants import TEXT_TOKENS
-from rasa.shared.nlu.training_data.training_data import TrainingData
 from rasa.shared.nlu.constants import (
     INTENT,
-    INTENT_RESPONSE_KEY,
     RESPONSE_IDENTIFIER_DELIMITER,
     ACTION_NAME,
 )
-from rasa.nlu.constants import TOKENS_NAMES, MESSAGE_ATTRIBUTES
+from rasa.shared.nlu.training_data.message import Message
+from rasa.shared.nlu.training_data.training_data import TrainingData
 
 logger = logging.getLogger(__name__)
 

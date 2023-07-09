@@ -11,7 +11,8 @@ from whoosh.index import open_dir
 from whoosh.qparser import QueryParser
 
 from actions.constant.server_settings import server_settings
-from actions.utils.langchain_utils import langchain_qa, query_chatgpt
+from actions.utils.indexer_utils import Searcher
+from actions.utils.langchain_utils import langchain_qa, query_chatgpt, query_online, chat_online
 from actions.utils.redis_utils import RedisUtils
 
 
@@ -19,6 +20,7 @@ class ActionWeOpsFallback(Action):
 
     def __init__(self) -> None:
         super().__init__()
+        self.searcher = Searcher()
         if server_settings.vec_db_path is not None:
             embeddings = HuggingFaceEmbeddings(model_name='shibing624/text2vec-base-chinese',
                                                cache_folder='cache/models',
@@ -67,20 +69,16 @@ class ActionWeOpsFallback(Action):
 
                     if server_settings.fallback_chat_mode == 'knowledgebase':
                         prompt_template = RedisUtils.get_prompt_template()
-                        if '{index_context}' in prompt_template:
-                            with self.ix.searcher() as searcher:
-                                index_context = ''
-                                search_query = QueryParser("content", self.ix.schema, group=qparser.OrGroup).parse(
-                                    user_msg)
-                                query_result = searcher.search(search_query, limit=2)
-                                if len(query_result) > 0:
-                                    for result in query_result:
-                                        index_context += result['content'] + '\n'
-                            prompt_template = prompt_template.replace('{index_context}', index_context)
+                        prompt_template = self.searcher.format_prompt(prompt_template, user_msg)
 
                         result = langchain_qa(self.doc_search, prompt_template, user_msg)
+
                         logger.info(f'GPT本地知识问答:问题[{user_msg}],回复:[{result}]')
                         dispatcher.utter_message(text=result['result'])
+                    elif server_settings.fallback_chat_mode == 'online_knowledgebase':
+                        result = chat_online(user_msg)
+                        logger.info(f'GPT本地知识问答:问题[{user_msg}],回复:[{result}]')
+                        dispatcher.utter_message(text=result)
                     else:
                         user_prompt = ''
                         for user_message in user_messages:
