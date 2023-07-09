@@ -30,6 +30,7 @@ class ServerSettings(BaseSettings):
 
     run_mode: str = 'Dev'
     fallback_chat_mode: str = 'knowledgebase'
+    enable_online_chat: bool = False
 
     class Config:
         env_file = '.env'
