@@ -17,3 +17,29 @@ actions:
   - action_weops_fallback
   - action_pre_weops_fallback
   - action_post_weops_fallback
+  - action_online_chat
+
+
+forms:
+  online_chat_form:
+    required_slots:
+      - online_chat_url
+      - online_chat_query
+
+slots:
+  online_chat_url:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+         - active_loop: online_chat_form
+           requested_slot: online_chat_url
+  online_chat_query:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+         - active_loop: online_chat_form
+           requested_slot: online_chat_query

@@ -6,13 +6,11 @@ from langchain.vectorstores import Chroma
 from rasa_sdk import Action, Tracker, logger
 from rasa_sdk.events import UserUtteranceReverted
 from rasa_sdk.executor import CollectingDispatcher
-from whoosh import qparser
 from whoosh.index import open_dir
-from whoosh.qparser import QueryParser
 
 from actions.constant.server_settings import server_settings
 from actions.utils.indexer_utils import Searcher
-from actions.utils.langchain_utils import langchain_qa, query_chatgpt, query_online, chat_online
+from actions.utils.langchain_utils import langchain_qa, query_chatgpt, chat_online
 from actions.utils.redis_utils import RedisUtils
 
 
@@ -33,7 +31,6 @@ class ActionWeOpsFallback(Action):
                                           db=server_settings.redis_db,
                                           password=server_settings.redis_password)
         self.redis_client = redis.Redis(connection_pool=redis_pool)
-        self.ix = open_dir("indexdir", indexname='doc_index')
 
     def name(self) -> Text:
         return "action_weops_fallback"

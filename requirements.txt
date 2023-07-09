@@ -26,3 +26,4 @@ pypdfium2==4.18.0
 spacy==3.6.0
 
 whoosh==2.7.4
+trafilatura==1.6.1

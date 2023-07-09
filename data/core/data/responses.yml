@@ -22,3 +22,9 @@ responses:
 
   utter_ask_rephrase:
     - text: "WeOps没有找到你需要的信息......"
+
+  utter_ask_online_chat_url:
+    - text: "你想对哪个网站进行知识问答呢？"
+
+  utter_ask_online_chat_query:
+    - text: "你想问的问题是什么呢？"

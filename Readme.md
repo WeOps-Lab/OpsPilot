@@ -16,6 +16,22 @@ OpsPilot是WeOps团队开源的一个基于Rasa和LLM技术的，专注于运维
 >
 <img src="./docs/images/canway.jpeg" width="30%" height="30%">
 
+# 场景
+
+## ChatOps场景
+* 持续补充中......
+
+## LLM场景
+* 闲聊模式
+![0.2-联网知识问答.png](./docs/images/version/0.2-闲聊模式.png)
+
+* 本地知识问答
+![0.2-联网知识问答.png](./docs/images/version/0.2-本地知识问答.png)
+
+* 联网问答
+![0.2-联网知识问答.png](./docs/images/version/0.2-联网知识问答.png)
+
+
 # 部署
 
 ```
@@ -117,7 +133,6 @@ tracker_store:
 | REDIS_PORT                 | Redis 端口号                      |        |
 | REDIS_DB                   | Redis 数据库号                     |        |
 | REDIS_PASSWORD             | Redis 密码                       |        |
-| SENTENCE_TRANSFORMERS_HOME | transformers模型缓存目录             |        |
 
 # 版本说明
 
@@ -125,6 +140,7 @@ tracker_store:
 
 * Prompt配置存放至Redis中
 * 采用倒排索引+语义检索两种模式，提升LLM推理准确率
+* 新增联网使用GPT进行问答的能力
 
 ## 0.1
 

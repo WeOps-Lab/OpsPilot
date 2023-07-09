@@ -94,4 +94,5 @@ class BootStrap(object):
 
 if __name__ == '__main__':
     load_dotenv()
+    os.environ.setdefault('SENTENCE_TRANSFORMERS_HOME', './cache/models')
     fire.Fire(BootStrap)

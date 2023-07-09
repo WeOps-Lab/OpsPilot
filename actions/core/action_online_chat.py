@@ -1,0 +1,24 @@
+from typing import Any, Text, Dict, List
+
+from rasa_sdk import Action, Tracker, logger
+from rasa_sdk.events import SlotSet
+from rasa_sdk.executor import CollectingDispatcher
+
+from actions.utils.core_utils import get_regex_entities
+from actions.utils.langchain_utils import query_online
+
+
+class ActionOnlineChat(Action):
+
+    def name(self) -> Text:
+        return "action_online_chat"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        dispatcher.utter_message('开始进行联网学习,请稍后......')
+        online_chat_url = tracker.get_slot('online_chat_url')
+        online_chat_query = tracker.get_slot('online_chat_query')
+        results = query_online(online_chat_url, online_chat_query)
+        dispatcher.utter_message(results)
+        return [SlotSet('online_chat_url', None), SlotSet('online_chat_query', None), ]

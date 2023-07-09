@@ -47,6 +47,11 @@ nlu:
       - 退出
       - 结束
 
+  - intent: chat_online
+    examples: |
+      - 联网问答
+      - 在线问答
+
   - intent: out_of_scope
     examples: |
       - 今天天气怎么样

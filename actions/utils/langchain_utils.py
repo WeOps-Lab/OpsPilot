@@ -1,3 +1,4 @@
+import trafilatura
 from langchain import PromptTemplate, LLMChain
 from langchain.agents import AgentType, initialize_agent
 from langchain.chains import RetrievalQA, LLMRequestsChain
@@ -6,6 +7,7 @@ from langchain.prompts import SystemMessagePromptTemplate, HumanMessagePromptTem
 from langchain.tools import Tool
 from langchain.utilities import BingSearchAPIWrapper
 from rasa_sdk import logger
+from trafilatura.settings import use_config
 
 from actions.constant.server_settings import server_settings
 
@@ -29,30 +31,17 @@ def langchain_qa(doc_search, prompt_template, query):
 
 
 def query_online(url, query):
-    llm = ChatOpenAI(openai_api_key=server_settings.openai_key,
-                     openai_api_base=server_settings.openai_endpoint,
-                     temperature=server_settings.openai_api_temperature)
+    config = use_config()
+    config.set("DEFAULT", "EXTRACTION_TIMEOUT", "0")
+    result = trafilatura.extract(trafilatura.fetch_url(url), config=config)
 
-    template = """在 >>> 和 <<< 之间是网页的返回的HTML内容。
+    template = f"""在 >>> 和 <<< 之间是网页的返回的HTML内容。
     
-    >>> {requests_result} <<<
+    >>> {result} <<<
     
     请回答以下问题:
     """
-
-    template += query
-    prompt = PromptTemplate(
-        input_variables=["requests_result"],
-        template=template
-    )
-
-    chain = LLMRequestsChain(llm_chain=LLMChain(llm=llm, prompt=prompt))
-    inputs = {
-        "url": url
-    }
-
-    response = chain(inputs)
-    return response['output']
+    return query_chatgpt(template, query)
 
 
 def chat_online(query):
