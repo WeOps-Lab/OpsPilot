@@ -141,6 +141,10 @@ tracker_store:
 
 # 版本说明
 
+## 0.3
+
+* [优化]联网问答添加url校验
+
 ## 0.2
 
 * Prompt配置存放至Redis中
