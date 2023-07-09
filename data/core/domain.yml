@@ -18,6 +18,7 @@ actions:
   - action_pre_weops_fallback
   - action_post_weops_fallback
   - action_online_chat
+  - validate_online_chat_form
 
 
 forms:
