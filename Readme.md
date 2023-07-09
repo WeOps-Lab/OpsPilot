@@ -144,6 +144,7 @@ tracker_store:
 ## 0.3
 
 * [优化]联网问答添加url校验
+* [优化]优化联网问答的slot，仅在chat_online模式下激活
 
 ## 0.2
 

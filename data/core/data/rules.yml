@@ -8,7 +8,6 @@ rules:
       - action: action_weops_fallback
       - action: action_post_weops_fallback
 
-
   - rule: 激活在线知识问答表单
     steps:
       - intent: chat_online
