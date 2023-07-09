@@ -19,18 +19,19 @@ OpsPilot是WeOps团队开源的一个基于Rasa和LLM技术的，专注于运维
 # 场景
 
 ## ChatOps场景
+
 * 持续补充中......
 
 ## LLM场景
+
 * 闲聊模式
-![0.2-联网知识问答.png](./docs/images/version/0.2-闲聊模式.png)
+  ![0.2-联网知识问答.png](./docs/images/version/0.2-闲聊模式.png)
 
 * 本地知识问答
-![0.2-联网知识问答.png](./docs/images/version/0.2-本地知识问答.png)
+  ![0.2-联网知识问答.png](./docs/images/version/0.2-本地知识问答.png)
 
 * 联网问答
-![0.2-联网知识问答.png](./docs/images/version/0.2-联网知识问答.png)
-
+  ![0.2-联网知识问答.png](./docs/images/version/0.2-联网知识问答.png)
 
 # 部署
 
@@ -54,11 +55,13 @@ python ./ops_pilot_cli.py init_data
 ```
 
 索引本地知识
+
 ```
 python ./ops_pilot_cli.py embed_local_knowledge --knowledge_path=
 ```
 
 测试本地知识
+
 ```
 python ./ops_pilot_cli.py query_embed_knowledge
 ```
@@ -104,6 +107,7 @@ pip install -r requirements.txt
 ```
 
 ## 如何使用MySQL作为Tracker
+
 ```
 tracker_store:
   type: SQL
@@ -116,23 +120,24 @@ tracker_store:
 
 # 参数说明
 
-| 参数                         | 说明                             | 可选配置   |
-|----------------------------|--------------------------------|--------|
-| FALLBACK_LLM               | 当OpsPilot无法处理的时候，使用LLM进行回复     | OPENAI |
-| OPENAI_ENDPOINT            | OpenAI上部署模型的终结点                |        |
-| OPENAI_KEY                 | OpenAI上部署模型使用的秘钥               |        |
-| JENKINS_URL                | Jenkins URL,启用Jenkins自动化能力需要配置 |        |
-| JENKINS_USERNAME           | Jenkins 用户名,启用Jenkins自动化能力需要配置 |        |
-| JENKINS_PASSWORD           | Jenkins 密码,启用Jenkins自动化能力需要配置  |        |
-| BING_SEARCH_URL            | Bing Search端点                  |        |
-| BIND_SEARCH_KEY            | Bing Search密码                  |        |
-| VEC_DB_PATH                | 向量数据库的路径                       |        |
-| RUN_MODE                   | 是否以开发模式运行                      |        |
-| FALLBACK_CHAT_MODE         | LLM使用本地知识库模式还是闲聊模式             |        |
-| REDIS_HOST                 | Redis IP地址                     |        |
-| REDIS_PORT                 | Redis 端口号                      |        |
-| REDIS_DB                   | Redis 数据库号                     |        |
-| REDIS_PASSWORD             | Redis 密码                       |        |
+| 参数                 | 说明                             | 可选配置   |
+|--------------------|--------------------------------|--------|
+| FALLBACK_LLM       | 当OpsPilot无法处理的时候，使用LLM进行回复     | OPENAI |
+| OPENAI_ENDPOINT    | OpenAI上部署模型的终结点                |        |
+| OPENAI_KEY         | OpenAI上部署模型使用的秘钥               |        |
+| JENKINS_URL        | Jenkins URL,启用Jenkins自动化能力需要配置 |        |
+| JENKINS_USERNAME   | Jenkins 用户名,启用Jenkins自动化能力需要配置 |        |
+| JENKINS_PASSWORD   | Jenkins 密码,启用Jenkins自动化能力需要配置  |        |
+| BING_SEARCH_URL    | Bing Search端点                  |        |
+| BIND_SEARCH_KEY    | Bing Search密码                  |        |
+| VEC_DB_PATH        | 向量数据库的路径                       |        |
+| RUN_MODE           | 是否以开发模式运行                      |        |
+| FALLBACK_CHAT_MODE | LLM使用本地知识库模式还是闲聊模式             |        |
+| REDIS_HOST         | Redis IP地址                     |        |
+| REDIS_PORT         | Redis 端口号                      |        |
+| REDIS_DB           | Redis 数据库号                     |        |
+| REDIS_PASSWORD     | Redis 密码                       |        |
+| ENABLE_ONLINE_CHAT | 是否开启联网知识问答                     |        |
 
 # 版本说明
 
