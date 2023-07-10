@@ -10,14 +10,9 @@ nlu:
     examples: |
       - 查看流水线
       - 查找流水线
-      - 帮我查一下流水线
-      - 查询Jenkins流水线
-      - 查询jenkins pipeline
       - 查流水线
 
   - intent: build_jenkins_pipeline
     examples: |
       - 构建流水线
       - 触发流水线
-      - build pipeline
-      - build jenkins
