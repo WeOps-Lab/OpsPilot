@@ -32,6 +32,13 @@ class ServerSettings(BaseSettings):
     fallback_chat_mode: str = 'knowledgebase'
     enable_online_chat: bool = False
 
+    token: str
+    encoding_aes_key: str
+    corp_id: str
+    secret: str
+    access_token: str
+    agent_id: str
+
     class Config:
         env_file = '.env'
 

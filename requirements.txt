@@ -27,3 +27,5 @@ spacy==3.6.0
 
 whoosh==2.7.4
 trafilatura==1.6.1
+
+pycryptodome-3.18.0
