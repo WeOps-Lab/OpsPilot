@@ -20,7 +20,7 @@ class ActionJenkinsNotify(Action):
             tracker: Tracker,
             domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
-        if server_settings.jenkins_url is None:
+        if server_settings.enable_jenkins_skill is False:
             dispatcher.utter_message('OpsPilot没有启用Jenkins自动化能力....')
             return []
 

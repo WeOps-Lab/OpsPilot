@@ -14,6 +14,7 @@ class ServerSettings(BaseSettings):
     openai_key: Optional[str] = None
     openai_api_temperature: Optional[float] = 0.7
 
+    enable_jenkins_skill: bool = False
     jenkins_url: Optional[str] = None
     jenkins_username: Optional[str] = None
     jenkins_password: Optional[str] = None
