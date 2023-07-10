@@ -12,6 +12,13 @@ from sanic.request import Request
 from sanic.response import HTTPResponse
 
 
+from channels.WXBizMsgCrypt3 import WXBizMsgCrypt
+import xml.etree.cElementTree as ET
+
+from channels.enterprise_wechat_utils import post_message
+from actions.constant.server_settings import server_settings
+
+
 class EnterpriseWechatChannel(InputChannel):
     def name(self) -> Text:
         return "enterprise_wechat"
@@ -37,6 +44,34 @@ class EnterpriseWechatChannel(InputChannel):
         @enterprise_wechathook.route("/", methods=["GET"])
         async def health(request: Request) -> HTTPResponse:
             return response.json({"status": "ok"})
+
+        @enterprise_wechathook.route("/", methods=["POST"])
+        async def msg_entry(request: Request) -> HTTPResponse:
+            # 企微消息解析
+            msg_signature = request.args["msg_signature"]
+            timestamp = request.args["timestamp"]
+            nonce = request.args["nonce"]
+            data = request.data
+            wxcpt = WXBizMsgCrypt(
+                server_settings.access_token,
+                server_settings.encoding_aes_key,
+                server_settings.corp_id,
+            )
+            _, msg = wxcpt.DecryptMsg(data, msg_signature, timestamp, nonce)
+            xml_tree = ET.fromstring(msg)
+
+            # 消息类型，event表示用户进入应用，text表示用户发送消息
+            msg_type = xml_tree.find("MsgType").text
+            if msg_type == "event":
+                return None
+            if msg_type == "text":
+                msg_content = xml_tree.find("Content").text
+                print(msg_content)
+            # 企微用户id
+            user_id = xml_tree.find("FromUserName").text
+            # TODO:对用户的消息进行判断处理，并通过下面的函数进行文本回复，支持换行符\n
+            post_message(user_id, "user_id is {user_id},msg is {msg_content}")
+            return None
 
         @enterprise_wechathook.route("/webhook", methods=["POST"])
         async def receive(request: Request) -> HTTPResponse:
