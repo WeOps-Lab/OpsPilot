@@ -22,8 +22,6 @@ class ServerSettings(BaseSettings):
     bing_search_url: Optional[str] = None
     bing_search_key: Optional[str] = None
 
-    vec_db_path: Optional[str] = None
-
     redis_host: str
     redis_port: int
     redis_db: int
@@ -32,6 +30,11 @@ class ServerSettings(BaseSettings):
     run_mode: str = 'Dev'
     fallback_chat_mode: str = 'knowledgebase'
     enable_online_chat: bool = False
+
+    embed_model_name: Optional[str] = 'shibing624/text2vec-base-chinese'
+    embed_model_cache_home: Optional[str] = 'cache/models'
+    vec_db_path: Optional[str] = 'vec_db'
+    indexer_db_path: Optional[str] = 'indexdir'
 
     class Config:
         env_file = '.env'

@@ -1,7 +1,7 @@
 import redis
 
 from actions.constant.server_settings import server_settings
-from logzero import logger
+from rasa_sdk import logger
 
 redis_pool = redis.ConnectionPool(host=server_settings.redis_host,
                                   port=server_settings.redis_port,

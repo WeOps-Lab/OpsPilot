@@ -1,10 +1,10 @@
+.PHONY: train run actions tensorboard clean interactive prepare release valid
 train:
 	rasa train -d data
 
 run:
 	rasa run --enable-api --cors "*"
 	#RASA_TELEMETRY_ENABLED=false  SANIC_WORKERS=5 ACTION_SERVER_SANIC_WORKERS=5 --debug
-
 
 actions:
 	rasa run actions --auto-reload
