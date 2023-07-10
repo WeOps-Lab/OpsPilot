@@ -25,3 +25,4 @@ train_test_split
 langchain.db
 indexdir
 llm_model
+.vscode
