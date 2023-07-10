@@ -33,7 +33,6 @@ slots:
     influence_conversation: true
     mappings:
       - type: from_text
-        intent: chat_online
         conditions:
          - active_loop: online_chat_form
            requested_slot: online_chat_url
@@ -42,7 +41,6 @@ slots:
     influence_conversation: true
     mappings:
       - type: from_text
-        intent: chat_online
         conditions:
          - active_loop: online_chat_form
            requested_slot: online_chat_query
