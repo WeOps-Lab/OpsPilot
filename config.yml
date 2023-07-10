@@ -1,5 +1,5 @@
 recipe: default.v1
-assistant_id: weops-chatbot
+assistant_id: ops-pilot
 language: zh
 
 pipeline:
