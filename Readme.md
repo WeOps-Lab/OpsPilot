@@ -153,6 +153,11 @@ tracker_store:
 
 # 版本说明
 
+## 0.4
+
+* [新增]Word文档索引能力
+* [新增]PPT文档索引能力
+* [新增]CSV文档索引能力
 ## 0.3
 
 * [新增]支持对接Jenkins，提供Jenkins流水线查询、列出Jenkins流水线、构建Jenkins流水线并通知的能力

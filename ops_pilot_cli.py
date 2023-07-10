@@ -3,7 +3,8 @@ import shutil
 
 import fire
 from dotenv import load_dotenv
-from langchain.document_loaders import PyPDFium2Loader, UnstructuredMarkdownLoader
+from langchain.document_loaders import PyPDFium2Loader, UnstructuredMarkdownLoader, UnstructuredWordDocumentLoader, \
+    UnstructuredPowerPointLoader
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.text_splitter import MarkdownTextSplitter, RecursiveCharacterTextSplitter
 from langchain.vectorstores import Chroma
@@ -50,7 +51,7 @@ class BootStrap(object):
 
             logger.info(f'回复:[{results["result"]}]')
 
-    def embed_local_knowledge(self, knowledge_path: str):
+    def embed_local_knowledge(self, knowledge_path: str, ):
         """
         索引目标路径下的文件，存放至向量数据库与倒排索引中
         Args:
@@ -80,6 +81,14 @@ class BootStrap(object):
                 knowledge_docs += loader.load_and_split(text_splitter)
             elif knowledge_file.lower().endswith(".pdf"):
                 loader = PyPDFium2Loader(knowledge_file)
+                text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+                knowledge_docs += loader.load_and_split(text_splitter)
+            elif knowledge_file.lower().endswith(".docx"):
+                loader = UnstructuredWordDocumentLoader(knowledge_file, mode="elements")
+                text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+                knowledge_docs += loader.load_and_split(text_splitter)
+            elif knowledge_file.lower().endswith(".pptx"):
+                loader = UnstructuredPowerPointLoader(knowledge_file, mode="elements")
                 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
                 knowledge_docs += loader.load_and_split(text_splitter)
         knowledge_contents = [x.page_content for x in knowledge_docs]
