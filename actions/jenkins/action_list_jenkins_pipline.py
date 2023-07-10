@@ -2,7 +2,6 @@ from typing import Any, Dict, List, Text
 
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
-from markdownify import markdownify as md
 
 from actions.constant.server_settings import server_settings
 from actions.utils.jenkins_utils import list_jenkins_job

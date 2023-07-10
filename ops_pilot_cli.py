@@ -95,7 +95,7 @@ class BootStrap(object):
 
         logger.info('建立知识内容的倒排索引.....')
         search = Searcher()
-        search.index_knowledges(knowledge_contents)
+        search.index_knowledge(knowledge_contents)
 
 
 if __name__ == '__main__':

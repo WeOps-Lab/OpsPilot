@@ -1,12 +1,10 @@
 from typing import Any, Text, Dict, List
 
-import redis
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import Chroma
 from rasa_sdk import Action, Tracker, logger
 from rasa_sdk.events import UserUtteranceReverted
 from rasa_sdk.executor import CollectingDispatcher
-from whoosh.index import open_dir
 
 from actions.constant.server_settings import server_settings
 from actions.utils.indexer_utils import Searcher
@@ -26,11 +24,6 @@ class ActionWeOpsFallback(Action):
                                                    'show_progress_bar': True
                                                })
             self.doc_search = Chroma(persist_directory=server_settings.vec_db_path, embedding_function=embeddings)
-        redis_pool = redis.ConnectionPool(host=server_settings.redis_host,
-                                          port=server_settings.redis_port,
-                                          db=server_settings.redis_db,
-                                          password=server_settings.redis_password)
-        self.redis_client = redis.Redis(connection_pool=redis_pool)
 
     def name(self) -> Text:
         return "action_weops_fallback"

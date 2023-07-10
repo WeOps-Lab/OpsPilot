@@ -2,7 +2,7 @@ import datetime
 from typing import Any, Dict, List, Text
 
 from rasa_sdk import Action, Tracker, logger
-from rasa_sdk.events import (ReminderScheduled)
+from rasa_sdk.events import ReminderScheduled
 from rasa_sdk.executor import CollectingDispatcher
 
 from actions.constant.server_settings import server_settings

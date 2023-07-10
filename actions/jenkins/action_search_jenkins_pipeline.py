@@ -1,12 +1,11 @@
 from typing import Any, Dict, List, Text
 
-from rasa_sdk import Action, Tracker, logger
-from rasa_sdk.events import (SlotSet, UserUtteranceReverted, FollowupAction, ActiveLoop)
+from rasa_sdk import Action, Tracker
+from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 
 from actions.constant.server_settings import server_settings
-from actions.utils.core_utils import get_regex_entities
-from actions.utils.jenkins_utils import (find_jenkins_job, search_jenkins_job)
+from actions.utils.jenkins_utils import search_jenkins_job
 
 
 class ActionSearchJenkinsPipeline(Action):
@@ -30,6 +29,7 @@ class ActionSearchJenkinsPipeline(Action):
         else:
             message = f'找到名字包含[{value}]名称的流水线[{len(jobs)}]个，这里是我找到的流水线:'
             dispatcher.utter_message(text=message)
+
             for i in jobs:
                 dispatcher.utter_message(text=i)
         return [SlotSet('search_jenkins_pipeline_name', None)]
