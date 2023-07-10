@@ -1,0 +1,54 @@
+version: "3.1"
+
+intents:
+  - EXTERNAL_jenkins_reminder
+  - build_jenkins_pipeline
+  - list_jenkins_pipeline
+  - search_jenkins_pipeline
+
+actions:
+  - action_build_jenkins_pipeline
+  - action_jenkins_notify
+  - action_check_jenkins_pipeline
+  - action_list_jenkins_pipline
+  - action_search_jenkins_pipeline
+
+forms:
+  search_jenkins_pipeline_form:
+    required_slots:
+      - search_jenkins_pipeline_name
+  build_jenkins_pipeline_form:
+    required_slots:
+      - build_jenkins_pipeline_name
+
+
+slots:
+  jenkins_job_buildnumber:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+
+  jenkins_job_name:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+
+  search_jenkins_pipeline_name:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: search_jenkins_pipeline_form
+            requested_slot: search_jenkins_pipeline_name
+
+  build_jenkins_pipeline_name:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: build_jenkins_pipeline_form
+            requested_slot: build_jenkins_pipeline_name

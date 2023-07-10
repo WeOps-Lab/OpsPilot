@@ -143,6 +143,8 @@ tracker_store:
 
 ## 0.3
 
+* [新增]支持对接Jenkins，提供Jenkins流水线查询、列出Jenkins流水线、构建Jenkins流水线并通知的能力
+* [新增]支持OpsPilot触发Jenkins流水线失败之后，调用LLM给出修复建议
 * [优化]联网问答添加url校验
 * [优化]优化联网问答的slot，仅在chat_online模式下激活
 

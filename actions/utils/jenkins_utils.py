@@ -26,11 +26,9 @@ def analyze_jenkins_build_console(job_name, build_number):
     jenkins = get_jenkins_instance()
     job = jenkins[job_name]
     build = job.get_build(int(build_number))
-    result = query_chatgpt([
-        {"role": "system",
-         "content": "扮演专业的运维开发工程师，你拥有丰富的运维领域经验，现在你正在使用Jenkins构建项目，出现了以下异常信息，给出你的分析意见以及处置建议."},
-        {"role": "user", "content": build.get_console()},
-    ])
+    result = query_chatgpt(
+        '扮演专业的运维开发工程师，你拥有丰富的运维领域经验，现在你正在使用Jenkins构建项目，出现了以下异常信息，给出你的分析意见以及处置建议.',
+        build.get_console())
     return result
 
 

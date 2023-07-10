@@ -1,22 +1,20 @@
 import datetime
 from typing import Any, Dict, List, Text
 
-from rasa_sdk import Action, Tracker, logger
+from rasa_sdk import Action, Tracker
 from rasa_sdk.events import (ReminderScheduled,
-                             SlotSet, UserUtteranceReverted, FollowupAction, ActiveLoop)
+                             SlotSet)
 from rasa_sdk.executor import CollectingDispatcher
 
 from actions.constant.server_settings import server_settings
 from actions.utils.core_utils import get_regex_entities
-from actions.utils.jenkins_utils import (analyze_jenkins_build_console,
-                                         get_jenkins_build_info,
-                                         trigger_jenkins_pipeline, find_jenkins_job)
+from actions.utils.jenkins_utils import (trigger_jenkins_pipeline)
 
 
-class ActionJenkinsReminder(Action):
+class ActionBuildJenkinsPipeline(Action):
 
     def name(self) -> Text:
-        return "action_jenkins_reminder"
+        return "action_build_jenkins_pipeline"
 
     async def run(
             self,
@@ -28,8 +26,7 @@ class ActionJenkinsReminder(Action):
             dispatcher.utter_message('OpsPilot没有启用Jenkins自动化能力....')
             return []
 
-        jenkins_pipeline_names = get_regex_entities(tracker, 'jenkins_pipeline_name')
-        value = jenkins_pipeline_names[0]['value']
+        value = tracker.get_slot('build_jenkins_pipeline_name')
         dispatcher.utter_message(f"流水线[{value}]开始构建,任务正在排队构建......")
         build_number = trigger_jenkins_pipeline(value)
 
@@ -51,7 +48,7 @@ class ActionJenkinsReminder(Action):
 
         return [
             reminder,
-            SlotSet('jenkins_pipeline_name', None),
+            SlotSet('build_jenkins_pipeline_name', None),
             SlotSet('jenkins_job_name', value),
             SlotSet('jenkins_job_buildnumber', build_number)
         ]

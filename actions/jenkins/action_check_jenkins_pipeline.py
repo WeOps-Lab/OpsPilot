@@ -23,11 +23,10 @@ class ActionFindJenkinsPipeline(Action):
             dispatcher.utter_message('OpsPilot没有启用Jenkins自动化能力....')
             return []
 
-        jenkins_pipeline_names = get_regex_entities(tracker, 'jenkins_pipeline_name')
-        if len(jenkins_pipeline_names) == 0:
-            dispatcher.utter_message('没有识别到流水线的名称，示例：查看"demo"流水线')
+        value = tracker.get_slot('build_jenkins_pipeline_name')
+        if len(value) == 0:
+            dispatcher.utter_message(f'没有找到[{value}]流水线')
 
-        value = jenkins_pipeline_names[0]['value']
         dispatcher.utter_message(f"检查[{value}]流水线是否存在......")
 
         job_exist = find_jenkins_job(value)

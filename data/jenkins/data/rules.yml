@@ -1,0 +1,46 @@
+version: "3.1"
+rules:
+
+  - rule: 触发Jenkins任务状态轮询
+    steps:
+      - intent: EXTERNAL_jenkins_reminder
+      - action: action_jenkins_notify
+
+  - rule: 列出Jenkins流水线
+    steps:
+      - intent: list_jenkins_pipeline
+      - action: action_list_jenkins_pipline
+
+  - rule: 激活查找Jenkins流水线表单
+    steps:
+      - intent: search_jenkins_pipeline
+      - action: search_jenkins_pipeline_form
+      - active_loop: search_jenkins_pipeline_form
+
+  - rule: 提交查找Jenkins流水线表单
+    condition:
+      - active_loop: search_jenkins_pipeline_form
+    steps:
+      - action: search_jenkins_pipeline_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_search_jenkins_pipeline
+
+  - rule: 激活触发Jenkins流水线构建表单
+    steps:
+      - intent: build_jenkins_pipeline
+      - action: build_jenkins_pipeline_form
+      - active_loop: build_jenkins_pipeline_form
+
+
+  - rule: 提交触发Jenkins流水线构建表单
+    condition:
+      - active_loop: build_jenkins_pipeline_form
+    steps:
+      - action: build_jenkins_pipeline_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_check_jenkins_pipeline
+      - action: action_build_jenkins_pipeline
