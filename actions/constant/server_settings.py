@@ -35,13 +35,12 @@ class ServerSettings(BaseSettings):
     embed_model_cache_home: Optional[str] = 'cache/models'
     vec_db_path: Optional[str] = 'vec_db'
     indexer_db_path: Optional[str] = 'indexdir'
-    
-    token: str
-    encoding_aes_key: str
-    corp_id: str
-    secret: str
-    access_token: str
-    agent_id: str
+
+    qywx_encoding_aes_key: Optional[str] = ''
+    qywx_corp_id: Optional[str] = ''
+    qywx_secret: Optional[str] = ''
+    qywx_access_token: Optional[str] = ''
+    qywx_agent_id: Optional[str] = ''
 
     class Config:
         env_file = '.env'

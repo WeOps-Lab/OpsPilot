@@ -150,6 +150,11 @@ tracker_store:
 | EMBED_MODEL_NAME       | embed模型名称                      |        |
 | EMBED_MODEL_CACHE_HOME | embed模型缓存路径                    |        |
 | INDEXER_DB_PATH        | 倒排索引文件存放路径                     |        |
+| QYWX_ENCODING_AES_KEY  | 企业微信AES_KEY                    |        |
+| QYWX_CORP_ID           | 企业微信corp id                    |        |
+| QYWX_SECRET            | 企业微信秘钥                         |        |
+| QYWX_ACCESS_TOKEN      | 企业微信token                      |        |
+| QYWX_AGENT_ID          | 企业微信agent id                   |        |
 
 # 版本说明
 

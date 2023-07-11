@@ -1,15 +1,14 @@
 import json
 import requests
-
+from loguru import logger
 from actions.constant.server_settings import server_settings
 
 ACCESS_TOKEN = server_settings.access_token
 
 
 def get_access_token():
-    url = f"https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={server_settings.corp_id}&corpsecret={server_settings.secret}"
+    url = f"https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={server_settings.qywx_corp_id}&corpsecret={server_settings.qywx_secret}"
     access_token = json.loads(requests.get(url).content)["access_token"]
-    print(access_token)
     return access_token
 
 
@@ -23,7 +22,7 @@ def post_message(user_id, content):
     params = {
         "touser": user_id,
         "msgtype": "text",
-        "agentid": server_settings.agent_id,
+        "agentid": server_settings.qywx_agent_id,
         "text": {"content": content},
         "safe": 0,
         "duplicate_check_interval": 1800,
@@ -44,6 +43,6 @@ def post_message(user_id, content):
             )
             # 再次出错，说明不是token的问题，需要深入排查
             if res["errcode"] != 0:
-                print("重新获取ACCESS_TOKEN后发送消息失败，res为:", res)
+                logger.info("重新获取ACCESS_TOKEN后发送消息失败，res为:", res)
         if res["errcode"] == 60020:
-            print(f"IP不是可信IP，详细信息：{res}")
+            logger.info(f"IP不是可信IP，详细信息：{res}")

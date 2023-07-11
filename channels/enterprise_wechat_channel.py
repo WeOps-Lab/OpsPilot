@@ -1,7 +1,7 @@
 import inspect
 import json
 from typing import Text, Dict, Any, Optional, Callable, Awaitable
-
+from loguru import logger
 from rasa.core.channels.channel import (
     InputChannel,
     CollectingOutputChannel,
@@ -10,7 +10,6 @@ from rasa.core.channels.channel import (
 from sanic import Blueprint, response
 from sanic.request import Request
 from sanic.response import HTTPResponse
-
 
 from channels.WXBizMsgCrypt3 import WXBizMsgCrypt
 import xml.etree.cElementTree as ET
@@ -53,9 +52,9 @@ class EnterpriseWechatChannel(InputChannel):
             nonce = request.args["nonce"]
             data = request.data
             wxcpt = WXBizMsgCrypt(
-                server_settings.access_token,
-                server_settings.encoding_aes_key,
-                server_settings.corp_id,
+                server_settings.qywx_access_token,
+                server_settings.qywx_encoding_aes_key,
+                server_settings.qywx_corp_id,
             )
             _, msg = wxcpt.DecryptMsg(data, msg_signature, timestamp, nonce)
             xml_tree = ET.fromstring(msg)
@@ -66,22 +65,16 @@ class EnterpriseWechatChannel(InputChannel):
                 return None
             if msg_type == "text":
                 msg_content = xml_tree.find("Content").text
-                print(msg_content)
+                logger.info(msg_content)
             # 企微用户id
             user_id = xml_tree.find("FromUserName").text
-            # TODO:对用户的消息进行判断处理，并通过下面的函数进行文本回复，支持换行符\n
-            post_message(user_id, "user_id is {user_id},msg is {msg_content}")
-            return None
 
-        @enterprise_wechathook.route("/webhook", methods=["POST"])
-        async def receive(request: Request) -> HTTPResponse:
-            sender_id = request.json.get("sender")
-            message = request.json.get("message")
+            sender_id = user_id
+            message = msg_content
             input_channel = self.name()
-            metadata = self.get_metadata(request)
+            metadata = None
 
             collector = CollectingOutputChannel()
-
             await on_new_message(
                 UserMessage(
                     message,
@@ -91,8 +84,6 @@ class EnterpriseWechatChannel(InputChannel):
                     metadata=metadata,
                 )
             )
-
             response_data = json.dumps(collector.messages, ensure_ascii=False)
-            return response.text(response_data, content_type='application/json; charset=utf-8')
-
-        return enterprise_wechathook
+            post_message(user_id, response_data)
+            return None
