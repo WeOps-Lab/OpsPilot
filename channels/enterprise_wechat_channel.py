@@ -21,18 +21,19 @@ class EnterpriseWechatChannel(InputChannel):
     def name(self) -> Text:
         return "enterprise_wechat"
 
-    def __init__(self, encoding_aes_key, corp_id, secret, access_token, agent_id) -> None:
+    def __init__(self, token, encoding_aes_key, corp_id, secret, access_token, agent_id) -> None:
         super().__init__()
+        self.token = token
         self.encoding_aes_key = encoding_aes_key
         self.corp_id = corp_id
         self.secret = secret
         self.access_token = access_token
         self.agent_id = agent_id
-        self.wx_access_token = None
 
     @classmethod
     def from_credentials(cls, credentials: Optional[Dict[Text, Any]]) -> "InputChannel":
         return cls(
+            credentials.get('token'),
             credentials.get('encoding_aes_key'),
             credentials.get('corp_id'),
             credentials.get('secret'),
@@ -60,7 +61,7 @@ class EnterpriseWechatChannel(InputChannel):
             nonce = request.args["nonce"]
             data = request.data
             wxcpt = WXBizMsgCrypt(
-                self.access_token,
+                self.token,
                 self.encoding_aes_key,
                 self.corp_id,
             )
@@ -92,11 +93,11 @@ class EnterpriseWechatChannel(InputChannel):
                     metadata=metadata,
                 )
             )
-            response_data = json.dumps(collector.messages, ensure_ascii=False)
+            response_data = collector.messages[-1]['text']
 
-            if self.wx_access_token is None:
-                self.wx_access_token = get_access_token(self.corp_id, self.secret)
-            post_message(self.wx_access_token, self.agent_id, user_id, response_data)
+            if self.access_token == "":
+                self.access_token = get_access_token(self.corp_id, self.secret)
+            post_message(self.access_token, self.agent_id, user_id, response_data)
             return None
 
         return enterprise_wechathook
