@@ -7,9 +7,7 @@ from pydantic import BaseSettings
 
 class ServerSettings(BaseSettings):
     fallback_llm: str = 'OPENAI'
-    fallback_prompt: str = '扮演专业的运维工程师'
 
-    openai_model_name: Optional[str] = None
     openai_endpoint: Optional[str] = None
     openai_key: Optional[str] = None
     openai_api_temperature: Optional[float] = 0.7

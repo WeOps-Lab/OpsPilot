@@ -128,28 +128,28 @@ tracker_store:
 
 # 参数说明
 
-| 参数                     | 说明                             | 可选配置   |
-|------------------------|--------------------------------|--------|
-| FALLBACK_LLM           | 当OpsPilot无法处理的时候，使用LLM进行回复     | OPENAI |
-| OPENAI_ENDPOINT        | OpenAI上部署模型的终结点                |        |
-| OPENAI_KEY             | OpenAI上部署模型使用的秘钥               |        |
-| JENKINS_URL            | Jenkins URL,启用Jenkins自动化能力需要配置 |        |
-| JENKINS_USERNAME       | Jenkins 用户名,启用Jenkins自动化能力需要配置 |        |
-| JENKINS_PASSWORD       | Jenkins 密码,启用Jenkins自动化能力需要配置  |        |
-| BING_SEARCH_URL        | Bing Search端点                  |        |
-| BIND_SEARCH_KEY        | Bing Search密码                  |        |
-| VEC_DB_PATH            | 向量数据库的路径                       |        |
-| RUN_MODE               | 是否以开发模式运行                      |        |
-| FALLBACK_CHAT_MODE     | LLM使用本地知识库模式还是闲聊模式             |        |
-| REDIS_HOST             | Redis IP地址                     |        |
-| REDIS_PORT             | Redis 端口号                      |        |
-| REDIS_DB               | Redis 数据库号                     |        |
-| REDIS_PASSWORD         | Redis 密码                       |        |
-| ENABLE_ONLINE_CHAT     | 是否开启联网知识问答                     |        |
-| ENABLE_JENKINS_SKILL   | 是否启用操作Jenkins的能力               |        |
-| EMBED_MODEL_NAME       | embed模型名称                      |        |
-| EMBED_MODEL_CACHE_HOME | embed模型缓存路径                    |        |
-| INDEXER_DB_PATH        | 倒排索引文件存放路径                     |        |
+| 参数                     | 说明                                   | 可选配置                                    |
+|------------------------|--------------------------------------|-----------------------------------------|
+| FALLBACK_LLM           | 当OpsPilot无法处理的时候，使用LLM进行回复           | OPENAI(默认)                              |
+| OPENAI_ENDPOINT        | OpenAI上部署模型的端点,开启ChatGPT的时候需要配置此变量   |                                         |
+| OPENAI_KEY             | OpenAI上部署模型使用的秘钥,开启ChatGPT的时候需要配置此变量 |                                         |
+| ENABLE_JENKINS_SKILL   | 是否开启Jenkins自动化能力                     | False(默认)                               |
+| JENKINS_URL            | Jenkins URL,启用Jenkins自动化能力需要配置       |                                         |
+| JENKINS_USERNAME       | Jenkins 用户名,启用Jenkins自动化能力需要配置       |                                         |
+| JENKINS_PASSWORD       | Jenkins 密码,启用Jenkins自动化能力需要配置        |                                         |
+| BING_SEARCH_URL        | Bing Search端点，用于在线检索问答               |                                         |
+| BIND_SEARCH_KEY        | Bing Search密码，用于在线检索问答               |                                         |
+| VEC_DB_PATH            | 向量数据库的路径                             | vec_db(默认)                              |
+| RUN_MODE               | 是否以开发模式运行                            | Dev(默认)                                 |
+| FALLBACK_CHAT_MODE     | LLM使用本地知识库模式还是闲聊模式                   | knowledgebase(默认) /online_knowledgebase |
+| REDIS_HOST             | Redis IP地址，必填                        |                                         |
+| REDIS_PORT             | Redis 端口号，必填                         |                                         |
+| REDIS_DB               | Redis 数据库号，必填                        |                                         |
+| REDIS_PASSWORD         | Redis 密码，必填                          |                                         |
+| ENABLE_ONLINE_CHAT     | 是否开启联网知识问答                           | False(默认)                               |
+| EMBED_MODEL_NAME       | embed模型名称                            | shibing624/text2vec-base-chinese(默认)    |
+| EMBED_MODEL_CACHE_HOME | embed模型缓存路径                          | cache/models(默认)                        |
+| INDEXER_DB_PATH        | 倒排索引文件存放路径                           | indexdir(默认)                            |
 
 # 版本说明
 
