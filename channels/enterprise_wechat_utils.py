@@ -3,7 +3,7 @@ import requests
 from loguru import logger
 from actions.constant.server_settings import server_settings
 
-ACCESS_TOKEN = server_settings.access_token
+ACCESS_TOKEN = server_settings.qywx_access_token
 
 
 def get_access_token():
@@ -27,7 +27,7 @@ def post_message(user_id, content):
         "safe": 0,
         "duplicate_check_interval": 1800,
     }
-    if server_settings.access_token == "":
+    if server_settings.qywx_access_token == "":
         ACCESS_TOKEN = get_access_token()
     post_msg_url = (
         f"https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={ACCESS_TOKEN}"
