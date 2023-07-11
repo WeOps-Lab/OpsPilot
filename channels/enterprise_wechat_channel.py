@@ -14,22 +14,30 @@ from sanic.response import HTTPResponse
 from channels.WXBizMsgCrypt3 import WXBizMsgCrypt
 import xml.etree.cElementTree as ET
 
-from channels.enterprise_wechat_utils import post_message
-from actions.constant.server_settings import server_settings
+from channels.enterprise_wechat_utils import post_message, get_access_token
 
 
 class EnterpriseWechatChannel(InputChannel):
     def name(self) -> Text:
         return "enterprise_wechat"
 
-    def __init__(self, url) -> None:
+    def __init__(self, encoding_aes_key, corp_id, secret, access_token, agent_id) -> None:
         super().__init__()
-        self.url = url
+        self.encoding_aes_key = encoding_aes_key
+        self.corp_id = corp_id
+        self.secret = secret
+        self.access_token = access_token
+        self.agent_id = agent_id
+        self.wx_access_token = None
 
     @classmethod
     def from_credentials(cls, credentials: Optional[Dict[Text, Any]]) -> "InputChannel":
         return cls(
-            credentials.get('url')
+            credentials.get('encoding_aes_key'),
+            credentials.get('corp_id'),
+            credentials.get('secret'),
+            credentials.get('access_token'),
+            credentials.get('agent_id'),
         )
 
     def blueprint(
@@ -52,9 +60,9 @@ class EnterpriseWechatChannel(InputChannel):
             nonce = request.args["nonce"]
             data = request.data
             wxcpt = WXBizMsgCrypt(
-                server_settings.qywx_access_token,
-                server_settings.qywx_encoding_aes_key,
-                server_settings.qywx_corp_id,
+                self.access_token,
+                self.encoding_aes_key,
+                self.corp_id,
             )
             _, msg = wxcpt.DecryptMsg(data, msg_signature, timestamp, nonce)
             xml_tree = ET.fromstring(msg)
@@ -85,5 +93,10 @@ class EnterpriseWechatChannel(InputChannel):
                 )
             )
             response_data = json.dumps(collector.messages, ensure_ascii=False)
-            post_message(user_id, response_data)
+
+            if self.wx_access_token is None:
+                self.wx_access_token = get_access_token(self.corp_id, self.secret)
+            post_message(self.wx_access_token, self.agent_id, user_id, response_data)
             return None
+
+        return enterprise_wechathook

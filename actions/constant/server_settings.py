@@ -36,12 +36,6 @@ class ServerSettings(BaseSettings):
     vec_db_path: Optional[str] = 'vec_db'
     indexer_db_path: Optional[str] = 'indexdir'
 
-    qywx_encoding_aes_key: Optional[str] = ''
-    qywx_corp_id: Optional[str] = ''
-    qywx_secret: Optional[str] = ''
-    qywx_access_token: Optional[str] = ''
-    qywx_agent_id: Optional[str] = ''
-
     class Config:
         env_file = '.env'
 

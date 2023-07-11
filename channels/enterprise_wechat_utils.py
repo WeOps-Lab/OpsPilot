@@ -1,36 +1,29 @@
 import json
 import requests
 from loguru import logger
-from actions.constant.server_settings import server_settings
-
-ACCESS_TOKEN = server_settings.qywx_access_token
 
 
-def get_access_token():
-    url = f"https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={server_settings.qywx_corp_id}&corpsecret={server_settings.qywx_secret}"
+def get_access_token(corp_id, secret):
+    url = f"https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={corp_id}&corpsecret={secret}"
     access_token = json.loads(requests.get(url).content)["access_token"]
     return access_token
 
 
-def post_message(user_id, content):
+def post_message(access_token, agent_id, user_id, content):
     """
     description: 企微应用通过接口发送消息给企微用户
     """
 
-    global ACCESS_TOKEN
-
     params = {
         "touser": user_id,
         "msgtype": "text",
-        "agentid": server_settings.qywx_agent_id,
+        "agentid": agent_id,
         "text": {"content": content},
         "safe": 0,
         "duplicate_check_interval": 1800,
     }
-    if server_settings.qywx_access_token == "":
-        ACCESS_TOKEN = get_access_token()
     post_msg_url = (
-        f"https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={ACCESS_TOKEN}"
+        f"https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={access_token}"
     )
     res = json.loads(requests.post(url=post_msg_url, data=json.dumps(params)).content)
     if res["errcode"] != 0:
