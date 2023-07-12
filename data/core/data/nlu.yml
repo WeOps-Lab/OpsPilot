@@ -29,24 +29,6 @@ nlu:
       - 不，谢谢
       - 不要这样
 
-
-  - intent: greet
-    examples: |
-      - 你好
-      - 您好
-      - hello
-      - hi
-      - 喂
-      - 在么
-
-  - intent: goodbye
-    examples: |
-      - 拜拜！
-      - 再见！
-      - 拜
-      - 退出
-      - 结束
-
   - intent: chat_online
     examples: |
       - 联网问答

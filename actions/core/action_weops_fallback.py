@@ -50,7 +50,10 @@ class ActionWeOpsFallback(Action):
                         dispatcher.utter_message(text='WeOps智能助理联网检索能力没有打开,无法回答这个问题.')
                         return [UserUtteranceReverted()]
 
-                    events = list(filter(lambda x: x.get("event") == "user" and x.get("text"), tracker.events))
+                    events = list(
+                        filter(lambda x: x.get("event") == "user" or x.get("event") == "bot" and x.get(
+                            "text") != server_settings.default_thinking_message,
+                               tracker.events))
                     user_messages = []
                     for event in reversed(events):
                         if len(user_messages) >= 10:
@@ -78,6 +81,7 @@ class ActionWeOpsFallback(Action):
                         if user_prompt != '':
                             system_prompt = RedisUtils.get_fallback_prompt()
                             result = query_chatgpt(system_prompt, user_prompt)
+
                         logger.info(f'GPT问答模式:问题[{user_msg}],回复:[{result}]')
                         dispatcher.utter_message(text=result)
                 except Exception as e:

@@ -20,14 +20,24 @@ class RedisUtils:
         return redis_client.get('prompt_template')
 
     @staticmethod
-    def get_fallback_prompt():
-        return redis_client.get('fallback_prompt')
+    def get_fallback_prompt(context=''):
+        return redis_client.get('fallback_prompt').replace('{context}', context)
 
     @staticmethod
     def set_default_prompt(force):
         logger.info('初始化OpsPilot默认参数')
 
-        default_fallback_prompt = '扮演专业的运维工程师'
+        default_fallback_prompt = """ 我希望你扮演运维工程师，你是一个非常严谨的人，不会给出模棱两可的回答，我要求你具备以下特点：
+                                                           1、 一步一步的思考
+                                                           2、回答问题严谨，不会回答任何你不清楚的信息，假如你没有把握回答准确，请回复：我不了解
+                                                           3、你精通开源领域的各种工具库，当有更适合的技术或者方案的时候，你可以不按照我的要求进行代码的编写，优先使用你最推荐的方法
+                                                           4、所编写的内容必须是生产可用的
+                                                           5、一步一步的思考问题
+                                                           6、像一个科学家一样严谨的回答我的问题
+                                        以下是我们的聊天记录:
+                                        {context}
+                                        我的问题是:
+                                        """
 
         fallback_prompt = redis_client.get('fallback_prompt')
         redis_client.set('fallback_prompt', default_fallback_prompt)
