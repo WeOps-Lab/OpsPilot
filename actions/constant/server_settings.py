@@ -36,6 +36,8 @@ class ServerSettings(BaseSettings):
 
     default_thinking_message = 'OpsPilot正在思考中........'
 
+    chatgpt_model_max_history: Optional[int] = 10
+
     class Config:
         env_file = '.env'
 

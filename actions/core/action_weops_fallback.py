@@ -50,16 +50,6 @@ class ActionWeOpsFallback(Action):
                         dispatcher.utter_message(text='WeOps智能助理联网检索能力没有打开,无法回答这个问题.')
                         return [UserUtteranceReverted()]
 
-                    events = list(
-                        filter(lambda x: x.get("event") == "user" or x.get("event") == "bot" and x.get(
-                            "text") != server_settings.default_thinking_message,
-                               tracker.events))
-                    user_messages = []
-                    for event in reversed(events):
-                        if len(user_messages) >= 10:
-                            break
-                        user_messages.insert(0, event.get("text"))
-
                     if server_settings.fallback_chat_mode == 'knowledgebase':
                         prompt_template = RedisUtils.get_prompt_template()
                         prompt_template = self.searcher.format_prompt(prompt_template, user_msg)
@@ -73,6 +63,16 @@ class ActionWeOpsFallback(Action):
                         logger.info(f'GPT本地知识问答:问题[{user_msg}],回复:[{result}]')
                         dispatcher.utter_message(text=result)
                     else:
+                        events = list(
+                            filter(lambda x: x.get("event") == "user" or x.get("event") == "bot" and x.get(
+                                "text") != server_settings.default_thinking_message,
+                                   tracker.events))
+                        user_messages = []
+                        for event in reversed(events):
+                            if len(user_messages) >= server_settings.chatgpt_model_max_history:
+                                break
+                            user_messages.insert(0, event.get("text"))
+
                         user_prompt = ''
                         for user_message in user_messages:
                             user_prompt += user_message + '\n'
