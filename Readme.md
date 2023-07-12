@@ -158,6 +158,7 @@ tracker_store:
 * [新增]Word文档索引能力
 * [新增]PPT文档索引能力
 * [新增]新增企业微信Channel
+* [优化]闲聊模式的Prompt
 
 ## 0.3
 
