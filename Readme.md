@@ -161,6 +161,7 @@ tracker_store:
 * [新增]新增企业微信Channel
 * [优化]闲聊模式的Prompt
 * [优化]闲聊模式添加LLM_MAX_HISTORY变量，控制传递的历史记录数量
+* [优化]使用FAISS替换chromadb
 
 ## 0.3
 

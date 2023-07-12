@@ -1,7 +1,7 @@
 from typing import Any, Text, Dict, List
 
+from langchain import FAISS
 from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.vectorstores import Chroma
 from rasa_sdk import Action, Tracker, logger
 from rasa_sdk.events import UserUtteranceReverted
 from rasa_sdk.executor import CollectingDispatcher
@@ -23,7 +23,7 @@ class ActionWeOpsFallback(Action):
                                                encode_kwargs={
                                                    'show_progress_bar': True
                                                })
-            self.doc_search = Chroma(persist_directory=server_settings.vec_db_path, embedding_function=embeddings)
+            self.doc_search = FAISS.load_local(server_settings.vec_db_path, embeddings)
 
     def name(self) -> Text:
         return "action_weops_fallback"

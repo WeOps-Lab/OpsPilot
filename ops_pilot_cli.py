@@ -3,11 +3,11 @@ import shutil
 
 import fire
 from dotenv import load_dotenv
+from langchain import FAISS
 from langchain.document_loaders import PyPDFium2Loader, UnstructuredMarkdownLoader, UnstructuredWordDocumentLoader, \
     UnstructuredPowerPointLoader
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.text_splitter import MarkdownTextSplitter, RecursiveCharacterTextSplitter
-from langchain.vectorstores import Chroma
 from loguru import logger
 from tqdm import tqdm
 
@@ -35,7 +35,7 @@ class BootStrap(object):
                                            encode_kwargs={
                                                'show_progress_bar': True
                                            })
-        doc_search = Chroma(persist_directory=server_settings.vec_db_path, embedding_function=embeddings)
+        doc_search = FAISS.load_local(server_settings.vec_db_path, embeddings)
 
         searcher = Searcher()
 
@@ -99,9 +99,8 @@ class BootStrap(object):
                                            encode_kwargs={
                                                'show_progress_bar': True
                                            })
-        doc_search = Chroma.from_documents(knowledge_docs, embeddings, persist_directory=server_settings.vec_db_path)
-        doc_search.persist()
-
+        faiss_db = FAISS.from_documents(knowledge_docs, embeddings)
+        faiss_db.save_local(folder_path=server_settings.vec_db_path)
         logger.info('建立知识内容的倒排索引.....')
         search = Searcher()
         search.index_knowledge(knowledge_contents)
