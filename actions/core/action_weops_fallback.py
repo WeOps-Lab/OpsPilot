@@ -17,14 +17,17 @@ class ActionWeOpsFallback(Action):
     def __init__(self) -> None:
         super().__init__()
         self.searcher = Searcher()
+
+        embeddings = HuggingFaceEmbeddings(model_name='shibing624/text2vec-base-chinese',
+                                           cache_folder='cache/models',
+                                           encode_kwargs={
+                                               'show_progress_bar': True,
+                                               'normalize_embeddings': True
+                                           })
         if server_settings.vec_db_path is not None:
-            embeddings = HuggingFaceEmbeddings(model_name='shibing624/text2vec-base-chinese',
-                                               cache_folder='cache/models',
-                                               encode_kwargs={
-                                                   'show_progress_bar': True,
-                                                   'normalize_embeddings': True
-                                               })
             self.doc_search = FAISS.load_local(server_settings.vec_db_path, embeddings)
+        else:
+            self.doc_search = None
 
     def name(self) -> Text:
         return "action_weops_fallback"
@@ -47,18 +50,23 @@ class ActionWeOpsFallback(Action):
                 return [UserUtteranceReverted()]
             else:
                 try:
+
                     if server_settings.openai_endpoint is None:
                         dispatcher.utter_message(text='WeOps智能助理联网检索能力没有打开,无法回答这个问题.')
                         return [UserUtteranceReverted()]
 
                     if server_settings.fallback_chat_mode == 'knowledgebase':
-                        prompt_template = RedisUtils.get_prompt_template()
-                        prompt_template = self.searcher.format_prompt(prompt_template, user_msg)
+                        if self.doc_search is None:
+                            dispatcher.utter_message(f'我没有学习到任何信息，没法回复')
+                            return [UserUtteranceReverted()]
+                        else:
+                            prompt_template = RedisUtils.get_prompt_template()
+                            prompt_template = self.searcher.format_prompt(prompt_template, user_msg)
 
-                        result = langchain_qa(self.doc_search, prompt_template, user_msg)
+                            result = langchain_qa(self.doc_search, prompt_template, user_msg)
 
-                        logger.info(f'GPT本地知识问答:问题[{user_msg}],回复:[{result}]')
-                        dispatcher.utter_message(text=result['result'])
+                            logger.info(f'GPT本地知识问答:问题[{user_msg}],回复:[{result}]')
+                            dispatcher.utter_message(text=result['result'])
                     elif server_settings.fallback_chat_mode == 'online_knowledgebase':
                         result = chat_online(user_msg)
                         logger.info(f'GPT本地知识问答:问题[{user_msg}],回复:[{result}]')

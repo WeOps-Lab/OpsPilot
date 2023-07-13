@@ -32,7 +32,6 @@ class ServerSettings(BaseSettings):
     embed_model_name: Optional[str] = 'shibing624/text2vec-base-chinese'
     embed_model_cache_home: Optional[str] = 'cache/models'
     vec_db_path: Optional[str] = 'vec_db'
-    faq_vec_db_path: Optional[str] = 'faq_vec_db'
     indexer_db_path: Optional[str] = 'indexdir'
 
     default_thinking_message = 'OpsPilot正在思考中........'
