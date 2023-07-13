@@ -1,12 +1,14 @@
+import json
 import os
 import shutil
-
+import pandas as pd
 import fire
 from dotenv import load_dotenv
 from langchain import FAISS
 from langchain.document_loaders import PyPDFium2Loader, UnstructuredMarkdownLoader, UnstructuredWordDocumentLoader, \
-    UnstructuredPowerPointLoader
+    UnstructuredPowerPointLoader, CSVLoader, UnstructuredCSVLoader
 from langchain.embeddings import HuggingFaceEmbeddings
+from langchain.schema import Document
 from langchain.text_splitter import MarkdownTextSplitter, RecursiveCharacterTextSplitter
 from loguru import logger
 from tqdm import tqdm
@@ -51,7 +53,55 @@ class BootStrap(object):
 
             logger.info(f'回复:[{results["result"]}]')
 
-    def embed_local_knowledge(self, knowledge_path: str, ):
+    def query_faq_embed_knowledge(self):
+        """
+        进入命令行模式进行本地知识问答
+        """
+        embeddings = HuggingFaceEmbeddings(model_name=server_settings.embed_model_name,
+                                           cache_folder=server_settings.embed_model_cache_home,
+                                           encode_kwargs={
+                                               'show_progress_bar': True,
+                                               'normalize_embeddings': True
+                                           })
+        doc_search = FAISS.load_local(server_settings.faq_vec_db_path, embeddings)
+
+        while True:
+            query = input("请输入问题（输入exit退出终端）：")
+            if query == "exit":
+                break
+            results = doc_search.similarity_search_with_relevance_scores(query, k=1)
+
+            logger.info(f'回复:[{results}]')
+
+    def embed_faq_knowledge(self, knowledge_path: str):
+        logger.info('清理索引文件....')
+        if os.path.exists(server_settings.faq_vec_db_path):
+            logger.info(f'清理语义向量数据库文件:[{server_settings.faq_vec_db_path}]')
+            shutil.rmtree(server_settings.faq_vec_db_path)
+        embeddings = HuggingFaceEmbeddings(model_name=server_settings.embed_model_name,
+                                           cache_folder=server_settings.embed_model_cache_home,
+                                           encode_kwargs={
+                                               'show_progress_bar': True,
+                                               'normalize_embeddings': True
+                                           })
+        knowledge_files = []
+        for root, dirs, files in os.walk(knowledge_path, topdown=False):
+            for name in files:
+                knowledge_files.append(os.path.join(root, name))
+
+        knowledge_docs = []
+        for knowledge_file in tqdm(knowledge_files, desc='索引文件中....'):
+            if knowledge_file.lower().endswith(".csv"):
+                df = pd.read_csv(knowledge_file)
+                for _, row in df.iterrows():
+                    doc = Document(page_content=row['title'], metadata={
+                        "content": row['content']
+                    })
+                    knowledge_docs.append(doc)
+        faiss_db = FAISS.from_documents(knowledge_docs, embeddings)
+        faiss_db.save_local(folder_path=server_settings.faq_vec_db_path)
+
+    def embed_local_knowledge(self, knowledge_path: str):
         """
         索引目标路径下的文件，存放至向量数据库与倒排索引中
         Args:

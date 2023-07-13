@@ -21,7 +21,8 @@ class ActionWeOpsFallback(Action):
             embeddings = HuggingFaceEmbeddings(model_name='shibing624/text2vec-base-chinese',
                                                cache_folder='cache/models',
                                                encode_kwargs={
-                                                   'show_progress_bar': True
+                                                   'show_progress_bar': True,
+                                                   'normalize_embeddings': True
                                                })
             self.doc_search = FAISS.load_local(server_settings.vec_db_path, embeddings)
 
