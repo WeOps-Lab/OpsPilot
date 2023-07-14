@@ -11,6 +11,7 @@ intents:
   - goodbye
   - deny
   - affirm
+  - chat_online
 
 actions:
   - action_reset_all_slot

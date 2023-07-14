@@ -4,6 +4,7 @@ language: zh
 
 pipeline:
   - name: "compoments.jieba_tokenizer.JiebaTokenizer"
+
   - name: RegexFeaturizer
     use_word_boundaries: false
     case_sensitive: True
@@ -26,6 +27,11 @@ pipeline:
     constrain_similarities: true
     evaluate_on_number_of_examples: 0
     evaluate_every_number_of_epochs: 100
+    number_of_transformer_layers: 4
+    transformer_size: 256
+    number_of_attention_heads: 4
+    learning_rate: 0.001
+    drop_rate: 0.3
     tensorboard_log_directory: "./tensorboard"
     tensorboard_log_level: "epoch"
 
@@ -34,11 +40,7 @@ pipeline:
     use_lookup_tables: True
     use_regexes: True
     use_word_boundaries: True
-  #  - name: EntitySynonymMapper
 
-  - name: ResponseSelector
-    epochs: 1000
-  #    retrieval_intent: chitchat
   - name: FallbackClassifier
     threshold: 0.89
 
