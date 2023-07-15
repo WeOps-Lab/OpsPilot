@@ -19,10 +19,10 @@ class ValidateOnlineChatForm(FormValidationAction):
             tracker: Tracker,
             domain: DomainDict,
     ) -> Dict[Text, Any]:
+
         if is_valid_url(slot_value):
             return {'online_chat_url': slot_value}
         else:
-            errmsg = f'输入的URL地址不合法,当前输入的地址为:[{slot_value}],请重新输入'
-            logger.info(errmsg)
-            dispatcher.utter_message(errmsg)
+            logger.info(f'输入的URL地址不合法,当前输入的地址为:[{slot_value}],当前通道为[{tracker.get_latest_input_channel()}]')
+            dispatcher.utter_message(f'输入的URL地址不合法,当前输入的地址为:[{slot_value}],请重新输入')
             return {'online_chat_url': None}
