@@ -23,3 +23,10 @@ rules:
       - slot_was_set:
           - requested_slot: null
       - action: action_online_chat
+
+  - rule: 无法理解
+    steps:
+      - intent: out_of_scope
+      - action: action_pre_weops_fallback
+      - action: action_weops_fallback
+      - action: action_post_weops_fallback

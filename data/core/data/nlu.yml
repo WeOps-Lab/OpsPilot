@@ -33,3 +33,15 @@ nlu:
     examples: |
       - 联网问答
       - 在线问答
+
+  - intent: out_of_scope
+    examples: |
+      - 今天天气怎么样
+      - 这个功能怎么用
+      - WeOps支持哪些功能
+      - 马斯克有没去参加笼中决斗
+      - 产品对比
+      - 你真好
+      - 再说吧
+      - jenkins是什么
+      - 那你从那里获取到jenkins的相关信息的
