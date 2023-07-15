@@ -21,5 +21,5 @@ class ValidateOnlineChatForm(FormValidationAction):
         if is_valid_url(slot_value):
             return {'online_chat_url': slot_value}
         else:
-            dispatcher.utter_message('输入的URL地址不合法,请重新输入')
+            dispatcher.utter_message(f'输入的URL地址不合法,当前输入的地址为:[{slot_value}],请重新输入')
             return {'online_chat_url': None}
