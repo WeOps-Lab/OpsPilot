@@ -1,3 +1,4 @@
+import os.path
 from typing import Any, Text, Dict, List
 
 from langchain import FAISS
@@ -24,7 +25,7 @@ class ActionWeOpsFallback(Action):
                                                'show_progress_bar': True,
                                                'normalize_embeddings': True
                                            })
-        if server_settings.vec_db_path is not None:
+        if server_settings.vec_db_path is not None and os.path.exists(server_settings.vec_db_path):
             self.doc_search = FAISS.load_local(server_settings.vec_db_path, embeddings)
         else:
             self.doc_search = None
