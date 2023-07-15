@@ -1,5 +1,6 @@
 from typing import Text, List, Any, Dict
 
+from loguru import logger
 from rasa_sdk import Tracker, FormValidationAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
@@ -21,5 +22,7 @@ class ValidateOnlineChatForm(FormValidationAction):
         if is_valid_url(slot_value):
             return {'online_chat_url': slot_value}
         else:
-            dispatcher.utter_message(f'输入的URL地址不合法,当前输入的地址为:[{slot_value}],请重新输入')
+            errmsg = f'输入的URL地址不合法,当前输入的地址为:[{slot_value}],请重新输入'
+            logger.info(errmsg)
+            dispatcher.utter_message(errmsg)
             return {'online_chat_url': None}
