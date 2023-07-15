@@ -12,6 +12,7 @@ intents:
   - deny
   - affirm
   - chat_online
+  - out_of_scope
 
 actions:
   - action_reset_all_slot
