@@ -41,9 +41,9 @@ class ActionWeOpsFallback(Action):
         run_mode = server_settings.run_mode
 
         logger.info(f'无法识别用户的意图，进入默认Fallback，用户输入的信息为:{user_msg}')
-        logger.info(f'TOP3 Intent结果如下：{tracker.latest_message["intent_ranking"][0:3]}')
 
-        # TODO: 先从本地知识文件中检索可能的内容，直接回复，假如没有，转给GPT进行查找总结
+        if 'intent_ranking' in tracker.latest_message:
+            logger.info(f'TOP3 Intent结果如下：{tracker.latest_message["intent_ranking"][0:3]}')
 
         if tracker.active_loop_name is None:
             if run_mode == 'DEV':

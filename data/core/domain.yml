@@ -6,13 +6,10 @@ session_config:
 
 
 intents:
-  - chitchat
-  - greet
-  - goodbye
-  - deny
-  - affirm
-  - chat_online
-  - out_of_scope
+  - 确认
+  - 取消
+  - 在线问答
+  - 无法理解
 
 actions:
   - action_reset_all_slot
@@ -36,13 +33,13 @@ slots:
     mappings:
       - type: from_text
         conditions:
-         - active_loop: online_chat_form
-           requested_slot: online_chat_url
+          - active_loop: online_chat_form
+            requested_slot: online_chat_url
   online_chat_query:
     type: text
     influence_conversation: true
     mappings:
       - type: from_text
         conditions:
-         - active_loop: online_chat_form
-           requested_slot: online_chat_query
+          - active_loop: online_chat_form
+            requested_slot: online_chat_query

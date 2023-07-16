@@ -1,7 +1,7 @@
 version: "3.1"
 
 nlu:
-  - intent: affirm
+  - intent: 确认
     examples: |
       - 好的
       - 是的
@@ -14,7 +14,7 @@ nlu:
       - 确认
       - 好的没错
 
-  - intent: deny
+  - intent: 取消
     examples: |
       - 不行
       - 不是的
@@ -29,12 +29,12 @@ nlu:
       - 不，谢谢
       - 不要这样
 
-  - intent: chat_online
+  - intent: 在线问答
     examples: |
       - 联网问答
       - 在线问答
 
-  - intent: out_of_scope
+  - intent: 无法理解
     examples: |
       - 今天天气怎么样
       - 这个功能怎么用

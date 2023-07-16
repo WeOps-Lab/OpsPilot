@@ -2,27 +2,6 @@ version: "3.1"
 
 responses:
 
-  utter_startup:
-    - text: "你好，我是OpsPilot智能助理，我能够完成多种运维任务，例如重启服务器、查询监控状态。同时我也是一个智能助理，能够帮你解答任何问题哦"
-#    - text: "你好，我是WeOps智能助理"
-#      channel: enterprise_wechat
-
-  utter_greet:
-    - text: "你好!"
-
-
-  utter_goodbye:
-    - text: "再见！"
-
-  utter_thinking:
-    - text: "WeOps正在思考中,请稍等......"
-
-  utter_default:
-    - text: "WeOps还没学会这个问题的解决方法~"
-
-  utter_ask_rephrase:
-    - text: "WeOps没有找到你需要的信息......"
-
   utter_ask_online_chat_url:
     - text: "你想对哪个网站进行知识问答呢？"
 

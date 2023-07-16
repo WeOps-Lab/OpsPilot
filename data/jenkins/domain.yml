@@ -2,9 +2,9 @@ version: "3.1"
 
 intents:
   - EXTERNAL_jenkins_reminder
-  - build_jenkins_pipeline
-  - list_jenkins_pipeline
-  - search_jenkins_pipeline
+  - 列出流水线
+  - 查找流水线
+  - 构建流水线
 
 actions:
   - action_build_jenkins_pipeline
