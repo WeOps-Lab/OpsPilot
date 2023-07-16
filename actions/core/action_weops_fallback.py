@@ -96,7 +96,7 @@ class ActionWeOpsFallback(Action):
                         dispatcher.utter_message(text=result)
                 except Exception as e:
                     logger.exception('请求Azure OpenAI 服务异常')
-                    dispatcher.utter_message(text='WeOps智能助理处于非常繁忙的状态，请稍后再试.')
+                    dispatcher.utter_message(text='OpsPilot处于非常繁忙的状态，请稍后再试.')
                 return [UserUtteranceReverted()]
         else:
             return []
