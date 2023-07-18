@@ -93,11 +93,12 @@ class EnterpriseWechatChannel(InputChannel):
                     metadata=metadata,
                 )
             )
-            response_data = collector.messages[-1]['text']
-
             if self.access_token == "":
                 self.access_token = get_access_token(self.corp_id, self.secret)
-            post_message(self.access_token, self.agent_id, user_id, response_data)
-            return None
+
+            response_data = collector.messages
+            for data in response_data:
+                post_message(self.access_token, self.agent_id, user_id, data['text'])
+            return HTTPResponse()
 
         return enterprise_wechathook

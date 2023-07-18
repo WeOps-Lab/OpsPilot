@@ -25,7 +25,8 @@ class ActionWeOpsFallback(Action):
                                                'show_progress_bar': True,
                                                'normalize_embeddings': True
                                            })
-        if server_settings.vec_db_path is not None and os.path.exists(server_settings.vec_db_path):
+        if server_settings.vec_db_path is not None and os.path.exists(
+                server_settings.vec_db_path) and server_settings.fallback_chat_mode == 'knowledgebase':
             self.doc_search = FAISS.load_local(server_settings.vec_db_path, embeddings)
         else:
             self.doc_search = None
