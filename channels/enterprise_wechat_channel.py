@@ -91,8 +91,6 @@ class EnterpriseWechatChannel(InputChannel):
                     metadata=metadata,
                 )
             )
-            response_data = collector.messages[-1]['text']
-
             qywx_app = QYWXApp(
                 self.token,
                 self.encoding_aes_key,
@@ -100,8 +98,9 @@ class EnterpriseWechatChannel(InputChannel):
                 self.secret,
                 self.agent_id,
             )
-
-            qywx_app.post_msg(user_id=user_id, msgtype="text", content=response_data)
-            return None
+            response_data = collector.messages
+            for data in response_data:
+                qywx_app.post_msg(user_id=user_id, msgtype="text", content=data['text'])
+            return HTTPResponse()
 
         return enterprise_wechathook
