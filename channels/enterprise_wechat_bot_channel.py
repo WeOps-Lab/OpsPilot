@@ -40,6 +40,12 @@ class EnterpriseWechatBotChannel(InputChannel):
         async def health(request: Request) -> HTTPResponse:
             return response.json({"status": "ok"})
 
+        @enterprise_wechathook.route("/raw", methods=["POST"])
+        async def msg_entry(request: Request) -> HTTPResponse:
+            data = request.json
+            self.bot.send_markdown(data['message'])
+            return HTTPResponse()
+
         @enterprise_wechathook.route("/", methods=["POST"])
         async def msg_entry(request: Request) -> HTTPResponse:
             input_channel = self.name()
