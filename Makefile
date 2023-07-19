@@ -3,7 +3,7 @@ train:
 	rasa train -d data
 
 run:
-	rasa run --enable-api --cors "*" --endpoints ./dev-config/endpoints.yml
+	rasa run --enable-api --cors "*" --endpoints ./dev-config/endpoints.yml --credentials ./dev-config/credentials.yml
 	#RASA_TELEMETRY_ENABLED=false  SANIC_WORKERS=5 ACTION_SERVER_SANIC_WORKERS=5 --debug
 
 actions:
