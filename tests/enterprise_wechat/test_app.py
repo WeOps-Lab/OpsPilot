@@ -75,7 +75,14 @@ class TestQYWXApp(unittest.TestCase):
         res = self.app.post_msg(user_id="WangBeiNing", msgtype='image', media_id=TestQYWXApp.media_id)
         assert res["errcode"] == 0
 
-
+    def test_name_to_userid(self):
+        # 将下面的人名换成企微内的，tips:可以通过群成员右边的三个点复制群成员名称
+        name1 = "张三;李四;王五(wangwu);"
+        name2 = "张三;"
+        res = QYWXApp.name_to_userid(name1)
+        assert len(res) != 0
+        res = QYWXApp.name_to_userid(name2)
+        assert len(res) != 0
 if __name__ == "__main__":
     # 构造测试套件，按顺序执行测试用例
     suite = unittest.TestSuite()
@@ -86,6 +93,7 @@ if __name__ == "__main__":
     suite.addTest(TestQYWXApp("test_get_img_media_id"))
     suite.addTest(TestQYWXApp("test_post_msg"))
     suite.addTest(TestQYWXApp("test_update_group"))
+    suite.addTest(TestQYWXApp("test_name_to_userid"))
 
     # 运行测试套件
     runner = unittest.TextTestRunner()

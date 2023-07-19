@@ -1,9 +1,10 @@
 import os
+import re
 import urllib.parse as urlparse
 import requests
 from loguru import logger
 
-from channels.enterprise_wechat_channel import EnterpriseWechatChannel
+from channels.enterprise_wechat_mysql import mysql_connect, mysql_select
 
 
 class QYWXApp():
@@ -31,7 +32,7 @@ class QYWXApp():
         self, token, encoding_aes_key, corp_id, secret, agent_id
     ):
         self.token = token
-        self.encoding_aes_k=encoding_aes_key
+        self.encoding_aes_key = encoding_aes_key
         self.corp_id = corp_id
         self.secret = secret
         self.token = agent_id
@@ -224,3 +225,31 @@ class QYWXApp():
 
         res = self._requests_validate_expired(**request_params)
         return res
+
+    @staticmethod
+    def name_to_userid(name: str, seq: str = ";") -> list:
+        """将用户名转换成对应的user_id
+           首先需要：1.通过企微管理员从后台把通讯录导出；2.去把enterprise_wechat_mysql.py执行下
+
+        Args:
+            name (str): 企微用户姓名
+            seq (str, optional): 姓名之间的分隔符，如果是单个姓名则没有. Defaults to ';'.
+
+        Returns:
+            list: 姓名对应的user_id列表
+        """
+        # 去掉姓名中带有的“(别名)”
+        name = re.sub(r"\(.*?\)", "", name)
+
+        name_or = "|".join(filter(None,name.split(seq)))
+        select_sql = 'select user_id from qywx_contacts where name regexp "{}"'.format(
+            name_or
+        )
+
+        db, cursor = mysql_connect()
+        result = mysql_select(db, cursor, select_sql)
+        if len(result) == 0:
+            logger.error(f"未查询到用户名称对应的用户帐号，请检查传入的姓名{name}和分隔符{seq}")
+        # 查询得到的是列表嵌套元组的形式
+        result = [i[0] for i in result]
+        return result
