@@ -1,5 +1,4 @@
 import inspect
-import json
 from typing import Text, Dict, Any, Optional, Callable, Awaitable
 from loguru import logger
 from rasa.core.channels.channel import (
@@ -13,8 +12,7 @@ from sanic.response import HTTPResponse
 
 from channels.WXBizMsgCrypt3 import WXBizMsgCrypt
 import xml.etree.cElementTree as ET
-
-from channels.enterprise_wechat_utils import post_message, get_access_token
+from channels.enterprise_wechat_app import QYWXApp
 
 
 class EnterpriseWechatChannel(InputChannel):
@@ -93,12 +91,16 @@ class EnterpriseWechatChannel(InputChannel):
                     metadata=metadata,
                 )
             )
-            if self.access_token == "":
-                self.access_token = get_access_token(self.corp_id, self.secret)
-
+            qywx_app = QYWXApp(
+                self.token,
+                self.encoding_aes_key,
+                self.corp_id,
+                self.secret,
+                self.agent_id,
+            )
             response_data = collector.messages
             for data in response_data:
-                post_message(self.access_token, self.agent_id, user_id, data['text'])
+                qywx_app.post_msg(user_id=user_id, msgtype="text", content=data['text'])
             return HTTPResponse()
 
         return enterprise_wechathook
