@@ -54,7 +54,10 @@ class TestQYWXApp(unittest.TestCase):
         assert res["errcode"] == 0
 
     def test_get_img_media_id(self):
-        img_url = "https://cdn.jsdelivr.net/gh/bainningking/pic_repo@main/img/opspilot.png"
+        # 图床图片（图片类型在尾部）
+        # img_url = "https://cdn.jsdelivr.net/gh/bainningking/pic_repo@main/img/opspilot.png"
+        # DALL-E图片
+        img_url = "https://oaidalleapiprodscus.blob.core.windows.net/private/org-x5cPubqlMOCWwX4scmcSvPU3/user-drxZ69DpevXcbdpwlc7xDpL8/img-mjpqVG4ojlbi8GidyXh1RMxu.png?st=2023-07-20T05%3A18%3A28Z&se=2023-07-20T07%3A18%3A28Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-07-19T20%3A04%3A40Z&ske=2023-07-20T20%3A04%3A40Z&sks=b&skv=2021-08-06&sig=QD/1eC1C5oS8V4um0y8DYuqWbuUHIWt/9l8x8F3aRs4%3D"
         TestQYWXApp.media_id = self.app._get_img_media_id(img_url)
         assert isinstance(TestQYWXApp.media_id, str)
         assert len(TestQYWXApp.media_id) != 0

@@ -1,9 +1,11 @@
 import os
 import re
 import urllib.parse as urlparse
+import openai
 import requests
 from loguru import logger
-
+from channels.WXBizMsgCrypt3 import WXBizMsgCrypt
+import xml.etree.cElementTree as ET
 from channels.enterprise_wechat_mysql import mysql_connect, mysql_select
 
 
@@ -35,7 +37,7 @@ class QYWXApp():
         self.encoding_aes_key = encoding_aes_key
         self.corp_id = corp_id
         self.secret = secret
-        self.token = agent_id
+        self.agent_id = agent_id
         self.access_token = self._get_access_token()
 
     def _fresh_access_token(self):
@@ -95,6 +97,9 @@ class QYWXApp():
 
         request_params = dict()
         img_postfix = os.path.splitext(img_url)[-1][1:]
+        if img_postfix == "":
+            # dall-E返回的图片链接默认是png，且后缀不在链接尾
+            img_postfix = "png"
         # 将png图片上传企微获得对应的media_id
         f = requests.get(img_url).content
         file = {"my_pic": ("pic_name", f, f"text/{img_postfix}")}
@@ -241,7 +246,7 @@ class QYWXApp():
         # 去掉姓名中带有的“(别名)”
         name = re.sub(r"\(.*?\)", "", name)
 
-        name_or = "|".join(filter(None,name.split(seq)))
+        name_or = "|".join(filter(None, name.split(seq)))
         select_sql = 'select user_id from qywx_contacts where name regexp "{}"'.format(
             name_or
         )
@@ -253,3 +258,58 @@ class QYWXApp():
         # 查询得到的是列表嵌套元组的形式
         result = [i[0] for i in result]
         return result
+
+    def request_decrypt(self, request):
+        """用经过企微服务器加密的用户对应用发送的消息进行解密
+
+        Args:
+            requset (request): request请求体
+
+        Returns:
+            user_id: 向应用发送消息的用户的企微帐号
+            msg_type: 消息类型，进入应用为event，发送文本消息为text
+            msg_content: 消息内容
+        """
+        # 企微应用消息解析
+        msg_signature = request.args["msg_signature"]
+        timestamp = request.args["timestamp"]
+        nonce = request.args["nonce"]
+        data = request.data
+        wxcpt = WXBizMsgCrypt(
+            self.token,
+            self.encoding_aes_key,
+            self.corp_id,
+        )
+        _, msg = wxcpt.DecryptMsg(data, msg_signature, timestamp, nonce)
+        xml_tree = ET.fromstring(msg)
+
+        # 企微用户id
+        user_id = xml_tree.find("FromUserName").text
+
+        # 消息类型，event表示用户进入应用，text表示用户发送消息
+        msg_type = xml_tree.find("MsgType").text
+        msg_content = (
+            xml_tree.find("Content").text
+            if xml_tree.find("Content") is not None
+            else None
+        )
+        logger.info(msg_content)
+
+        return user_id, msg_type, msg_content
+
+    def post_dall_e_img(self, user_id, msg_content):
+        """接收企微用户的dall 图片描述语句(msg_content)，发送openai接口返回的图片给到用户
+
+        Args:
+            user_id (_type_): 企微用户帐号
+            msg_content (_type_): 图片描述语句
+        """
+        response = openai.Image.create(
+            prompt=msg_content.strip("dall"),
+            n=1,
+            size="1024x1024",
+            response_format="url",
+        )
+        image_url = response["data"][0]["url"]
+        media_id = self._get_img_media_id(image_url)
+        self.post_msg(user_id=user_id, msgtype="image", media_id=media_id)
