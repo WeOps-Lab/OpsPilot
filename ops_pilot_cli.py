@@ -5,6 +5,8 @@ import shutil
 import fire
 import pandas as pd
 from dotenv import load_dotenv
+import pandas as pd
+import sqlalchemy
 from langchain import FAISS
 from langchain.document_loaders import (
     PyPDFium2Loader, UnstructuredMarkdownLoader, UnstructuredWordDocumentLoader,
@@ -20,6 +22,7 @@ from actions.constant.server_settings import server_settings
 from actions.utils.indexer_utils import Searcher
 from actions.utils.langchain_utils import langchain_qa, graph_db_chat
 from actions.utils.redis_utils import RedisUtils
+from channels.enterprise_wechat_mysql import create_mysql_engine, mysql_connect
 
 
 class BootStrap:
@@ -116,6 +119,84 @@ class BootStrap:
         logger.info('建立知识内容的倒排索引.....')
         search = Searcher()
         search.index_knowledge(knowledge_contents)
+
+
+    def init_db_table(self):
+        """根据企微后台通讯录应用导出的excel，将其中用于一键拉群的字段写入mysql；
+        函数包括建库、建表、导入三部分
+        """
+        # 数据库连接，无数据库
+        db, cursor = mysql_connect(exist_db=False)
+
+        create_db_sql = """CREATE DATABASE IF NOT EXISTS {} DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;""".format(
+            MYSQL_DATABASE
+        )
+        try:
+            cursor.execute(create_db_sql)
+            db.commit()
+        except:
+            # 发生错误时回滚
+            db.rollback()
+        # 关闭数据库连接
+        db.close()
+
+        # 建立数据表，有数据库名
+        db, cursor = mysql_connect()
+        create_table_sql = """CREATE TABLE `qywx_contacts` (
+            `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT COMMENT '默认主键',
+            `user_id` varchar(20) NOT NULL DEFAULT '' COMMENT '帐号',
+            `name` varchar(16) NOT NULL DEFAULT '' COMMENT '姓名',
+            `sex` char(2) DEFAULT '' COMMENT '性别',
+            `department` varchar(100) DEFAULT '' COMMENT '部门',
+            `phone_number` varchar(20) DEFAULT '' COMMENT '手机',
+            `email` varchar(50) DEFAULT '' COMMENT '企业邮箱',
+            
+            PRIMARY KEY (`id`),
+            KEY `k_name` (`name`)
+            ) CHARSET=utf8 COMMENT='企微通讯录';""".format(
+            MYSQL_DATABASE
+        )
+        try:
+            cursor.execute(create_table_sql)
+            db.commit()
+        except:
+            # 发生错误时回滚
+            db.rollback()
+        # 关闭数据库连接
+        db.close()
+
+
+    def contacts_to_mysql(self, contacts_path):
+        """将通讯录相关字段写入Mysql
+
+        Args:
+            contacts_path (str): 企微后台导出的通讯录的地址，类似"../XX公司通讯录.xlsx"
+        """
+        conn = create_mysql_engine()
+        contacts_df = pd.read_excel(
+            contacts_path,
+            engine="openpyxl",
+            header=9,
+            usecols=["帐号", "姓名", "性别", "部门", "手机", "企业邮箱"],
+            index_col=None
+        )
+        contacts_df = contacts_df.reset_index(drop=True)
+        contacts_df = contacts_df.rename(columns={"帐号":"user_id", "姓名":"name", "性别":"sex", "部门":"department", "手机":"phone_number", "企业邮箱":"email"})
+        contacts_df.to_sql(
+            "qywx_contacts",
+            con=conn,
+            if_exists="append",
+            dtype={
+                "user_id": sqlalchemy.VARCHAR(length=30),
+                "name": sqlalchemy.VARCHAR(length=16),
+                "sex": sqlalchemy.CHAR(length=2),
+                "department": sqlalchemy.VARCHAR(length=100),
+                "phone_number": sqlalchemy.VARCHAR(length=20),
+                "email": sqlalchemy.VARCHAR(length=50)
+            },
+            index=False
+        )
+
 
     def create_relationships_from_files(self, folder_path: str, json_config_path: str):
         """
@@ -247,8 +328,9 @@ class BootStrap:
             logger.info(f'回复:[{results}]')
 
 
+
 if __name__ == '__main__':
     load_dotenv()
     os.environ.setdefault('SENTENCE_TRANSFORMERS_HOME', server_settings.embed_model_cache_home)
-
+    MYSQL_DATABASE = os.getenv("MYSQL_DATABASE")
     fire.Fire(BootStrap)
