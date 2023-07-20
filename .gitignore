@@ -29,3 +29,4 @@ llm_model
 faq_vec_db
 weops-traindata
 dev-config
+node_modules

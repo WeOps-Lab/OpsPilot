@@ -38,6 +38,10 @@ class ServerSettings(BaseSettings):
 
     chatgpt_model_max_history: Optional[int] = 10
 
+    neo4j_url: Optional[str] = ''
+    neo4j_username: Optional[str] = ''
+    neo4j_password: Optional[str] = ''
+
     class Config:
         env_file = '.env'
 

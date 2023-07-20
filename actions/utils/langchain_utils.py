@@ -1,8 +1,9 @@
 import trafilatura
 from langchain import PromptTemplate, LLMChain
 from langchain.agents import AgentType, initialize_agent
-from langchain.chains import RetrievalQA
+from langchain.chains import RetrievalQA, GraphCypherQAChain
 from langchain.chat_models import ChatOpenAI
+from langchain.graphs import Neo4jGraph
 from langchain.prompts import SystemMessagePromptTemplate, HumanMessagePromptTemplate, ChatPromptTemplate
 from langchain.tools import Tool
 from langchain.utilities import BingSearchAPIWrapper
@@ -119,3 +120,17 @@ def query_chatgpt(system_message, user_message):
 
     result = chain.run(user_message)
     return result
+
+
+def graph_db_chat(query):
+    llm = ChatOpenAI(openai_api_key=server_settings.openai_key,
+                     openai_api_base=server_settings.openai_endpoint,
+                     temperature=server_settings.openai_api_temperature)
+    graph = Neo4jGraph(
+        url=server_settings.neo4j_url, username=server_settings.neo4j_username, password=server_settings.neo4j_password
+    )
+    chain = GraphCypherQAChain.from_llm(
+        llm, graph=graph, verbose=True
+    )
+    chain.verbose = True
+    return chain.run(query)
