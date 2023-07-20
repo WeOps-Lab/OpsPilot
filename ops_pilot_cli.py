@@ -33,6 +33,7 @@ class BootStrap:
     3. 索引目标路径下的文件，存放至向量数据库与倒排索引中
     4. 从CSV和Excel文件中读取实体和关系信息，创建实体和关系节点，并添加到Neo4j数据库中
     """
+
     def init_data(self, force: bool = False):
         """
         初始化系统配置
@@ -120,7 +121,6 @@ class BootStrap:
         search = Searcher()
         search.index_knowledge(knowledge_contents)
 
-
     def init_db_table(self):
         """根据企微后台通讯录应用导出的excel，将其中用于一键拉群的字段写入mysql；
         函数包括建库、建表、导入三部分
@@ -165,7 +165,6 @@ class BootStrap:
         # 关闭数据库连接
         db.close()
 
-
     def contacts_to_mysql(self, contacts_path):
         """将通讯录相关字段写入Mysql
 
@@ -181,7 +180,9 @@ class BootStrap:
             index_col=None
         )
         contacts_df = contacts_df.reset_index(drop=True)
-        contacts_df = contacts_df.rename(columns={"帐号":"user_id", "姓名":"name", "性别":"sex", "部门":"department", "手机":"phone_number", "企业邮箱":"email"})
+        contacts_df = contacts_df.rename(
+            columns={"帐号": "user_id", "姓名": "name", "性别": "sex", "部门": "department", "手机": "phone_number",
+                     "企业邮箱": "email"})
         contacts_df.to_sql(
             "qywx_contacts",
             con=conn,
@@ -196,7 +197,6 @@ class BootStrap:
             },
             index=False
         )
-
 
     def create_relationships_from_files(self, folder_path: str, json_config_path: str):
         """
@@ -326,7 +326,6 @@ class BootStrap:
             results = graph_db_chat(query)
 
             logger.info(f'回复:[{results}]')
-
 
 
 if __name__ == '__main__':
