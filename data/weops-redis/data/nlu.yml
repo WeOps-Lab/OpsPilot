@@ -1,0 +1,8 @@
+version: "3.1"
+
+nlu:
+  - intent: redis_up
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis监控插件运行状态
+      - 发生Redis监控插件运行状态告警,ip地址:"[10.11.25.50](ip_address)"
+      - ip地址:"[127.0.0.1](ip_address)",redis监控插件运行状态==0

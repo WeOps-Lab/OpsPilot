@@ -1,0 +1,13 @@
+version: "3.1"
+responses:
+
+  utter_redis_up:
+    - text: "指标描述： Redis实例是否处于运行状态。处理指引： 如果发现redis_up的值为0，可以先检查网络连接是否正常，以及Redis实例的日志是否有异常信息等等。"
+
+  utter_redis_up_button:
+    - text: "建议的处理方式"
+      buttons:
+        - title: "检查网络连接"
+          payload: '/internal_exec_job{{"internal_job_name":"检查Redis网络连接"}}'
+        - title: "查看实例日志"
+          payload: '/internal_exec_job{{"internal_job_name":"查看Redis实例日志"}}'

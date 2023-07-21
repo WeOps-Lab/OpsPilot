@@ -1,0 +1,8 @@
+version: "3.1"
+rules:
+
+  - rule: redis_up
+    steps:
+      - intent: redis_up
+      - action: utter_redis_up
+      - action: utter_redis_up_button

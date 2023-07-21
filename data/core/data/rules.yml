@@ -30,3 +30,8 @@ rules:
       - action: action_pre_weops_fallback
       - action: action_weops_fallback
       - action: action_post_weops_fallback
+
+  - rule: 执行自动化任务
+    steps:
+      - intent: internal_exec_job
+      - action: action_execute_job

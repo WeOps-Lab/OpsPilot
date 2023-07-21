@@ -1,6 +1,6 @@
 .PHONY: train run actions tensorboard clean interactive prepare release valid
 train:
-	rasa train -d data
+	NUMEXPR_MAX_THREADS=16 rasa train -d data
 
 run:
 	rasa run --enable-api --cors "*" --endpoints ./dev-config/endpoints.yml --credentials ./dev-config/credentials.yml

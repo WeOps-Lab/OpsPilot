@@ -1,0 +1,6 @@
+version: "3.1"
+
+nlu:
+  - regex: ip_address
+    examples: |
+      - (?<=").*(?=")
