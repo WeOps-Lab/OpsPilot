@@ -159,7 +159,7 @@ tracker_store:
 * [新增]Word文档索引能力
 * [新增]PPT文档索引能力
 * [新增]企业微信机器人Channel
-* [新增]企业微信Channel
+* [新增]企业微信Channel，企业微信Channel支持Dall与GPT问答能力
 * [优化]闲聊模式的Prompt
 * [优化]闲聊模式添加LLM_MAX_HISTORY变量，控制传递的历史记录数量
 * [优化]使用FAISS替换chromadb
