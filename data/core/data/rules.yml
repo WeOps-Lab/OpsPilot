@@ -34,4 +34,5 @@ rules:
   - rule: 执行自动化任务
     steps:
       - intent: internal_exec_job
+      - action: action_pre_execute_job
       - action: action_execute_job

@@ -16,6 +16,7 @@ intents:
   - 无法理解
   - internal_exec_job
 
+
 actions:
   - action_reset_all_slot
   - action_weops_fallback
@@ -25,6 +26,7 @@ actions:
   - validate_online_chat_form
   - action_execute_job
   - action_set_entities_values
+  - action_pre_execute_job
 
 
 forms:
