@@ -1,9 +1,14 @@
 import os
 import re
 import urllib.parse as urlparse
+from dotenv import load_dotenv
 import openai
 import requests
 from loguru import logger
+from rasa_sdk.utils import read_yaml_file
+from rasa.shared.constants import DEFAULT_CREDENTIALS_PATH
+from actions.utils.enterprise_wechat_utils import async_fun
+from actions.utils.langchain_utils import query_chatgpt
 from channels.WXBizMsgCrypt3 import WXBizMsgCrypt
 import xml.etree.cElementTree as ET
 from channels.enterprise_wechat_mysql import mysql_connect, mysql_select
@@ -134,6 +139,7 @@ class QYWXApp():
         res = self._requests_validate_expired(**request_params)
         return res["chatid"]
 
+    @async_fun
     def post_msg(
         self,
         chatid: str = "",
@@ -271,10 +277,11 @@ class QYWXApp():
             msg_content: 消息内容
         """
         # 企微应用消息解析
-        msg_signature = request.args["msg_signature"]
-        timestamp = request.args["timestamp"]
-        nonce = request.args["nonce"]
-        data = request.data
+        query_args = dict(request.query_args)
+        msg_signature = query_args["msg_signature"]
+        timestamp = query_args["timestamp"]
+        nonce = query_args["nonce"]
+        data = request.body
         wxcpt = WXBizMsgCrypt(
             self.token,
             self.encoding_aes_key,
@@ -297,6 +304,7 @@ class QYWXApp():
 
         return user_id, msg_type, msg_content
 
+    @async_fun
     def post_dall_e_img(self, user_id, msg_content):
         """接收企微用户的dall 图片描述语句(msg_content)，发送openai接口返回的图片给到用户
 
@@ -313,3 +321,27 @@ class QYWXApp():
         image_url = response["data"][0]["url"]
         media_id = self._get_img_media_id(image_url)
         self.post_msg(user_id=user_id, msgtype="image", media_id=media_id)
+
+    @async_fun
+    def post_chatgpt_answer(self, user_id, msg_content):
+        """接收企微用户的gpt 问题(msg_content)，发送openai接口返回的答案给到用户
+
+        Args:
+            user_id (_type_): 企微用户帐号
+            msg_content (_type_): 图片描述语句
+        """
+        system_prompt = "You are ChatGPT, a large language model trained by OpenAI. Answer as detailed as possible."
+        # 直接走chatGPT接口
+        res = query_chatgpt(system_prompt, msg_content.strip("gpt"))
+        self.post_msg(user_id=user_id, content=res)
+
+
+load_dotenv()
+RUN_MODE = os.getenv("RUN_MODE")
+credentials_path = (
+    ".vscode/credentials.yml" if RUN_MODE == "DEV" else DEFAULT_CREDENTIALS_PATH
+)
+credentials = read_yaml_file(credentials_path)
+qywx_app = QYWXApp(
+    **credentials["channels.enterprise_wechat_channel.EnterpriseWechatChannel"]
+)
