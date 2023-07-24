@@ -270,7 +270,6 @@ class BootStrap:
         graph = Graph(server_settings.neo4j_url, auth=(server_settings.neo4j_username, server_settings.neo4j_password))
         graph.delete_all()
 
-        missing_columns = []
         # 遍历文件夹中的所有文件，处理csv和excel文件
         for file_name in os.listdir(folder_path):
             file_path = os.path.join(folder_path, file_name)
@@ -326,6 +325,10 @@ class BootStrap:
             results = graph_db_chat(query)
 
             logger.info(f'回复:[{results}]')
+
+    def init_cmdb_graphdb(self):
+        logger.info('初始化蓝鲸CMDB资产进入CMDB.....')
+        graph = Graph(server_settings.neo4j_url, auth=(server_settings.neo4j_username, server_settings.neo4j_password))
 
 
 if __name__ == '__main__':
