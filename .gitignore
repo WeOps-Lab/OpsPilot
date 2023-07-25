@@ -29,4 +29,9 @@ llm_model
 faq_vec_db
 weops-traindata
 dev-config
+<<<<<<< HEAD
 node_modules
+=======
+*.pkl
+*.index
+>>>>>>> 9328890 (feat:增加企微km标题问答功能)

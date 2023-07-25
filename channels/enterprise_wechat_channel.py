@@ -64,7 +64,11 @@ class EnterpriseWechatChannel(InputChannel):
                 # 直接走DALL-E接口
                 qywx_app.post_msg(user_id=user_id, content='dall-e暂停支持')
                 return HTTPResponse(body='')
-
+            if "km" in msg_content:
+                # 内部km标题搜索
+                qywx_app.qywx_km_qa(user_id=user_id, query=msg_content.strip("km").strip())
+                return HTTPResponse(body='')
+                
             # 走rasa处理
             collector = CollectingOutputChannel()
             await on_new_message(
