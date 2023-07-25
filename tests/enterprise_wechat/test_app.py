@@ -1,20 +1,24 @@
+import os
 import unittest
-import yaml
+from dotenv import load_dotenv
 from channels.enterprise_wechat_app import QYWXApp
+from rasa.shared.constants import DEFAULT_CREDENTIALS_PATH
+from rasa_sdk.utils import read_yaml_file
 
 
 class TestQYWXApp(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         # 全局变量
-        TestQYWXApp.chatid = ''
-        TestQYWXApp.media_id= ''
+        TestQYWXApp.chatid = ""
+        TestQYWXApp.media_id = ""
 
         # 配置信息获取，实例化QYWXAPP
-        with open(".vscode/credentials.yml","r") as f:
-            credentials=yaml.load(f.read(),Loader=yaml.Loader)
-            qywx_config = credentials['channels.enterprise_wechat_channel.EnterpriseWechatChannel']
-        self.app = QYWXApp(**qywx_config)
+        load_dotenv()
+        RUN_MODE = os.getenv("RUN_MODE")
+        credentials_path = ".vscode/credentials.yml" if RUN_MODE == 'DEV' else DEFAULT_CREDENTIALS_PATH
+        credentials = read_yaml_file(credentials_path)
+        self.app = QYWXApp(**credentials['channels.enterprise_wechat_channel.EnterpriseWechatChannel'])
 
     def test_get_access_token(self):
         """测试获取access_token"""
@@ -62,7 +66,6 @@ class TestQYWXApp(unittest.TestCase):
         assert isinstance(TestQYWXApp.media_id, str)
         assert len(TestQYWXApp.media_id) != 0
 
-
     def test_post_msg(self):
         content = "这是OpsPilot内的测试用例所发出"
         # 企微应用向群聊发送文本消息
@@ -86,6 +89,8 @@ class TestQYWXApp(unittest.TestCase):
         assert len(res) != 0
         res = QYWXApp.name_to_userid(name2)
         assert len(res) != 0
+
+
 if __name__ == "__main__":
     # 构造测试套件，按顺序执行测试用例
     suite = unittest.TestSuite()

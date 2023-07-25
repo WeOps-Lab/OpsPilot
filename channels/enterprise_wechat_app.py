@@ -1,9 +1,17 @@
+import pickle
+import faiss
 import os
 import re
 import urllib.parse as urlparse
+from dotenv import load_dotenv
 import openai
 import requests
+from sentence_transformers import SentenceTransformer
 from loguru import logger
+from rasa_sdk.utils import read_yaml_file
+from rasa.shared.constants import DEFAULT_CREDENTIALS_PATH
+from actions.utils.enterprise_wechat_utils import async_fun
+from actions.utils.langchain_utils import query_chatgpt
 from channels.WXBizMsgCrypt3 import WXBizMsgCrypt
 import xml.etree.cElementTree as ET
 from channels.enterprise_wechat_mysql import mysql_connect, mysql_select
@@ -134,6 +142,7 @@ class QYWXApp():
         res = self._requests_validate_expired(**request_params)
         return res["chatid"]
 
+    @async_fun
     def post_msg(
         self,
         chatid: str = "",
@@ -271,10 +280,11 @@ class QYWXApp():
             msg_content: 消息内容
         """
         # 企微应用消息解析
-        msg_signature = request.args["msg_signature"]
-        timestamp = request.args["timestamp"]
-        nonce = request.args["nonce"]
-        data = request.data
+        query_args = dict(request.query_args)
+        msg_signature = query_args["msg_signature"]
+        timestamp = query_args["timestamp"]
+        nonce = query_args["nonce"]
+        data = request.body
         wxcpt = WXBizMsgCrypt(
             self.token,
             self.encoding_aes_key,
@@ -297,6 +307,7 @@ class QYWXApp():
 
         return user_id, msg_type, msg_content
 
+    @async_fun
     def post_dall_e_img(self, user_id, msg_content):
         """接收企微用户的dall 图片描述语句(msg_content)，发送openai接口返回的图片给到用户
 
@@ -313,3 +324,81 @@ class QYWXApp():
         image_url = response["data"][0]["url"]
         media_id = self._get_img_media_id(image_url)
         self.post_msg(user_id=user_id, msgtype="image", media_id=media_id)
+
+    @async_fun
+    def post_chatgpt_answer(self, user_id, msg_content):
+        """接收企微用户的gpt 问题(msg_content)，发送openai接口返回的答案给到用户
+
+        Args:
+            user_id (_type_): 企微用户帐号
+            msg_content (_type_): 图片描述语句
+        """
+        system_prompt = "You are ChatGPT, a large language model trained by OpenAI. Answer as detailed as possible."
+        # 直接走chatGPT接口
+        res = query_chatgpt(system_prompt, msg_content.strip("gpt").strip())
+        self.post_msg(user_id=user_id, content=res)
+
+    @staticmethod
+    def init_qywx_km_index(km):
+        """将键值形式的km标题形成faiss向量并进行文件持久化
+
+        Args:
+            pkl_path (_type_): 由知识库的标题（key）及对应超链接（value）组成
+        """
+        sentence_embeddings = km_embedding.encode(
+            list(km.keys()), show_progress_bar=True
+        )
+        dimension = sentence_embeddings.shape[1]
+        # 数据量不大，使用平面索引，如果量过大，考虑采用分区索引和量化索引
+        index = faiss.IndexFlatL2(dimension)
+        index.add(sentence_embeddings)
+        faiss.write_index(
+            index, os.path.join(os.path.dirname(__file__), "km_question.index")
+        )
+
+    @async_fun
+    def qywx_km_qa(self, user_id, query, top_n=10, pkl_name="km.pkl"):
+        """根据相似度返回最相似的n个km标题及其链接
+
+        Args:
+            query (str): 企微用户要检索的km内容
+        """
+        path = os.path.dirname(__file__)
+        pkl_file = os.path.join(path, pkl_name)
+        with open(pkl_file, "rb") as f:
+            km = pickle.load(f)
+
+        if "km_question.index" not in os.listdir(path):
+            QYWXApp.init_qywx_km_index(km)
+
+        index = faiss.read_index(os.path.join(path, "km_question.index"))
+        search = km_embedding.encode([query])
+        D, I = index.search(search, top_n)
+        sim_query = [list(km.keys())[i] for i in I[0]]
+        link = [km[k] for k in sim_query]
+
+        prefix = "根据您的问题，您可以查看以下结果："
+        answer = ""
+        for i in range(1, top_n + 1):
+            # answer += "\n{0}. {2}\n{1}".format(i, link[i-1], sim_query[i-1])
+            answer += '\n{0}. <a href="{1}">{2}</a>'.format(
+                i, link[i - 1], sim_query[i - 1]
+            )
+        result = prefix + answer
+
+        qywx_app.post_msg(user_id=user_id, content=result)
+
+
+load_dotenv()
+RUN_MODE = os.getenv("RUN_MODE")
+credentials_path = (
+    ".vscode/credentials.yml" if RUN_MODE == "DEV" else DEFAULT_CREDENTIALS_PATH
+)
+credentials = read_yaml_file(credentials_path)
+qywx_app = QYWXApp(
+    **credentials["channels.enterprise_wechat_channel.EnterpriseWechatChannel"]
+)
+
+km_embedding = SentenceTransformer(
+    "shibing624/text2vec-base-chinese", cache_folder="cache/models"
+)

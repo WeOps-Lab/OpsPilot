@@ -30,3 +30,5 @@ faq_vec_db
 weops-traindata
 dev-config
 node_modules
+*.pkl
+*.index

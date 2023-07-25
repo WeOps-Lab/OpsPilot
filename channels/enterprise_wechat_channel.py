@@ -1,8 +1,5 @@
 import inspect
-import os
-from typing import Text, Dict, Any, Optional, Callable, Awaitable
-from loguru import logger
-import openai
+from typing import Dict, Optional, Text, Any, Callable, Awaitable
 from rasa.core.channels.channel import (
     InputChannel,
     CollectingOutputChannel,
@@ -11,12 +8,8 @@ from rasa.core.channels.channel import (
 from sanic import Blueprint, response
 from sanic.request import Request
 from sanic.response import HTTPResponse
-from actions.utils.langchain_utils import query_chatgpt
 
-
-from channels.enterprise_wechat_app import QYWXApp
-
-openai.api_key = os.getenv("OPENAI_API_KEY")
+from channels.enterprise_wechat_app import qywx_app
 
 
 class EnterpriseWechatChannel(InputChannel):
@@ -55,52 +48,42 @@ class EnterpriseWechatChannel(InputChannel):
 
         @enterprise_wechathook.route("/", methods=["POST"])
         async def msg_entry(request: Request) -> HTTPResponse:
-            qywx_app = QYWXApp(
-                token=self.token,
-                encoding_aes_key=self.encoding_aes_key,
-                corp_id=self.corp_id,
-                secret=self.secret,
-                agent_id=self.agent_id,
-            )
-
             user_id, msg_type, msg_content = qywx_app.request_decrypt(request)
+
             if msg_type == "event":
                 # TODO:考虑在用户每天第一次进入企微应用时随机发一句话（运维知识，开发知识，时间管理知识，office操作技巧，各种冷知识等等），提升趣味性
-                return HTTPResponse()
+                # 这里返回的不是''，企微就会认为消息没有送达，会重复发送请求
+                return HTTPResponse(body='')
 
             # 直接走openai接口
             msg_content = msg_content.strip().lower()
             if "gpt" in msg_content:
-                system_prompt = "You are ChatGPT, a large language model trained by OpenAI. Answer as detailed as possible."
-                # 直接走chatGPT接口
-                res = query_chatgpt(system_prompt, msg_content.strip("gpt"))
-                qywx_app.post_msg(user_id=user_id, content=res)
-                return HTTPResponse()
+                qywx_app.post_chatgpt_answer(user_id, msg_content)
+                return HTTPResponse(body='')
             if "dall" in msg_content:
                 # 直接走DALL-E接口
-                qywx_app.post_dall_e_img(user_id, msg_content)
-                return HTTPResponse()
-            
+                qywx_app.post_msg(user_id=user_id, content='dall-e暂停支持')
+                return HTTPResponse(body='')
+            if "km" in msg_content:
+                # 内部km标题搜索
+                qywx_app.qywx_km_qa(user_id=user_id, query=msg_content.strip("km").strip())
+                return HTTPResponse(body='')
+                
             # 走rasa处理
-            sender_id = user_id
-            message = msg_content
-            input_channel = self.name()
-            metadata = None
-
             collector = CollectingOutputChannel()
             await on_new_message(
                 UserMessage(
-                    message,
-                    collector,
-                    sender_id=sender_id,
-                    input_channel=input_channel,
-                    metadata=metadata,
+                    text=msg_content,
+                    output_channel=collector,
+                    sender_id=user_id,
+                    input_channel=self.name(),
+                    metadata=None,
                 )
             )
 
             response_data = collector.messages
             for data in response_data:
-                qywx_app.post_msg(user_id=user_id, msgtype="text", content=data['text'])
-            return HTTPResponse()
+                qywx_app.post_msg(user_id=user_id, msgtype="text", content=data["text"])
+            return HTTPResponse(body='')
 
         return enterprise_wechathook
