@@ -82,12 +82,12 @@ class ActionWeOpsFallback(Action):
                         for event in reversed(events):
                             if len(user_messages) >= server_settings.chatgpt_model_max_history:
                                 break
-                            user_messages.insert(0, event.get("text"))
+                            user_messages.insert(0, event)
 
                         user_prompt = ''
                         for user_message in user_messages:
-                            user_prompt += user_message + '\n'
-                        user_prompt += user_msg
+                            user_prompt += f"{user_message['event']}:{user_message['text']}\n"
+                        # user_prompt += user_msg
 
                         if user_prompt != '':
                             system_prompt = RedisUtils.get_fallback_prompt()
