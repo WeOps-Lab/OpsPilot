@@ -163,9 +163,9 @@ class QYWXApp():
         Returns:
             dict: 企微接口返回体
         """
-        assert msgtype in ["text", "image"], "目前OpsPilot版本仅支持发送文字(text)和图片(image)消息"
+        assert msgtype in ["text", "image", "markdown"], "目前OpsPilot版本仅支持发送文字(text,markdown)和图片(image)消息"
         assert (msgtype == "image" and media_id != "") or (
-            msgtype == "text" and content != ""
+            msgtype == "text" or 'markdown' and content != ""
         ), "发送图片/文字消息，缺失必要参数"
         params = dict()
         if chatid != "":
@@ -186,6 +186,9 @@ class QYWXApp():
             # 发送的是文本消息
             # 最长不超过2048个字节，对于长文本消息需要截断分多次发送
             params["text"] = {"content": content}
+        if msgtype == "markdown":
+            # 发送的是md消息，对于带有<>符号的文本（比如html代码），无法用文本消息发送
+            params["markdown"] = {"content": content}
         if msgtype == "image":
             # 发送的是图片消息
             params["image"] = {"media_id": media_id}
@@ -336,7 +339,9 @@ class QYWXApp():
         system_prompt = "You are ChatGPT, a large language model trained by OpenAI. Answer as detailed as possible."
         # 直接走chatGPT接口
         res = query_chatgpt(system_prompt, msg_content.strip("gpt").strip())
-        self.post_msg(user_id=user_id, content=res)
+        # 如果res里含有<>格式，通过md格式发送，否则企微无法识别
+        msg_type = 'markdown' if re.findall('<.*>', res) else 'text'
+        self.post_msg(user_id=user_id, msgtype=msg_type, content=res)
 
     @staticmethod
     def init_qywx_km_index(km):
