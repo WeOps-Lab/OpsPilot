@@ -11,3 +11,250 @@ responses:
           payload: '/internal_exec_job{{"internal_job_name":"检查Redis网络连接"}}'
         - title: "查看实例日志"
           payload: '/internal_exec_job{{"internal_job_name":"查看Redis实例日志"}}'
+          
+  utter_redis_uptime_in_seconds:
+    - text: "指标描述： Redis服务器已连续运行的时间。"
+  
+  utter_redis_commands_processed_total:
+    - text: "指标描述： Redis服务器处理的命令数量。"
+  
+  utter_redis_net_input_bytes_total:
+    - text: "指标描述： Redis服务器接收的网络流量。"
+  
+  utter_redis_net_output_bytes_total:
+    - text: "指标描述： Redis服务器发送的网络流量。"
+  
+  utter_redis_db_keys:
+    - text: "指标描述： Redis数据库中键的数量。"
+  
+  utter_redis_db_keys_expiring:
+    - text: "指标描述： 统计了Redis数据库中即将过期的键的数量，可以帮助用户了解Redis数据库中哪些键即将被删除，以及它们的数量随时间的变化情况。一般而言，过期的key数量过多可能会导致Redis性能下降，因此，如果指标的值较高，则需要及时进行处理。处理指引： 1. 分析过期的key的类型和数量。可以使用Redis的TTL命令来查看每个key的过期时间，并统计即将过期的key的数量。需要根据具体情况来确定过期的key的类型和数量，以及它们对应的业务场景和应用程序的需求。2. 确认过期时间的设置是否合理。如果Redis实例中有大量的key即将过期，可能是因为过期时间的设置不合理导致的。可以根据业务需求和Redis实例的负载情况来确定合适的过期时间，并对过期时间进行相应的调整。3. 对即将过期的key进行处理。根据过期的key的类型和数量，可以采取不同的处理方式。例如，可以手动删除过期的key，或者使用Redis的EXPIRE命令重新设置key的过期时间，以延长其生命周期。如果过期的key对应的数据仍然需要使用，可以考虑将其转移到热存储或其他存储系统中，以便随时恢复数据。4. 进行Redis实例的性能调优。过期的key过多可能会导致Redis实例的性能下降，需要进行相应的调优。可以根据Redis实例的负载情况和硬件配置，对Redis实例进行优化和调整，以提高其性能和稳定性。"
+  
+  utter_redis_db_keys_expiring_button:
+     - text: "请点击以下按钮进行问题的排查和处理"
+       buttons:
+       - title: "删除过期的key"
+         payload: '/internal_exec_job{{"internal_job_name":"删除过期的key"}}'
+       - title: "重置key过期时间"
+         payload: '/internal_exec_job{{"internal_job_name":"重置key过期时间"}}'
+
+  utter_redis_expired_keys_total:
+    - text: "指标描述： Redis服务器中已过期的key的数量。"
+  
+  utter_redis_evicted_keys_total:
+    - text: "指标描述： Redis服务器中已删除的key的数量。"
+  
+  utter_redis_commands_total:
+    - text: "指标描述： Redis服务器执行指定命令的数量。"
+  
+  utter_redis_commands_duration_seconds_total:
+    - text: "指标描述： 表示Redis实例中每个命令的总执行时间。它是一个计数器，用于累计每个命令的执行时间，包括读取和写入操作。每个命令的执行时间会随着Redis实例的运行时间而增加。处理指引： 分析命令执行时间过长的原因。执行时间过长的命令可能受到多种因素的影响，例如Redis实例的负载、网络延迟、命令的复杂度和数据量等。需要根据具体情况进行综合分析和判断，找出影响命令执行时间的主要因素。进行性能调优。根据命令执行时间过长的原因，可以采取一些措施来进行性能调优，例如：1. 升级Redis实例的硬件配置，以提高Redis实例的性能和负载能力；2. 优化网络配置，减少网络延迟和带宽瓶颈；3. 对执行时间过长的命令进行优化，例如使用Redis的管道（Pipeline）特性来批量执行命令，减少网络通信的开销；4. 对Redis实例进行分片（Sharding）或集群化（Cluster）等操作，以增加Redis实例的负载能力和可扩展性。"
+  
+  utter_redis_commands_duration_seconds_total_button:
+     - text: "请点击以下按钮进行问题的排查和处理"
+       buttons:
+       - title: "升级Redis实例的硬件配置"
+         payload: '/internal_exec_job{{"internal_job_name":"升级Redis实例的硬件配置"}}' 
+       - title: "减少网络通信的开销"
+         payload: '/internal_exec_job{{"internal_job_name":"减少网络通信的开销"}}' 
+       - title: "对Redis实例进行分片"
+         payload: '/internal_exec_job{{"internal_job_name":"对Redis实例进行分片"}}' 
+       - title: "对Redis实例集群化"
+         payload: '/internal_exec_job{{"internal_job_name":"对Redis实例集群化"}}' 
+
+  utter_redis_rejected_connections_total:
+    - text: "指标描述： 用于记录Redis服务器拒绝的连接请求数量。在Redis中，当Redis服务器的最大连接数已满或无法处理更多连接请求时，会拒绝新的连接请求，导致连接被拒绝。当Redis实例中的redis_rejected_connections_total指标数值较高时，表示有很多客户端连接请求被Redis服务器拒绝，这可能会影响Redis的性能和可用性。通常，高redis_rejected_connections_total值的原因有以下几种：1. Redis服务器资源不足，例如CPU、内存、网络带宽等，导致无法处理更多的客户端连接请求。2. Redis服务器配置错误，例如maxclients参数设置过低，导致无法处理更多的客户端连接请求。3. Redis服务器被攻击，例如DDoS攻击、恶意扫描等，导致有大量的恶意连接请求被Redis服务器拒绝。处理指引： 1. 检查Redis服务器的资源使用情况，例如CPU、内存、网络带宽等，确保Redis服务器具备足够的资源来处理客户端连接请求。2. 检查Redis服务器的配置参数，例如maxclients参数等，确保它们被正确地设置和调整。3. 检查Redis服务器的网络安全设置，例如开启防火墙、限制IP访问等，以防止恶意连接请求对Redis服务器造成影响。4. 可以考虑升级Redis服务器的硬件或使用Redis集群来分担客户端连接请求，以提高Redis的性能和可用性。"
+  
+  utter_redis_rejected_connections_total_button:
+     - text: "请点击以下按钮进行问题的排查和处理"
+       buttons:
+       - title: "检查Redis服务器基本情况"
+         payload: '/internal_exec_job{{"internal_job_name":"检查Redis服务器基本情况"}}'  
+       - title: "升级Redis服务器的硬件"
+         payload: '/internal_exec_job{{"internal_job_name":"升级Redis服务器的硬件"}}'  
+       - title: "启用Redis集群"
+         payload: '/internal_exec_job{{"internal_job_name":"启用Redis集群"}}' 
+
+  utter_redis_mem_fragmentation_ratio:
+    - text: "指标描述： 表示Redis实例内存碎片的比率。Redis内存碎片是指Redis内存中存在的一些未被使用的碎片空间，这些碎片空间无法被完整地利用，导致Redis内存的利用率下降。该指标的值等于Redis实例已使用内存和Redis实例总内存之间的比率。如果Redis实例中存在较多的碎片空间，则该指标值较高，说明Redis实例的内存利用率较低。通常情况下，该指标值应该保持在较低的水平，否则可能会导致Redis内存的浪费。处理指引： 当redis_mem_fragmentation_ratio超过告警阈值时，你应该考虑使用Redis命令MEMORY DOCTOR或MEMORY STATS来查看内存使用情况，以便找出导致内存碎片率高的原因，并尝试通过调整Redis实例的内存配置或清除不需要的数据来解决问题。"
+ 
+  utter_redis_mem_fragmentation_ratio_button:
+     - text: "请点击以下按钮进行问题的排查和处理"
+       buttons:
+       - title: "检查内存使用情况"
+         payload: '/internal_exec_job{{"internal_job_name":"检查内存使用情况"}}'  
+       - title: "调整Redis实例的内存配置"
+         payload: '/internal_exec_job{{"internal_job_name":"调整Redis实例的内存配置"}}'  
+       - title: "清除Redis实例数据"
+         payload: '/internal_exec_job{{"internal_job_name":"清除Redis实例数据"}}'  
+
+  utter_redis_mem_fragmentation_ratio:
+    - text: "指标描述： 表示 Redis 实例内存碎片的比率。Redis 内存碎片是指 Redis 内存中存在的一些未被使用的碎片空间，这些碎片空间无法被完整地利用，导致 Redis 内存的利用率下降。该指标的值等于 Redis 实例已使用内存和 Redis 实例总内存之间的比率。如果 Redis 实例中存在较多的碎片空间，则该指标值较高，说明 Redis 实例的内存利用率较低。通常情况下，该指标值应该保持在较低的水平，否则可能会导致 Redis 内存的浪费。处理指引： 当 redis_mem_fragmentation_ratio 超过告警阈值时，你应该考虑使用 Redis 命令 MEMORY DOCTOR 或 MEMORY STATS 来查看内存使用情况，以便找出导致内存碎片率高的原因，并尝试通过调整 Redis 实例的内存配置或清除不需要的数据来解决问题。"
+  
+  utter_redis_memory_used_bytes:
+    - text: "指标描述： 用于记录 Redis 实例当前使用的内存总量，以字节为单位。Redis 是一种基于内存的键值存储系统，其中每个键和值都会占用一定的内存空间，而 redis_memory_used_bytes 统计了 Redis 实例中所有数据占用的内存总量。"
+  
+  utter_redis_memory_max_bytes:
+    - text: "指标描述： 表示 Redis 实例最大内存限制，单位为字节。它是在 Redis 配置文件中通过 maxmemory 参数设置的，它限制了 Redis 实例能够使用的最大内存空间。如果 redis_memory_max_bytes 的值为 0，表示 Redis 实例没有设置最大内存限制。这意味着 Redis 实例可以使用主机上可用的所有内存，直到达到主机上的操作系统限制为止。如果 Redis 实例使用了大量内存，这可能会导致系统性能下降或操作系统的 OOM（Out of Memory）错误。因此，最好在 Redis 实例上设置一个合适的最大内存限制。处理指引： 需要根据实际情况设置合适的最大内存限制，以避免 Redis 实例使用过多内存导致系统性能下降或操作系统的 OOM 错误。可以根据 Redis 实例的负载情况和硬件配置，以及业务需求来确定最大内存限制，并在 Redis 配置文件中设置 maxmemory 参数。"
+  
+  utter_redis_total_system_memory_bytes:
+    - text: "指标描述： Redis 实例所在系统的总内存大小，单位为字节。这个指标可以用来了解 Redis 实例所在系统的总体内存使用情况，进一步判断 Redis 实例是否存在内存使用问题。通常情况下，Redis 实例的内存占用应该小于系统总内存，否则可能会对系统的性能和稳定性产生负面影响。"
+  
+  utter_redis_connected_slaves:
+    - text: "指标描述： 与 Redis 服务器建立的从服务器连接数量。"
+  
+  utter_redis_instance_info:
+    - text: "指标描述： 指标的取值是一个字符串，包含了 Redis 实例的详细信息。Redis 实例的信息，包括版本、端口号、运行状态等等。"
+  
+  utter_redis_connected_clients:
+    - text: "指标描述： 与 Redis 服务器建立的客户端连接数量。"
+  
+  utter_redis_config_maxclients:
+    - text: "指标描述： Redis 实例中配置的最大客户端连接数，可以帮助用户了解 Redis 实例的并发连接数的限制情况。如果 Redis 实例中的客户端连接数达到最大限制，将无法建立新的连接，这可能会导致 Redis 实例的性能下降。处理指引： 如果 redis_config_maxclients 的值较小，需要及时进行调整以避免连接数不足。注意，修改最大客户端连接数的配置需要重启 Redis 实例才能生效。"
+  
+  utter_redis_config_maxclients_button:
+     - text: "请点击以下按钮进行问题的排查和处理"
+       buttons:
+       - title: "修改最大客户端连接数的配置"
+         payload: '/internal_exec_job{{"internal_job_name":"修改最大客户端连接数的配置"}}'  
+
+  utter_redis_blocked_clients:
+    - text: "指标描述： 表示 Redis 实例中当前被阻塞的客户端的数量。被阻塞的客户端通常是由于执行了一些耗时的操作，例如长时间的 I/O 操作或复杂的计算等。处理指引： 1. 查看被阻塞的客户端的状态。可以使用 Redis 的 CLIENT LIST 命令来查看当前所有客户端的状态，并找出被阻塞的客户端。2. 分析被阻塞的客户端的原因。被阻塞的客户端通常是由于执行了一些耗时的操作导致的，例如长时间的 I/O 操作或复杂的计算等。需要根据被阻塞的客户端的状态和执行的操作来分析问题的原因。"
+  
+  utter_redis_blocked_clients_button:
+     - text: "请点击以下按钮进行问题的排查和处理”"
+       buttons:
+       - title: "检查客户端状态"
+         payload: '/internal_exec_job{{"internal_job_name":"检查客户端状态"}}'
+
+  utter_redis_keyspace_hits_total:
+    - text: "指标描述： 用于记录 Redis 数据库中已经存在的键被命中的次数。在 Redis 中，如果一个已存在的键被请求获取或更新，就会导致一个命中（hit）操作。redis_keyspace_hits_total 统计了 Redis 数据库中已存在键的命中次数，可以帮助用户了解 Redis 数据库的性能和热点数据访问情况。"
+  
+  utter_redis_keyspace_misses_total:
+    - text: "指标描述： 用于记录 Redis 数据库中不存在的键被请求的次数。在 Redis 中，如果请求获取或更新一个不存在的键，就会导致一个未命中（miss）操作。redis_keyspace_misses_total 统计了 Redis 数据库中不存在键的请求次数，可以帮助用户了解 Redis 数据库的性能和缓存命中率。处理指引： 查看未命中的 key 的数量和类型。可以使用 Redis 的 INFO 命令来查看 Redis 实例中未命中的 key 的数量和类型，并统计其分布情况。需要根据具体情况来确定未命中的 key 的数量和类型，以及它们对应的业务场景和应用程序的需求。"
+  
+  utter_redis_keyspace_misses_total_button:
+     - text: "请点击以下按钮进行问题的排查和处理"
+       buttons:
+       - title: "查询未命中的key信息"
+         payload: '/internal_exec_job{{"internal_job_name":"查询未命中的key信息"}}'    
+
+  utter_redis_rdb_last_save_timestamp_seconds:
+    - text: "指标描述： 最近一次 RDB 持久化操作完成的时间戳，单位为秒。该指标可用于监控 Redis RDB 持久化操作的频率和时效性。处理指引： 1. 确认 RDB 持久化的设置是否正确。RDB 持久化可以基于时间、修改次数或者两者的组合来触发，需要确认 RDB 持久化的设置是否正确，并根据实际情况进行相应的调整。2. 查看 RDB 持久化的日志和状态。可以使用 Redis 的 INFO PERSISTENCE 命令来查看 RDB 持久化的日志和状态，并找出问题的原因。例如，可以查看持久化操作的时间戳和状态，确认持久化操作是否成功执行。"
+  
+  utter_redis_rdb_last_save_timestamp_seconds_button:
+     - text: "请点击以下按钮进行问题的排查和处理"
+       buttons:
+       - title: "检查RDB持久化的设置、日志信息"
+         payload: '/internal_exec_job{{"internal_job_name":"检查RDB持久化的设置、日志信息"}}'
+
+  utter_redis_rdb_changes_since_last_save:
+    - text: "指标描述： 用于记录最后一次 RDB 持久化操作以来，Redis 数据库中的变更次数。在 Redis 中，RDB 持久化可以将 Redis 数据库中的所有数据保存到一个二进制文件中，以便在 Redis 重启或宕机后恢复数据。处理指引： RDB 持久化操作所需要的最大更改次数是通过 Redis 配置文件中的 save 选项设置的，该选项可以设置多个保存点，格式为 save <seconds> <changes>，其中 <seconds> 表示持久化操作执行的间隔时间，<changes> 表示执行持久化操作前更改的次数。默认情况下，Redis 配置文件中会有一条默认的 save 选项，设置的值为 save 900 1，表示如果 900 秒内至少有 1 个 key 被更改，就会自动执行 RDB 持久化操作。这个值的一半就是 RDB 持久化操作所需要的最大更改次数。因此，在默认情况下，RDB 持久化操作所需要的最大更改次数为 0.5。如果在 Redis 实例中更改了 save 选项的配置值，则需要根据修改后的配置值来计算 RDB 持久化操作所需要的最大更改次数的一半。可以使用 Redis 的 CONFIG GET 命令来获取当前 Redis 实例的配置信息，包括 save 选项的配置值。"
+  
+  utter_redis_rdb_changes_since_last_save_button:
+     - text: "请点击以下按钮进行问题的排查和处理"
+       buttons:
+       - title: "获取Redis配置信息"
+         payload: '/internal_exec_job{{"internal_job_name":"获取Redis配置信息"}}'
+
+  utter_redis_cluster_connections:
+    - text: "指标描述： Redis 集群连接客户端数。"
+  
+  utter_redis_cluster_current_epoch:
+    - text: "指标描述： 当前 Redis 集群所处的 epoch。Redis 集群会自动递增 epoch 版本号以检测配置更改。每次发现有任何主节点或从节点状态更改，都会自动递增 Redis 集群的当前 epoch。处理指引： 1. 确认 Redis 集群的配置是否正确。在 Redis 集群中，每个节点都需要配置相同的纪元号，否则可能会出现状态不一致的情况。需要确认 Redis 集群中每个节点的配置是否正确，并根据实际情况进行相应的调整。2. 检查 Redis 集群节点的状态和数据迁移情况。如果 Redis 集群中发生了状态变化或者数据迁移，纪元号会自动递增，需要检查 Redis 集群中每个节点的状态和数据迁移情况，找出问题的原因。"
+
+  utter_redis_cluster_current_epoch_button:
+     - text: "请点击以下按钮进行问题的排查和处理"
+       buttons:
+       - title: "检查Redis集群的配置"
+         payload: '/internal_exec_job{{"internal_job_name":"检查Redis集群的配置"}}'
+       - title: "检查Redis集群节点的状态"
+         payload: '/internal_exec_job{{"internal_job_name":"检查Redis集群节点的状态"}}'
+       - title: "检查Redis数据迁移情况"  
+         payload: '/internal_exec_job{{"internal_job_name":"检查Redis数据迁移情况"}}'
+
+  utter_redis_cluster_enabled:
+    - text: "指标描述： 表示当前 Redis 实例是否启用了集群模式。当 Redis 集群启用时，该指标的值为 1；否则，该指标的值为 0。处理指引： 如果在 Redis 集群中检测到 redis_cluster_enabled 的值为 0，可能是由于 Redis 实例未启用集群模式，或者在 Redis 配置文件中未正确配置集群模式相关的参数。需要检查 Redis 实例的配置文件，确保 cluster-enabled 选项设置为 yes，并且设置了正确的集群节点信息。"
+  
+  utter_redis_cluster_enabled_button:
+     - text: "请点击以下按钮进行问题的排查和处理"
+       buttons:
+       - title: "检查Redis实例的配置文件"
+         payload: '/internal_exec_job{{"internal_job_name":"检查Redis实例的配置文件"}}'
+
+  utter_redis_cluster_known_nodes:
+    - text: "用于记录 Redis 集群中已知的节点数量。Redis 集群是一个分布式的 Redis 实例集群，其中每个 Redis 实例作为一个节点加入集群，并通过握手协议相互认识和通信。redis_cluster_known_nodes 统计了 Redis 集群中已知的节点数量，可以帮助用户了解 Redis 集群的拓扑结构和节点数量。"
+  
+  utter_redis_cluster_messages_received_total:
+    - text: "统计了 Redis 集群中所有节点接收到的消息总数，包括握手协议、状态同步和数据传输等消息。"
+  
+  utter_redis_cluster_messages_sent_total:
+    - text: "统计了 Redis 集群中所有节点发送的消息总数，包括握手协议、状态同步和数据传输等消息。"
+  
+  utter_redis_cluster_my_epoch:
+    - text: "redis_cluster_my_epoch是Redis集群中本节点的最近一次Epoch值，而redis_cluster_current_epoch则是Redis集群中当前的Epoch值。Epoch是Redis集群用于判断节点状态变化的一个重要参数，如果一个节点的Epoch值比集群中其他节点的Epoch值小，则该节点将被认为已下线或脱离集群。处理指引： 1. 检查网络连接是否正常。在Redis集群中，节点之间需要通过网络连接进行通信，如果网络连接存在故障或者延迟等问题，可能会导致redis_cluster_my_epoch的值异常。需要检查Redis节点之间的网络连接，排除网络故障。2. 检查节点状态是否正常。如果Redis节点出现故障或者不可用，可能会导致redis_cluster_my_epoch的值异常。需要检查Redis节点的状态，确保节点正常运行，并进行必要的维护和修复。3. 确认集群的状态是否正常。如果Redis集群中出现了状态变化或者数据迁移等情况，可能会导致redis_cluster_my_epoch的值异常。需要检查Redis集群的状态，确保状态正常，并进行必要的恢复和修复。4. 对Redis集群进行优化和调整。如果Redis集群的负载情况较高，可能会影响redis_cluster_my_epoch的值的准确性。可以根据Redis集群的负载情况和硬件配置，对Redis集群进行优化和调整，以提高其性能和稳定性。"
+  
+  utter_redis_cluster_my_epoch_button:
+     - text: "请点击以下按钮进行问题的排查和处理"
+       buttons:
+       - title: "检查网络连接是否正常"
+         payload: '/internal_exec_job{{"internal_job_name":"检查网络连接是否正常"}}'
+       - title: "检查节点状态是否正常"
+         payload: '/internal_exec_job{{"internal_job_name":"检查节点状态是否正常"}}'
+
+  utter_redis_cluster_size:
+    - text: "用于记录 Redis 集群中的槽位数量，即集群中可用于存储数据的分区数量。在 Redis 集群中，每个节点都被分配了一定数量的槽位，用于存储数据。redis_cluster_size 统计了 Redis 集群中所有节点的槽位数量总和，可以帮助用户了解 Redis 集群的容量和数据存储情况。"
+  
+  utter_redis_cluster_slots_assigned:
+    - text: "用于记录 Redis 集群中已分配的槽位数量。在 Redis 集群中，每个节点被分配了一定数量的槽位，用于存储数据。redis_cluster_slots_assigned 统计了 Redis 集群中已经被分配给节点的槽位数量，可以帮助用户了解 Redis 集群的容量和数据分布情况。"
+  
+  utter_redis_cluster_slots_fail:
+    - text: "Redis 集群中当前未被成功分配的槽数量。这个指标的值越小越好，因为它代表了 Redis 集群的可用性。如果集群中存在太多未被成功分配的槽，那么就可能导致 Redis 集群出现故障或性能下降。"
+  
+  utter_redis_cluster_slots_ok:
+    - text: "Redis集群中正常运行的槽数量"
+  
+  utter_redis_cluster_slots_pfail:
+    - text: "redis_cluster_slots_pfail 是 Redis 集群中被标记为无法运行的 slot 数量，这些 slot 所在的节点可能存在网络问题或者短暂性的错误。"
+  
+  utter_redis_cluster_state:
+    - text: "Redis集群的状态。当Redis集群节点发生故障或者下线时，redis_cluster_state的值会变为0，表示该节点不可用。当Redis集群节点恢复正常运行时，redis_cluster_state的值会变为1，表示该节点已上线。处理指引： Redis集群状态的常见取值包括：ok：表示Redis集群正常运行，节点之间的数据已经迁移完成。fail：表示Redis集群出现故障，可能是由于节点故障、网络故障或者其他原因导致的。handshake：表示Redis集群节点之间正在进行数据迁移或者状态同步，属于正常情况。"
+  
+  utter_redis_sentinel_master_ok_sentinels:
+    - text: "记录了可用的哨兵数量，用于监测 Redis 主节点的高可用性。在 Redis Sentinel 部署架构中，多个 Redis 哨兵会监测同一个 Redis 主节点，通过哨兵之间的协作，可以实现对 Redis 主节点的故障检测和自动故障转移。"
+  
+  utter_redis_sentinel_master_ok_slaves:
+    - text: "记录了可用的 Redis 从节点数量，用于监测 Redis 主节点的可用性和性能。在 Redis Sentinel 部署架构中，Redis 主节点会异步地将数据复制到多个 Redis 从节点，从而实现数据备份和读写分离等功能。如果 Redis 主节点发生故障，Redis Sentinel 服务将通过 Sentinel 协议自动选举一个从节点作为新的主节点。"
+  
+  utter_redis_sentinel_master_sentinels:
+    - text: "统计了 Redis Sentinel 监控的 Redis 主服务器的 Sentinel 数量，可以帮助用户了解 Redis Sentinel 的配置和高可用性情况。"
+  
+  utter_redis_sentinel_master_slaves:
+    - text: "表示 Redis Sentinel 监控的 Redis 主服务器下从服务器的数量。这个指标的值是一个整数，代表从服务器的数量。"
+  
+  utter_redis_sentinel_master_status:
+    - text: "用于检查 Redis Sentinel 集群中某个主节点（master）的状态是否正常。当 Redis Sentinel 无法成功连接到主节点或主节点被 Sentinel 标记为已下线时，该指标会显示为 0；否则，该指标值为 1。"
+  
+  utter_redis_sentinel_masters:
+    - text: "统计了 Redis Sentinel 监控的 Redis 主服务器数量"
+  
+  utter_redis_exporter_last_scrape_duration_seconds:
+    - text: "统计了 Redis Exporter 最近一次抓取 Redis 实例数据所花费的时间，单位为秒。"
+  
+  utter_redis_exporter_last_scrape_ping_time_seconds:
+    - text: "记录了Redis Exporter最后一次抓取Redis服务器ping命令的响应时间，以秒为单位。"
+  
+  utter_redis_slowlog_length:
+    - text: "Redis 服务器的慢查询日志队列长度，即慢查询日志的数量。慢查询是指执行时间超过 slowlog-log-slower-than 参数设置的时间阈值的查询。处理指引： 1. 查找和分析慢查询日志，确定慢查询的原因和影响。2. 优化 Redis 配置和应用程序代码，减少慢查询的发生。3. 升级 Redis 服务器硬件或升级 Redis 软件版本。4. 调整告警阈值，避免误报或漏报。"
+  
+  utter_redis_slowlog_length_button:
+     - text: "请点击以下按钮进行问题的排查和处理"  
+       buttons:
+       - title: "检查慢查询日志"
+         payload: '/internal_exec_job{{"internal_job_name":"检查慢查询日志"}}'
+       - title: "优化 Redis 配置"
+         payload: '/internal_exec_job{{"internal_job_name":"优化 Redis 配置"}}'
+       - title: "升级Redis 服务器硬件"
+         payload: '/internal_exec_job{{"internal_job_name":"升级Redis 服务器硬件"}}'
+       - title: "升级 Redis 软件版本"
+         payload: '/internal_exec_job{{"internal_job_name":"升级 Redis 软件版本"}}'
