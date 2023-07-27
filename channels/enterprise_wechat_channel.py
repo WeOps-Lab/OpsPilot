@@ -1,4 +1,5 @@
 import inspect
+import json
 from typing import Dict, Optional, Text, Any, Callable, Awaitable
 from rasa.core.channels.channel import (
     InputChannel,
@@ -45,6 +46,15 @@ class EnterpriseWechatChannel(InputChannel):
         @enterprise_wechathook.route("/", methods=["GET"])
         async def health(request: Request) -> HTTPResponse:
             return response.json({"status": "ok"})
+
+        @enterprise_wechathook.route("/km_search", methods=["POST"])
+        async def km_search(request: Request) -> HTTPResponse:
+            km_query = request.json.get("km_query")
+            top_n = request.json.get("top_n")
+            # 内部km标题搜索
+            sim_query, link = qywx_app.km_qa(query=km_query,top_n=top_n)
+            res = dict(zip(sim_query, link))
+            return HTTPResponse(json.dumps(res), content_type="application/json")
 
         @enterprise_wechathook.route("/", methods=["POST"])
         async def msg_entry(request: Request) -> HTTPResponse:

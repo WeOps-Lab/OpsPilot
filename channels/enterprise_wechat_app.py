@@ -361,12 +361,16 @@ class QYWXApp():
             index, os.path.join(os.path.dirname(__file__), "km_question.index")
         )
 
-    @async_fun
-    def qywx_km_qa(self, user_id, query, top_n=10, pkl_name="km.pkl"):
-        """根据相似度返回最相似的n个km标题及其链接
+    def km_qa(self, query, top_n=10, pkl_name="km.pkl"):
+        """根据query搜索最相似的N个km标题及对应链接
 
         Args:
-            query (str): 企微用户要检索的km内容
+            query (str): 问题
+            top_n (int, optional): 返回前n个相似. Defaults to 10.
+            pkl_name (str, optional): 标题链接映射源. Defaults to "km.pkl".
+
+        Returns:
+            _type_: _description_
         """
         path = os.path.dirname(__file__)
         pkl_file = os.path.join(path, pkl_name)
@@ -381,7 +385,16 @@ class QYWXApp():
         D, I = index.search(search, top_n)
         sim_query = [list(km.keys())[i] for i in I[0]]
         link = [km[k] for k in sim_query]
+        return sim_query, link
 
+    @async_fun
+    def qywx_km_qa(self, user_id, query, top_n=10, pkl_name="km.pkl"):
+        """根据相似度返回最相似的n个km标题及其链接
+
+        Args:
+            query (str): 企微用户要检索的km内容
+        """
+        sim_query, link = self.km_qa(query, top_n=top_n, pkl_name=pkl_name)
         prefix = "根据您的问题，您可以查看以下结果："
         answer = ""
         for i in range(1, top_n + 1):
