@@ -19,6 +19,7 @@ from py2neo import Relationship, Node, Graph, NodeMatcher
 from tqdm import tqdm
 
 from actions.constant.server_settings import server_settings
+from actions.utils.bk_utils.cmdb_to_neo4j import ImportInst
 from actions.utils.indexer_utils import Searcher
 from actions.utils.langchain_utils import langchain_qa, graph_db_chat
 from actions.utils.redis_utils import RedisUtils
@@ -327,9 +328,11 @@ class BootStrap:
             logger.info(f'回复:[{results}]')
 
     def init_cmdb_graphdb(self):
-        logger.info('初始化蓝鲸CMDB资产进入CMDB.....')
-        graph = Graph(server_settings.neo4j_url, auth=(server_settings.neo4j_username, server_settings.neo4j_password))
-
+        logger.info('初始化蓝鲸CMDB资产到neo4j数据库...')
+        try:
+            ImportInst().collector()
+        except Exception as e:
+            logger.exception(getattr(e, "message", e))
 
 if __name__ == '__main__':
     load_dotenv()
