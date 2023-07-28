@@ -157,6 +157,7 @@ tracker_store:
 ## 0.5
 
 * [新增]Redis 故障处置预案规则
+* [新增]支持将蓝鲸CMDB的数据映射至Neo4J，并使用LangChain进行知识问答
 
 ## 0.4
 
