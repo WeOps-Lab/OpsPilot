@@ -4,17 +4,24 @@ import os
 import re
 import urllib.parse as urlparse
 from dotenv import load_dotenv
+from langchain import FAISS
+import torch
 import openai
 import requests
-from sentence_transformers import SentenceTransformer
 from loguru import logger
 from rasa_sdk.utils import read_yaml_file
 from rasa.shared.constants import DEFAULT_CREDENTIALS_PATH
 from actions.utils.enterprise_wechat_utils import async_fun
-from actions.utils.langchain_utils import query_chatgpt
+from actions.utils.indexer_utils import Searcher
+from actions.utils.langchain_utils import langchain_qa, query_chatgpt
+from actions.utils.redis_utils import RedisUtils
 from channels.WXBizMsgCrypt3 import WXBizMsgCrypt
 import xml.etree.cElementTree as ET
 from channels.enterprise_wechat_mysql import mysql_connect, mysql_select
+from actions.constant.server_settings import server_settings
+from langchain.embeddings import HuggingFaceEmbeddings
+
+from channels.enterprise_wechat_utils import get_source_doc, struct_qywx_answer
 
 
 class QYWXApp():
@@ -47,6 +54,25 @@ class QYWXApp():
         self.secret = secret
         self.agent_id = agent_id
         self.access_token = self._get_access_token()
+
+        self.km = self._get_km("km.pkl")
+
+    def _get_km(self, pkl_name):
+        """获取km标题链接字典，如没有则返回None
+
+        Args:
+            pkl_name (str): km标题链接字典序列化文件
+
+        Returns:
+            _type_: km标题链接字典
+        """
+        path = os.path.dirname(__file__)
+        pkl_file = os.path.join(path, pkl_name)
+        if pkl_name not in os.listdir(path):
+            return None
+        with open(pkl_file, "rb") as f:
+            km = pickle.load(f)
+        return km
 
     def _fresh_access_token(self):
         """刷新实例的access_token属性，便于后续接口调用
@@ -350,9 +376,7 @@ class QYWXApp():
         Args:
             pkl_path (_type_): 由知识库的标题（key）及对应超链接（value）组成
         """
-        sentence_embeddings = km_embedding.encode(
-            list(km.keys()), show_progress_bar=True
-        )
+        sentence_embeddings = torch.Tensor(embeddings.embed_documents(list(km.keys())))
         dimension = sentence_embeddings.shape[1]
         # 数据量不大，使用平面索引，如果量过大，考虑采用分区索引和量化索引
         index = faiss.IndexFlatL2(dimension)
@@ -361,48 +385,68 @@ class QYWXApp():
             index, os.path.join(os.path.dirname(__file__), "km_question.index")
         )
 
-    def km_qa(self, query, top_n=10, pkl_name="km.pkl"):
+    def km_qa(self, query, top_n=10):
         """根据query搜索最相似的N个km标题及对应链接
 
         Args:
             query (str): 问题
+            km (dict, optional): 标题链接映射. Defaults to None.
             top_n (int, optional): 返回前n个相似. Defaults to 10.
-            pkl_name (str, optional): 标题链接映射源. Defaults to "km.pkl".
 
         Returns:
             _type_: _description_
         """
+
         path = os.path.dirname(__file__)
-        pkl_file = os.path.join(path, pkl_name)
-        with open(pkl_file, "rb") as f:
-            km = pickle.load(f)
 
         if "km_question.index" not in os.listdir(path):
-            QYWXApp.init_qywx_km_index(km)
+            QYWXApp.init_qywx_km_index(self.km)
 
         index = faiss.read_index(os.path.join(path, "km_question.index"))
-        search = km_embedding.encode([query])
+        search = torch.Tensor(embeddings.embed_documents([query]))
         D, I = index.search(search, top_n)
-        sim_query = [list(km.keys())[i] for i in I[0]]
-        link = [km[k] for k in sim_query]
+        sim_query = [list(self.km.keys())[i] for i in I[0]]
+        link = [self.km[k] for k in sim_query]
         return sim_query, link
 
     @async_fun
-    def qywx_km_qa(self, user_id, query, top_n=10, pkl_name="km.pkl"):
-        """根据相似度返回最相似的n个km标题及其链接
+    def qywx_km_qa(self, user_id, query, top_n=10):
+        """根据langchainQA返回基于本地知识的回答并结合问题相似度返回最相似的n个km标题链接
 
         Args:
+            user_id (str): 企微用户id
             query (str): 企微用户要检索的km内容
         """
-        sim_query, link = self.km_qa(query, top_n=top_n, pkl_name=pkl_name)
-        prefix = "根据您的问题，您可以查看以下结果："
-        answer = ""
-        for i in range(1, top_n + 1):
-            # answer += "\n{0}. {2}\n{1}".format(i, link[i-1], sim_query[i-1])
-            answer += '\n{0}. <a href="{1}">{2}</a>'.format(
-                i, link[i - 1], sim_query[i - 1]
+
+        # 1.返回langchain_qa的答案，并附加上其来源链接
+        prompt_template = RedisUtils.get_prompt_template()
+        prompt_template = searcher.format_prompt(prompt_template, query)
+        results = langchain_qa(doc_search, prompt_template, query)
+        # TODO2.优化：对langchain_qa的答案做有效性打分，不返回无效信息（比如对问题的重复）
+        # 3.将有效答案的来源链接添加到km标题的排序里面
+        langchain_source = dict(
+            map(
+                lambda x: get_source_doc(x.metadata["source"], self.km),
+                results["source_documents"],
             )
-        result = prefix + answer
+        )
+        # 4.对参考链接排序
+        langchain_prefix = "\n本回答来源如下："
+        title_sim_prefix = "\n根据您的问题，您还可以查看以下结果："
+        sim_query, link = self.km_qa(query, top_n=top_n)
+        sim_query_dict = dict(zip(sim_query,link))
+
+        sim_query_dict = dict(set(sim_query_dict.items()) - set(langchain_source.items()))
+        sim_query_dict = dict(list(sim_query_dict.items())[:5])
+        result = (
+            results["result"]
+            + langchain_prefix
+            + struct_qywx_answer(
+                len(langchain_source), list(langchain_source.values()), list(langchain_source.keys())
+            )
+            + title_sim_prefix
+            + struct_qywx_answer(len(sim_query_dict), list(sim_query_dict.values()), list(sim_query_dict.keys()))
+        )
 
         qywx_app.post_msg(user_id=user_id, content=result)
 
@@ -417,6 +461,10 @@ qywx_app = QYWXApp(
     **credentials["channels.enterprise_wechat_channel.EnterpriseWechatChannel"]
 )
 
-km_embedding = SentenceTransformer(
-    "shibing624/text2vec-base-chinese", cache_folder="cache/models"
+embeddings = HuggingFaceEmbeddings(
+    model_name=server_settings.embed_model_name,
+    cache_folder=server_settings.embed_model_cache_home,
+    encode_kwargs={"show_progress_bar": True},
 )
+doc_search = FAISS.load_local(server_settings.vec_db_path, embeddings)
+searcher = Searcher()

@@ -75,7 +75,7 @@ class EnterpriseWechatChannel(InputChannel):
                 qywx_app.post_msg(user_id=user_id, content='dall-e暂停支持')
                 return HTTPResponse(body='')
             if "km" in msg_content:
-                # 内部km标题搜索
+                # 内部km搜索
                 qywx_app.qywx_km_qa(user_id=user_id, query=msg_content.strip("km").strip())
                 return HTTPResponse(body='')
                 
