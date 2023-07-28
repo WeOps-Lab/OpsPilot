@@ -23,7 +23,7 @@ def langchain_qa(doc_search, prompt_template, query):
     chain_type_kwargs = {"prompt": prompt, "verbose": True}
 
     retriever = doc_search.as_retriever()
-    retriever.search_kwargs = {'k': 5}
+    retriever.search_kwargs = {'k': 3}
     qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever,
                                      return_source_documents=True, chain_type_kwargs=chain_type_kwargs)
     qa.verbose = True
