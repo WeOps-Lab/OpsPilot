@@ -149,6 +149,7 @@ def query_chatgpt_with_memory(user_id, query, ttl=300):
     Returns:
         str: 基于历史问答信息的回答
     """
+    logger.info(f'开始调用gpt多轮问答，用户id为 {user_id}，问题为 {query}')
     template = """
     You are ChatGPT, a large language model trained by OpenAI. Answer as detailed as possible and use Chinese to answer.
 
