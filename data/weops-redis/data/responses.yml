@@ -88,9 +88,6 @@ responses:
        - title: "清除Redis实例数据"
          payload: '/internal_exec_job{{"internal_job_name":"清除Redis实例数据"}}'  
 
-  utter_redis_mem_fragmentation_ratio:
-    - text: "指标描述： 表示 Redis 实例内存碎片的比率。Redis 内存碎片是指 Redis 内存中存在的一些未被使用的碎片空间，这些碎片空间无法被完整地利用，导致 Redis 内存的利用率下降。该指标的值等于 Redis 实例已使用内存和 Redis 实例总内存之间的比率。如果 Redis 实例中存在较多的碎片空间，则该指标值较高，说明 Redis 实例的内存利用率较低。通常情况下，该指标值应该保持在较低的水平，否则可能会导致 Redis 内存的浪费。处理指引： 当 redis_mem_fragmentation_ratio 超过告警阈值时，你应该考虑使用 Redis 命令 MEMORY DOCTOR 或 MEMORY STATS 来查看内存使用情况，以便找出导致内存碎片率高的原因，并尝试通过调整 Redis 实例的内存配置或清除不需要的数据来解决问题。"
-  
   utter_redis_memory_used_bytes:
     - text: "指标描述： 用于记录 Redis 实例当前使用的内存总量，以字节为单位。Redis 是一种基于内存的键值存储系统，其中每个键和值都会占用一定的内存空间，而 redis_memory_used_bytes 统计了 Redis 实例中所有数据占用的内存总量。"
   
