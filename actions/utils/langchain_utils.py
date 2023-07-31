@@ -1,5 +1,7 @@
 import trafilatura
 from langchain import PromptTemplate, LLMChain
+from langchain.memory import ConversationBufferMemory
+from langchain.memory.chat_message_histories import RedisChatMessageHistory
 from langchain.agents import AgentType, initialize_agent
 from langchain.chains import RetrievalQA, GraphCypherQAChain
 from langchain.chat_models import ChatOpenAI
@@ -134,3 +136,47 @@ def graph_db_chat(query):
     )
     chain.verbose = True
     return chain.run(query)
+
+
+def query_chatgpt_with_memory(user_id, query, ttl=300):
+    """通过redis存储用户会话，实现对chatgpt的多轮问答
+
+    Args:
+        user_id (str): 企微用户ID
+        query (str): 用户问题
+        ttl (int, optional): 用户会话过期时间，单位秒. Defaults to 300.
+
+    Returns:
+        str: 基于历史问答信息的回答
+    """
+    template = """
+    You are ChatGPT, a large language model trained by OpenAI. Answer as detailed as possible and use Chinese to answer.
+
+    {chat_history}
+    Question: {input}
+    """
+
+    prompt = PromptTemplate(
+        input_variables=["chat_history", "input"], template=template
+    )
+    message_history = RedisChatMessageHistory(
+        url=f"redis://{server_settings.redis_password}@{server_settings.redis_host}:{server_settings.redis_port}/{server_settings.redis_db}",
+        ttl=ttl,
+        session_id=user_id,
+    )
+
+    memory = ConversationBufferMemory(
+        memory_key="chat_history", chat_memory=message_history
+    )
+    llm_chain = LLMChain(
+        llm=ChatOpenAI(
+            openai_api_key=server_settings.openai_key,
+            openai_api_base=server_settings.openai_endpoint,
+            temperature=server_settings.openai_api_temperature,
+        ),
+        prompt=prompt,
+        memory=memory,
+        verbose=False,
+    )
+    answer = llm_chain.predict(input=query)
+    return answer.replace("AI: ", "")
