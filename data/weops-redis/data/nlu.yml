@@ -370,7 +370,7 @@ nlu:
       - redis集群是否启用告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
       - "[127.0.0.1](ip_address)"的redis集群是否启用异常
       - "[127.0.0.1](ip_address)"上的redis集群启用出现问题
-       - "[127.0.0.1](ip_address)"上的redis集群未启用，产生告警
+      - "[127.0.0.1](ip_address)"上的redis集群未启用，产生告警
 
   - intent: redis_cluster_known_nodes
     examples: |    

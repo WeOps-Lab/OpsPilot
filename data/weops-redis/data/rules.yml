@@ -1,73 +1,71 @@
 version: "3.1"
 rules:
-
-
-- rule: redis_up
-  steps:
-  - intent: redis_up
-  - action: utter_redis_up
-  - action: utter_redis_up_button
-- rule: redis_db_keys_expiring
-  steps:
-  - intent: redis_db_keys_expiring
-  - action: utter_redis_db_keys_expiring
-  - action: utter_redis_db_keys_expiring_button
-- rule: redis_commands_duration_seconds_total
-  steps:
-  - intent: redis_commands_duration_seconds_total
-  - action: utter_redis_commands_duration_seconds_total
-- rule: redis_rejected_connections_total
-  steps:
-  - intent: redis_rejected_connections_total
-  - action: utter_redis_rejected_connections_total
-  - action: utter_redis_rejected_connections_total_button
-- rule: redis_mem_fragmentation_ratio
-  steps:
-  - intent: redis_mem_fragmentation_ratio
-  - action: utter_redis_mem_fragmentation_ratio
-  - action: utter_redis_mem_fragmentation_ratio_button
-- rule: redis_config_maxclients
-  steps:
-  - intent: redis_config_maxclients
-  - action: utter_redis_config_maxclients
-  - action: utter_redis_config_maxclients_button
-- rule: redis_blocked_clients
-  steps:
-  - intent: redis_blocked_clients
-  - action: utter_redis_blocked_clients
-  - action: utter_redis_blocked_clients_button
-- rule: redis_keyspace_misses_total
-  steps:
-  - intent: redis_keyspace_misses_total
-  - action: utter_redis_keyspace_misses_total
-  - action: utter_redis_keyspace_misses_total_button
-- rule: redis_rdb_last_save_timestamp_seconds
-  steps:
-  - intent: redis_rdb_last_save_timestamp_seconds
-  - action: utter_redis_rdb_last_save_timestamp_seconds
-  - action: utter_redis_rdb_last_save_timestamp_seconds_button
-- rule: redis_rdb_changes_since_last_save
-  steps:
-  - intent: redis_rdb_changes_since_last_save
-  - action: utter_redis_rdb_changes_since_last_save
-  - action: utter_redis_rdb_changes_since_last_save_button
-- rule: redis_cluster_current_epoch
-  steps:
-  - intent: 
-  - action: utter_redis_cluster_current_epoch
-  - action: utter_redis_cluster_current_epoch_button
-- rule: redis_cluster_enabled
-  steps:
-  - intent: 
-  - action: utter_redis_cluster_enabled
-  - action: utter_redis_cluster_enabled_button
-- rule: redis_cluster_my_epoch
-  steps:
-  - intent: 
-  - action: utter_redis_cluster_my_epoch
-  - action: utter_redis_cluster_my_epoch_button
-- rule: redis_slowlog_length
-  steps:
-  - intent: 
-  - action: utter_redis_slowlog_length
-  - action: utter_redis_slowlog_length_button
+  - rule: redis_up
+    steps:
+      - intent: redis_up
+      - action: utter_redis_up
+      - action: utter_redis_up_button
+  - rule: redis_db_keys_expiring
+    steps:
+      - intent: redis_db_keys_expiring
+      - action: utter_redis_db_keys_expiring
+      - action: utter_redis_db_keys_expiring_button
+  - rule: redis_commands_duration_seconds_total
+    steps:
+      - intent: redis_commands_duration_seconds_total
+      - action: utter_redis_commands_duration_seconds_total
+  - rule: redis_rejected_connections_total
+    steps:
+      - intent: redis_rejected_connections_total
+      - action: utter_redis_rejected_connections_total
+      - action: utter_redis_rejected_connections_total_button
+  - rule: redis_mem_fragmentation_ratio
+    steps:
+      - intent: redis_mem_fragmentation_ratio
+      - action: utter_redis_mem_fragmentation_ratio
+      - action: utter_redis_mem_fragmentation_ratio_button
+  - rule: redis_config_maxclients
+    steps:
+      - intent: redis_config_maxclients
+      - action: utter_redis_config_maxclients
+      - action: utter_redis_config_maxclients_button
+  - rule: redis_blocked_clients
+    steps:
+      - intent: redis_blocked_clients
+      - action: utter_redis_blocked_clients
+      - action: utter_redis_blocked_clients_button
+  - rule: redis_keyspace_misses_total
+    steps:
+      - intent: redis_keyspace_misses_total
+      - action: utter_redis_keyspace_misses_total
+      - action: utter_redis_keyspace_misses_total_button
+  - rule: redis_rdb_last_save_timestamp_seconds
+    steps:
+      - intent: redis_rdb_last_save_timestamp_seconds
+      - action: utter_redis_rdb_last_save_timestamp_seconds
+      - action: utter_redis_rdb_last_save_timestamp_seconds_button
+  - rule: redis_rdb_changes_since_last_save
+    steps:
+      - intent: redis_rdb_changes_since_last_save
+      - action: utter_redis_rdb_changes_since_last_save
+      - action: utter_redis_rdb_changes_since_last_save_button
+  - rule: redis_cluster_current_epoch
+    steps:
+      - intent: redis_cluster_current_epoch
+      - action: utter_redis_cluster_current_epoch
+      - action: utter_redis_cluster_current_epoch_button
+  - rule: redis_cluster_enabled
+    steps:
+      - intent: redis_cluster_enabled
+      - action: utter_redis_cluster_enabled
+      - action: utter_redis_cluster_enabled_button
+  - rule: redis_cluster_my_epoch
+    steps:
+      - intent: redis_cluster_my_epoch
+      - action: utter_redis_cluster_my_epoch
+      - action: utter_redis_cluster_my_epoch_button
+  - rule: redis_slowlog_length
+    steps:
+      - intent: redis_slowlog_length
+      - action: utter_redis_slowlog_length
+      - action: utter_redis_slowlog_length_button

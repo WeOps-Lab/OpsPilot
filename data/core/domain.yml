@@ -15,6 +15,7 @@ intents:
   - 在线问答
   - 无法理解
   - internal_exec_job
+  - chat_online
 
 
 actions:
