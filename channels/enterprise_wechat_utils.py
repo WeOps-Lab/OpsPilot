@@ -1,7 +1,12 @@
 import os
+import re
+from dotenv import load_dotenv
+
+load_dotenv()
+WIKI_URL_FRONT = os.getenv("WIKI_URL_FRONT")
 
 
-def get_source_doc(source,km):
+def get_source_doc(source, km):
     """通过docs的metadata找到文档对应的km wiki标题和链接
     results['source_documents'][0].metadata['source']
     Args:
@@ -11,16 +16,15 @@ def get_source_doc(source,km):
     Returns:
         _type_: _description_
     """
-    wiki_url_front = "https://km.cwoa.net/doc/lib/"
-    # 
-    wiki_uuid = os.path.basename(source).split(".")[0].replace("_", "/wiki/list/")
-    wiki_url = wiki_url_front + wiki_uuid
+    wiki_uuid = re.findall(r'([0-9a-z]+_[0-9a-z]+)\.',source)[0].replace("_", "/wiki/list/")
+    wiki_url = WIKI_URL_FRONT + wiki_uuid
 
     title_list = list(km.keys())
     link_list = list(km.values())
     position = link_list.index(wiki_url)
-    
+
     return title_list[position], wiki_url
+
 
 def struct_qywx_answer(top_n, link_list, title_list):
     """通过km的标题和链接生成企微应用的回答（超链接）
