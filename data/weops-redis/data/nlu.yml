@@ -4,5 +4,627 @@ nlu:
   - intent: redis_up
     examples: |
       - "[127.0.0.1](ip_address)"上的redis监控插件运行状态
-      - 发生Redis监控插件运行状态告警,ip地址:"[10.11.25.50](ip_address)"
+      - 发生Redis监控插件运行状态告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis监控插件运行状态异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis监控插件运行状态发生告警
+      - redis监控插件运行状态发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis监控插件运行状态异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis监控插件运行状态异常 
+      - redis监控插件运行状态告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis监控插件运行状态异常
+      - IP地址为"[127.0.0.1](ip_address)"的redis监控插件运行状态为0
+      - IP地址为"[127.0.0.1](ip_address)"的redis监控插件运行状态等于0是什么意思
       - ip地址:"[127.0.0.1](ip_address)",redis监控插件运行状态==0
+
+  - intent: redis_uptime_in_seconds
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis服务器已运行时间异常
+      - 发生redis服务器已运行时间告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis服务器已运行时间异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis服务器已运行时间发生告警
+      - redis服务器已运行时间发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis服务器已运行时间异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis服务器已运行时间异常 
+      - redis服务器已运行时间告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis服务器已运行时间异常
+
+  - intent: redis_commands_processed_total
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis命令处理数量异常
+      - 发生redis命令处理数量告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis命令处理数量异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis命令处理数量发生告警
+      - redis命令处理数量发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis命令处理数量异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis命令处理数量异常 
+      - redis命令处理数量告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis命令处理数量异常
+
+  - intent: redis_net_input_bytes_total
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis网络接收流量异常
+      - 发生redis网络接收流量告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis网络接收流量异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis网络接收流量发生告警
+      - redis网络接收流量发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis网络接收流量异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis网络接收流量异常 
+      - redis网络接收流量告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis网络接收流量异常
+      - "[127.0.0.1](ip_address)"上的redis网络接收流量出现问题
+
+  - intent: redis_net_output_bytes_total
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis网络发送流量异常
+      - 发生redis网络发送流量告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis网络发送流量异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis网络发送流量发生告警
+      - redis网络发送流量发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis网络发送流量异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis网络发送流量异常 
+      - redis网络发送流量告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis网络发送流量异常
+      - "[127.0.0.1](ip_address)"上的redis网络发送流量出现问题
+
+  - intent: redis_db_keys
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis数据库key数量异常
+      - 发生redis数据库key数量告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis数据库key数量异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis数据库key数量发生告警
+      - redis数据库key数量发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis数据库key数量异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的Rredis数据库key数量异常 
+      - redis数据库key数量告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis数据库key数量异常
+      - "[127.0.0.1](ip_address)"上的redis数据库key数量出现问题
+  
+  - intent: redis_db_keys_expiring
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis即将过期的key数量异常
+      - 发生redis即将过期的key数量告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis即将过期的key数量异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis即将过期的key数量发生告警
+      - redis即将过期的key数量发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis即将过期的key数量异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis即将过期的key数量异常 
+      - redis即将过期的key数量告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis即将过期的key数量异常
+      - "[127.0.0.1](ip_address)"上的redis即将过期的key数量出现问题
+      - IP地址为"[127.0.0.1](ip_address)"的redis即将过期的key数量> 10000
+      - IP地址为"[127.0.0.1](ip_address)"的redis即将过期的key数量太高了，怎么办
+
+  - intent: redis_expired_keys_total
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis过期的key数量异常
+      - 发生redis过期的key数量告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis过期的key数量异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis过期的key数量发生告警
+      - redis过期的key数量发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis过期的key数量异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis过期的key数量异常 
+      - redis过期的key数量告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis过期的key数量异常
+      - "[127.0.0.1](ip_address)"上的redis过期的key数量出现问题
+
+  - intent: redis_evicted_keys_total
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis已删除的key数量异常
+      - 发生redis已删除的key数量告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis已删除的key数量异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis已删除的key数量发生告警
+      - redis已删除的key数量发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis已删除的key数量异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis已删除的key数量异常 
+      - redis已删除的key数量告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis已删除的key数量异常
+      - "[127.0.0.1](ip_address)"上的redis已删除的key数量出现问题
+
+  - intent: redis_commands_total
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis命令执行数量异常
+      - 发生redis命令执行数量告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis命令执行数量异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis命令执行数量发生告警
+      - redis命令执行数量发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis命令执行数量异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis命令执行数量异常 
+      - redis命令执行数量告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis命令执行数量异常
+      - "[127.0.0.1](ip_address)"上的redis命令执行数量出现问题
+
+  - intent: redis_commands_duration_seconds_total
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis命令执行时间异常
+      - 发生redis命令执行时间告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis命令执行时间异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis命令执行时间发生告警
+      - redis命令执行时间发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis命令执行时间异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis命令执行时间异常 
+      - redis命令执行时间告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis命令执行时间异常
+      - "[127.0.0.1](ip_address)"上的redis命令执行时间出现问题
+
+  - intent: redis_rejected_connections_total
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis拒绝连接的数量异常
+      - 发生redis拒绝连接的数量告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis拒绝连接的数量异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis拒绝连接的数量发生告警
+      - redis拒绝连接的数量发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis拒绝连接的数量异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis拒绝连接的数量异常 
+      - redis拒绝连接的数量告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis拒绝连接的数量异常
+      - "[127.0.0.1](ip_address)"上的redis拒绝连接的数量出现问题
+
+  - intent: redis_mem_fragmentation_ratio
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis内存碎片比率异常
+      - 发生redis内存碎片比率告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis内存碎片比率异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis内存碎片比率发生告警
+      - redis内存碎片比率发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis内存碎片比率异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis内存碎片比率异常 
+      - redis内存碎片比率告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis内存碎片比率异常
+      - "[127.0.0.1](ip_address)"上的redis内存碎片比率出现问题
+      - IP地址为"[127.0.0.1](ip_address)"的redis内存碎片比率> 1.5
+      - IP地址为"[127.0.0.1](ip_address)"的redis内存碎片比率太高了，怎么办
+
+  - intent: redis_memory_used_bytes
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis内存使用量异常
+      - 发生redis内存使用量告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis内存使用量异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis内存使用量发生告警
+      - redis内存使用量发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis内存使用量异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis内存使用量异常 
+      - redis内存使用量告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis内存使用量异常
+      - "[127.0.0.1](ip_address)"上的redis内存使用量出现问题
+
+  - intent: redis_memory_max_bytes
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis最大可用内存量异常
+      - 发生redis最大可用内存量告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis最大可用内存量异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis最大可用内存量发生告警
+      - redis最大可用内存量发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis最大可用内存量异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis最大可用内存量异常 
+      - Rredis最大可用内存量告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis最大可用内存量异常
+      - "[127.0.0.1](ip_address)"上的redis最大可用内存量出现问题
+
+  - intent: redis_total_system_memory_bytes
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis系统内存总量异常
+      - 发生redis系统内存总量告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis系统内存总量异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis系统内存总量发生告警
+      - redis系统内存总量发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis系统内存总量异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis系统内存总量异常 
+      - redis系统内存总量告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis系统内存总量异常
+      - "[127.0.0.1](ip_address)"上的redis系统内存总量出现问题
+
+  - intent: redis_connected_slaves
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis从服务器连接数异常
+      - 发生redis从服务器连接数告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis从服务器连接数异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis从服务器连接数发生告警
+      - redis从服务器连接数发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis从服务器连接数异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis从服务器连接数异常 
+      - redis从服务器连接数告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis从服务器连接数异常
+      - "[127.0.0.1](ip_address)"上的redis从服务器连接数出现问题
+
+  - intent: redis_instance_info
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis实例信息异常
+      - 发生redis实例信息告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis实例信息异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis实例信息发生告警
+      - redis实例信息发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis实例信息异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis实例信息异常 
+      - redis实例信息告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis实例信息异常
+      - "[127.0.0.1](ip_address)"上的redis实例信息出现问题
+
+  - intent: redis_connected_clients
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis客户端连接数异常
+      - 发生redis客户端连接数告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis客户端连接数异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis客户端连接数发生告警
+      - redis客户端连接数发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis客户端连接数异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis客户端连接数异常 
+      - redis客户端连接数告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis客户端连接数异常
+      - "[127.0.0.1](ip_address)"上的redis客户端连接数出现问题
+
+  - intent: redis_config_maxclients
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis客户端最大连接数异常
+      - 发生redis客户端最大连接数告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis客户端最大连接数异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis客户端最大连接数发生告警
+      - redis客户端最大连接数发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis客户端最大连接数异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis客户端最大连接数异常 
+      - redis客户端最大连接数告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis客户端最大连接数异常
+      - "[127.0.0.1](ip_address)"上的redis客户端最大连接数出现问题
+
+  - intent: redis_blocked_clients
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis被阻塞的客户端数量异常
+      - 发生redis被阻塞的客户端数量告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis被阻塞的客户端数量异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis被阻塞的客户端数量发生告警
+      - redis被阻塞的客户端数量发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis被阻塞的客户端数量异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis被阻塞的客户端数量异常 
+      - redis被阻塞的客户端数量告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis被阻塞的客户端数量异常
+      - "[127.0.0.1](ip_address)"上的redis被阻塞的客户端数量出现问题
+      - IP地址为"[127.0.0.1](ip_address)"的redis被阻塞的客户端数量太高是什么意思
+      - ip地址:"[127.0.0.1](ip_address)",redis被阻塞的客户端数量> 10
+
+  - intent: redis_keyspace_hits_total
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis命中key数量异常
+      - 发生redis命中key数量告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis命中key数量异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis命中key数量发生告警
+      - redis命中key数量发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis命中key数量异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis命中key数量异常 
+      - redis命中key数量告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis命中key数量异常
+      - "[127.0.0.1](ip_address)"上的redis命中key数量出现问题
+
+  - intent: redis_keyspace_misses_total
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis未命中key数量异常
+      - 发生redis未命中key数量告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis未命中key数量异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis未命中key数量发生告警
+      - redis未命中key数量发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis未命中key数量异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis未命中key数量异常 
+      - redis未命中key数量告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis未命中key数量异常
+      - "[127.0.0.1](ip_address)"上的redis未命中key数量出现问题
+
+  - intent: redis_rdb_last_save_timestamp_seconds
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis RDB最后保存时间异常
+      - 发生redis RDB最后保存时间告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis RDB最后保存时间异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis RDB最后保存时间发生告警
+      - redis RDB最后保存时间发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis RDB最后保存时间异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis RDB最后保存时间异常 
+      - redis RDB最后保存时间告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis RDB最后保存时间异常
+      - "[127.0.0.1](ip_address)"上的redis RDB最后保存时间出现问题
+
+  - intent: redis_rdb_changes_since_last_save
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis RDB上次保存以来更改的key数量异常
+      - 发生redis RDB上次保存以来更改的key数量告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis RDB上次保存以来更改的key数量异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis RDB上次保存以来更改的key数量发生告警
+      - redis RDB上次保存以来更改的key数量发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis RDB上次保存以来更改的key数量异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis RDB上次保存以来更改的key数量异常 
+      - redis RDB上次保存以来更改的key数量告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis RDB上次保存以来更改的key数量异常
+      - "[127.0.0.1](ip_address)"上的redis RDB上次保存以来更改的key数量出现问题
+
+  - intent: redis_cluster_connections
+    examples: |   
+      - "[127.0.0.1](ip_address)"上的redis集群连接数异常
+      - 发生redis集群连接数告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis集群连接数异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis集群连接数发生告警
+      - redis集群连接数发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis集群连接数异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis集群连接数异常 
+      - redis集群连接数告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis集群连接数异常
+      - "[127.0.0.1](ip_address)"上的redis集群连接数出现问题
+
+  - intent: redis_cluster_current_epoch
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis集群当前纪元异常
+      - 发生redis集群当前纪元告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis集群当前纪元异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis集群当前纪元发生告警
+      - redis集群当前纪元发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis集群当前纪元异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis集群当前纪元异常 
+      - redis集群当前纪元告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis集群当前纪元异常
+      - "[127.0.0.1](ip_address)"上的redis集群当前纪元出现问题
+
+  - intent: redis_cluster_enabled
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis集群是否启用异常
+      - 发生redis集群是否启用告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis集群是否启用异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis集群是否启用发生告警
+      - redis集群是否启用发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis集群是否启用异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis集群是否启用异常 
+      - redis集群是否启用告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis集群是否启用异常
+      - "[127.0.0.1](ip_address)"上的redis集群启用出现问题
+       - "[127.0.0.1](ip_address)"上的redis集群未启用，产生告警
+
+  - intent: redis_cluster_known_nodes
+    examples: |    
+      - "[127.0.0.1](ip_address)"上的redis集群已知节点数异常
+      - 发生redis集群已知节点数告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis集群已知节点数异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis集群已知节点数发生告警
+      - redis集群已知节点数发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis集群已知节点数异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis集群已知节点数异常 
+      - redis集群已知节点数告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis集群已知节点数异常
+      - "[127.0.0.1](ip_address)"上的redis集群已知节点数出现问题
+
+  - intent: redis_cluster_messages_received_total
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis集群接收消息总数异常
+      - 发生redis集群接收消息总数告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis集群接收消息总数异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis集群接收消息总数发生告警
+      - redis集群接收消息总数发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis集群接收消息总数异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis集群接收消息总数异常 
+      - redis集群接收消息总数告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis集群接收消息总数异常
+      - "[127.0.0.1](ip_address)"上的redis集群接收消息总数出现问题
+
+  - intent: redis_cluster_messages_sent_total
+    examples: |
+      - "[127.0.0.1](ip_address)"上的Rredis集群发送消息总数异常
+      - 发生redis集群发送消息总数告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis集群发送消息总数异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis集群发送消息总数发生告警
+      - redis集群发送消息总数发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis集群发送消息总数异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis集群发送消息总数异常 
+      - redis集群发送消息总数告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis集群发送消息总数异常
+      - "[127.0.0.1](ip_address)"上的redis集群发送消息总数出现问题
+
+  - intent: redis_cluster_my_epoch
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis集群当前节点所在纪元异常
+      - 发生redis集群当前节点所在纪元告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis集群当前节点所在纪元异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis集群当前节点所在纪元发生告警
+      - redis集群当前节点所在纪元发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis集群当前节点所在纪元异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis集群当前节点所在纪元异常 
+      - redis集群当前节点所在纪元告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis集群当前节点所在纪元异常
+      - "[127.0.0.1](ip_address)"上的redis集群当前节点所在纪元出现问题
+
+  - intent: redis_cluster_size
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis集群节点数量异常
+      - 发生redis集群节点数量告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis集群节点数量异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis集群节点数量发生告警
+      - redis集群节点数量发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis集群节点数量异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis集群节点数量异常 
+      - redis集群节点数量告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis集群节点数量异常
+      - "[127.0.0.1](ip_address)"上的redis集群节点数量出现问题
+
+  - intent: redis_cluster_slots_assigned
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis集群已分配的槽数量异常
+      - 发生redis集群已分配的槽数量告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis集群已分配的槽数量异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis集群已分配的槽数量发生告警
+      - redis集群已分配的槽数量发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis集群已分配的槽数量异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis集群已分配的槽数量异常 
+      - redis集群已分配的槽数量告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis集群已分配的槽数量异常
+      - "[127.0.0.1](ip_address)"上的redis集群已分配的槽数量出现问题
+
+  - intent: redis_cluster_slots_fail
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis集群标记为FAIL的槽数量异常
+      - 发生redis集群标记为FAIL的槽数量告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis集群标记为FAIL的槽数量异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis集群标记为FAIL的槽数量发生告警
+      - redis集群标记为FAIL的槽数量发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis集群标记为FAIL的槽数量异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis集群标记为FAIL的槽数量异常 
+      - redis集群标记为FAIL的槽数量告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis集群标记为FAIL的槽数量异常
+      - "[127.0.0.1](ip_address)"上的redis集群标记为FAIL的槽数量出现问题
+
+  - intent: redis_cluster_slots_ok
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis集群正常运行的槽数量异常
+      - 发生redis集群正常运行的槽数量告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis集群正常运行的槽数量异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis集群正常运行的槽数量发生告警
+      - redis集群正常运行的槽数量发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis集群正常运行的槽数量异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis集群正常运行的槽数量异常 
+      - redis集群正常运行的槽数量告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis集群正常运行的槽数量异常
+      - "[127.0.0.1](ip_address)"上的redis集群正常运行的槽数量出现问题
+
+  - intent: redis_cluster_slots_pfail
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis集群标记为PFAIL的槽数量异常
+      - 发生redis集群标记为PFAIL的槽数量告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis集群标记为PFAIL的槽数量异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis集群标记为PFAIL的槽数量发生告警
+      - redis集群标记为PFAIL的槽数量发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis集群标记为PFAIL的槽数量异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis集群标记为PFAIL的槽数量异常 
+      - redis集群标记为PFAIL的槽数量告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis集群标记为PFAIL的槽数量异常
+      - "[127.0.0.1](ip_address)"上的redis集群标记为PFAIL的槽数量出现问题
+
+  - intent: redis_cluster_state
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis集群状态异常
+      - 发生redis集群状态告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis集群状态异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis集群状态发生告警
+      - redis集群状态发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis集群状态异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis集群状态异常 
+      - redis集群状态告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis集群状态异常
+      - "[127.0.0.1](ip_address)"上的redis集群状态出现问题
+      - IP地址为"[127.0.0.1](ip_address)"的redis集群状态为0
+      - IP地址为"[127.0.0.1](ip_address)"的redis集群状态等于0是什么意思
+      - ip地址:"[127.0.0.1](ip_address)",redis集群状态==0
+
+  - intent: redis_sentinel_master_ok_sentinels
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis Sentinel主节点的可用哨兵数量异常
+      - 发生redis Sentinel主节点的可用哨兵数量告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis Sentinel主节点的可用哨兵数量异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis Sentinel主节点的可用哨兵数量发生告警
+      - redis Sentinel主节点的可用哨兵数量发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis Sentinel主节点的可用哨兵数量异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis Sentinel主节点的可用哨兵数量异常 
+      - redis Sentinel主节点的可用哨兵数量告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis Sentinel主节点的可用哨兵数量异常
+      - "[127.0.0.1](ip_address)"上的redis Sentinel主节点的可用哨兵数量出现问题
+
+  - intent: redis_sentinel_master_ok_slaves
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis Sentinel主节点的可用从节点数量异常
+      - 发生redis Sentinel主节点的可用从节点数量告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis Sentinel主节点的可用从节点数量异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis Sentinel主节点的可用从节点数量发生告警
+      - redis Sentinel主节点的可用从节点数量发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis Sentinel主节点的可用从节点数量异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis Sentinel主节点的可用从节点数量异常 
+      - redis Sentinel主节点的可用从节点数量告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis Sentinel主节点的可用从节点数量异常
+      - "[127.0.0.1](ip_address)"上的redis Sentinel主节点的可用从节点数量出现问题
+
+  - intent: redis_sentinel_master_sentinels
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis Sentinel主节点的哨兵数量异常
+      - 发生redis Sentinel主节点的哨兵数量告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis Sentinel主节点的哨兵数量异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis Sentinel主节点的哨兵数量发生告警
+      - redis Sentinel主节点的哨兵数量发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis Sentinel主节点的哨兵数量异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis Sentinel主节点的哨兵数量异常 
+      - redis Sentinel主节点的哨兵数量告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis Sentinel主节点的哨兵数量异常
+      - "[127.0.0.1](ip_address)"上的redis Sentinel主节点的哨兵数量出现问题
+
+  - intent: redis_sentinel_master_slaves
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis Sentinel主节点的从节点数量异常
+      - 发生redis Sentinel主节点的从节点数量告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis Sentinel主节点的从节点数量异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis Sentinel主节点的从节点数量发生告警
+      - redis Sentinel主节点的从节点数量发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis Sentinel主节点的从节点数量异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis Sentinel主节点的从节点数量异常 
+      - redis Sentinel主节点的从节点数量告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis Sentinel主节点的从节点数量异常
+      - "[127.0.0.1](ip_address)"上的redis Sentinel主节点的从节点数量出现问题
+
+  - intent: redis_sentinel_master_status
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis Sentinel主节点状态异常
+      - 发生redis Sentinel主节点状态告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis Sentinel主节点状态异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis Sentinel主节点状态发生告警
+      - redis Sentinel主节点状态发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis Sentinel主节点状态异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis Sentinel主节点状态异常 
+      - redis Sentinel主节点状态告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis Sentinel主节点状态异常
+      - "[127.0.0.1](ip_address)"上的redis Sentinel主节点状态出现问题
+      - IP地址为"[127.0.0.1](ip_address)"的redis Sentinel主节点状态为0
+      - IP地址为"[127.0.0.1](ip_address)"的redis Sentinel主节点状态等于0是什么意思
+      - ip地址:"[127.0.0.1](ip_address)",redis Sentinel主节点状态== 0
+
+  - intent: redis_sentinel_masters
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis Sentinel主节点数量异常
+      - 发生redis Sentinel主节点数量告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis Sentinel主节点数量异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis Sentinel主节点数量发生告警
+      - redis Sentinel主节点数量发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis Sentinel主节点数量异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis Sentinel主节点数量异常 
+      - redis Sentinel主节点数量告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis Sentinel主节点数量异常
+      - "[127.0.0.1](ip_address)"上的redis Sentinel主节点数量出现问题
+
+  - intent: redis_exporter_last_scrape_duration_seconds
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis监控探针最近一次抓取时长异常
+      - 发生redis监控探针最近一次抓取时长告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis监控探针最近一次抓取时长异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis监控探针最近一次抓取时长发生告警
+      - redis监控探针最近一次抓取时长发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis监控探针最近一次抓取时长异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis监控探针最近一次抓取时长异常 
+      - redis监控探针最近一次抓取时长告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis监控探针最近一次抓取时长异常
+      - "[127.0.0.1](ip_address)"上的redis监控探针最近一次抓取时长出现问题
+
+  - intent: redis_exporter_last_scrape_ping_time_seconds
+    examples: |
+      - "[127.0.0.1](ip_address)"上的redis监控探针最后一次抓取ping命令的响应时间异常
+      - 发生redis监控探针最后一次抓取ping命令的响应时间告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis监控探针最后一次抓取ping命令的响应时间异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis监控探针最后一次抓取ping命令的响应时间发生告警
+      - redis监控探针最后一次抓取ping命令的响应时间发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis监控探针最后一次抓取ping命令的响应时间异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis监控探针最后一次抓取ping命令的响应时间异常 
+      - redis监控探针最后一次抓取ping命令的响应时间告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis监控探针最后一次抓取ping命令的响应时间异常
+      - "[127.0.0.1](ip_address)"上的redis监控探针最后一次抓取ping命令的响应时间出现问题
+      - IP地址为"[127.0.0.1](ip_address)"的redis监控探针最后一次抓取ping命令的响应时间过长
+      - ip地址:"[127.0.0.1](ip_address)",redis监控探针最后一次抓取ping命令的响应时间> 2
+
+ 
+  - intent: redis_slowlog_length
+    examples: | 
+      - "[127.0.0.1](ip_address)"上的redis慢查询日志队列长度异常
+      - 发生redis慢查询日志队列长度告警,ip地址:"[127.0.0.1](ip_address)"
+      - redis慢查询日志队列长度异常，ip是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis慢查询日志队列长度发生告警
+      - redis慢查询日志队列长度发生告警，位于"[127.0.0.1](ip_address)"
+      - 怎么处理"[127.0.0.1](ip_address)"的redis慢查询日志队列长度异常
+      - 什么原因导致的"[127.0.0.1](ip_address)"的redis慢查询日志队列长度异常 
+      - redis慢查询日志队列长度告警了，我该怎么办，ip地址是"[127.0.0.1](ip_address)"
+      - "[127.0.0.1](ip_address)"的redis慢查询日志队列长度异常
+      - "[127.0.0.1](ip_address)"上的redis慢查询日志队列长度出现问题
+
