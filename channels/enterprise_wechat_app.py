@@ -13,7 +13,7 @@ from rasa_sdk.utils import read_yaml_file
 from rasa.shared.constants import DEFAULT_CREDENTIALS_PATH
 from actions.utils.enterprise_wechat_utils import async_fun
 from actions.utils.indexer_utils import Searcher
-from actions.utils.langchain_utils import langchain_qa, query_chatgpt_with_memory
+from actions.utils.langchain_utils import langchain_qa, query_chatgpt, query_chatgpt_with_memory
 from actions.utils.redis_utils import RedisUtils, redis_client
 from channels.WXBizMsgCrypt3 import WXBizMsgCrypt
 import xml.etree.cElementTree as ET
@@ -420,8 +420,7 @@ class QYWXApp():
         prompt_template = RedisUtils.get_prompt_template()
         prompt_template = searcher.format_prompt(prompt_template, query)
         results = langchain_qa(doc_search, prompt_template, query)
-        # TODO2.优化：对langchain_qa的答案做有效性打分，不返回无效信息（比如对问题的重复）
-        # 3.将有效答案的来源链接添加到km标题的排序里面
+        # 2.将答案的来源链接添加到km标题的排序里面
         langchain_source = dict(
             map(
                 lambda x: get_source_doc(x.metadata["source"], self.km),
@@ -446,6 +445,15 @@ class QYWXApp():
             + struct_qywx_answer(len(sim_query_dict), list(sim_query_dict.values()), list(sim_query_dict.keys()))
         )
 
+        # 3.若本地未匹配到相关文档，当前通过正则匹配，后续考虑意图识别
+        negative_rule = re.compile(r'无法回答|不知道|没有.*信息|未提供.*信息|无关|不确定|没有提到')
+        if re.findall(negative_rule, results["result"]):
+            # 转为gpt问答
+            system_message = 'Answer as detailed as possible and use Chinese to answer.'
+            gpt_answer = query_chatgpt(system_message=system_message, user_message=query)
+            result = result.replace(langchain_prefix, '\n可以参考如下来源：').replace(results["result"], gpt_answer)
+            result = '您的问题没有在本地知识库检索到，下面是gpt的回答：\n' + result
+        # TODO：对超过2048字节的文本需要分多次发送
         self.post_msg(user_id=user_id, content=result)
 
     @async_fun
