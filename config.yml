@@ -58,5 +58,5 @@ policies:
     tensorboard_log_directory: "./tensorboard"
     tensorboard_log_level: "epoch"
   - name: RulePolicy
-    core_fallback_threshold: 0.89
+    core_fallback_threshold: 0.8
     core_fallback_action_name: "action_weops_fallback"
