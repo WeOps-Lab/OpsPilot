@@ -18,6 +18,10 @@ OpsPilot支持以ChatBot的形态与Web应用集成，主要提供以下能力�
 >
 <img src="./docs/images/canway.jpeg" width="30%" height="30%">
 
+# 架构
+
+<img src="./docs/images/arch.png" >
+
 # 场景
 
 ## ChatOps场景
