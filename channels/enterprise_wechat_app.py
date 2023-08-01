@@ -13,7 +13,7 @@ from rasa_sdk.utils import read_yaml_file
 from rasa.shared.constants import DEFAULT_CREDENTIALS_PATH
 from actions.utils.enterprise_wechat_utils import async_fun
 from actions.utils.indexer_utils import Searcher
-from actions.utils.langchain_utils import langchain_qa, query_chatgpt
+from actions.utils.langchain_utils import langchain_qa, query_chatgpt_with_memory
 from actions.utils.redis_utils import RedisUtils
 from channels.WXBizMsgCrypt3 import WXBizMsgCrypt
 import xml.etree.cElementTree as ET
@@ -359,12 +359,10 @@ class QYWXApp():
         """接收企微用户的gpt 问题(msg_content)，发送openai接口返回的答案给到用户
 
         Args:
-            user_id (_type_): 企微用户帐号
-            msg_content (_type_): 图片描述语句
+            user_id (str): 企微用户帐号
+            msg_content (str): 企微用户问题
         """
-        system_prompt = "You are ChatGPT, a large language model trained by OpenAI. Answer as detailed as possible."
-        # 直接走chatGPT接口
-        res = query_chatgpt(system_prompt, msg_content.strip("gpt").strip())
+        res = query_chatgpt_with_memory(user_id=user_id, query=msg_content.strip("gpt").strip())
         # 如果res里含有<>格式，通过md格式发送，否则企微无法识别
         msg_type = 'markdown' if re.findall('<.*>', res) else 'text'
         self.post_msg(user_id=user_id, msgtype=msg_type, content=res)
