@@ -14,7 +14,7 @@ from rasa.shared.constants import DEFAULT_CREDENTIALS_PATH
 from actions.utils.enterprise_wechat_utils import async_fun
 from actions.utils.indexer_utils import Searcher
 from actions.utils.langchain_utils import langchain_qa, query_chatgpt_with_memory
-from actions.utils.redis_utils import RedisUtils
+from actions.utils.redis_utils import RedisUtils, redis_client
 from channels.WXBizMsgCrypt3 import WXBizMsgCrypt
 import xml.etree.cElementTree as ET
 from channels.enterprise_wechat_mysql import mysql_connect, mysql_select
@@ -446,7 +446,25 @@ class QYWXApp():
             + struct_qywx_answer(len(sim_query_dict), list(sim_query_dict.values()), list(sim_query_dict.keys()))
         )
 
-        qywx_app.post_msg(user_id=user_id, content=result)
+        self.post_msg(user_id=user_id, content=result)
+
+    @async_fun
+    def post_funny_msg(self, user_id):
+        """调用接口，每人每天返回一句精美句子
+
+        Args:
+            user_id (str): 企微用户ID
+        """
+        if redis_client.get('hitokoto'+user_id):
+            return
+        redis_client.set('hitokoto'+user_id, 'hi', ex=24*60*60)
+        netease_comment_url = 'https://v1.hitokoto.cn/'
+        try:
+            hitokoto = requests.get(netease_comment_url).json()['hitokoto']
+        except Exception as e:
+            logger.exception('调用热评接口出错：{e}')
+            return
+        self.post_msg(user_id=user_id, content='每日一句：'+hitokoto)
 
 
 load_dotenv()
