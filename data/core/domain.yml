@@ -12,7 +12,6 @@ entities:
 intents:
   - 确认
   - 取消
-  - 在线问答
   - 无法理解
   - internal_exec_job
   - chat_online

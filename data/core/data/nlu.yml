@@ -29,7 +29,7 @@ nlu:
       - 不，谢谢
       - 不要这样
 
-  - intent: 在线问答
+  - intent: chat_online
     examples: |
       - 联网问答
       - 在线问答
