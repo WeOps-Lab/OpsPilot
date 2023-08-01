@@ -30,7 +30,7 @@ pipeline:
     number_of_transformer_layers: 4
     transformer_size: 256
     number_of_attention_heads: 4
-    learning_rate: 0.001
+    learning_rate: 0.0001
     drop_rate: 0.3
     tensorboard_log_directory: "./tensorboard"
     tensorboard_log_level: "epoch"
@@ -42,7 +42,7 @@ pipeline:
     use_word_boundaries: True
 
   - name: FallbackClassifier
-    threshold: 0.89
+    threshold: 0.8
 
 policies:
   - name: MemoizationPolicy

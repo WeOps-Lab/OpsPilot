@@ -10,11 +10,11 @@ entities:
   - internal_job_name
 
 intents:
-  - 确认
-  - 取消
-  - 无法理解
-  - internal_exec_job
+  - yes
+  - deny
+  - out_of_scope
   - chat_online
+  - internal_exec_job
 
 
 actions:
