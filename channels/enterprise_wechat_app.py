@@ -11,6 +11,7 @@ import requests
 from loguru import logger
 from rasa_sdk.utils import read_yaml_file
 from rasa.shared.constants import DEFAULT_CREDENTIALS_PATH
+from rasa.core.channels.channel import UserMessage
 from actions.utils.enterprise_wechat_utils import async_fun
 from actions.utils.indexer_utils import Searcher
 from actions.utils.langchain_utils import langchain_qa, query_chatgpt, query_chatgpt_with_memory
@@ -473,6 +474,21 @@ class QYWXApp():
             logger.exception('调用热评接口出错：{e}')
             return
         self.post_msg(user_id=user_id, content='每日一句：'+hitokoto)
+
+
+    async def qywx_rasa_qa(self, request, user_id, msg_content, collector, input_channel):
+        await request.app.ctx.agent.handle_message(
+                UserMessage(
+                    text=msg_content,
+                    output_channel=collector,
+                    sender_id=user_id,
+                    input_channel=input_channel,
+                    metadata=None,
+                )
+            )
+        response_data = collector.messages
+        for data in response_data:
+            self.post_msg(user_id=user_id, msgtype="text", content=data["text"].replace('bot: ',''))
 
 
 load_dotenv()
