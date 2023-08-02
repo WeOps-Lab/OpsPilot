@@ -1,5 +1,7 @@
+import asyncio
 import inspect
 import json
+from threading import Thread
 from typing import Dict, Optional, Text, Any, Callable, Awaitable
 from rasa.core.channels.channel import (
     InputChannel,
@@ -52,7 +54,7 @@ class EnterpriseWechatChannel(InputChannel):
             km_query = request.json.get("km_query")
             top_n = request.json.get("top_n")
             # 内部km标题搜索
-            sim_query, link = qywx_app.km_qa(query=km_query,top_n=top_n)
+            sim_query, link = qywx_app.km_qa(query=km_query, top_n=top_n)
             res = dict(zip(sim_query, link))
             return HTTPResponse(json.dumps(res), content_type="application/json")
 
@@ -64,37 +66,35 @@ class EnterpriseWechatChannel(InputChannel):
                 # TODO:考虑在用户每天第一次进入企微应用时随机发一句话（运维知识，开发知识，时间管理知识，office操作技巧，各种冷知识等等），提升趣味性
                 # 这里返回的不是''，企微就会认为消息没有送达，会重复发送请求
                 qywx_app.post_funny_msg(user_id)
-                return HTTPResponse(body='')
+                return HTTPResponse(body="")
 
             # 直接走openai接口
             msg_content = msg_content.strip().lower()
             if "gpt" in msg_content:
                 qywx_app.post_chatgpt_answer(user_id, msg_content)
-                return HTTPResponse(body='')
+                return HTTPResponse(body="")
             if "dall" in msg_content:
                 # 直接走DALL-E接口
-                qywx_app.post_msg(user_id=user_id, content='dall-e暂停支持')
-                return HTTPResponse(body='')
+                qywx_app.post_msg(user_id=user_id, content="dall-e暂停支持")
+                return HTTPResponse(body="")
             if "km" in msg_content:
                 # 内部km搜索
-                qywx_app.qywx_km_qa(user_id=user_id, query=msg_content.strip("km").strip())
-                return HTTPResponse(body='')
-                
+                qywx_app.qywx_km_qa(
+                    user_id=user_id, query=msg_content.strip("km").strip()
+                )
+                return HTTPResponse(body="")
+
             # 走rasa处理
             collector = CollectingOutputChannel()
-            await on_new_message(
-                UserMessage(
-                    text=msg_content,
-                    output_channel=collector,
-                    sender_id=user_id,
-                    input_channel=self.name(),
-                    metadata=None,
-                )
-            )
+            thread = Thread(target=asyncio.run, args=(qywx_app.qywx_rasa_qa(
+                request,
+                user_id=user_id,
+                msg_content=msg_content,
+                collector=collector,
+                input_channel=self.name()
+            ),))
+            thread.start()
 
-            response_data = collector.messages
-            for data in response_data:
-                qywx_app.post_msg(user_id=user_id, msgtype="text", content=data["text"])
-            return HTTPResponse(body='')
+            return HTTPResponse(body="")
 
         return enterprise_wechathook
