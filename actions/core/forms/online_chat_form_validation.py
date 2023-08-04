@@ -5,7 +5,7 @@ from rasa_sdk import Tracker, FormValidationAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
 
-from actions.core.utils.form_validate_utils import FormValidateUtils
+from actions.utils.form_validate_utils import FormValidateUtils
 
 
 class ValidateOnlineChatForm(FormValidationAction):
