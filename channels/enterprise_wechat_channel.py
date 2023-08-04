@@ -67,6 +67,8 @@ class EnterpriseWechatChannel(InputChannel):
                 # 这里返回的不是''，企微就会认为消息没有送达，会重复发送请求
                 qywx_app.post_funny_msg(user_id)
                 return HTTPResponse(body="")
+            
+            qywx_app.post_msg(user_id=user_id, content="AIOps智慧狗正在思考中，请稍等...")
 
             # 直接走openai接口
             msg_content = msg_content.strip().lower()
