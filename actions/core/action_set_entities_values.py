@@ -1,10 +1,8 @@
 from typing import Any, Text, Dict, List
 
 from rasa.shared.core.slots import Slot
-from rasa_sdk import Action, Tracker, logger
+from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
-
-from actions.utils.core_utils import get_regex_entities
 
 
 class ActionSetEntitiesValues(Action):

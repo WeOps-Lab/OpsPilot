@@ -7,6 +7,7 @@ def async_fun(f):
     Args:
         f (Function): 需要异步非阻塞属性的函数
     """
+
     def wrapper(*args, **kwargs):
         thr = Thread(target=f, args=args, kwargs=kwargs)
         thr.start()

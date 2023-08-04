@@ -19,7 +19,7 @@ def get_jenkins_build_info(job_name, build_number):
     job = jenkins[job_name]
     build = job.get_build(int(build_number))
     return build.is_running(), build.get_status(), \
-        build.get_timestamp(), build.get_estimated_duration()
+           build.get_timestamp(), build.get_estimated_duration()
 
 
 def analyze_jenkins_build_console(job_name, build_number):

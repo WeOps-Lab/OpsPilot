@@ -1,11 +1,10 @@
 from typing import Any, Dict, List, Text
 
 from rasa_sdk import Action, Tracker, logger
-from rasa_sdk.events import (SlotSet, UserUtteranceReverted, FollowupAction, ActiveLoop)
+from rasa_sdk.events import UserUtteranceReverted
 from rasa_sdk.executor import CollectingDispatcher
 
 from actions.constant.server_settings import server_settings
-from actions.utils.core_utils import get_regex_entities
 from actions.utils.jenkins_utils import (find_jenkins_job)
 
 
