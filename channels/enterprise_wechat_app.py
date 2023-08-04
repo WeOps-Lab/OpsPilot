@@ -487,8 +487,8 @@ class QYWXApp():
                 )
             )
         response_data = collector.messages
-        for data in response_data:
-            self.post_msg(user_id=user_id, msgtype="text", content=data["text"].replace('bot:','').strip())
+        res_content = '\n\n'.join(data["text"] for data in response_data[1:]).replace('bot:', '').strip()
+        self.post_msg(user_id=user_id, msgtype="text", content=res_content)
 
 
 load_dotenv()
