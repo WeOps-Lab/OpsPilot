@@ -4,9 +4,8 @@ import shutil
 
 import fire
 import pandas as pd
-from dotenv import load_dotenv
-import pandas as pd
 import sqlalchemy
+from dotenv import load_dotenv
 from langchain import FAISS
 from langchain.document_loaders import (
     PyPDFium2Loader, UnstructuredMarkdownLoader, UnstructuredWordDocumentLoader,
@@ -333,6 +332,7 @@ class BootStrap:
             ImportInst().collector()
         except Exception as e:
             logger.exception(getattr(e, "message", e))
+
 
 if __name__ == '__main__':
     load_dotenv()
