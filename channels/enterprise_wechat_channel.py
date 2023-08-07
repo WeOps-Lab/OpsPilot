@@ -67,12 +67,11 @@ class EnterpriseWechatChannel(InputChannel):
                 # 这里返回的不是''，企微就会认为消息没有送达，会重复发送请求
                 qywx_app.post_funny_msg(user_id)
                 return HTTPResponse(body="")
-            
-            qywx_app.post_msg(user_id=user_id, content="AIOps智慧狗正在思考中，请稍等...")
 
             # 直接走openai接口
             msg_content = msg_content.strip().lower()
             if "gpt" in msg_content:
+                qywx_app.post_msg(user_id=user_id, content="AIOps智慧狗正在思考中，请稍等...")
                 qywx_app.post_chatgpt_answer(user_id, msg_content)
                 return HTTPResponse(body="")
             if "dall" in msg_content:
@@ -80,6 +79,7 @@ class EnterpriseWechatChannel(InputChannel):
                 qywx_app.post_msg(user_id=user_id, content="dall-e暂停支持")
                 return HTTPResponse(body="")
             if "km" in msg_content:
+                qywx_app.post_msg(user_id=user_id, content="AIOps智慧狗正在思考中，请稍等...")
                 # 内部km搜索
                 qywx_app.qywx_km_qa(
                     user_id=user_id, query=msg_content.strip("km").strip()

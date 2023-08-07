@@ -14,7 +14,11 @@ from rasa.shared.constants import DEFAULT_CREDENTIALS_PATH
 from rasa.core.channels.channel import UserMessage
 from actions.utils.enterprise_wechat_utils import async_fun
 from actions.utils.indexer_utils import Searcher
-from actions.utils.langchain_utils import langchain_qa, query_chatgpt, query_chatgpt_with_memory
+from actions.utils.langchain_utils import (
+    langchain_qa,
+    query_chatgpt,
+    query_chatgpt_with_memory,
+)
 from actions.utils.redis_utils import RedisUtils, redis_client
 from channels.WXBizMsgCrypt3 import WXBizMsgCrypt
 import xml.etree.cElementTree as ET
@@ -25,7 +29,7 @@ from langchain.embeddings import HuggingFaceEmbeddings
 from channels.enterprise_wechat_utils import get_source_doc, struct_qywx_answer
 
 
-class QYWXApp():
+class QYWXApp:
     """
     企业微信应用，支持：
     1.创建群聊
@@ -46,9 +50,7 @@ class QYWXApp():
     APPCHAT_UPDATE = BASE_URL + "/cgi-bin/appchat/update?access_token={}"
     MEDIA_UPLOAD = BASE_URL + "/cgi-bin/media/upload?access_token={}&type={}"
 
-    def __init__(
-        self, token, encoding_aes_key, corp_id, secret, agent_id
-    ):
+    def __init__(self, token, encoding_aes_key, corp_id, secret, agent_id):
         self.token = token
         self.encoding_aes_key = encoding_aes_key
         self.corp_id = corp_id
@@ -76,8 +78,7 @@ class QYWXApp():
         return km
 
     def _fresh_access_token(self):
-        """刷新实例的access_token属性，便于后续接口调用
-        """
+        """刷新实例的access_token属性，便于后续接口调用"""
         self.access_token = self._get_access_token()
 
     def _requests_validate_expired(self, **request_params):
@@ -190,9 +191,13 @@ class QYWXApp():
         Returns:
             dict: 企微接口返回体
         """
-        assert msgtype in ["text", "image", "markdown"], "目前OpsPilot版本仅支持发送文字(text,markdown)和图片(image)消息"
+        assert msgtype in [
+            "text",
+            "image",
+            "markdown",
+        ], "目前OpsPilot版本仅支持发送文字(text,markdown)和图片(image)消息"
         assert (msgtype == "image" and media_id != "") or (
-            msgtype == "text" or 'markdown' and content != ""
+            msgtype == "text" or "markdown" and content != ""
         ), "发送图片/文字消息，缺失必要参数"
         params = dict()
         if chatid != "":
@@ -363,9 +368,11 @@ class QYWXApp():
             user_id (str): 企微用户帐号
             msg_content (str): 企微用户问题
         """
-        res = query_chatgpt_with_memory(user_id=user_id, query=msg_content.strip("gpt").strip())
+        res = query_chatgpt_with_memory(
+            user_id=user_id, query=msg_content.strip("gpt").strip()
+        )
         # 如果res里含有<>格式，通过md格式发送，否则企微无法识别
-        msg_type = 'markdown' if re.findall('<.*>', res) else 'text'
+        msg_type = "markdown" if re.findall("<.*>", res) else "text"
         self.post_msg(user_id=user_id, msgtype=msg_type, content=res)
 
     @staticmethod
@@ -432,28 +439,40 @@ class QYWXApp():
         langchain_prefix = "\n本回答来源如下："
         title_sim_prefix = "\n根据您的问题，您还可以查看以下结果："
         sim_query, link = self.km_qa(query, top_n=top_n)
-        sim_query_dict = dict(zip(sim_query,link))
+        sim_query_dict = dict(zip(sim_query, link))
 
-        sim_query_dict = dict(set(sim_query_dict.items()) - set(langchain_source.items()))
+        sim_query_dict = dict(
+            set(sim_query_dict.items()) - set(langchain_source.items())
+        )
         sim_query_dict = dict(list(sim_query_dict.items())[:5])
         result = (
             results["result"]
             + langchain_prefix
             + struct_qywx_answer(
-                len(langchain_source), list(langchain_source.values()), list(langchain_source.keys())
+                len(langchain_source),
+                list(langchain_source.values()),
+                list(langchain_source.keys()),
             )
             + title_sim_prefix
-            + struct_qywx_answer(len(sim_query_dict), list(sim_query_dict.values()), list(sim_query_dict.keys()))
+            + struct_qywx_answer(
+                len(sim_query_dict),
+                list(sim_query_dict.values()),
+                list(sim_query_dict.keys()),
+            )
         )
 
         # 3.若本地未匹配到相关文档，当前通过正则匹配，后续考虑意图识别
-        negative_rule = re.compile(r'无法回答|不知道|没有.*信息|未提供.*信息|无关|不确定|没有提到')
+        negative_rule = re.compile(r"无法回答|不知道|没有.*信息|未提供.*信息|无关|不确定|没有提到")
         if re.findall(negative_rule, results["result"]):
             # 转为gpt问答
-            system_message = 'Answer as detailed as possible and use Chinese to answer.'
-            gpt_answer = query_chatgpt(system_message=system_message, user_message=query)
-            result = result.replace(langchain_prefix, '\n可以参考如下来源：').replace(results["result"], gpt_answer)
-            result = '您的问题没有在本地知识库检索到，下面是gpt的回答：\n' + result
+            system_message = "Answer as detailed as possible and use Chinese to answer."
+            gpt_answer = query_chatgpt(
+                system_message=system_message, user_message=query
+            )
+            result = result.replace(langchain_prefix, "\n可以参考如下来源：").replace(
+                results["result"], gpt_answer
+            )
+            result = "您的问题没有在本地知识库检索到，下面是gpt的回答：\n" + result
         # TODO：对超过2048字节的文本需要分多次发送
         self.post_msg(user_id=user_id, content=result)
 
@@ -464,30 +483,36 @@ class QYWXApp():
         Args:
             user_id (str): 企微用户ID
         """
-        if redis_client.get('hitokoto'+user_id):
+        if redis_client.get("hitokoto" + user_id):
             return
-        redis_client.set('hitokoto'+user_id, 'hi', ex=24*60*60)
-        netease_comment_url = 'https://v1.hitokoto.cn/'
+        redis_client.set("hitokoto" + user_id, "hi", ex=24 * 60 * 60)
+        netease_comment_url = "https://v1.hitokoto.cn/"
         try:
-            hitokoto = requests.get(netease_comment_url).json()['hitokoto']
+            hitokoto = requests.get(netease_comment_url).json()["hitokoto"]
         except Exception as e:
-            logger.exception('调用热评接口出错：{e}')
+            logger.exception("调用热评接口出错：{e}")
             return
-        self.post_msg(user_id=user_id, content='每日一句：'+hitokoto)
+        self.post_msg(user_id=user_id, content="每日一句：" + hitokoto)
 
-
-    async def qywx_rasa_qa(self, request, user_id, msg_content, collector, input_channel):
+    async def qywx_rasa_qa(
+        self, request, user_id, msg_content, collector, input_channel
+    ):
         await request.app.ctx.agent.handle_message(
-                UserMessage(
-                    text=msg_content,
-                    output_channel=collector,
-                    sender_id=user_id,
-                    input_channel=input_channel,
-                    metadata=None,
-                )
+            UserMessage(
+                text=msg_content,
+                output_channel=collector,
+                sender_id=user_id,
+                input_channel=input_channel,
+                metadata=None,
             )
+        )
         response_data = collector.messages
-        res_content = '\n\n'.join(data["text"] for data in response_data[1:]).replace('bot:', '').strip()
+        res_content = (
+            "\n\n".join(data["text"] for data in response_data)
+            .replace("bot:", "")
+            .replace(server_settings.default_thinking_message, "")
+            .strip()
+        )
         self.post_msg(user_id=user_id, msgtype="text", content=res_content)
 
 
