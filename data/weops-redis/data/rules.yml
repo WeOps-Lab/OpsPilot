@@ -6,11 +6,51 @@ rules:
       - action: utter_redis_up
 #      - action: utter_redis_up_button
 
+  - rule: redis_uptime_in_seconds
+    steps:
+      - intent: redis_uptime_in_seconds
+      - action: utter_redis_uptime_in_seconds
+
+  - rule: redis_commands_processed_total
+    steps:
+      - intent: redis_commands_processed_total
+      - action: utter_redis_commands_processed_total
+
+  - rule: redis_net_input_bytes_total
+    steps:
+      - intent: redis_net_input_bytes_total
+      - action: utter_redis_net_input_bytes_total
+
+  - rule: redis_net_output_bytes_total
+    steps:
+      - intent: redis_net_output_bytes_total
+      - action: utter_redis_net_output_bytes_total
+
+  - rule: redis_db_keys
+    steps:
+      - intent: redis_db_keys
+      - action: utter_redis_db_keys
+
   - rule: redis_db_keys_expiring
     steps:
       - intent: redis_db_keys_expiring
       - action: utter_redis_db_keys_expiring
 #      - action: utter_redis_db_keys_expiring_button
+
+  - rule: redis_expired_keys_total
+    steps:
+      - intent: redis_expired_keys_total
+      - action: utter_redis_expired_keys_total
+
+  - rule: redis_evicted_keys_total
+    steps:
+      - intent: redis_evicted_keys_total
+      - action: utter_redis_evicted_keys_total
+
+  - rule: redis_commands_total
+    steps:
+      - intent: redis_commands_total
+      - action: utter_redis_commands_total
 
   - rule: redis_commands_duration_seconds_total
     steps:
@@ -29,6 +69,36 @@ rules:
       - action: utter_redis_mem_fragmentation_ratio
 #      - action: utter_redis_mem_fragmentation_ratio_button
 
+  - rule: redis_memory_used_bytes
+    steps:
+      - intent: redis_memory_used_bytes
+      - action: utter_redis_memory_used_bytes
+
+  - rule: redis_memory_max_bytes
+    steps:
+      - intent: redis_memory_max_bytes
+      - action: utter_redis_memory_max_bytes
+
+  - rule: redis_total_system_memory_bytes
+    steps:
+      - intent: redis_total_system_memory_bytes
+      - action: utter_redis_total_system_memory_bytes
+
+  - rule: redis_connected_slaves
+    steps:
+      - intent: redis_connected_slaves
+      - action: utter_redis_connected_slaves
+
+  - rule: redis_instance_info
+    steps:
+      - intent: redis_instance_info
+      - action: utter_redis_instance_info
+
+  - rule: redis_connected_clients
+    steps:
+      - intent: redis_connected_clients
+      - action: utter_redis_connected_clients
+
   - rule: redis_config_maxclients
     steps:
       - intent: redis_config_maxclients
@@ -40,6 +110,11 @@ rules:
       - intent: redis_blocked_clients
       - action: utter_redis_blocked_clients
 #      - action: utter_redis_blocked_clients_button
+
+  - rule: redis_keyspace_hits_total
+    steps:
+      - intent: redis_keyspace_hits_total
+      - action: utter_redis_keyspace_hits_total
 
   - rule: redis_keyspace_misses_total
     steps:
@@ -59,6 +134,11 @@ rules:
       - action: utter_redis_rdb_changes_since_last_save
 #      - action: utter_redis_rdb_changes_since_last_save_button
 
+  - rule: redis_cluster_connections
+    steps:
+      - intent: redis_cluster_connections
+      - action: utter_redis_cluster_connections
+
   - rule: redis_cluster_current_epoch
     steps:
       - intent: redis_cluster_current_epoch
@@ -71,11 +151,96 @@ rules:
       - action: utter_redis_cluster_enabled
 #      - action: utter_redis_cluster_enabled_button
 
+  - rule: redis_cluster_known_nodes
+    steps:
+      - intent: redis_cluster_known_nodes
+      - action: utter_redis_cluster_known_nodes
+
+  - rule: redis_cluster_messages_received_total
+    steps:
+      - intent: redis_cluster_messages_received_total
+      - action: utter_redis_cluster_messages_received_total
+
+  - rule: redis_cluster_messages_sent_total
+    steps:
+      - intent: redis_cluster_messages_sent_total
+      - action: utter_redis_cluster_messages_sent_total
+
   - rule: redis_cluster_my_epoch
     steps:
       - intent: redis_cluster_my_epoch
       - action: utter_redis_cluster_my_epoch
 #      - action: utter_redis_cluster_my_epoch_button
+
+  - rule: redis_cluster_size
+    steps:
+      - intent: redis_cluster_size
+      - action: utter_redis_cluster_size
+
+  - rule: redis_cluster_slots_assigned
+    steps:
+      - intent: redis_cluster_slots_assigned
+      - action: utter_redis_cluster_slots_assigned
+
+  - rule: redis_cluster_slots_fail
+    steps:
+      - intent: redis_cluster_slots_fail
+      - action: utter_redis_cluster_slots_fail
+ 
+  - rule: redis_cluster_slots_ok
+    steps:
+      - intent: redis_cluster_slots_ok
+      - action: utter_redis_cluster_slots_ok
+
+  - rule: redis_cluster_slots_pfail
+    steps:
+      - intent: redis_cluster_slots_pfail
+      - action: utter_redis_cluster_slots_pfail
+
+  - rule: redis_cluster_state
+    steps:
+      - intent: redis_cluster_state
+      - action: utter_redis_cluster_state
+
+  - rule: redis_sentinel_master_ok_sentinels
+    steps:
+      - intent: redis_sentinel_master_ok_sentinels
+      - action: utter_redis_sentinel_master_ok_sentinels    
+
+  - rule: redis_sentinel_master_ok_slaves
+    steps:
+      - intent: redis_sentinel_master_ok_slaves
+      - action: utter_redis_sentinel_master_ok_slaves    
+
+  - rule: redis_sentinel_master_sentinels
+    steps:
+      - intent: redis_sentinel_master_sentinels
+      - action: utter_redis_sentinel_master_sentinels  
+
+  - rule: redis_sentinel_master_slaves
+    steps:
+      - intent: redis_sentinel_master_slaves
+      - action: utter_redis_sentinel_master_slaves 
+
+  - rule: redis_sentinel_master_status
+    steps:
+      - intent: redis_sentinel_master_status
+      - action: utter_redis_sentinel_master_status
+
+  - rule: redis_sentinel_masters
+    steps:
+      - intent: redis_sentinel_masters
+      - action: utter_redis_sentinel_masters      
+
+  - rule: redis_exporter_last_scrape_duration_seconds
+    steps:
+      - intent: redis_exporter_last_scrape_duration_seconds
+      - action: utter_redis_exporter_last_scrape_duration_seconds     
+
+  - rule: redis_exporter_last_scrape_ping_time_seconds
+    steps:
+      - intent: redis_exporter_last_scrape_ping_time_seconds
+      - action: utter_redis_exporter_last_scrape_ping_time_seconds 
 
   - rule: redis_slowlog_length
     steps:
