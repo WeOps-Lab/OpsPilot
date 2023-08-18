@@ -32,3 +32,9 @@ dev-config
 node_modules
 *.pkl
 *.index
+data/weops-mssql
+data/weops-postgres
+data/weops-oracle
+data/weops-mysql
+data/weops-mongo
+data/weops-iis
