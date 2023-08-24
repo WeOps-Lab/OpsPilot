@@ -86,6 +86,11 @@ class EnterpriseWechatChannel(InputChannel):
                 )
                 return HTTPResponse(body="")
 
+            # 拉群判断
+            if msg_content in [str(i) for i in range(1, 15)]:
+                qywx_app.judge_create_helper_group(user_id=user_id, msg_content=msg_content)
+                return HTTPResponse(body="")
+
             # 走rasa处理
             collector = CollectingOutputChannel()
             thread = Thread(target=asyncio.run, args=(qywx_app.qywx_rasa_qa(
