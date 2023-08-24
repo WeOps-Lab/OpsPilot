@@ -16,7 +16,9 @@ def get_source_doc(source, km):
     Returns:
         _type_: _description_
     """
-    wiki_uuid = re.findall(r'([0-9a-z]+_[0-9a-z]+)\.',source)[0].replace("_", "/wiki/list/")
+    wiki_uuid = re.findall(r"([0-9a-z]+_[0-9a-z]+)\.", source)[0].replace(
+        "_", "/wiki/list/"
+    )
     wiki_url = WIKI_URL_FRONT + wiki_uuid
 
     title_list = list(km.keys())

@@ -2,6 +2,7 @@ import pickle
 import faiss
 import os
 import re
+import threading
 import urllib.parse as urlparse
 from dotenv import load_dotenv
 from langchain import FAISS
@@ -146,17 +147,15 @@ class QYWXApp:
         return res["media_id"]
 
     def create_group(
-        self,
-        group_name: str,
-        group_owner: str,
-        group_user_list: list,
+        self, group_name: str, group_owner: str, group_user_list: list, chatid: str
     ) -> str:
         """通过企微应用创建企微应用群聊，返回群聊id
 
         Args:
             group_name (str): 群名称
             group_owner (str): 群主
-            group_user_list (list): 群成员列表
+            group_user_list (list): 群成员id列表
+            chatid (str): 群聊的唯一标志，不能与已有的群重复；字符串类型，最长32个字符。只允许字符0-9及字母a-zA-Z。如果不填，系统会随机生成群id
 
         Returns:
             str: 群聊id，唯一标志群聊
@@ -164,7 +163,12 @@ class QYWXApp:
 
         setup_group_url = self.APPCHAT_CREATE.format(self.access_token)
 
-        params = {"name": group_name, "owner": group_owner, "userlist": group_user_list}
+        params = {
+            "name": group_name,
+            "owner": group_owner,
+            "userlist": group_user_list,
+            "chatid": chatid,
+        }
         request_params = {"method": "post", "url": setup_group_url, "json": params}
 
         res = self._requests_validate_expired(**request_params)
@@ -475,6 +479,9 @@ class QYWXApp:
             result = "您的问题没有在本地知识库检索到，下面是gpt的回答：\n" + result
         # TODO：对超过2048字节的文本需要分多次发送
         self.post_msg(user_id=user_id, content=result)
+        # redis记录用户问题，供helper功能使用，保存10分钟
+        redis_client.rpush("km_" + user_id, query)
+        redis_client.expire("km_" + user_id, 10*60)
 
     @async_fun
     def post_funny_msg(self, user_id):
@@ -514,12 +521,44 @@ class QYWXApp:
             .strip()
         )
         self.post_msg(user_id=user_id, msgtype="text", content=res_content)
+    
+    @async_fun
+    def judge_create_helper_group(self, user_id, msg_content):
+        # 获取helper信息
+        try:
+            helper_info = list(filter(lambda x: "HELPER" in x[0] and msg_content in x[0], os.environ.items()))[0]
+            helper_name = helper_info[0]
+            helper_owner = helper_info[1]
+        except Exception as e:
+            logger.exception('请检查是否有正确配置helper环境变量')
+            raise e
+        helper_chat_id = helper_name.replace("_", "")
+        # 创建群聊 or 将用户拉入群聊
+        res_get_chat = self.get_group(chatid=helper_chat_id)
+        if res_get_chat is None:
+            # 说明未创建此群聊，需要通过接口创建群聊，并手动拉入对应Helper
+            self.create_group(
+                helper_name[:-2],
+                group_owner=helper_owner,
+                group_user_list=[helper_owner, user_id],
+                chatid=helper_chat_id,
+            )
+        else:
+            self.update_group(chatid=helper_chat_id, add_user_list=[user_id])
+        # 发送历史km问题
+        for i in range(redis_client.llen("km_" + user_id)):
+            chat_msg = redis_client.lindex("km_" + user_id, i)
+            self.post_msg(chatid=helper_chat_id, content=chat_msg)
+         # 30分钟后自动踢出群聊
+        t1 = threading.Timer(30*60, self.update_group, kwargs={'chatid':helper_chat_id, 'del_user_list':[user_id]})
+        # 启动线程
+        t1.start()
 
 
 load_dotenv()
 RUN_MODE = os.getenv("RUN_MODE")
 credentials_path = (
-    ".vscode/credentials.yml" if RUN_MODE == "DEV" else DEFAULT_CREDENTIALS_PATH
+    "dev-config/credentials.yml" if RUN_MODE == "DEV" else DEFAULT_CREDENTIALS_PATH
 )
 credentials = read_yaml_file(credentials_path)
 qywx_app = QYWXApp(
