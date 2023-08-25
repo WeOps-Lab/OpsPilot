@@ -1,6 +1,8 @@
+import json
 import os.path
 from typing import Any, Text, Dict, List
 
+import requests
 from langchain import FAISS
 from langchain.embeddings import HuggingFaceEmbeddings
 from rasa_sdk import Action, Tracker, logger
@@ -17,19 +19,21 @@ class ActionWeOpsFallback(Action):
 
     def __init__(self) -> None:
         super().__init__()
-        self.searcher = Searcher()
+        if server_settings.fallback_mode == 'LOCAL_LLM':
+            self.searcher = Searcher()
+            embeddings = HuggingFaceEmbeddings(model_name=server_settings.embed_model_name,
+                                               cache_folder=server_settings.embed_model_cache_home,
+                                               encode_kwargs={
+                                                   'show_progress_bar': True, 'normalize_embeddings': True
+                                               })
 
-        embeddings = HuggingFaceEmbeddings(model_name=server_settings.embed_model_name,
-                                           cache_folder=server_settings.embed_model_cache_home,
-                                           encode_kwargs={
-                                               'show_progress_bar': True, 'normalize_embeddings': True
-                                           })
-
-        if server_settings.vec_db_path is not None and os.path.exists(
-                server_settings.vec_db_path) and server_settings.fallback_chat_mode == 'knowledgebase':
-            self.doc_search = FAISS.load_local(server_settings.vec_db_path, embeddings)
-        else:
-            self.doc_search = None
+            if server_settings.vec_db_path is not None and os.path.exists(
+                    server_settings.vec_db_path) and server_settings.fallback_chat_mode == 'knowledgebase':
+                self.doc_search = FAISS.load_local(server_settings.vec_db_path, embeddings)
+            else:
+                self.doc_search = None
+        if server_settings.fallback_mode == 'FAST_GPT':
+            logger.info(f'Fallback模式为FAST_GPT,应用地址为:{server_settings.fastgpt_endpoint}')
 
     def name(self) -> Text:
         return "action_weops_fallback"
@@ -98,21 +102,54 @@ class ActionWeOpsFallback(Action):
             dispatcher.utter_message(text='OpsPilot当前运行在开发模式，没有办法回复这些复杂的问题哦')
             return [UserUtteranceReverted()]
 
-        if server_settings.openai_endpoint is None:
-            dispatcher.utter_message(text='OpsPilot没有打开LLM回复的能力,无法回答这个问题.')
-            return [UserUtteranceReverted()]
+        if server_settings.fallback_mode == 'LOCAL_LLM':
+            if server_settings.openai_endpoint is None:
+                dispatcher.utter_message(text='OpsPilot没有打开LLM回复的能力,无法回答这个问题.')
+                return [UserUtteranceReverted()]
 
-        try:
-            if server_settings.fallback_chat_mode == 'knowledgebase':
-                return self.answer_via_knowledgebase(user_msg, dispatcher)
+            try:
+                if server_settings.fallback_chat_mode == 'knowledgebase':
+                    return self.answer_via_knowledgebase(user_msg, dispatcher)
 
-            elif server_settings.fallback_chat_mode == 'online_knowledgebase':
-                return self.answer_via_online_knowledgebase(user_msg, dispatcher)
+                elif server_settings.fallback_chat_mode == 'online_knowledgebase':
+                    return self.answer_via_online_knowledgebase(user_msg, dispatcher)
 
-            else:
-                return self.answer_via_llm(user_msg, tracker, dispatcher)
+                else:
+                    return self.answer_via_llm(user_msg, tracker, dispatcher)
 
-        except Exception as e:
-            logger.exception('请求Azure OpenAI 服务异常')
-            dispatcher.utter_message(text='OpsPilot处于非常繁忙的状态，请稍后再试.')
-            return [UserUtteranceReverted()]
+            except Exception as e:
+                logger.exception('请求Azure OpenAI 服务异常')
+                dispatcher.utter_message(text='OpsPilot处于非常繁忙的状态，请稍后再试.')
+                return [UserUtteranceReverted()]
+
+        if server_settings.fallback_mode == 'FAST_GPT':
+            if server_settings.fastgpt_endpoint is None:
+                dispatcher.utter_message(text='OpsPilot没有打开FAST_GPT回复的能力,无法回答这个问题.')
+                return [UserUtteranceReverted()]
+
+            try:
+                # 向FAST_GPT服务发起POST请求,数据格式为JSON
+                headers = {
+                    "Authorization": f"Bearer {server_settings.fastgpt_key}",
+                    "Content-Type": "application/json"
+                }
+
+                data = {
+                    "chatId": tracker.sender_id,
+                    "stream": False,
+                    "detail": False,
+                    "messages": [
+                        {
+                            "content": tracker.latest_message['text'],
+                            "role": "user"
+                        }
+                    ]
+                }
+                response = requests.post(server_settings.fastgpt_endpoint, headers=headers, data=json.dumps(data))
+                response_msg = response.json()['choices'][0]['message']['content']
+                dispatcher.utter_message(text=response_msg)
+                return []
+            except Exception as e:
+                logger.exception('请求FAST_GPT服务异常')
+                dispatcher.utter_message(text='OpsPilot处于非常繁忙的状态，请稍后再试.')
+                return [UserUtteranceReverted()]

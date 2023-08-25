@@ -19,5 +19,5 @@ class ActionWeOpsPreFallback(Action):
             logger.warning('用户输入了空白的字符串,跳过FallBack')
             return [UserUtteranceReverted()]
         else:
-            dispatcher.utter_message(text=server_settings.default_thinking_message)
+            # dispatcher.utter_message(text=server_settings.default_thinking_message)
             return []

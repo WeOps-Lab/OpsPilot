@@ -4,7 +4,10 @@ from pydantic import BaseSettings
 
 
 class ServerSettings(BaseSettings):
-    fallback_llm: str = 'OPENAI'
+    fallback_mode: str = 'LOCAL_LLM'
+
+    fastgpt_endpoint: Optional[str] = None
+    fastgpt_key: Optional[str] = None
 
     openai_endpoint: Optional[str] = None
     openai_key: Optional[str] = None

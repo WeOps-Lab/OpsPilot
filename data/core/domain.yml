@@ -5,64 +5,15 @@ session_config:
   carry_over_slots_to_new_session: true
 
 
-entities:
-  - ip_address
-  - internal_job_name
-
 intents:
   - yes
   - deny
-  - out_of_scope
-  - chat_online
-  - internal_exec_job
 
 
 actions:
   - action_reset_all_slot
-  - action_weops_fallback
   - action_pre_weops_fallback
   - action_post_weops_fallback
-  - action_online_chat
-  - validate_online_chat_form
-  - action_execute_job
+  - action_weops_fallback
   - action_set_entities_values
-  - action_pre_execute_job
 
-
-forms:
-  online_chat_form:
-    required_slots:
-      - online_chat_url
-      - online_chat_query
-
-slots:
-  online_chat_url:
-    type: text
-    influence_conversation: true
-    mappings:
-      - type: from_text
-        conditions:
-          - active_loop: online_chat_form
-            requested_slot: online_chat_url
-  online_chat_query:
-    type: text
-    influence_conversation: true
-    mappings:
-      - type: from_text
-        conditions:
-          - active_loop: online_chat_form
-            requested_slot: online_chat_query
-
-  internal_job_name:
-    type: text
-    influence_conversation: false
-    mappings:
-      - type: from_entity
-        entity: internal_job_name
-
-  ip_address:
-    type: text
-    influence_conversation: false
-    mappings:
-      - type: from_entity
-        entity: ip_address
