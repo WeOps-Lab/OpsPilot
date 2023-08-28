@@ -27,7 +27,7 @@ from channels.enterprise_wechat_mysql import mysql_connect, mysql_select
 from actions.constant.server_settings import server_settings
 from langchain.embeddings import HuggingFaceEmbeddings
 
-from channels.enterprise_wechat_utils import get_source_doc, struct_qywx_answer
+from channels.enterprise_wechat_utils import get_source_doc, helper_map_desc, struct_qywx_answer, text_split
 
 
 class QYWXApp:
@@ -218,19 +218,18 @@ class QYWXApp:
             params["duplicate_check_interval"] = 1800
             url = self.USER_MESSAGE_SEND.format(self.access_token)
 
-        if msgtype == "text":
-            # 发送的是文本消息
+        if msgtype == "text" or msgtype == "markdown":
             # 最长不超过2048个字节，对于长文本消息需要截断分多次发送
-            params["text"] = {"content": content}
-        if msgtype == "markdown":
-            # 发送的是md消息，对于带有<>符号的文本（比如html代码），无法用文本消息发送
-            params["markdown"] = {"content": content}
+            content_list = text_split(content, 2048)
+            for chunk in content_list:
+                params[msgtype] = {"content": chunk}
+                request_params = {"method": "post", "url": url, "json": params}
+                res = self._requests_validate_expired(**request_params)
         if msgtype == "image":
             # 发送的是图片消息
             params["image"] = {"media_id": media_id}
-
-        request_params = {"method": "post", "url": url, "json": params}
-        res = self._requests_validate_expired(**request_params)
+            request_params = {"method": "post", "url": url, "json": params}
+            res = self._requests_validate_expired(**request_params)
         return res
 
     def get_group(
@@ -477,11 +476,16 @@ class QYWXApp:
                 results["result"], gpt_answer
             )
             result = "您的问题没有在本地知识库检索到，下面是gpt的回答：\n" + result
-        # TODO：对超过2048字节的文本需要分多次发送
         self.post_msg(user_id=user_id, content=result)
         # redis记录用户问题，供helper功能使用，保存10分钟
         redis_client.rpush("km_" + user_id, query)
         redis_client.expire("km_" + user_id, 10*60)
+        # 发送提示，告知用户序号对应的helper，每天一次
+        if redis_client.get("km_helper" + user_id):
+            return
+        redis_client.set("km_helper" + user_id, "km_helper", ex=24 * 60 * 60)
+        self.post_msg(user_id=user_id, content=helper_map_desc())
+        
 
     @async_fun
     def post_funny_msg(self, user_id):

@@ -45,3 +45,31 @@ def struct_qywx_answer(top_n, link_list, title_list):
             i, link_list[i - 1], title_list[i - 1]
         )
     return answer
+
+
+def text_split(text, chunk_size):
+    """该函数将文本分割成指定大小的块，并将它们存储在列表中，最后返回该列表
+
+    Args:
+        text (str): 要分割的文本
+        chunk_size (int): 每个块的大小（以字节数为单位）
+
+    Returns:
+        list: 包含已经被分好块文本的列表
+    """
+    text_bytes = text.encode('utf-8')
+    chunks = []
+    for i in range(0, len(text_bytes), chunk_size):
+        chunk = text_bytes[i:i+chunk_size].decode('utf-8', errors='ignore')
+        chunks.append(chunk)
+    return chunks
+
+
+def helper_map_desc():
+    """根据环境变量配置输出序号与对应helper的关系的文本
+    """
+    helper_info = list(filter(lambda x: "HELPER" in x[0], os.environ.items()))
+    helper_text_info = '\n'.join([i[0].split('_')[-1]+'. 向'+i[0].split('_')[0]+'研发大佬求助' for i in helper_info])
+    prefix_text = '对km答案不满意？可以输入序号（比如1）进入群聊获取研发大佬（helper）的帮助：\n'
+    postfix_text = '\nPS.进入群聊30分钟后会被智慧狗自动踢出群聊哟'
+    return prefix_text+helper_text_info+postfix_text
