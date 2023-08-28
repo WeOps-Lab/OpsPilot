@@ -64,3 +64,12 @@ def text_split(text, chunk_size):
         chunks.append(chunk)
     return chunks
 
+
+def helper_map_desc():
+    """根据环境变量配置输出序号与对应helper的关系的文本
+    """
+    helper_info = list(filter(lambda x: "HELPER" in x[0], os.environ.items()))
+    helper_text_info = '\n'.join([i[0].split('_')[-1]+'. 向'+i[0].split('_')[0]+'研发大佬求助' for i in helper_info])
+    prefix_text = '对km答案不满意？可以输入序号（比如1）进入群聊获取研发大佬（helper）的帮助：\n'
+    postfix_text = '\nPS.进入群聊30分钟后会被智慧狗自动踢出群聊哟'
+    return prefix_text+helper_text_info+postfix_text

@@ -27,7 +27,7 @@ from channels.enterprise_wechat_mysql import mysql_connect, mysql_select
 from actions.constant.server_settings import server_settings
 from langchain.embeddings import HuggingFaceEmbeddings
 
-from channels.enterprise_wechat_utils import get_source_doc, struct_qywx_answer, text_split
+from channels.enterprise_wechat_utils import get_source_doc, helper_map_desc, struct_qywx_answer, text_split
 
 
 class QYWXApp:
@@ -480,6 +480,12 @@ class QYWXApp:
         # redis记录用户问题，供helper功能使用，保存10分钟
         redis_client.rpush("km_" + user_id, query)
         redis_client.expire("km_" + user_id, 10*60)
+        # 发送提示，告知用户序号对应的helper，每天一次
+        if redis_client.get("km_helper" + user_id):
+            return
+        redis_client.set("km_helper" + user_id, "km_helper", ex=24 * 60 * 60)
+        self.post_msg(user_id=user_id, content=helper_map_desc())
+        
 
     @async_fun
     def post_funny_msg(self, user_id):
