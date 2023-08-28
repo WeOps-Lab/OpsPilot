@@ -63,7 +63,6 @@ class EnterpriseWechatChannel(InputChannel):
             user_id, msg_type, msg_content = qywx_app.request_decrypt(request)
 
             if msg_type == "event":
-                # TODO:考虑在用户每天第一次进入企微应用时随机发一句话（运维知识，开发知识，时间管理知识，office操作技巧，各种冷知识等等），提升趣味性
                 # 这里返回的不是''，企微就会认为消息没有送达，会重复发送请求
                 qywx_app.post_funny_msg(user_id)
                 return HTTPResponse(body="")
