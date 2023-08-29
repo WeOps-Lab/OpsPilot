@@ -132,29 +132,43 @@ tracker_store:
 
 # 参数说明
 
-| 参数                     | 说明                                   | 可选配置                                    |
-|------------------------|--------------------------------------|-----------------------------------------|
-| FALLBACK_LLM           | 当OpsPilot无法处理的时候，使用LLM进行回复           | OPENAI(默认)                              |
-| OPENAI_ENDPOINT        | OpenAI上部署模型的端点,开启ChatGPT的时候需要配置此变量   |                                         |
-| OPENAI_KEY             | OpenAI上部署模型使用的秘钥,开启ChatGPT的时候需要配置此变量 |                                         |
-| ENABLE_JENKINS_SKILL   | 是否开启Jenkins自动化能力                     | False(默认)                               |
-| JENKINS_URL            | Jenkins URL,启用Jenkins自动化能力需要配置       |                                         |
-| JENKINS_USERNAME       | Jenkins 用户名,启用Jenkins自动化能力需要配置       |                                         |
-| JENKINS_PASSWORD       | Jenkins 密码,启用Jenkins自动化能力需要配置        |                                         |
-| BING_SEARCH_URL        | Bing Search端点，用于在线检索问答               |                                         |
-| BIND_SEARCH_KEY        | Bing Search密码，用于在线检索问答               |                                         |
-| VEC_DB_PATH            | 向量数据库的路径                             | vec_db(默认)                              |
-| RUN_MODE               | 是否以开发模式运行                            | Dev(默认)                                 |
-| FALLBACK_CHAT_MODE     | LLM使用本地知识库模式还是闲聊模式                   | knowledgebase(默认) /online_knowledgebase |
-| REDIS_HOST             | Redis IP地址，必填                        |                                         |
-| REDIS_PORT             | Redis 端口号，必填                         |                                         |
-| REDIS_DB               | Redis 数据库号，必填                        |                                         |
-| REDIS_PASSWORD         | Redis 密码，必填                          |                                         |
-| ENABLE_ONLINE_CHAT     | 是否开启联网知识问答                           | False(默认)                               |
-| EMBED_MODEL_NAME       | embed模型名称                            | shibing624/text2vec-base-chinese(默认)    |
-| EMBED_MODEL_CACHE_HOME | embed模型缓存路径                          | cache/models(默认)                        |
-| INDEXER_DB_PATH        | 倒排索引文件存放路径                           | indexdir(默认)                            |
-| LLM_MAX_HISTORY        | 闲聊模式下，最多传递的历史消息数量                    | 10(默认)                                  |                 
+## 公共
+| 参数                     | 说明                 | 可选配置                   |
+| ------------------------ | -------------------- | -------------------------- |
+| FALLBACK_MODE            | 使用本地LLM的模式    | LOCAL_LLM/FAST_GPT         |
+| RUN_MODE                 | 是否以开发模式运行   | Dev(默认)                  |
+| DEFAULT_THINKING_MESSAGE | 默认回复的思考中信息 | OpsPilot正在思考中........ |
+
+## FastGPT
+| 参数             | 说明                  | 可选配置 |
+| ---------------- | --------------------- | -------- |
+| FASTGPT_ENDPOINT | FastGPT API调用地址   |          |
+| FASTGPT_KEY      | FastGPT API调用的秘钥 |          |
+
+
+## LocalLLM
+| 参数                   | 说明                                | 可选配置                               |
+| ---------------------- | ----------------------------------- | -------------------------------------- |
+| OPENAI_ENDPOINT        | OpenAI上部署模型的端点              |                                        |
+| OPENAI_KEY             | OpenAI上部署模型使用的秘钥          |                                        |
+| OPENAI_API_TEMPERATURE | OpenAI回复的严谨度                  | 0~1,默认为0.7                          |
+| VEC_DB_PATH            | 本地向量数据库的路径                | vec_db(默认)                           |
+| REDIS_HOST             | Redis IP地址,用于存放初始化的Prompt |                                        |
+| REDIS_PORT             | Redis 端口号                        |                                        |
+| REDIS_DB               | Redis 数据库号                      |                                        |
+| REDIS_PASSWORD         | Redis 密码                          |                                        |
+| FALLBACK_CHAT_MODE     | LLM使用本地知识库模式还是闲聊模式   | knowledgebase /chat(默认)              |
+| EMBED_MODEL_NAME       | embed模型名称                       | shibing624/text2vec-base-chinese(默认) |
+| EMBED_MODEL_CACHE_HOME | embed模型缓存路径                   | cache/models(默认)                     |
+| INDEXER_DB_PATH        | 倒排索引文件存放路径                | indexdir(默认)                         |
+| LLM_MAX_HISTORY        | 闲聊模式下，最多传递的历史消息数量  | 10(默认)                               |
+| NEO4J_URL              | 知识图谱的连接地址                  |                                        |
+| NEO4J_USERNAME         | 知识图谱的用户名                    |                                        |
+| NEO4J_PASSWORD         | 知识图谱的密码                      |                                        |
+| BKAPP_APPCODE          | 蓝鲸的APP Code                      |                                        |
+| BKAPP_APP_TOKEN        | 蓝鲸的APP Token                     |                                        |
+| BKAPP_BK_PAAS_HOST     | 蓝鲸的PAAS HOST                     |                                        |
+| BKAPP_API_VER          | 蓝鲸的API版本                       |                                        |
 
 # 版本说明
 

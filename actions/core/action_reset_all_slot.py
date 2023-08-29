@@ -6,11 +6,13 @@ from rasa_sdk.executor import CollectingDispatcher
 
 
 class ActionResetAllSlot(Action):
-
     def name(self) -> Text:
         return "action_reset_all_slot"
 
-    def run(self, dispatcher: CollectingDispatcher,
-            tracker: Tracker,
-            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+    def run(
+        self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> List[Dict[Text, Any]]:
         return [AllSlotsReset()]
