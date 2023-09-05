@@ -71,8 +71,8 @@ class EnterpriseWechatChannel(InputChannel):
             # 不同分支
             msg_content = msg_content.strip().lower()
             if "gpt" in msg_content:
-                qywx_app.post_msg(user_id=user_id, content="AIOps智慧狗正在思考中，请稍等...")
-                qywx_app.post_chatgpt_answer(user_id, msg_content)
+                qywx_app.post_msg(user_id=user_id, content="现在提问无需使用gpt前缀啦，请重新直接进行提问~")
+                # qywx_app.post_chatgpt_answer(user_id, msg_content)
                 return HTTPResponse(body="")
             if "dall" in msg_content:
                 # 直接走DALL-E接口
