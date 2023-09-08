@@ -11,3 +11,5 @@ ADD ./channels ./channels
 ADD ./compoments ./compoments
 ADD ./endpoints.yml ./endpoints.yml
 ADD ./credentials.yml ./credentials.yml
+
+ADD ./mc /usr/local/bin/mc
