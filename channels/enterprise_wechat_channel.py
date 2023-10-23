@@ -13,7 +13,6 @@ from sanic.request import Request
 from sanic.response import HTTPResponse
 
 from channels.enterprise_wechat_app import qywx_app
-from channels.enterprise_wechat_blueking_job import job_api_query
 
 
 class EnterpriseWechatChannel(InputChannel):
@@ -68,30 +67,13 @@ class EnterpriseWechatChannel(InputChannel):
                 qywx_app.post_funny_msg(user_id)
                 return HTTPResponse(body="")
 
-            # 不同分支
             msg_content = msg_content.strip().lower()
-            if "gpt" in msg_content:
-                qywx_app.post_msg(user_id=user_id, content="现在提问无需使用gpt前缀啦，请重新直接进行提问~")
-                # qywx_app.post_chatgpt_answer(user_id, msg_content)
-                return HTTPResponse(body="")
-            if "dall" in msg_content:
-                # 直接走DALL-E接口
-                qywx_app.post_msg(user_id=user_id, content="dall-e暂停支持")
-                return HTTPResponse(body="")
             if "km" in msg_content:
                 qywx_app.post_msg(user_id=user_id, content="AIOps智慧狗正在思考中，请稍等...")
                 # 内部km搜索
                 qywx_app.qywx_km_qa(
                     user_id=user_id, query=msg_content.strip("km").strip()
                 )
-                return HTTPResponse(body="")
-            # 拉群判断
-            if msg_content in [str(i) for i in range(1, 15)]:
-                qywx_app.judge_create_helper_group(user_id=user_id, msg_content=msg_content)
-                return HTTPResponse(body="")
-            # 作业平台api调用
-            if 'job' in msg_content:
-                job_api_query(query=msg_content.strip("job").strip(), user_id=user_id)
                 return HTTPResponse(body="")
 
             # 走rasa处理
