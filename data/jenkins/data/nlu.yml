@@ -1,0 +1,17 @@
+version: "3.1"
+
+nlu:
+  - intent: list_jenkins_pipeline
+    examples: |
+      - 查看Jenkins流水线
+      - 列出Jenkins流水线
+
+  - intent: search_jenkins_pipeline
+    examples: |
+      - 查找Jenkins流水线
+      - 搜索Jenkins流水线
+
+  - intent: build_jenkins_pipeline
+    examples: |
+      - 构建Jenkins流水线
+      - 触发Jenkins流水线
