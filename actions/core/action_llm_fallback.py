@@ -44,7 +44,35 @@ class ActionLLMFallback(Action):
                 return []
             except Exception as e:
                 logger.exception(f"请求OPEN_AI服务异常:{e}")
-                dispatcher.utter_message(text="RasaPilot服务异常，请稍后重试")
+                dispatcher.utter_message(text="OpsPilot服务异常，请稍后重试")
+                return [UserUtteranceReverted()]
+
+        if server_settings.llm_fallback_mode == "DIFY":
+            try:
+                headers = {
+                    "Authorization": f"Bearer {server_settings.dify_key}",
+                    "Content-Type": "application/json",
+                }
+                data = {
+                    "inputs": {},
+                    "query": tracker.latest_message["text"],
+                    "response_mode": "streaming",
+                    "conversation_id": "",
+                    "user": tracker.sender_id
+                }
+                response = requests.post(server_settings.dify_endpoint, headers=headers, json=data, stream=True)
+                response.raise_for_status()
+                response_msg = ""
+                for line in response.iter_lines():
+                    if line:
+                        json_data = json.loads(line.decode('utf-8')[5:])
+                        if 'answer' in json_data:
+                            response_msg += json_data['answer']
+                dispatcher.utter_message(text=response_msg)
+                return []
+            except Exception as e:
+                logger.exception(f"请求DIFY服务异常:{e}")
+                dispatcher.utter_message(text="OpsPilot服务异常，请稍后重试")
                 return [UserUtteranceReverted()]
 
         if server_settings.llm_fallback_mode == "FAST_GPT":
@@ -71,5 +99,5 @@ class ActionLLMFallback(Action):
                 return []
             except Exception as e:
                 logger.exception(f"请求FAST_GPT服务异常:{e}")
-                dispatcher.utter_message(text="RasaPilot服务异常，请稍后重试")
+                dispatcher.utter_message(text="OpsPilot服务异常，请稍后重试")
                 return [UserUtteranceReverted()]

@@ -7,6 +7,9 @@ class ServerSettings(BaseSettings):
     run_mode: str = "dev"
     llm_fallback_mode: Optional[str] = None
 
+    dify_key: Optional[str] = None
+    dify_endpoint: Optional[str] = None
+
     fastgpt_key: Optional[str] = None
     fastgpt_endpoint: Optional[str] = None
 
