@@ -1,0 +1,13 @@
+venv/
+.idea/
+.rasa/
+tracker.db
+story_graph.dot
+.pytest_cache
+*.pyc
+ops-pilot.tar.gz
+.env
+.venv
+tensorboard
+graph.html
+cache

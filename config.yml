@@ -1,0 +1,72 @@
+recipe: default.v1
+assistant_id: rasa-pilot
+language: zh
+
+pipeline:
+  - name: "compoments.jieba_tokenizer.JiebaTokenizer"
+
+  - name: RegexFeaturizer
+    use_word_boundaries: false
+    case_sensitive: True
+    number_additional_patterns: 10
+
+  - name: LanguageModelFeaturizer
+    model_name: "bert"
+    model_weights: "bert-base-chinese"
+    cache_dir: cache/models
+
+  - name: LexicalSyntacticFeaturizer
+
+  - name: CountVectorsFeaturizer
+
+  - name: CountVectorsFeaturizer
+    analyzer: char_wb
+    min_ngram: 1
+    max_ngram: 4
+
+  - name: DIETClassifier
+    epochs: 300
+    constrain_similarities: true
+    evaluate_on_number_of_examples: 0
+    evaluate_every_number_of_epochs: 100
+    number_of_transformer_layers: 4
+    transformer_size: 256
+    number_of_attention_heads: 4
+    learning_rate: 0.0001
+    drop_rate: 0.3
+    tensorboard_log_directory: "./tensorboard"
+    tensorboard_log_level: "epoch"
+
+  - name: RegexEntityExtractor
+    case_sensitive: True
+    use_lookup_tables: True
+    use_regexes: True
+    use_word_boundaries: True
+
+  - name: FallbackClassifier
+    threshold: 0.7
+    ambiguity_threshold: 0.1
+
+  - name: ResponseSelector
+    retrieval_intent: chitchat
+    epochs: 100
+    learning_rate: 0.001
+    constrain_similarities: True
+    scale_loss: false
+
+
+policies:
+  - name: MemoizationPolicy
+
+  - name: TEDPolicy
+    max_history: 1
+    epochs: 1000
+    constrain_similarities: true
+    evaluate_on_number_of_examples: 0
+    evaluate_every_number_of_epochs: 100
+    tensorboard_log_directory: "./tensorboard"
+    tensorboard_log_level: "epoch"
+
+  - name: RulePolicy
+    core_fallback_threshold: 0.4
+    core_fallback_action_name: "action_llm_fallback"
