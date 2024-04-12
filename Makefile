@@ -31,6 +31,7 @@ interactive:
 	rasa interactive -d data
 
 release:
+	mkdir -p ./cache
 	docker build -t ccr.ccs.tencentyun.com/megalab/ops-pilot .
 	docker push ccr.ccs.tencentyun.com/megalab/ops-pilot
 
