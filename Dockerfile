@@ -3,7 +3,7 @@ WORKDIR /apps
 
 RUN pip install pip-tools
 ADD ./requirements.in ./requirements.in
-RUN pip-compile
+RUN pip-compile -v
 RUN pip-sync
 
 ADD ./actions ./actions
