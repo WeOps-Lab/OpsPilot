@@ -12,6 +12,3 @@ OpsPilot支持以ChatBot的形态与Web应用集成，主要提供以下能力�
 
 <img src="./docs/images/chatbot.png" >
 
-# 特性
-
-* 支持与大模型集成作为LLM Failback:包括OneAPI、FastGPT、Dify
