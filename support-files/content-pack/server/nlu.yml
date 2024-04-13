@@ -1,0 +1,28 @@
+version: "3.1"
+
+nlu:
+  - intent: reboot_server
+    examples: |
+      - 重启[10.11.25.48](reboot_server)服务器
+      - 我需要重启[10.11.25.48](reboot_server)服务器
+      - 帮我重启[10.11.25.48](reboot_server)服务器
+      - 我想重启[10.11.25.48](reboot_server)服务器
+      - 重启[10.11.25.48](reboot_server)一下服务器
+      - 能否请你重启[10.11.25.48](reboot_server)服务器
+      - 重启[10.11.25.48](reboot_server)一下机器
+      - 我需要重启[10.11.25.48](reboot_server)一下机器
+      - 能否请你重启[10.11.25.48](reboot_server)一下机器
+      - 请帮我重启[10.11.25.48](reboot_server)服务器
+      - 请帮我重启[10.11.25.48](reboot_server)一下机器
+      - 我打算重启[10.11.25.48](reboot_server)服务器
+      - 请帮忙重启[10.11.25.48](reboot_server)服务器
+      - 帮忙重启[10.11.25.48](reboot_server)一下机器
+      - 可以帮我重启[10.11.25.48](reboot_server)服务器吗
+      - 可以重启[10.11.25.48](reboot_server)服务器吗
+      - 可以重启[10.11.25.48](reboot_server)一下服务器吗
+      - 帮我重新启动服务器
+      - 重新启动一下服务器
+      - 请重新启动服务器
+      - 请重新启动一下服务器
+      - 能否请你重新启动服务器
+      - 能否请你重新启动一下服务器
