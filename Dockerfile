@@ -1,8 +1,10 @@
 FROM python:3.10
 WORKDIR /apps
 
-ADD requirements.in ./requirements.txt
-RUN pip install -r requirements.in
+RUN pip install pip-tools
+ADD ./requirements.in ./requirements.in
+RUN pip-compile -v
+RUN pip-sync
 
 ADD ./actions ./actions
 ADD ./cache ./cache
