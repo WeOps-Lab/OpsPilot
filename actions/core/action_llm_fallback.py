@@ -50,8 +50,7 @@ class ActionLLMFallback(Action):
                 events = list(
                     filter(
                         lambda x: x.get("event") == "user"
-                                  or x.get("event") == "bot"
-                                  and x.get("text") != server_settings.default_thinking_message,
+                                  or x.get("event") == "bot",
                         tracker.events,
                     )
                 )
