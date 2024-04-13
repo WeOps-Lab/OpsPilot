@@ -11,4 +11,3 @@ OpsPilot支持以ChatBot的形态与Web应用集成，主要提供以下能力�
 * LLM聊天：当问题超出OpsPilot能够处理的范围的时候，使用LLM的能力解决各种长尾问题
 
 <img src="./docs/images/chatbot.png" >
-
