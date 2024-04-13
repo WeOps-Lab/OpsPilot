@@ -1,8 +1,11 @@
 import asyncio
 import inspect
-import json
+from concurrent.futures import ThreadPoolExecutor
 from threading import Thread
 from typing import Dict, Optional, Text, Any, Callable, Awaitable
+
+from rasa_sdk import logger
+from wechatpy.session.memorystorage import MemoryStorage
 from rasa.core.channels.channel import (
     InputChannel,
     CollectingOutputChannel,
@@ -11,29 +14,70 @@ from rasa.core.channels.channel import (
 from sanic import Blueprint, response
 from sanic.request import Request
 from sanic.response import HTTPResponse
+from wechatpy.enterprise import WeChatClient, WeChatCrypto, parse_message
 
 
 class EnterpriseWechatChannel(InputChannel):
     def name(self) -> Text:
         return "enterprise_wechat"
 
-    def __init__(self, token, encoding_aes_key, corp_id, secret, agent_id) -> None:
+    def __init__(self, corp_id, secret, app_id, token, aes_key, agent_id) -> None:
         super().__init__()
-        self.token = token
-        self.encoding_aes_key = encoding_aes_key
+
         self.corp_id = corp_id
         self.secret = secret
+        self.app_id = app_id
+        self.token = token
+        self.aes_key = aes_key
         self.agent_id = agent_id
+        self.thread_pool = ThreadPoolExecutor(max_workers=8)
+
+        self.crypto = WeChatCrypto(token, aes_key, app_id)
+
+        self.wechat_client = WeChatClient(
+            corp_id,
+            secret,
+            app_id,
+        )
 
     @classmethod
     def from_credentials(cls, credentials: Optional[Dict[Text, Any]]) -> "InputChannel":
         return cls(
-            credentials.get("token"),
-            credentials.get("encoding_aes_key"),
             credentials.get("corp_id"),
             credentials.get("secret"),
+            credentials.get("app_id"),
+            credentials.get("token"),
+            credentials.get("aes_key"),
             credentials.get("agent_id"),
         )
+
+    async def _do_send(self, request, query, reply_user_id):
+        try:
+            if not query:
+                return
+
+            context = dict()
+            context['from_user_id'] = reply_user_id
+            collector = CollectingOutputChannel()
+            await request.app.ctx.agent.handle_message(
+                UserMessage(
+                    text=query,
+                    output_channel=collector,
+                    sender_id=reply_user_id,
+                    input_channel=self.name(),
+                    metadata=None,
+                )
+            )
+            response_data = collector.messages
+            reply_text = (
+                "\n\n".join(data["text"] for data in response_data)
+                .replace("bot:", "")
+                .strip()
+            )
+
+            self.wechat_client.message.send_text(self.agent_id, reply_user_id, reply_text)
+        except Exception as e:
+            logger.exception(e)
 
     def blueprint(
             self, on_new_message: Callable[[UserMessage], Awaitable[None]]
@@ -49,33 +93,30 @@ class EnterpriseWechatChannel(InputChannel):
 
         @enterprise_wechathook.route("/", methods=["POST"])
         async def msg_entry(request: Request) -> HTTPResponse:
-            user_id, msg_type, msg_content = qywx_app.request_decrypt(request)
-
-            if msg_type == "event":
-                # 这里返回的不是''，企微就会认为消息没有送达，会重复发送请求
-                qywx_app.post_funny_msg(user_id)
-                return HTTPResponse(body="")
-
-            msg_content = msg_content.strip().lower()
-            if "km" in msg_content:
-                qywx_app.post_msg(user_id=user_id, content="AIOps智慧狗正在思考中，请稍等...")
-                # 内部km搜索
-                qywx_app.qywx_km_qa(
-                    user_id=user_id, query=msg_content.strip("km").strip()
+            query_params = request.args
+            signature = query_params.get('msg_signature', '')
+            timestamp = query_params.get('timestamp', '')
+            nonce = query_params.get('nonce', '')
+            if request.method == 'GET':
+                echostr = query_params.get('echostr', '')
+                echostr = self.crypto.check_signature(
+                    signature, timestamp, nonce, echostr
                 )
+                return echostr
+            elif request.method == 'POST':
+                message = self.crypto.decrypt_message(
+                    request.data,
+                    signature,
+                    timestamp,
+                    nonce
+                )
+                msg = parse_message(message)
+                if msg.type == "event":
+                    return HTTPResponse(body="")
+
+                self.thread_pool.submit(self._do_send, request, msg.content, msg.source)
+
                 return HTTPResponse(body="")
-
-            # 走rasa处理
-            collector = CollectingOutputChannel()
-            thread = Thread(target=asyncio.run, args=(qywx_app.qywx_rasa_qa(
-                request,
-                user_id=user_id,
-                msg_content=msg_content,
-                collector=collector,
-                input_channel=self.name()
-            ),))
-            thread.start()
-
-            return HTTPResponse(body="")
 
         return enterprise_wechathook
+   
