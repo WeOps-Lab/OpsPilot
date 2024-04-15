@@ -63,7 +63,7 @@ def blueprint(
                 content = content.split(img_match_prefix, 1)[1].strip()
                 self.thread_pool.submit(self._do_send_img, content, from_user_id)
             else:
-                self.thread_pool.submit(self._do_send, content, from_user_id)
+                self.thread_pool.submit(self.send_message, content, from_user_id)
 
         elif to_user_id == other_user_id and match_prefix:
             # 自己给好友发送消息
@@ -75,7 +75,7 @@ def blueprint(
                 content = content.split(img_match_prefix, 1)[1].strip()
                 self.thread_pool.submit(self._do_send_img, content, to_user_id)
             else:
-                self.thread_pool.submit(self._do_send, content, to_user_id)
+                self.thread_pool.submit(self.send_message, content, to_user_id)
 
     def handle_group(self, msg):
         group_name = msg['User'].get('NickName', None)

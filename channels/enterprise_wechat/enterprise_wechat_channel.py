@@ -47,7 +47,7 @@ class EnterpriseWechatChannel(InputChannel):
             credentials.get("agent_id"),
         )
 
-    async def _do_send(self, request, query, reply_user_id):
+    async def send_message(self, request, query, reply_user_id):
         try:
             if not query:
                 return
@@ -71,7 +71,7 @@ class EnterpriseWechatChannel(InputChannel):
                 .strip()
             )
 
-            self.wechat_client.message.send_text(self.agent_id, reply_user_id, reply_text)
+            self.wechat_client.message.send_markdown(self.agent_id, reply_user_id, reply_text)
         except Exception as e:
             logger.exception(e)
 
@@ -116,7 +116,7 @@ class EnterpriseWechatChannel(InputChannel):
                 if msg.type == "event":
                     return HTTPResponse(body="")
 
-                thread = Thread(target=asyncio.run, args=(self._do_send(
+                thread = Thread(target=asyncio.run, args=(self.send_message(
                     request,
                     msg.content,
                     msg.source,
