@@ -31,7 +31,7 @@ class EnterpriseWechatChannel(InputChannel):
         self.agent_id = agent_id
         self.thread_pool = ThreadPoolExecutor(max_workers=8)
 
-        self.crypto = WeChatCrypto(token, aes_key)
+        self.crypto = WeChatCrypto(token, aes_key, corp_id)
 
         self.wechat_client = WeChatClient(
             corp_id,
