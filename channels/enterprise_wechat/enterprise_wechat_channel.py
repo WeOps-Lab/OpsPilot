@@ -5,7 +5,6 @@ from threading import Thread
 from typing import Dict, Optional, Text, Any, Callable, Awaitable
 
 from rasa_sdk import logger
-from wechatpy.session.memorystorage import MemoryStorage
 from rasa.core.channels.channel import (
     InputChannel,
     CollectingOutputChannel,
@@ -86,7 +85,12 @@ class EnterpriseWechatChannel(InputChannel):
 
         @enterprise_wechathook.route("/", methods=["GET"])
         async def health(request: Request) -> HTTPResponse:
-            return response.json({"status": "ok"})
+            msg_signature = request.args.get('msg_signature')
+            timestamp = request.args.get('timestamp')
+            nonce = request.args.get('nonce')
+            echostr = request.args.get('echostr')
+            echo_str = self.crypto.check_signature(msg_signature, timestamp, nonce, echostr)
+            return response.text(echo_str)
 
         @enterprise_wechathook.route("/", methods=["POST"])
         async def msg_entry(request: Request) -> HTTPResponse:
@@ -94,6 +98,7 @@ class EnterpriseWechatChannel(InputChannel):
             signature = query_params.get('msg_signature', '')
             timestamp = query_params.get('timestamp', '')
             nonce = query_params.get('nonce', '')
+
             if request.method == 'GET':
                 echostr = query_params.get('echostr', '')
                 echostr = self.crypto.check_signature(
@@ -102,7 +107,7 @@ class EnterpriseWechatChannel(InputChannel):
                 return echostr
             elif request.method == 'POST':
                 message = self.crypto.decrypt_message(
-                    request.data,
+                    request.body,
                     signature,
                     timestamp,
                     nonce
@@ -111,7 +116,12 @@ class EnterpriseWechatChannel(InputChannel):
                 if msg.type == "event":
                     return HTTPResponse(body="")
 
-                self.thread_pool.submit(self._do_send, request, msg.content, msg.source)
+                thread = Thread(target=asyncio.run, args=(self._do_send(
+                    request,
+                    msg.content,
+                    msg.source,
+                ),))
+                thread.start()
 
                 return HTTPResponse(body="")
 
