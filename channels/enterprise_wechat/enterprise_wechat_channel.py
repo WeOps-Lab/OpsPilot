@@ -21,23 +21,21 @@ class EnterpriseWechatChannel(InputChannel):
     def name(self) -> Text:
         return "enterprise_wechat"
 
-    def __init__(self, corp_id, secret, app_id, token, aes_key, agent_id) -> None:
+    def __init__(self, corp_id, secret, token, aes_key, agent_id) -> None:
         super().__init__()
 
         self.corp_id = corp_id
         self.secret = secret
-        self.app_id = app_id
         self.token = token
         self.aes_key = aes_key
         self.agent_id = agent_id
         self.thread_pool = ThreadPoolExecutor(max_workers=8)
 
-        self.crypto = WeChatCrypto(token, aes_key, app_id)
+        self.crypto = WeChatCrypto(token, aes_key)
 
         self.wechat_client = WeChatClient(
             corp_id,
             secret,
-            app_id,
         )
 
     @classmethod
@@ -45,7 +43,6 @@ class EnterpriseWechatChannel(InputChannel):
         return cls(
             credentials.get("corp_id"),
             credentials.get("secret"),
-            credentials.get("app_id"),
             credentials.get("token"),
             credentials.get("aes_key"),
             credentials.get("agent_id"),
@@ -119,4 +116,3 @@ class EnterpriseWechatChannel(InputChannel):
                 return HTTPResponse(body="")
 
         return enterprise_wechathook
-   
