@@ -1,5 +1,10 @@
 version: "3.1"
 responses:
+  utter_chitchat/ability:
+    - text: |
+        我是您的小助手,我能够回答您的问题,帮助您解决问题，我还具备一些特殊的技能:
+        总结聊天记录: 我可以帮助您总结聊天记录
+
   utter_chitchat/hi:
     - text: 你好,有什么可以帮助你的吗?
     - text: 你好,有什么可以帮忙的吗?

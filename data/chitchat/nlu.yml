@@ -1,5 +1,15 @@
 version: "3.1"
 nlu:
+  - intent: chitchat/ability
+    examples: |
+      - 你有什么能力
+      - 你能帮我做什么
+      - 介绍一下你自己
+      - 你能做什么
+      - 你有什么技能
+      - 你有什么特殊技能
+      - 你有什么特长
+
   - intent: chitchat/hi
     examples: |
       - 你好

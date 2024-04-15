@@ -34,7 +34,7 @@ class ActionLLMFallback(Action):
         run_mode = server_settings.run_mode
         user_msg = tracker.latest_message["text"]
 
-        logger.info(f"无法识别用户的意图，进入默认Fallback，用户输入的信息为:{user_msg}，当前运行模式为:[{run_mode}]")
+        logger.info(f"[大模型问答]用户输入的信息为:{user_msg}，当前运行模式为:[{run_mode}]")
 
         if run_mode == "dev":
             dispatcher.utter_message(text="RasaPilot当前运行在开发模式,不对内容进行回复")
@@ -50,6 +50,3 @@ class ActionLLMFallback(Action):
             logger.exception(f"请求服务异常:{e}")
             dispatcher.utter_message(text="OpsPilot服务异常，请稍后重试")
             return [UserUtteranceReverted()]
-
-
-

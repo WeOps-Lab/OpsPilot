@@ -1,7 +1,7 @@
 import datetime
 from typing import Any, Dict, List, Text
 
-from rasa_sdk import Action, Tracker
+from rasa_sdk import Action, Tracker, logger
 from rasa_sdk.executor import CollectingDispatcher
 
 from actions.constants.server_settings import server_settings
@@ -41,5 +41,7 @@ class ActionLlmSummary(Action):
         for user_message in user_messages:
             user_prompt += f"{user_message['text']}\n"
         response_msg = self.chat_service.content_summary(tracker.sender_id, user_prompt)
+
+        logger.info(f"[对话总结]用户的对话记录: {user_prompt},总结的内容: {response_msg}")
         dispatcher.utter_message(response_msg)
         return []
