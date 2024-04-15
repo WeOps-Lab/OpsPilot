@@ -51,18 +51,5 @@ class ActionLLMFallback(Action):
             dispatcher.utter_message(text="OpsPilot服务异常，请稍后重试")
             return [UserUtteranceReverted()]
 
-# events = list(
-#     filter(
-#         lambda x: x.get("event") == "user"
-#                   or x.get("event") == "bot",
-#         tracker.events,
-#     )
-# )
-# user_messages = []
-# for event in reversed(events):
-#     if len(user_messages) >= server_settings.chatgpt_model_max_history:
-#         break
-#     user_messages.insert(0, event)
-# user_prompt = ""
-# for user_message in user_messages:
-#     user_prompt += f"{user_message['event']}:{user_message['text']}\n"
+
+

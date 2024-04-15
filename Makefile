@@ -12,7 +12,7 @@ venv-install:
 	./.venv/bin/pip-sync
 
 train:
-	NUMEXPR_MAX_THREADS=16 rasa train -d data --fixed-model-name ops-pilot
+	NUMEXPR_MAX_THREADS=16 rasa train --domain data --fixed-model-name ops-pilot
 
 run:
 	RASA_TELEMETRY_ENABLED=false rasa run --enable-api --cors "*" --endpoints ./endpoints.yml --credentials ./credentials.yml
@@ -42,4 +42,4 @@ finetune:
 	NUMEXPR_MAX_THREADS=16 rasa train --finetune  -d data --fixed-model-name ops-pilot --epoch-fraction 0.5
 
 visualize:
-	rasa visualize
+	rasa visualize -d data

@@ -4,6 +4,10 @@ rules:
       - intent: nlu_fallback
       - action: action_llm_fallback
 
+  - rule: summary_content
+    steps:
+      - intent: summary_content
+      - action: action_llm_summary
   - rule: out_of_scope
     steps:
       - intent: out_of_scope

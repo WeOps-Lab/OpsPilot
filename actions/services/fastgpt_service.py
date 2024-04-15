@@ -1,6 +1,7 @@
 import json
 
 import requests
+from rasa_sdk import logger
 
 
 class FastGptService:
@@ -26,5 +27,6 @@ class FastGptService:
             headers=headers,
             data=json.dumps(data),
         )
+        response.raise_for_status()
         response_msg = response.json()["choices"][0]["message"]["content"]
         return response_msg

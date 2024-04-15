@@ -10,9 +10,11 @@ class ServerSettings(BaseSettings):
 
     fastgpt_endpoint: Optional[str] = None
     fastgpt_key: Optional[str] = None
+    fastgpt_content_summary_key: Optional[str] = None
 
     dify_key: Optional[str] = None
     dify_endpoint: Optional[str] = None
+    dify_content_summary_key: Optional[str] = None
 
     chatgpt_model_max_history: int = 5
 

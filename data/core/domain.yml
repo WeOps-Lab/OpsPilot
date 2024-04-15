@@ -6,3 +6,4 @@ session_config:
 
 actions:
   - action_llm_fallback
+  - action_llm_summary
