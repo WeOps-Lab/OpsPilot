@@ -20,3 +20,7 @@ OpsPilot支持以ChatBot的形态与Web应用集成，主要提供以下能力�
 * 支持Jenkins对接，通过ChatBot触发Jenkins任务： 触发流水线、查看流水线、检索流水线
 * Chitchat能力：支持闲聊、问候、打招呼等功能
 * 支持聊天对话总结：对话内容进行总结，生成对话总结文档
+
+# 讨论群
+
+<img src="./docs/images/chatbot.png" >
