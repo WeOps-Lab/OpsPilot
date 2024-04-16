@@ -1,7 +1,5 @@
-import json
 from typing import Text, Any, Dict, List
 
-import requests
 from rasa_sdk import Action, Tracker
 from rasa_sdk import logger
 from rasa_sdk.events import UserUtteranceReverted
@@ -9,8 +7,6 @@ from rasa_sdk.executor import CollectingDispatcher
 
 from actions.constants.server_settings import server_settings
 from actions.services.chat_service import ChatService
-from actions.services.dify_service import DifyService
-from actions.services.fastgpt_service import FastGptService
 
 
 class ActionLLMFallback(Action):

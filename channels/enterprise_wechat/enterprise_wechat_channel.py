@@ -1,5 +1,6 @@
 import asyncio
 import inspect
+import os
 from concurrent.futures import ThreadPoolExecutor
 from threading import Thread
 from typing import Dict, Optional, Text, Any, Callable, Awaitable
@@ -14,6 +15,8 @@ from sanic import Blueprint, response
 from sanic.request import Request
 from sanic.response import HTTPResponse
 from wechatpy.enterprise import WeChatClient, WeChatCrypto, parse_message
+
+from actions.services.ocr_service import OcrService
 
 
 class EnterpriseWechatChannel(InputChannel):
@@ -36,6 +39,8 @@ class EnterpriseWechatChannel(InputChannel):
             corp_id,
             secret,
         )
+
+        self.ocr_engine = OcrService()
 
     @classmethod
     def from_credentials(cls, credentials: Optional[Dict[Text, Any]]) -> "InputChannel":
@@ -116,13 +121,33 @@ class EnterpriseWechatChannel(InputChannel):
                 if msg.type == "event":
                     return HTTPResponse(body="")
 
-                thread = Thread(target=asyncio.run, args=(self.send_message(
-                    request,
-                    msg.content,
-                    msg.source,
-                ),))
-                thread.start()
+                if msg.type == "text":
+                    thread = Thread(target=asyncio.run, args=(self.send_message(
+                        request,
+                        msg.content,
+                        msg.source,
+                    ),))
+                    thread.start()
+
+                if msg.type == "image":
+                    logger.info(f"[收到图片]:{msg.image}")
+                    thread = Thread(target=asyncio.run, args=(self.extract_image_content_and_response(
+                        request, msg, timestamp
+                    ),))
+                    thread.start()
 
                 return HTTPResponse(body="")
 
         return enterprise_wechathook
+
+    async def extract_image_content_and_response(self, request, msg, timestamp):
+        image_data = self.wechat_client.media.download(msg.media_id)
+        image_file_path = os.path.join('./ocr_files', f"{msg.source}_{timestamp}.jpg")
+        with open(image_file_path, "wb") as f:
+            f.write(image_data.content)
+        msg_content = self.ocr_engine.extract_content(image_file_path)
+        if msg_content == '':
+            self.wechat_client.message.send_markdown(self.agent_id, msg.source,
+                                                     '小助手没有没有识别到图片中的文字哟...')
+        else:
+            await self.send_message(request, msg_content, msg.source)

@@ -14,7 +14,8 @@ OpsPilot支持以ChatBot的形态与Web应用集成，主要提供以下能力�
 
 # 特性
 
-* 支持多种LLM后端：FastGPT、Dify
+* 支持FastGPT对接,提供大模型的编排与知识管理能力
+* 企业微信通道支持OCR能力，支持识别用户上传的图片，并对图片进行回复
 * 支持多种对话通道：WebChat、Slack 、企业微信、微信
 * 支持Jenkins对接，通过ChatBot触发Jenkins任务： 触发流水线、查看流水线、检索流水线
 * Chitchat能力：支持闲聊、问候、打招呼等功能

@@ -39,7 +39,7 @@ pipeline:
 
   - name: ResponseSelector
     retrieval_intent: chitchat
-    epochs: 100
+    epochs: 300
     learning_rate: 0.001
     constrain_similarities: True
     scale_loss: false

@@ -13,3 +13,4 @@ graph.html
 cache
 requirements.txt
 credentials-dev.yml
+ocr_files/*
