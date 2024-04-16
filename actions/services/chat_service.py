@@ -6,13 +6,15 @@ from actions.constants.server_settings import server_settings
 
 
 class ChatService:
+    def __init__(self, app_key):
+        self.app_key = app_key
 
     def has_llm_backend(self):
         return server_settings.fastgpt_endpoint is not None
 
     def chat(self, sender_id, content):
         headers = {
-            "Authorization": f"Bearer {server_settings.fastgpt_key}",
+            "Authorization": f"Bearer {self.app_key}",
             "Content-Type": "application/json",
         }
         data = {
