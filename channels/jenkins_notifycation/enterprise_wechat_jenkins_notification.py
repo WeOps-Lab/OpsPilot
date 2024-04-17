@@ -56,13 +56,14 @@ class EnterpriseWeChatJenkinsNotification(InputChannel):
 
             body = request.load_json()
             status = body.get("status")
+            title = body.get("title")
             content = body.get("content")
             logger.info(f"EnterpriseWeChatJenkinsNotification: {content}")
 
             if status != "success":
                 content = self.chat_service.chat('jenkins_notifycation_bot', content)
 
-            EnterpriseWechatBotUtils.send_wechat_notification(self.enterprise_bot_url, content)
+            EnterpriseWechatBotUtils.send_wechat_notification(self.enterprise_bot_url, title + '\n' + content)
 
             return response.json({"status": "ok"})
 
