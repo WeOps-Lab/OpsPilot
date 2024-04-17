@@ -12,7 +12,7 @@ from actions.services.chat_service import ChatService
 class ActionLLMFallback(Action):
     def __init__(self) -> None:
         super().__init__()
-        self.chat_service = ChatService(server_settings.fastgpt_key)
+        self.chat_service = ChatService(server_settings.fastgpt_endpoint, server_settings.fastgpt_key)
 
     def name(self) -> Text:
         return "action_llm_fallback"

@@ -10,7 +10,7 @@ from actions.services.chat_service import ChatService
 
 class ActionLlmSummary(Action):
     def __init__(self):
-        self.chat_service = ChatService(server_settings.fastgpt_content_summary_key)
+        self.chat_service = ChatService(server_settings.fastgpt_endpoint, server_settings.fastgpt_content_summary_key)
 
     def name(self) -> Text:
         return "action_llm_summary"
@@ -21,9 +21,6 @@ class ActionLlmSummary(Action):
             tracker: Tracker,
             domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
-        if self.chat_service.has_llm_backend() is False:
-            dispatcher.utter_message('OpsPilot没有启用LLM能力....')
-            return []
 
         events = list(
             filter(
