@@ -1,3 +1,7 @@
+# 1.1.0
+* 新增: Docker Compose 部署文件
+
+
 # 1.0.0
 
 * 支持企业微信Channel

@@ -1,0 +1,65 @@
+version: '3.3'
+services:
+  opspilot-server:
+    image: ccr.ccs.tencentyun.com/megalab/ops-pilot
+    restart: always
+    command: 
+      - rasa
+      - run
+      - --enable-api
+      - --cors
+      - "*"
+      - --endpoints
+      - ./endpoints.yml
+      - --credentials
+      - ./credentials.yml
+    volumes:
+      - ./conf/endpoints.yml:/apps/endpoints.yml
+      - ./conf/credentials.yml:/apps/credentials.yml
+    networks:
+      - traefik
+    environment:
+      - RASA_TELEMETRY_ENABLED=false
+      - RUN_MODE=prod
+      - FALLBACK_LLM=FAST_GPT
+      - FASTGPT_ENDPOINT=${FASTGPT_ENDPOINT}
+      - FASTGPT_KEY=${FASTGPT_KEY}
+  opspilot-action-server:
+    image: ccr.ccs.tencentyun.com/megalab/ops-pilot
+    restart: always
+    volumes:
+      - ./conf/endpoints.yml:/apps/endpoints.yml
+      - ./conf/credentials.yml:/apps/credentials.yml    
+    command: 
+      - rasa
+      - run
+      - actions
+      - --auto-reload
+    ports:
+      - "5005:5005"
+    networks:
+      - traefik
+    depends_on:
+      - opspilot-server
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.opspilot.rule=Host(`${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.services.opspilot.loadbalancer.server.port=5005"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.opspilot.tls.certresolver=letsencrypt"
+      - "traefik.http.middlewares.compress.compress=true"
+      - "traefik.http.routers.opspilot.middlewares=compress"       
+    environment:
+      - RASA_TELEMETRY_ENABLED=false
+      - RUN_MODE=prod
+      - FALLBACK_LLM=FAST_GPT
+      - FASTGPT_ENDPOINT=${FASTGPT_ENDPOINT}
+      - FASTGPT_KEY=${FASTGPT_KEY}
+volumes:
+  postgres-data:
+  mongo-data:
+  fastgpt-data:
+
+networks:
+  traefik:
+    external: true

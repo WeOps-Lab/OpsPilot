@@ -1,0 +1,10 @@
+action_endpoint:
+  url: "http://opspilot-action-server:5055/webhook"
+
+tracker_store:
+  type: SQL
+  dialect: "sqlite"
+  url: ""
+  db: "tracker.db"
+  username:
+  password:
