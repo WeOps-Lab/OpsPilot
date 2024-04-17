@@ -26,3 +26,7 @@ OpsPilot支持以ChatBot的形态与Web应用集成，主要提供以下能力�
 # 讨论群
 
 <img src="./docs/images/wx.png" >
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=WeOps-Lab/OpsPilot&type=Date)](https://star-history.com/#WeOps-Lab/OpsPilot&Date)
