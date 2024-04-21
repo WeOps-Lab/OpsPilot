@@ -5,7 +5,6 @@ session_config:
   carry_over_slots_to_new_session: true
 
 intents:
-  - EXTERNAL_scan_reminder
   - scan
   - summary_content
   - out_of_scope
@@ -14,7 +13,7 @@ actions:
   - action_llm_fallback
   - action_llm_summary
   - action_scan
-  - action_scan_reminder
+  - action_scan_job
 
 slots:
   scan_targets:

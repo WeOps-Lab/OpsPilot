@@ -1,11 +1,5 @@
 version: "3.1"
 rules:
-
-  - rule: 触发资产测绘扫描后台任务
-    steps:
-      - intent: EXTERNAL_scan_reminder
-      - action: action_scan_reminder
-
   - rule: Fallback
     steps:
       - intent: nlu_fallback
@@ -36,3 +30,4 @@ rules:
       - slot_was_set:
           - requested_slot: null
       - action: action_scan
+      - action: action_scan_job
