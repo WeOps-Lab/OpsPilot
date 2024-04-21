@@ -9,7 +9,7 @@ setup:
 	unzip kscan_linux_amd64.zip &&\
 	mv kscan_linux_amd64 kscan &&\
 	chmod +x kscan &&\
-	./ksacn --download-qqwry &&\
+	./kscan --download-qqwry &&\
 	rm -Rf kscan_linux_amd64.zip
 
 
