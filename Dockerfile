@@ -22,6 +22,7 @@ ADD https://github.com/lcvvvv/kscan/releases/download/v1.85/kscan_linux_amd64.zi
 RUN unzip kscan_linux_amd64.zip
 RUN mv kscan_linux_amd64 kscan
 RUN chmod +x kscan
+RUN ./ksacn --download-qqwry
 RUN rm -Rf kscan_linux_amd64.zip
 
 WORKDIR /apps
