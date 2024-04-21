@@ -22,7 +22,7 @@ class ActionScan(Action):
         scan_targets = tracker.get_slot("scan_targets")
         dispatcher.utter_message(f"开始对[{scan_targets}]进行资产测绘~,扫描结束后，小助手会第一时间通知你哟")
 
-        date = datetime.datetime.now() + datetime.timedelta(seconds=2)
+        date = datetime.datetime.now() + datetime.timedelta(seconds=5)
         reminder = ReminderScheduled(
             "EXTERNAL_scan_reminder",
             trigger_date_time=date,
