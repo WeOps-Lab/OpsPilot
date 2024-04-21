@@ -11,3 +11,16 @@ nlu:
       - 你有什么特长
       - help
       - 帮助
+
+  - intent: chitchat/hi
+    examples: |
+      - 你好
+      - hello
+      - 你好呀
+      - hi
+
+  - intent: chitchat/bye
+    examples: |
+      - 再见
+      - bye
+      - 下次见
