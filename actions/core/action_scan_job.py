@@ -26,7 +26,6 @@ class ActionScanJob(Action):
 
         logger.info(f'开始扫描:[{scan_targets}]')
         scan_result = service.scan(scan_targets)
-        markdown_result = service.json_to_markdown(scan_result)
         dispatcher.utter_message('扫描结果如下：')
-        dispatcher.utter_message(markdown_result)
+        dispatcher.utter_message(scan_result)
         return [SlotSet('scan_targets', None)]
