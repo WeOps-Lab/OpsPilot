@@ -1,6 +1,14 @@
 version: "3.1"
 
 nlu:
+  - intent: scan
+    examples: |
+      - 扫描服务器
+      - 资产测绘
+      - 扫描资产
+      - 扫描资产信息
+      - 测绘资产信息
+
   - intent: summary_content
     examples: |
       - 总结我们的聊天记录

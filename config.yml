@@ -44,6 +44,12 @@ pipeline:
     constrain_similarities: True
     scale_loss: false
 
+  - name: RegexEntityExtractor
+    case_sensitive: True
+    use_lookup_tables: True
+    use_regexes: True
+    use_word_boundaries: True
+
   - name: FallbackClassifier
     threshold: 0.7
     ambiguity_threshold: 0.1

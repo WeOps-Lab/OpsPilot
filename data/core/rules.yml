@@ -1,4 +1,11 @@
+version: "3.1"
 rules:
+
+  - rule: 触发资产测绘扫描后台任务
+    steps:
+      - intent: EXTERNAL_scan_reminder
+      - action: action_scan_reminder
+
   - rule: Fallback
     steps:
       - intent: nlu_fallback
@@ -8,7 +15,24 @@ rules:
     steps:
       - intent: summary_content
       - action: action_llm_summary
+
   - rule: out_of_scope
     steps:
       - intent: out_of_scope
       - action: action_llm_fallback
+
+  - rule: 激活资产测绘表单
+    steps:
+      - intent: scan
+      - action: scan_targets_form
+      - active_loop: scan_targets_form
+
+  - rule: 提交资产测绘表单
+    condition:
+      - active_loop: scan_targets_form
+    steps:
+      - action: scan_targets_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_scan

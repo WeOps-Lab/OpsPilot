@@ -4,6 +4,29 @@ session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true
 
+intents:
+  - EXTERNAL_scan_reminder
+  - scan
+  - summary_content
+  - out_of_scope
+
 actions:
   - action_llm_fallback
   - action_llm_summary
+  - action_scan
+  - action_scan_reminder
+
+slots:
+  scan_targets:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: scan_targets_form
+            requested_slot: scan_targets
+
+forms:
+  scan_targets_form:
+    required_slots:
+      - scan_targets
