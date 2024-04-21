@@ -5,7 +5,6 @@ from concurrent.futures import ThreadPoolExecutor
 from threading import Thread
 from typing import Dict, Optional, Text, Any, Callable, Awaitable
 
-from rasa.core.channels.socketio import SocketIOOutput
 from rasa_sdk import logger
 from rasa.core.channels.channel import (
     InputChannel,
@@ -60,7 +59,7 @@ class EnterpriseWechatChannel(InputChannel):
 
             context = dict()
             context['from_user_id'] = reply_user_id
-            collector = SocketIOOutput()
+            collector = CollectingOutputChannel()
             await request.app.ctx.agent.handle_message(
                 UserMessage(
                     text=query,
