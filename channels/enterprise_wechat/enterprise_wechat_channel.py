@@ -5,7 +5,7 @@ from concurrent.futures import ThreadPoolExecutor
 from threading import Thread
 from typing import Dict, Optional, Text, Any, Callable, Awaitable
 
-from rasa_sdk import logger
+from loguru import logger
 from rasa.core.channels.channel import (
     InputChannel,
     CollectingOutputChannel,
@@ -52,15 +52,15 @@ class EnterpriseWechatChannel(InputChannel):
             credentials.get("agent_id"),
         )
 
-    async def send_message(self, request, query, reply_user_id):
+    async def send_message(self, on_new_message, query, reply_user_id):
         try:
             if not query:
                 return
-
+            logger.info(f"[收到消息]:{query}")
             context = dict()
             context['from_user_id'] = reply_user_id
             collector = CollectingOutputChannel()
-            await request.app.ctx.agent.handle_message(
+            await on_new_message(
                 UserMessage(
                     text=query,
                     output_channel=collector,
@@ -123,7 +123,7 @@ class EnterpriseWechatChannel(InputChannel):
 
                 if msg.type == "text":
                     thread = Thread(target=asyncio.run, args=(self.send_message(
-                        request,
+                        on_new_message,
                         msg.content,
                         msg.source,
                     ),))
@@ -132,7 +132,7 @@ class EnterpriseWechatChannel(InputChannel):
                 if msg.type == "image":
                     logger.info(f"[收到图片]:{msg.image}")
                     thread = Thread(target=asyncio.run, args=(self.extract_image_content_and_response(
-                        request, msg, timestamp
+                        on_new_message, msg, timestamp
                     ),))
                     thread.start()
 
@@ -140,7 +140,7 @@ class EnterpriseWechatChannel(InputChannel):
 
         return enterprise_wechathook
 
-    async def extract_image_content_and_response(self, request, msg, timestamp):
+    async def extract_image_content_and_response(self, on_new_message, msg, timestamp):
         image_data = self.wechat_client.media.download(msg.media_id)
         image_file_path = os.path.join('./ocr_files', f"{msg.source}_{timestamp}.jpg")
         with open(image_file_path, "wb") as f:
@@ -150,4 +150,4 @@ class EnterpriseWechatChannel(InputChannel):
             self.wechat_client.message.send_markdown(self.agent_id, msg.source,
                                                      '小助手没有没有识别到图片中的文字哟...')
         else:
-            await self.send_message(request, msg_content, msg.source)
+            await self.send_message(on_new_message, msg_content, msg.source)
