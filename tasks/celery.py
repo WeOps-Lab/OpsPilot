@@ -20,7 +20,7 @@ logger.info(f'成功加载配置:[{server_settings.rasa_credentials}]')
 def scan_target(channel, conversation_id, scan_targets, **kwargs):
     logger.info(f'开始扫描:[{scan_targets}],会话ID:[{conversation_id}],通道:[{channel}],附加参数:[{kwargs}]')
     service = KScanService()
-    scan_result = service.scan(scan_targets)
+    scan_result = '资产测绘结果: \n' + service.scan(scan_targets)
 
     if channel == 'enterprise_wechat':
         logger.info(f'发送企业微信消息回调:[{conversation_id}]')
@@ -30,9 +30,16 @@ def scan_target(channel, conversation_id, scan_targets, **kwargs):
             conf['secret'],
         )
         wechat_client.message.send_text(conf['agent_id'], conversation_id, scan_result)
+
+        # 记录Rasa对话记录
+        url = f"http://localhost:5005/conversations/{conversation_id}/tracker/events"
+        headers = {"Content-Type": "application/json"}
+        data = {"event": "bot", "text": scan_result}
+        requests.post(url, headers=headers, data=json.dumps(data))
+        logger.info(f'[{conversation_id}]事件记录已经记录到对话引擎')
     else:
         url = f"http://localhost:5005/conversations/{conversation_id}/trigger_intent?output_channel=latest"
         headers = {"Content-Type": "application/json"}
         data = {"name": "EXTERNAL_UTTER", "entities": {"content": scan_result}}
         requests.post(url, headers=headers, data=json.dumps(data))
-        logger.info('扫描结果已发送至对话引擎')
+        logger.info(f'[{conversation_id}]扫描结果已发送至对话引擎')
