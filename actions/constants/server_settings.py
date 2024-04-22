@@ -18,7 +18,8 @@ class ServerSettings(BaseSettings):
     jenkins_password: Optional[str] = None
 
     celery_broker_url: Optional[str] = None
-    rasa_credentials: Optional[str] = None
+    rasa_credentials: Optional[str] = 'credentials.yml'
+    rasa_action_server_url: Optional[str] = 'http://localhost:5005'
 
     class Config:
         env_file = ".env"

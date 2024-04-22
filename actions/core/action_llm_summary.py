@@ -1,11 +1,12 @@
-import datetime
 from typing import Any, Dict, List, Text
 
-from rasa_sdk import Action, Tracker, logger
+from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 
 from actions.constants.server_settings import server_settings
 from actions.services.chat_service import ChatService
+from utils.core_logger import log_info
+from utils.rasa_utils import load_chat_history
 
 
 class ActionLlmSummary(Action):
@@ -21,24 +22,9 @@ class ActionLlmSummary(Action):
             tracker: Tracker,
             domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
+        user_message = load_chat_history(tracker, server_settings.chatgpt_model_max_history)
+        response_msg = self.chat_service.chat(tracker.sender_id, user_message)
+        log_info(tracker, f"[对话总结]用户的对话记录: {user_message},总结的内容: {response_msg}")
 
-        events = list(
-            filter(
-                lambda x: x.get("event") == "user"
-                          or x.get("event") == "bot",
-                tracker.events,
-            )
-        )
-        user_messages = []
-        for event in reversed(events):
-            if len(user_messages) >= server_settings.chatgpt_model_max_history:
-                break
-            user_messages.insert(0, event)
-        user_prompt = ""
-        for user_message in user_messages:
-            user_prompt += f"{user_message['text']}\n"
-        response_msg = self.chat_service.chat(tracker.sender_id, user_prompt)
-
-        logger.info(f"[对话总结]用户的对话记录: {user_prompt},总结的内容: {response_msg}")
         dispatcher.utter_message(response_msg)
         return []

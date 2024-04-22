@@ -1,11 +1,11 @@
 import inspect
 from typing import Dict, Optional, Text, Any, Callable, Awaitable
 
+from loguru import logger
 from rasa.core.channels.channel import (
     InputChannel,
     UserMessage,
 )
-from rasa_sdk import logger
 from sanic import Blueprint, response
 from sanic.request import Request
 from sanic.response import HTTPResponse
@@ -45,13 +45,12 @@ class EnterpriseWeChatJenkinsNotification(InputChannel):
         )
 
         @webhook.route("/", methods=["GET"])
-        async def health(request: Request) -> HTTPResponse:
+        async def index(request: Request) -> HTTPResponse:
             return response.json({"status": "ok"})
 
         @webhook.route("/", methods=["POST"])
-        async def health(request: Request) -> HTTPResponse:
+        async def notify(request: Request) -> HTTPResponse:
             if request.args.get('secret_token') != self.secret_token:
-                # return 401 http code if secret_token is not correct
                 return response.json({"status": "error"}, status=401)
 
             body = request.load_json()

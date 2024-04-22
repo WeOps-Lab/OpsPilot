@@ -1,7 +1,6 @@
 import asyncio
 import inspect
 import os
-from concurrent.futures import ThreadPoolExecutor
 from threading import Thread
 from typing import Dict, Optional, Text, Any, Callable, Awaitable
 
@@ -31,7 +30,6 @@ class EnterpriseWechatChannel(InputChannel):
         self.token = token
         self.aes_key = aes_key
         self.agent_id = agent_id
-        self.thread_pool = ThreadPoolExecutor(max_workers=8)
 
         self.crypto = WeChatCrypto(token, aes_key, corp_id)
 
@@ -57,9 +55,11 @@ class EnterpriseWechatChannel(InputChannel):
             if not query:
                 return
             logger.info(f"[收到消息]:{query}")
+
             context = dict()
             context['from_user_id'] = reply_user_id
             collector = CollectingOutputChannel()
+
             await on_new_message(
                 UserMessage(
                     text=query,
@@ -69,6 +69,7 @@ class EnterpriseWechatChannel(InputChannel):
                     metadata=None,
                 )
             )
+
             response_data = collector.messages
             reply_text = (
                 "\n\n".join(data["text"] for data in response_data)
@@ -78,7 +79,7 @@ class EnterpriseWechatChannel(InputChannel):
 
             self.wechat_client.message.send_markdown(self.agent_id, reply_user_id, reply_text)
         except Exception as e:
-            logger.exception(e)
+            logger.error(e)
 
     def blueprint(
             self, on_new_message: Callable[[UserMessage], Awaitable[None]]
@@ -89,11 +90,15 @@ class EnterpriseWechatChannel(InputChannel):
         )
 
         @enterprise_wechathook.route("/", methods=["GET"])
-        async def health(request: Request) -> HTTPResponse:
+        async def index(request: Request) -> HTTPResponse:
             msg_signature = request.args.get('msg_signature')
             timestamp = request.args.get('timestamp')
             nonce = request.args.get('nonce')
             echostr = request.args.get('echostr')
+
+            logger.info(
+                f'企业微信验证: msg_signature:{msg_signature}, timestamp:{timestamp}, nonce:{nonce}, echostr:{echostr}')
+
             echo_str = self.crypto.check_signature(msg_signature, timestamp, nonce, echostr)
             return response.text(echo_str)
 

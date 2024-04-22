@@ -16,3 +16,4 @@ credentials-dev.yml
 ocr_files/*
 libs/*
 credentials-prod.yml
+node_modules
