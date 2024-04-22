@@ -17,6 +17,8 @@ class ServerSettings(BaseSettings):
     jenkins_username: Optional[str] = None
     jenkins_password: Optional[str] = None
 
+    celery_broker_url: Optional[str] = None
+
     class Config:
         env_file = ".env"
 

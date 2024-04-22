@@ -8,12 +8,17 @@ intents:
   - scan
   - summary_content
   - out_of_scope
+  - EXTERNAL_UTTER
+
+entities:
+  - content
 
 actions:
   - action_llm_fallback
   - action_llm_summary
   - action_scan
-  - action_scan_job
+  - action_external_utter
+
 
 slots:
   scan_targets:

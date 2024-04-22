@@ -53,3 +53,6 @@ finetune:
 
 visualize:
 	rasa visualize -d data
+
+celery:
+	celery -A tasks.celery worker --loglevel=INFO

@@ -1,5 +1,10 @@
 version: "3.1"
 rules:
+  - rule: 主动回复
+    steps:
+      - intent: EXTERNAL_UTTER
+      - action: action_external_utter
+
   - rule: Fallback
     steps:
       - intent: nlu_fallback
@@ -30,4 +35,3 @@ rules:
       - slot_was_set:
           - requested_slot: null
       - action: action_scan
-      - action: action_scan_job
