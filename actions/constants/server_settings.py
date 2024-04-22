@@ -18,6 +18,7 @@ class ServerSettings(BaseSettings):
     jenkins_password: Optional[str] = None
 
     celery_broker_url: Optional[str] = None
+    rasa_credentials: Optional[str] = None
 
     class Config:
         env_file = ".env"

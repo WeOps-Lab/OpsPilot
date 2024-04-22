@@ -1,22 +1,38 @@
 import json
 
 import requests
+import yaml
 from celery import Celery
 from loguru import logger
+from wechatpy.enterprise import WeChatClient
 
 from actions.constants.server_settings import server_settings
 from actions.services.kscan_service import KScanService
 
 app = Celery('celery', broker=server_settings.celery_broker_url)
 
+with open(server_settings.rasa_credentials, 'r') as f:
+    credentials = yaml.safe_load(f)
+logger.info(f'成功加载配置:[{server_settings.rasa_credentials}]')
+
 
 @app.task
-def scan_target(conversation_id, scan_targets):
-    logger.info(f'开始扫描:[{scan_targets}],会话ID:[{conversation_id}]')
+def scan_target(channel, conversation_id, scan_targets, **kwargs):
+    logger.info(f'开始扫描:[{scan_targets}],会话ID:[{conversation_id}],通道:[{channel}],附加参数:[{kwargs}]')
     service = KScanService()
     scan_result = service.scan(scan_targets)
-    url = f"http://localhost:5005/conversations/{conversation_id}/trigger_intent?output_channel=latest"
-    headers = {"Content-Type": "application/json"}
-    data = {"name": "EXTERNAL_UTTER", "entities": {"content": scan_result}}
-    response = requests.post(url, headers=headers, data=json.dumps(data))
-    logger.info(response.text)
+
+    if channel == 'enterprise_wechat':
+        logger.info(f'发送企业微信消息回调:[{conversation_id}]')
+        conf = credentials['channels.enterprise_wechat.enterprise_wechat_channel.EnterpriseWechatChannel']
+        wechat_client = WeChatClient(
+            conf['corp_id'],
+            conf['secret'],
+        )
+        wechat_client.message.send_text(conf['agent_id'], conversation_id, scan_result)
+    else:
+        url = f"http://localhost:5005/conversations/{conversation_id}/trigger_intent?output_channel=latest"
+        headers = {"Content-Type": "application/json"}
+        data = {"name": "EXTERNAL_UTTER", "entities": {"content": scan_result}}
+        requests.post(url, headers=headers, data=json.dumps(data))
+        logger.info('扫描结果已发送至对话引擎')
