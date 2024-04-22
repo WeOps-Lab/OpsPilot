@@ -15,6 +15,32 @@ services:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
 
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: /data/postgres
+      POSTGRES_DB: ops-pilot
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    restart: always
+
+  redis:
+      image: bitnami/redis
+      restart: always
+      ports:
+        - 6379:6379
+      volumes:
+        - redis-data:/bitnami/redis/data
+      environment:
+        - REDIS_PASSWORD=${REDIS_PASSWORD}
+volumes:
+  postgres:
+  redis-data:
+
 networks:
   traefik:
     external: true

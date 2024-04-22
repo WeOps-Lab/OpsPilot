@@ -6,6 +6,9 @@ function setup_network() {
 
 function setup_env() {
     export RABBITMQ_DEFAULT_PASS=`openssl rand -hex 32`
+    export POSTGRES_PASSWORD=`openssl rand -hex 32`
+    export REDIS_PASSWORD=`openssl rand -hex 32`
+
     envsubst < .env.example > .env
 }
 
