@@ -1,0 +1,20 @@
+version: '3.3'
+services:
+  rabbitmq:
+    restart: always
+    image: rabbitmq:management
+    ports:
+      - 5671:5671
+      - 5672:5672
+      - 15671:15671
+      - 15672:15672
+    networks:
+      - traefik
+    environment:
+      TZ: Asia/Shanghai
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+
+networks:
+  traefik:
+    external: true
