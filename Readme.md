@@ -25,6 +25,8 @@ OpsPilot支持以ChatBot的形态与Web应用集成，主要提供以下能力�
 * [日常]Chitchat能力：支持闲聊、问候、打招呼等功能
 * [日常]支持聊天对话总结：对话内容进行总结，生成对话总结文档
 
+<img src="./docs/images/skills.png" >
+
 # 环境变量
 
 | 变量名                         | 说明                               | 默认值                    |

@@ -2,3 +2,9 @@ version: "3.1"
 responses:
   utter_ask_scan_targets:
     - text: "你想测绘哪些对象呢？eg: 127.0.0.1,https://baidu.com"
+
+  utter_ticket_canceled:
+    - text: "OpsPilot已经取消了本次的提单申请，期待下次为您服务！"
+
+  utter_ticket_submitted:
+    - text: "OpsPilot已经成功为您提交了提单，我们会尽快处理您的请求！"

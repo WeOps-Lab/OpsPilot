@@ -1,0 +1,52 @@
+version: "3.1"
+stories:
+
+  - story: 智能提单-提单
+    steps:
+      - intent: start_ticket
+      - action: action_set_start_ticket_slot
+      - action: action_ticket_summary
+      - action: utter_ask_start_ticket
+      - checkpoint: check_sure_start_ticket
+
+  - story: 确认提单
+    steps:
+      - checkpoint: check_sure_start_ticket
+      - slot_was_set:
+          - in_ticket_submission: true
+
+      - intent: yes
+      - action: action_start_ticket
+      - action: action_set_finish_ticket_slot
+      - action: utter_ticket_submitted
+
+  - story: 取消提单
+    steps:
+      - checkpoint: check_sure_start_ticket
+      - slot_was_set:
+          - in_ticket_submission: true
+
+      - intent: no
+      - action: action_set_finish_ticket_slot
+      - action: utter_ticket_canceled
+
+  - story: 智能提单-中途修改单据
+    steps:
+      - checkpoint: check_sure_start_ticket
+      - slot_was_set:
+          - in_ticket_submission: true
+
+      - intent: revise
+      - action: action_set_revise_ticket_slot
+      - action: utter_ask_revise_ticket
+
+      - action: revise_ticket_form
+      - active_loop: revise_ticket_form
+      - slot_was_set:
+          - requested_slot: revise_ticket
+      - slot_was_set:
+          - requested_slot: null
+      - active_loop: null
+      - action: action_revise_ticket
+      - action: utter_ask_start_ticket
+      - checkpoint: check_sure_start_ticket

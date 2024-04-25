@@ -25,7 +25,7 @@ pipeline:
     max_ngram: 4
 
   - name: DIETClassifier
-    epochs: 300
+    epochs: 500
     constrain_similarities: true
     evaluate_on_number_of_examples: 0
     evaluate_every_number_of_epochs: 100
@@ -60,8 +60,9 @@ policies:
   - name: MemoizationPolicy
 
   - name: TEDPolicy
-    max_history: 1
+    max_history: 10
     epochs: 1000
+    model_confidence: softmax
     constrain_similarities: true
     evaluate_on_number_of_examples: 0
     evaluate_every_number_of_epochs: 100

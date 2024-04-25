@@ -9,9 +9,9 @@ intents:
   - summary_content
   - out_of_scope
   - EXTERNAL_UTTER
+  - yes
+  - no
 
-entities:
-  - content
 
 actions:
   - action_llm_fallback
@@ -19,6 +19,8 @@ actions:
   - action_scan
   - action_external_utter
 
+entities:
+  - content
 
 slots:
   scan_targets:
@@ -30,7 +32,9 @@ slots:
           - active_loop: scan_targets_form
             requested_slot: scan_targets
 
+
 forms:
   scan_targets_form:
     required_slots:
       - scan_targets
+

@@ -6,9 +6,15 @@ from pydantic import BaseSettings
 class ServerSettings(BaseSettings):
     run_mode: str = "dev"
 
+    redis_host: Optional[str] = None
+    redis_port: Optional[int] = None
+    redis_db: Optional[int] = None
+    redis_password: Optional[str] = None
+
     fastgpt_endpoint: Optional[str] = None
     fastgpt_key: Optional[str] = None
     fastgpt_content_summary_key: Optional[str] = None
+    fastgpt_ticket_key: Optional[str] = None
 
     chatgpt_model_max_history: int = 5
 

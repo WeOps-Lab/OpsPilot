@@ -1,0 +1,17 @@
+version: "3.1"
+responses:
+  utter_ask_start_ticket:
+    - text: "确认提单？(是/否/修改)"
+      channel: "enterprise_wechat"
+
+    - text: "确认提单？"
+      buttons:
+        - title: "是"
+          payload: "/yes"
+        - title: "否"
+          payload: "/no"
+        - title: "修改"
+          payload: "/revise"
+
+  utter_ask_revise_ticket:
+    - text: "请告诉我您想修改的内容"

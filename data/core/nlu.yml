@@ -1,6 +1,22 @@
 version: "3.1"
 
 nlu:
+  - intent: yes
+    examples: |
+      - 是
+      - 确认
+      - yes
+      - 是的
+      - 对
+      - 对的
+  - intent: no
+    examples: |
+      - 不是
+      - 不对
+      - 不
+      - no
+      - 不是的
+
   - intent: scan
     examples: |
       - 扫描服务器
@@ -44,3 +60,7 @@ nlu:
       - jenkins是什么
       - 那你从那里获取到jenkins的相关信息的
       - 使用Java编写一个爬虫示例程序
+      - 修复一个bug
+      - 我要申请笔记本
+      - 帮我查一下这个服务器的信息
+      - 申请一下仓库权限

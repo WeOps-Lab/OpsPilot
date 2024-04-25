@@ -2,6 +2,8 @@ import json
 
 import requests
 
+from actions.constants.server_settings import server_settings
+
 
 class ChatService:
     def __init__(self, app_url, app_key):
@@ -9,6 +11,9 @@ class ChatService:
         self.app_url = app_url
 
     def chat(self, sender_id, content):
+        if server_settings.run_mode == 'debug':
+            return '开发模式运行中.....'
+
         headers = {
             "Authorization": f"Bearer {self.app_key}",
             "Content-Type": "application/json",

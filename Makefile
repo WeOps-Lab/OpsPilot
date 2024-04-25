@@ -41,7 +41,7 @@ tensorboard:
 	tensorboard --logdir ./tensorboard
 
 interactive:
-	rasa interactive -d data
+	rasa interactive -d data -m models/ops-pilot.tar.gz
 
 release:
 	docker build -t ccr.ccs.tencentyun.com/megalab/ops-pilot .
