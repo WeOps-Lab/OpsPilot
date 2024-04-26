@@ -25,6 +25,9 @@ class AutogenService:
             name="user_proxy",
             human_input_mode="NEVER",
             llm_config=llm_config,
+            system_message="""Reply TERMINATE if the task has been solved at full satisfaction.
+        Otherwise, reply CONTINUE, or the reason why the task is not solved yet.""",
+            is_termination_msg=lambda x: x.get("content", "").rstrip().endswith("TERMINATE"),
             max_consecutive_auto_reply=5,
             code_execution_config={
                 "work_dir": "coding",
@@ -61,3 +64,10 @@ class AutogenService:
         )
 
         return chat_res
+
+#
+# service = AutogenService()
+# chat_res = service.chat('https://github.com/是一个什么网站？')
+# print(f'执行结果:[{chat_res.summary}]')
+# print(f'共消费:[{chat_res.cost}]')
+# print(f'对话历史:[{chat_res.chat_history}]')
