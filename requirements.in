@@ -11,3 +11,5 @@ paddlepaddle==2.6.1
 paddleocr==2.7.3
 celery==5.4.0
 loguru==0.7.2
+pyautogen==0.2.26
+ipython==8.8.0

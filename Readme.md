@@ -48,6 +48,15 @@ OpsPilot支持以ChatBot的形态与Web应用集成，主要提供以下能力�
 
 <img src="./docs/images/wx.png" >
 
+# TODO:
+
+* 安全
+  * [ ] 支持JWT令牌认证功能
+  * [ ] 支持Token Base认证功能
+* 存储
+  * [ ] 支持SupaBase Tracker存储
+  * [ ] 支持从SupaBase 加载模型
+  * [ ] 支持Redis锁存储
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=WeOps-Lab/OpsPilot&type=Date)](https://star-history.com/#WeOps-Lab/OpsPilot&Date)
