@@ -3,7 +3,7 @@ assistant_id: rasa-pilot
 language: zh
 
 pipeline:
-  - name: "compoments.jieba_tokenizer.JiebaTokenizer"
+  - name: "compoments.tokenizer.jieba_tokenizer.JiebaTokenizer"
 
   - name: RegexFeaturizer
     use_word_boundaries: false
