@@ -9,7 +9,9 @@ from wechatpy.enterprise import WeChatClient
 from actions.constants.server_settings import server_settings
 from actions.services.kscan_service import KScanService
 
-app = Celery('celery', broker=server_settings.celery_broker_url)
+app = Celery('celery',
+             broker=server_settings.celery_broker_url,
+             backend=server_settings.celery_result_backend, )
 
 with open(server_settings.rasa_credentials, 'r') as f:
     credentials = yaml.safe_load(f)
