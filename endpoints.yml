@@ -1,6 +1,15 @@
 action_endpoint:
   url: "http://127.0.0.1:5055/webhook"
 
+
+#tracker_store:
+#  type: SQL
+#  dialect: "postgresql"
+#  url: "localhost"
+#  db: "ops-pilot"
+#  username: "postgres"
+#  password: "password"
+
 tracker_store:
   type: SQL
   dialect: "sqlite"

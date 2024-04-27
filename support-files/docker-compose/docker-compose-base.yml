@@ -1,25 +1,11 @@
 version: '3.3'
 services:
-  rabbitmq:
-    restart: always
-    image: rabbitmq:management
-    ports:
-      - 5671:5671
-      - 5672:5672
-      - 15671:15671
-      - 15672:15672
-    networks:
-      - traefik
-    environment:
-      TZ: Asia/Shanghai
-      RABBITMQ_DEFAULT_USER: admin
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
 
   postgres:
     image: postgres:16
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PASSWORD: password
       PGDATA: /data/postgres
       POSTGRES_DB: ops-pilot
     volumes:
@@ -28,19 +14,5 @@ services:
       - "5432:5432"
     restart: always
 
-  redis:
-      image: bitnami/redis
-      restart: always
-      ports:
-        - 6379:6379
-      volumes:
-        - redis-data:/bitnami/redis/data
-      environment:
-        - REDIS_PASSWORD=${REDIS_PASSWORD}
 volumes:
   postgres:
-  redis-data:
-
-networks:
-  traefik:
-    external: true
