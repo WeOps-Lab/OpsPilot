@@ -25,6 +25,13 @@ slots:
       - type: from_entity
         entity: in_ticket_submission
 
+  ticket_summary:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+
   revise_ticket:
     type: text
     influence_conversation: true

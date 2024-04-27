@@ -4,9 +4,6 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 
-from utils.core_logger import log_info
-from utils.redis_utils import RedisUtils
-
 
 class ActionSetFinishTicketSlot(Action):
     def __init__(self):
@@ -24,4 +21,5 @@ class ActionSetFinishTicketSlot(Action):
         return [
             SlotSet("in_ticket_submission", False),
             SlotSet("revise_ticket", None),
+            SlotSet("ticket_summary", None),
         ]

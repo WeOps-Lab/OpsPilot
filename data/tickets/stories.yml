@@ -4,6 +4,7 @@ stories:
   - story: 智能提单-提单
     steps:
       - intent: start_ticket
+
       - action: action_set_start_ticket_slot
       - action: action_ticket_summary
       - action: utter_ask_start_ticket

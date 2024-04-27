@@ -9,7 +9,6 @@ from actions.constants.server_settings import server_settings
 from actions.services.chat_service import ChatService
 from utils.core_logger import log_info
 from utils.rasa_utils import load_chat_history
-from utils.redis_utils import RedisUtils
 
 
 class ActionTicketSummary(Action):
@@ -28,9 +27,7 @@ class ActionTicketSummary(Action):
         chat_history = load_chat_history(tracker, server_settings.chatgpt_model_max_history)
         log_info(tracker, f"开始新让LLM识别工单")
 
-        cache_key = f'{tracker.sender_id}_ticket_summary'
         ticket_summary = self.chat_service.chat(tracker.sender_id, chat_history)
-        RedisUtils.set_value(cache_key, ticket_summary)
 
         dispatcher.utter_message('以下即将为您提的工单：')
         ticket_dict = json.loads(ticket_summary)
@@ -38,4 +35,6 @@ class ActionTicketSummary(Action):
         for key, value in ticket_dict.items():
             ticket_dict_summary += f'{key}: {value}\n'
         dispatcher.utter_message(ticket_dict_summary)
-        return []
+        return [
+            SlotSet("ticket_summary", ticket_summary),
+        ]
