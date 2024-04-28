@@ -1,6 +1,10 @@
 action_endpoint:
   url: "http://127.0.0.1:5055/webhook"
 
+#models:
+#  url:
+#  wait_time_between_pulls: null
+
 #
 #tracker_store:
 #  type: SQL

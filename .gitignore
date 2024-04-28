@@ -22,3 +22,4 @@ OAI_CONFIG_LIST
 coding
 .cache
 endpoints-prod.yml
+endpoints-dev.yml
