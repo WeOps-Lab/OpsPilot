@@ -1,5 +1,5 @@
 recipe: default.v1
-assistant_id: rasa-pilot
+assistant_id: ops-pilot
 language: zh
 
 pipeline:

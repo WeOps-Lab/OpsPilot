@@ -29,6 +29,9 @@ class ServerSettings(BaseSettings):
     rasa_credentials: Optional[str] = 'credentials.yml'
     rasa_action_server_url: Optional[str] = 'http://localhost:5005'
 
+    supabase_url: Optional[str] = None
+    supabase_key: Optional[str] = None
+
     class Config:
         env_file = ".env"
 

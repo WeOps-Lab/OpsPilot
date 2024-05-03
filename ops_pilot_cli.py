@@ -9,6 +9,9 @@ from sqlalchemy.orm import Session
 
 
 class BootStrap:
+    def init_supabase_data(self):
+        pass
+
     def prepare_training_data(self, bot_name: str):
         Base = automap_base()
 
