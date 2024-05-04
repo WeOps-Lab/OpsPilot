@@ -24,3 +24,4 @@ coding
 endpoints-prod.yml
 endpoints-dev.yml
 celerydb.sqlite
+tmp

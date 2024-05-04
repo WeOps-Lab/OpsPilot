@@ -31,6 +31,8 @@ class ServerSettings(BaseSettings):
 
     supabase_url: Optional[str] = None
     supabase_key: Optional[str] = None
+    supabase_username: Optional[str] = None
+    supabase_password: Optional[str] = None
 
     class Config:
         env_file = ".env"

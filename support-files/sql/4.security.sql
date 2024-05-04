@@ -68,7 +68,7 @@ CREATE POLICY "允许ops-pilot管理员访问所有表单数据"
 
 ALTER TABLE ops_pilot_response ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "允许ops-pilot管理员访问所有回复数据"
-    ON ops_pilot_form
+    ON ops_pilot_response
     FOR ALL
     USING (
         jwt_has_permission('ops-pilot.admin')
