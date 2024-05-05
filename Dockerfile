@@ -1,7 +1,7 @@
 FROM python:3.10
 WORKDIR /apps
 
-RUN pip config set global.index-url http://mirrors.cloud.tencent.com/pypi/simple
+RUN pip config set global.index-url https://mirrors.cloud.tencent.com/pypi/simple
 RUN pip install pip-tools
 ADD ./requirements.in ./requirements.in
 RUN pip-compile -v
