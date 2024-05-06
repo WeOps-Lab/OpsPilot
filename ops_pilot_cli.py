@@ -1,14 +1,12 @@
 import os
-import subprocess
-import uuid
 
 import fire
+import yaml
 from dotenv import load_dotenv
 from loguru import logger
 from supabase import create_client, Client
-import yaml
+
 from actions.constants.server_settings import server_settings
-from jinja2 import FileSystemLoader, Environment
 
 
 class BootStrap(object):
@@ -18,8 +16,6 @@ class BootStrap(object):
         :param bot_name:
         :return:
         """
-        jinja_env = Environment(loader=FileSystemLoader('templates'), trim_blocks=True,
-                                lstrip_blocks=True, )
 
         logger.info(f'创建临时目录......')
         tmp_path = f'tmp/'
@@ -66,10 +62,7 @@ class BootStrap(object):
 
             logger.info('准备动作数据....')
 
-            nlu_dict = {
-                "version": "3.1",
-                "nlu": []
-            }
+            nlu_content = 'nlu:\n'
             domain_dict = {
                 "version": "3.1",
                 "intents": [],
@@ -98,17 +91,18 @@ class BootStrap(object):
             logger.info('准备意图数据....')
             intents = supabase.table('ops_pilot_intent').select('name,ops_pilot_intent_corpus(corpus)').execute().data
             for intent in intents:
-                nlu_dict['nlu'].append({
-                    'intent': intent['name'],
-                    'examples': ''.join(['- ' + x['corpus'] + '\n' for x in intent['ops_pilot_intent_corpus']])
-                })
-                domain_dict['intents'].append(intent['name'])
+                if len(intent['ops_pilot_intent_corpus']) == 0:
+                    continue
+                nlu_content += '  - intent: ' + intent['name'] + '\n'
+                nlu_content += '    examples: |\n'
+                for x in intent['ops_pilot_intent_corpus']:
+                    nlu_content += '      - ' + x['corpus'] + '\n'
 
             with open(f'{tmp_path}/domain.yml', 'w') as f:
                 yaml.dump(domain_dict, f, default_flow_style=False, allow_unicode=True, encoding='utf-8')
 
             with open(f'{tmp_path}/nlu.yml', 'w') as f:
-                yaml.dump(nlu_dict, f, default_flow_style=False, allow_unicode=True, encoding='utf-8')
+                f.write(nlu_content)
 
             logger.info('准备响应数据....')
             responses = supabase.table('ops_pilot_response').select(

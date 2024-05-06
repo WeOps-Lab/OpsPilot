@@ -109,9 +109,7 @@ values (1,'utter_ask_scan_targets',''),
 
 -- 初始化回复语料
 insert into ops_pilot_response_corpus(response_id, corpus)
-values (1,'你想测绘哪些对象呢？eg: 127.0.0.1,https://baidu.com'),
-(2,'OpsPilot已经取消了本次的提单申请，期待下次为您服务！'),
-(3,'OpsPilot已经成功为您提交了提单，我们会尽快处理您的请求！');
+values (1,'你想测绘哪些对象呢？eg: 127.0.0.1,https://baidu.com');
 
 -- 初始化对话规则表
 INSERT INTO ops_pilot_rule(id,name, description, steps)
