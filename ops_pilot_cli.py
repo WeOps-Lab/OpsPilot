@@ -29,7 +29,12 @@ class BootStrap(object):
         try:
             logger.info(f'获取机器人训练数据')
             bot = supabase.table('ops_pilot_bot').select('*').eq('name', bot_name).execute().data[0]
-
+            with open(f'{tmp_path}/credentials.yml', 'w') as f:
+                f.write(bot['credentials_config'])
+            with open(f'{tmp_path}/config.yml', 'w') as f:
+                f.write(bot['train_config'])
+            with open(f'{tmp_path}/endpoints.yml', 'w') as f:
+                f.write(bot['endpoints_config'])
             logger.info('准备规则数据....')
             rules = supabase.table('ops_pilot_bot_rule').select('ops_pilot_rule(*)').eq('bot_id',
                                                                                         bot['id']).execute().data

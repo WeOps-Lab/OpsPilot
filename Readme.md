@@ -47,7 +47,9 @@ OpsPilot支持以ChatBot的形态与Web应用集成，主要提供以下能力�
 
 # 讨论群
 
-<img src="./docs/images/wx.png" >
+添加小嘉企微，小嘉拉群里
+
+<img src="./docs/images/wx.jpg" >
 
 ## Star History
 
