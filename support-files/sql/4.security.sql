@@ -123,6 +123,18 @@ CREATE POLICY "允许ops-pilot管理员访问所有数据"
         jwt_has_permission('ops-pilot.admin')
     );
 
+ALTER TABLE ops_pilot_models ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "允许ops-pilot管理员访问所有数据"
+    ON ops_pilot_models
+    FOR ALL
+    USING (
+        jwt_has_permission('ops-pilot.admin')
+    )
+    WITH CHECK (
+        jwt_has_permission('ops-pilot.admin')
+    );
+
+
 ALTER TABLE ops_pilot_bot_rule ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "允许ops-pilot管理员访问所有数据"
     ON ops_pilot_bot_rule

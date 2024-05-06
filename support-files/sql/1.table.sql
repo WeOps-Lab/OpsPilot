@@ -100,6 +100,15 @@ create table if not exists ops_pilot_bot (
     create_time timestamp default current_timestamp
 );
 
+-- Rasa模型表
+create table if not exists ops_pilot_models (
+    id BIGSERIAL primary key,
+    name varchar(255) not null,
+    model_path text not null,
+    bot_id BIGINT references ops_pilot_bot on delete cascade not null,
+    create_time timestamp default current_timestamp
+);
+
 -- 机器人-规则关联表
 create table if not exists ops_pilot_bot_rule (
     id BIGSERIAL primary key,
