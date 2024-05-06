@@ -38,9 +38,7 @@ create table if not exists ops_pilot_slot (
     id BIGSERIAL primary key,
     name varchar(255) not null,
     description text,
-    slot_type varchar(255) not null,
-    influence_conversation boolean default false,
-    slot_mappings text,
+    slot_config text,
     create_time timestamp default current_timestamp
 );
 
@@ -48,7 +46,7 @@ create table if not exists ops_pilot_slot (
 create table if not exists ops_pilot_form (
     id BIGSERIAL primary key,
     name varchar(255) not null,
-    required_slots text,
+    form_config text,
     description text,
     create_time timestamp default current_timestamp
 );
@@ -75,7 +73,6 @@ create table if not exists ops_pilot_rule (
     name varchar(255) not null,
     description text,
     steps text,
-    rule_condition text,
     create_time timestamp default current_timestamp
 );
 

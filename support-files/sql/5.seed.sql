@@ -81,20 +81,24 @@ INSERT INTO ops_pilot_entity(name, description)
 values ('content', '');
 
 -- 初始化槽位表数据
-INSERT INTO ops_pilot_slot(name, description, slot_type, influence_conversation, slot_mappings)
-values ('scan_targets', '','text',false,'
-mappings:
-  - type: from_text
-    conditions:
-      - active_loop: scan_targets_form
-        requested_slot: scan_targets
+INSERT INTO ops_pilot_slot(name, description,  slot_config)
+values ('scan_targets', false,'
+scan_targets:
+  type: text
+  influence_conversation: false
+  mappings:
+    - type: from_text
+      conditions:
+        - active_loop: scan_targets_form
+          requested_slot: scan_targets
 ');
 
 -- 初始化表单数据
-INSERT INTO ops_pilot_form(name, description, required_slots)
+INSERT INTO ops_pilot_form(name, description, form_config)
 values ('scan_targets_form','','
-required_slots:
-  - scan_targets
+scan_targets_form:
+  required_slots:
+    - scan_targets
 ');
 
 -- 初始化回复数据
@@ -110,35 +114,41 @@ values (1,'你想测绘哪些对象呢？eg: 127.0.0.1,https://baidu.com'),
 (3,'OpsPilot已经成功为您提交了提单，我们会尽快处理您的请求！');
 
 -- 初始化对话规则表
-INSERT INTO ops_pilot_rule(id,name, description, rule_condition, steps)
+INSERT INTO ops_pilot_rule(id,name, description, steps)
 values 
-    (1,'主动回复','','','
+    (1,'主动回复','','
+rule: 主动回复
 steps:
     - intent: EXTERNAL_UTTER
     - action: action_external_utter'),
     
-    (2,'Fallback','','','
+    (2,'Fallback','','
+rule: Fallback
 steps:
     - intent: nlu_fallback
     - action: action_llm_fallback'),
 
-    (3,'summary_content','','','
+    (3,'summary_content','','
+rule: summary_content    
 steps:
     - intent: summary_content
     - action: action_llm_summary'),
 
-    (4,'out_of_scope','','','
+    (4,'out_of_scope','','
+rule: out_of_scope    
 steps:
     - intent: out_of_scope
     - action: action_llm_fallback'),
 
-    (5,'激活资产测绘表单','','','
+    (5,'激活资产测绘表单','','
+rule: 激活资产测绘表单    
 steps:
     - intent: scan
     - action: scan_targets_form
     - active_loop: scan_targets_form'),
 
-    (6,'提交资产测绘表单','','
+    (6,'提交资产测绘表单','
+rule: 提交资产测绘表单    
 condition:
     - active_loop: scan_targets_form','
 steps:

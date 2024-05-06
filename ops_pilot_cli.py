@@ -6,8 +6,9 @@ import fire
 from dotenv import load_dotenv
 from loguru import logger
 from supabase import create_client, Client
-
+import yaml
 from actions.constants.server_settings import server_settings
+from jinja2 import FileSystemLoader, Environment
 
 
 class BootStrap(object):
@@ -17,8 +18,11 @@ class BootStrap(object):
         :param bot_name:
         :return:
         """
+        jinja_env = Environment(loader=FileSystemLoader('templates'), trim_blocks=True,
+                                lstrip_blocks=True, )
+
         logger.info(f'创建临时目录......')
-        tmp_path = f'tmp/{str(uuid.uuid4())}'
+        tmp_path = f'tmp/'
         os.makedirs(tmp_path, exist_ok=True)
 
         supabase: Client = create_client(server_settings.supabase_url, server_settings.supabase_key)
@@ -39,52 +43,94 @@ class BootStrap(object):
             rules = supabase.table('ops_pilot_bot_rule').select('ops_pilot_rule(*)').eq('bot_id',
                                                                                         bot['id']).execute().data
 
+            rule_dict = {
+                "version": "3.1",
+                "rules": []
+            }
+            for rule in rules:
+                rule_dict['rules'].append(yaml.safe_load(rule['ops_pilot_rule']['steps']))
+            with open(f'{tmp_path}/rules.yml', 'w') as f:
+                yaml.dump(rule_dict, f, default_flow_style=False, allow_unicode=True, encoding='utf-8')
+
+            stories_dict = {
+                "version": "3.1",
+                "stories": []
+            }
             logger.info('准备故事数据....')
             stories = supabase.table('ops_pilot_bot_story').select('ops_pilot_story(*)').eq('bot_id',
                                                                                             bot['id']).execute().data
+            for story in stories:
+                rule_dict['stories'].append(yaml.safe_load(story['ops_pilot_story']['steps']))
+            with open(f'{tmp_path}/stories.yml', 'w') as f:
+                yaml.dump(stories_dict, f, default_flow_style=False, allow_unicode=True, encoding='utf-8')
 
             logger.info('准备动作数据....')
+
+            nlu_dict = {
+                "version": "3.1",
+                "nlu": []
+            }
+            domain_dict = {
+                "version": "3.1",
+                "intents": [],
+                "entities": [],
+                "slots": {},
+                "actions": [],
+                "forms": {}
+            }
             actions = supabase.table('ops_pilot_actions').select('*').execute().data
+            domain_dict['actions'] = [action['name'] for action in actions]
 
             logger.info('准备实体数据....')
             entities = supabase.table('ops_pilot_entity').select('*').execute().data
+            domain_dict['entities'] = [entity['name'] for entity in entities]
 
             logger.info('准备表单数据....')
             forms = supabase.table('ops_pilot_form').select('*').execute().data
+            for form in forms:
+                domain_dict['forms'].update(yaml.safe_load(form['form_config']))
+
+            logger.info('准备槽位数据....')
+            slots = supabase.table('ops_pilot_slot').select('*').execute().data
+            for slot in slots:
+                domain_dict['slots'].update(yaml.safe_load(slot['slot_config']))
 
             logger.info('准备意图数据....')
             intents = supabase.table('ops_pilot_intent').select('name,ops_pilot_intent_corpus(corpus)').execute().data
+            for intent in intents:
+                nlu_dict['nlu'].append({
+                    'intent': intent['name'],
+                    'examples': ''.join(['- ' + x['corpus'] + '\n' for x in intent['ops_pilot_intent_corpus']])
+                })
+                domain_dict['intents'].append(intent['name'])
+
+            with open(f'{tmp_path}/domain.yml', 'w') as f:
+                yaml.dump(domain_dict, f, default_flow_style=False, allow_unicode=True, encoding='utf-8')
+
+            with open(f'{tmp_path}/nlu.yml', 'w') as f:
+                yaml.dump(nlu_dict, f, default_flow_style=False, allow_unicode=True, encoding='utf-8')
 
             logger.info('准备响应数据....')
             responses = supabase.table('ops_pilot_response').select(
                 'name,ops_pilot_response_corpus(corpus)').execute().data
-
-            logger.info('准备槽位数据....')
-            slots = supabase.table('ops_pilot_slot').select('*').execute().data
+            response_dict = {
+                "version": "3.1",
+                "responses": {}
+            }
+            for response in responses:
+                response_dict['responses'][response['name']] = []
+                for x in response['ops_pilot_response_corpus']:
+                    response_dict['responses'][response['name']].append({
+                        'text': x['corpus'],
+                    })
+            with open(f'{tmp_path}/responses.yml', 'w') as f:
+                yaml.dump(response_dict, f, default_flow_style=False, allow_unicode=True, encoding='utf-8')
 
         except Exception as e:
             logger.error(f'获取机器人训练数据失败, {e}')
             return
 
         supabase.auth.sign_out()
-
-    def train(self, domain_path, model_name):
-        """
-        训练模型
-        :param domain_path:
-        :param model_name:
-        :return:
-        """
-        process = subprocess.Popen(f"rasa train --domain {domain_path} --fixed-model-name {model_name}",
-                                   stdout=subprocess.PIPE,
-                                   shell=True)
-
-        while True:
-            output = process.stdout.readline()
-            if output == '' and process.poll() is not None:
-                break
-            if output:
-                print(output.strip())
 
     def upload_model(self, model_path, model_name):
         """

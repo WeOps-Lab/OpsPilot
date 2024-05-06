@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS ops_pilot_models;
 DROP TABLE IF EXISTS ops_pilot_bot_story;
 DROP TABLE IF EXISTS ops_pilot_bot_rule;
 DROP TABLE IF EXISTS ops_pilot_bot;
