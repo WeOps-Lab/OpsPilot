@@ -1,6 +1,7 @@
 import asyncio
 import inspect
 import os
+import tempfile
 from threading import Thread
 from typing import Dict, Optional, Text, Any, Callable, Awaitable
 
@@ -146,11 +147,13 @@ class EnterpriseWechatChannel(InputChannel):
         return enterprise_wechathook
 
     async def extract_image_content_and_response(self, on_new_message, msg, timestamp):
+        temp_file = tempfile.NamedTemporaryFile(delete=True)
+
         image_data = self.wechat_client.media.download(msg.media_id)
-        image_file_path = os.path.join('./ocr_files', f"{msg.source}_{timestamp}.jpg")
-        with open(image_file_path, "wb") as f:
+        with open(temp_file.name, "wb") as f:
             f.write(image_data.content)
-        msg_content = self.ocr_engine.extract_content(image_file_path)
+        msg_content = self.ocr_engine.extract_content(temp_file.name)
+        temp_file.close()
         if msg_content == '':
             self.wechat_client.message.send_markdown(self.agent_id, msg.source,
                                                      '小助手没有没有识别到图片中的文字哟...')

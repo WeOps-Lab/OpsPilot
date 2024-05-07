@@ -34,6 +34,10 @@ class ServerSettings(BaseSettings):
     supabase_username: Optional[str] = None
     supabase_password: Optional[str] = None
 
+    ocr_service: Optional[str] = None
+    azure_ocr_endpoint: Optional[str] = None
+    azure_ocr_key: Optional[str] = None
+
     class Config:
         env_file = ".env"
 

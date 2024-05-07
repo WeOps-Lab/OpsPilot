@@ -7,9 +7,8 @@ pytest==8.1.1
 pycryptodome==3.20.0
 wechatpy==1.8.18
 jenkinsapi==0.3.13
-paddlepaddle==2.6.1
-paddleocr==2.7.3
 celery==5.4.0
 loguru==0.7.2
 pyautogen==0.2.26
 ipython==8.8.0
+azure-cognitiveservices-vision-computervision==0.9.0
