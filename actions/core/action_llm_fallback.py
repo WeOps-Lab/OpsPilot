@@ -7,6 +7,7 @@ from rasa_sdk.executor import CollectingDispatcher
 from actions.constants.server_settings import server_settings
 from actions.services.chat_service import ChatService
 from utils.core_logger import log_info, log_error
+from utils.rasa_utils import load_chat_history
 
 
 class ActionLLMFallback(Action):
@@ -28,7 +29,7 @@ class ActionLLMFallback(Action):
             return []
 
         run_mode = server_settings.run_mode
-        user_msg = tracker.latest_message["text"]
+        user_msg = load_chat_history(tracker, server_settings.chatgpt_model_max_history)
 
         if run_mode == "dev":
             log_info(tracker, f"用户输入的信息为:{user_msg},当前运行在开发模式,不对内容进行回复")
