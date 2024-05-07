@@ -27,7 +27,7 @@ class ChatService:
             ],
         }
         response = requests.post(
-            self.app_url,
+            self.app_url + '/api/v1/chat/completions',
             headers=headers,
             data=json.dumps(data),
             verify=False
