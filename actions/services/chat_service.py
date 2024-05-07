@@ -40,7 +40,7 @@ class ChatService:
             doc_source = set()
             for source in response.json()['responseData'][0]['quoteList']:
                 doc_source.add(source['sourceName'])
-            response_msg += '知识来源：\n'
+            response_msg += '\n知识来源：\n'
             for index, source in enumerate(doc_source):
                 response_msg += f'{index + 1}: {source}\n'
         return response_msg
