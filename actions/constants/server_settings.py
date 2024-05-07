@@ -38,6 +38,8 @@ class ServerSettings(BaseSettings):
     azure_ocr_endpoint: Optional[str] = None
     azure_ocr_key: Optional[str] = None
 
+    enable_llm_source_detail: bool = False
+
     class Config:
         env_file = ".env"
 

@@ -33,5 +33,15 @@ class ChatService:
             verify=False
         )
         response.raise_for_status()
-        response_msg = response.json()["choices"][0]["message"]["content"]
+
+        result_data = response.json()
+        response_msg = result_data["choices"][0]["message"]["content"]
+        if server_settings.enable_llm_source_detail:
+            doc_source = set()
+            for source in response.json()['responseData'][0]['quoteList']:
+                doc_source.add(source['sourceName'])
+            response_msg += '\n'
+            response_msg += '知识来源：\n'
+            for source in doc_source:
+                response_msg += f'* {source}\n'
         return response_msg
