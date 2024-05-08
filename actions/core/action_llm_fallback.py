@@ -29,7 +29,7 @@ class ActionLLMFallback(Action):
             return []
 
         run_mode = server_settings.run_mode
-        user_msg = load_chat_history(tracker, server_settings.chatgpt_model_max_history)
+        user_msg = tracker.latest_message["text"]
 
         if run_mode == "dev":
             log_info(tracker, f"用户输入的信息为:{user_msg},当前运行在开发模式,不对内容进行回复")
