@@ -15,48 +15,38 @@ export default defineConfig({
             {
                 text: '文档',
                 items: [
-                    {text: '简介', link: '/markdown-examples'},
-                    {text: '快速入门', link: '/api-examples'},
-                    {text: '系统架构', link: '/api-examples'},
+                    {text: '简介', link: '/introduction'},
+                    {text: '快速入门', link: '/quick-start'},
+                    {text: '系统架构', link: '/architecture'},
                     {
-                        text: '消息通道', link: '#', items: [
-                            {text: '企业微信', link: '/api-examples'},
-                            {text: 'Web', link: '/api-examples1'}
+                        text: '通道概览', link: '#', items: [
+                            {text: '企业微信', link: '/channel/enterprise-wechat'},
+                            {text: 'Web', link: '/channel/web'}
                         ]
                     },
                     {
-                        text: '能力介绍', link: '#', items: [
+                        text: '能力概览', link: '/skills/index', items: [
                             {
-                                text: '日常', link: '#', items: [
-                                    {text: '知识问答', link: '#'},
-                                    {text: '对话总结', link: '#'},
-                                    {text: 'OCR识别', link: '#'},
-                                ]
+                                text: '日常', link: '/skills/common'
                             },
                             {
-                                text: '安全', link: '#', items: [
-                                    {text: '资产测绘', link: '#'},
-                                ]
+                                text: '安全', link: '/skills/security'
                             },
                             {
-                                text: 'DevOps', link: '#', items: [
-                                    {text: '构建分析', link: '#'},
-                                ]
+                                text: 'DevOps', link: '#'
                             },
                             {
-                                text: 'ITSM', link: '#', items: [
-                                    {text: '智能提单', link: '#'},
-                                ]
+                                text: 'ITSM', link: '#',
                             }
                         ]
                     },
-                    {text: '本地开发', link: '/api-examples'}
+                    {text: '本地开发', link: 'development'},
                 ]
             }
         ],
 
         socialLinks: [
-            {icon: 'github', link: 'https://github.com/vuejs/vitepress'}
+            {icon: 'github', link: 'https://github.com/WeOps-Lab/OpsPilot'}
         ]
     }
 })

@@ -8,8 +8,8 @@ hero:
   tagline: ""
   actions:
     - theme: brand
-      text: 快速开始
-      link: /markdown-examples
+      text: 快速入门
+      link: /quick-start
     - theme: alt
       text: 能力介绍
       link: /api-examples
