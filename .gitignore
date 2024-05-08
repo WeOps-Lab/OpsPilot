@@ -6,6 +6,7 @@ story_graph.dot
 .pytest_cache
 *.pyc
 ops-pilot.tar.gz
+dist
 .env
 .venv
 tensorboard
