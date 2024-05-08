@@ -37,10 +37,13 @@ class ChatService:
         result_data = response.json()
         response_msg = result_data["choices"][0]["message"]["content"]
         if server_settings.enable_llm_source_detail:
-            doc_source = set()
-            for source in response.json()['responseData'][0]['quoteList']:
-                doc_source.add(source['sourceName'])
-            response_msg += '\n知识来源：\n'
-            for index, source in enumerate(doc_source):
-                response_msg += f'{index + 1}: {source}\n'
+            try:
+                doc_source = set()
+                for source in response.json()['responseData'][0]['quoteList']:
+                    doc_source.add(source['sourceName'])
+                response_msg += '\n知识来源：\n'
+                for index, source in enumerate(doc_source):
+                    response_msg += f'{index + 1}: {source}\n'
+            except:
+                pass
         return response_msg
