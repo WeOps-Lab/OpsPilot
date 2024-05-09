@@ -11,8 +11,8 @@ hero:
       text: 快速入门
       link: /quick-start
     - theme: alt
-      text: 能力介绍
-      link: /api-examples
+      text: 能力概览
+      link: /skills/index
 
 features:
   - title: 🎓知识问答
