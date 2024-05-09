@@ -18,6 +18,7 @@ export default defineConfig({
                     {text: '简介', link: '/introduction'},
                     {text: '快速入门', link: '/quick-start'},
                     {text: '系统架构', link: '/architecture'},
+                    {text: '模型下载', link: '/models'},
                     {
                         text: '通道概览', link: '#', items: [
                             {text: '企业微信', link: '/channel/enterprise-wechat'},
@@ -33,10 +34,10 @@ export default defineConfig({
                                 text: '安全', link: '/skills/security'
                             },
                             {
-                                text: 'DevOps', link: '#'
+                                text: 'DevOps', link: '/skills/devops'
                             },
                             {
-                                text: 'ITSM', link: '#',
+                                text: '智能工单', link: '/skills/itsm',
                             }
                         ]
                     },

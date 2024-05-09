@@ -20,6 +20,6 @@ class ActionExternalUtter(Action):
             tracker: Tracker,
             domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
-        content = get_tracker_entity('content')
+        content = get_tracker_entity(tracker, 'content')
         log_info(tracker, f'接收到主动触发回复请求,内容为: {content}')
         dispatcher.utter_message(content)

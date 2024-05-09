@@ -39,11 +39,11 @@ class ActionLLMFallback(Action):
 
         try:
             log_info(tracker, f"用户输入的信息为:{user_msg}")
-            response_msg = self.chat_service.chat(tracker.sender_id, user_msg)
-            dispatcher.utter_message(text=response_msg)
+            if user_msg != '':
+                response_msg = self.chat_service.chat(tracker.sender_id, user_msg)
+                dispatcher.utter_message(text=response_msg)
 
-            log_info(tracker, f"返回的信息为:{response_msg}")
-
+                log_info(tracker, f"返回的信息为:{response_msg}")
             return []
 
         except Exception as e:
