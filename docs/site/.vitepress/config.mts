@@ -5,6 +5,10 @@ export default defineConfig({
     title: "OpsPilot",
     description: "OpsPilot Site",
     themeConfig: {
+        search: {
+            provider: 'local'
+        },
+
         // https://vitepress.dev/reference/default-theme-config
         nav: [
             {text: '首页', link: '/'},
