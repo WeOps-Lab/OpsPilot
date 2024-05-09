@@ -59,3 +59,12 @@ visualize:
 
 celery:
 	celery -A tasks.celery worker --loglevel=INFO
+
+DOC_IMAGE_NAME ?= ops-pilot-doc:latest
+.PHONY: build-doc
+build-doc:
+	cd docs/site && docker build . -t $(DOC_IMAGE_NAME) 
+
+.PHONY: push-doc
+push-doc: build-doc
+	docker push $(DOC_IMAGE_NAME)
