@@ -17,7 +17,7 @@ hero:
 features:
   - title: 🎓知识问答
     details: 通过大模型的技术，提供私域知识问答能力，提供服务台门户的知识问答、IM知识问答、工单智能总结能力
-  - title: 🚀自动化
+  - title: 🚀ChatOps
     details: 通过NLP技术，Rich Component的能力，让运维操作能够在聊天的过程中被完成，提供服务器状态检查、实时安全扫描等能力
   - title: 🌟智能引导
     details: 创新性的结合预测性对话流与大模型，让OpsPilot能够具备对话智能引导能力，引导用户完成智能提单引导、智能故障处置引导等场景
