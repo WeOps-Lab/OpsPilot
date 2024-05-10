@@ -37,3 +37,7 @@ docker-compose up -d
 | SUPABASE_KEY                | Supabase Key                     |                 |
 | SUPABASE_USERNAME           | Supabase用户名                      |                 |
 | SUPABASE_PASSWORD           | Supabase密码                       |                 |
+| SALT_API_URL                | Salt API地址                       |                 |
+| SALT_API_USERNAME           | Salt API用户名                      |                 |
+| SALT_API_PASSWORD           | Salt API密码                       |                 |
+| FASTGPT_AUTOMATION_KEY      | FastGPT服务的Key，用于自动化技能            |                 |

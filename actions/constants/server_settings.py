@@ -40,6 +40,11 @@ class ServerSettings(BaseSettings):
 
     enable_llm_source_detail: bool = False
 
+    salt_api_url: Optional[str] = None
+    salt_api_username: Optional[str] = None
+    salt_api_password: Optional[str] = None
+    fastgpt_automation_key: Optional[str] = None
+
     class Config:
         env_file = ".env"
 

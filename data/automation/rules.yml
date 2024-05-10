@@ -1,0 +1,7 @@
+version: "3.1"
+rules:
+  - rule: 执行Ping检查
+    steps:
+      - intent: salt_ping
+      - action: action_saltstack
+

@@ -1,0 +1,14 @@
+version: "3.1"
+
+nlu:
+  - intent: salt_ping
+    examples: |
+      - 检查所有服务器的网络连接状态
+      - 检查127.0.0.1能不能ping通
+      - 看看192.168.31.1能不能ping
+      - ping一下127.0.0.1
+      - ping 192.16.31.1
+      - ping这台服务器127.0.0.1
+  - intent: salt_cp
+    example: |
+      - 拷贝文件XXX到服务器XXX
