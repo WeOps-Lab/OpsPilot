@@ -30,21 +30,6 @@ OpsPilot支持以ChatBot的形态与Web应用集成，主要提供以下能力�
 
 # 环境变量
 
-| 变量名                         | 说明                               | 默认值                    |
-|-----------------------------|----------------------------------|------------------------|
-| RUN_MODE                    | 运行模式                             | dev                    |
-| CHATGPT_MODEL_MAX_HISTORY   | 对话历史记录最大长度（用于对话总结技能）             | 5                      |
-| CELERY_BROKER_URL           | Celery Broker地址,用于长周期任务技能        |                        |
-| RASA_CREDENTIALS            | Rasa认证配置文件名称，Celery任务会使用         | credentials.yml        |
-| RASA_ACTION_SERVER_URL      | Rasa Action Server地址，Celery任务会使用 | http://localhost:5055/ |
-| FASTGPT_ENDPOINT            | FastGPT服务地址                      |                        |
-| FASTGPT_KEY                 | FastGPT服务的Key，用于LLM回复技能          |                        |
-| FASTGPT_CONTENT_SUMMARY_KEY | FastGPT服务的Key，用于对话总结技能           |                        |
-| ENABLE_JENKINS_SKILL        | 是否启用Jenkins技能                    | false                  |
-| JENKINS_URL                 | Jenkins服务地址                      |                        |
-| JENKINS_USERNAME            | Jenkins用户名                       |                        |
-| JENKINS_PASSWORD            | Jenkins密码                        |                        |
-
 # 讨论群
 
 添加小嘉企微，小嘉拉群里
