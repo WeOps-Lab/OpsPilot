@@ -3,6 +3,8 @@
 setup:
 	pip install pip-tools
 
+
+download-kscan:
 	mkdir -p ./libs/kscan &&\
 	cd ./libs/kscan &&\
 	wget -c "https://github.com/lcvvvv/kscan/releases/download/v1.85/kscan_linux_amd64.zip" &&\
@@ -11,7 +13,6 @@ setup:
 	chmod +x kscan &&\
 	./kscan --download-qqwry &&\
 	rm -Rf kscan_linux_amd64.zip
-
 
 install:
 	pip-compile

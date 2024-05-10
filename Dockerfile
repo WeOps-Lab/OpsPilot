@@ -19,5 +19,4 @@ ADD ./utils ./utils
 ADD ./tasks ./tasks
 ADD ./ops_pilot_cli.py ./ops_pilot_cli.py
 
-
 WORKDIR /apps
