@@ -15,7 +15,7 @@ ADD ./models ./models
 ADD ./credentials.yml ./credentials.yml
 ADD ./endpoints.yml ./endpoints.yml
 ADD ./libs ./libs
-
+ADD ./utils ./utils
 ADD ./ops_pilot_cli.py ./ops_pilot_cli.py
 
 

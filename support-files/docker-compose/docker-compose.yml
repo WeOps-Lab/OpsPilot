@@ -40,7 +40,6 @@ services:
       - celery
       - -A
       - tasks.celery worker
-      - --loglevel=INFO
     volumes:
       - ./conf/endpoints.yml:/apps/endpoints.yml
       - ./conf/credentials.yml:/apps/credentials.yml
