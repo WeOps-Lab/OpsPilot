@@ -44,6 +44,9 @@ export default defineConfig({
                             },
                             {
                                 text: '智能工单', link: '/skills/itsm',
+                            },
+                            {
+                                text: '自动化', link: '/skills/automation',
                             }
                         ]
                     },

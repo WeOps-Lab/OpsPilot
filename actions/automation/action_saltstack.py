@@ -44,7 +44,8 @@ class ActionSaltStack(Action):
 
             dispatcher.utter_message(f"开始执行任务,认为执行完后会通知你哟~")
 
-            start_salt_job.delay(tracker.get_latest_input_channel(), tracker.sender_id, tracker.latest_message['text'], func,
+            start_salt_job.delay(tracker.get_latest_input_channel(), tracker.sender_id, tracker.latest_message['text'],
+                                 func,
                                  tgt, args)
         else:
             dispatcher.utter_message(f"抱歉，我还不知道如何处理这个任务，我会尽快学习的！")
