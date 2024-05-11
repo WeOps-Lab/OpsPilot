@@ -4,8 +4,7 @@
 
 OpsPilot系统架构如下图所示：
 
-![arch-overview.png](https://static.cwoa.net/ce13f1df99db425c8092799470066c84.png)
-
+![技术架构-1.1.png](https://static.cwoa.net/3cd6f7273852461fb33ce56a165ccf7b.png)
 ## 集成架构
 
 OpsPilot集成架构如下图所示：
