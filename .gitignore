@@ -27,4 +27,4 @@ endpoints-dev.yml
 celerydb.sqlite
 tmp
 models/*
-OAI_CONFIG_LIST.json
+OAI_CONFIG_LIST
