@@ -157,3 +157,14 @@ CREATE POLICY "允许ops-pilot管理员访问所有数据"
         jwt_has_permission('ops-pilot.admin')
     );
 
+
+ALTER TABLE events ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "允许ops-pilot管理员访问所有数据"
+    ON events
+    FOR ALL
+    USING (
+        jwt_has_permission('ops-pilot.admin')
+    )
+    WITH CHECK (
+        jwt_has_permission('ops-pilot.admin')
+    );

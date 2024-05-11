@@ -30,7 +30,7 @@ run:
 	#SANIC_WORKERS=5 ACTION_SERVER_SANIC_WORKERS=5 --debug
 
 dev:
-	RASA_TELEMETRY_ENABLED=false rasa run --enable-api --cors "*" --endpoints ./endpoints.yml --credentials ./credentials-dev.yml
+	RASA_TELEMETRY_ENABLED=false rasa run --enable-api --cors "*" --endpoints ./endpoints-dev.yml --credentials ./credentials-dev.yml
 
 shell:
 	rasa shell
