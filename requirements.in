@@ -1,5 +1,5 @@
 supabase==2.4.5
-rasa==3.6.19
+rasa==3.6.20
 jieba==0.42.1
 python-dotenv==1.0.1
 transformers==4.39.3
