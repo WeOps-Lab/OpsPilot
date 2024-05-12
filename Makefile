@@ -3,7 +3,6 @@
 setup:
 	pip install pip-tools
 
-
 download-kscan:
 	mkdir -p ./libs/kscan &&\
 	cd ./libs/kscan &&\
