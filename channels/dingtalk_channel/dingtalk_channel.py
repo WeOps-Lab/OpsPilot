@@ -4,7 +4,6 @@ import threading
 from threading import Thread
 from typing import Text, Optional, Dict, Any, Callable, Awaitable
 
-from loguru import logger
 from rasa.core.channels import InputChannel, CollectingOutputChannel, UserMessage
 from sanic import Blueprint, Request, HTTPResponse, response
 

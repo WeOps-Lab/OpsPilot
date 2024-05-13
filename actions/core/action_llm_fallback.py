@@ -7,7 +7,6 @@ from rasa_sdk.executor import CollectingDispatcher
 from actions.constants.server_settings import server_settings
 from actions.services.chat_service import ChatService
 from utils.core_logger import log_info, log_error
-from utils.rasa_utils import load_chat_history
 
 
 class ActionLLMFallback(Action):
@@ -28,17 +27,11 @@ class ActionLLMFallback(Action):
             log_info(tracker, f"当前处于[{tracker.active_loop_name}]循环中,不执行Fallback操作")
             return []
 
-        run_mode = server_settings.run_mode
         user_msg = tracker.latest_message["text"]
-
-        if run_mode == "dev":
-            log_info(tracker, f"用户输入的信息为:{user_msg},当前运行在开发模式,不对内容进行回复")
-
-            dispatcher.utter_message(text="OpsPilot当前运行在开发模式,不对内容进行回复")
-            return [UserUtteranceReverted()]
 
         try:
             log_info(tracker, f"用户输入的信息为:{user_msg}")
+
             if user_msg != '':
                 response_msg = self.chat_service.chat(tracker.sender_id, user_msg)
                 dispatcher.utter_message(text=response_msg)
