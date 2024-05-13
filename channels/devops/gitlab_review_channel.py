@@ -79,6 +79,7 @@ class GitlabReviewChannel(InputChannel):
             diffs = [change["diff"] for change in mr_changes["changes"]]
             diffs = "\n".join(diffs)
             review_msg = self.chat_service.chat('reviewer', self.prompt + diffs)
+            review_msg = f'@{payload["user_username"]}:' + review_msg
             logger.info(f'审核结果：{review_msg}')
             comment_url = f"{self.gitlab_url}/projects/{project_id}/merge_requests/{mr_id}/notes"
             comment_payload = {"body": review_msg}
@@ -95,6 +96,7 @@ class GitlabReviewChannel(InputChannel):
             changes = rs.json()
             changes_string = ''.join([str(change) for change in changes])
             answer = self.chat_service.chat('reviewer', self.prompt + changes_string)
+            answer = f'@{payload["user_username"]}:' + answer
             logger.info(f'审核结果：{answer}')
 
             comment_url = f"{self.gitlab_url}/projects/{project_id}/repository/commits/{commit_id}/comments"
