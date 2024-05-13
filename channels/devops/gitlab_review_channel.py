@@ -21,6 +21,7 @@ class GitlabReviewChannel(InputChannel):
         self.fastgpt_key = fastgpt_key
         self.gitlab_url = gitlab_url
         self.chat_service = ChatService(fastgpt_url, fastgpt_key)
+        logger.info("GitlabReviewChannel initialized")
 
     @classmethod
     def from_credentials(cls, credentials: Optional[Dict[Text, Any]]) -> "InputChannel":
@@ -43,8 +44,10 @@ class GitlabReviewChannel(InputChannel):
         @hook.route("/", methods=["GET"])
         async def index(request: Request) -> HTTPResponse:
             if request.headers.get('X-Gitlab-Token') == self.token:
+                logger.info("Token verification successful")
                 return response.json({"status": "ok"}, status=200)
             else:
+                logger.warning("Token verification failed")
                 return response.json({"status": "error"}, status=401)
 
         def handle_merge_request(payload):
@@ -65,6 +68,7 @@ class GitlabReviewChannel(InputChannel):
             comment_url = f"{self.gitlab_url}/projects/{project_id}/merge_requests/{mr_id}/notes"
             comment_payload = {"body": review_msg}
             comment_response = requests.post(comment_url, headers=headers, json=comment_payload)
+            logger.info(f"Posted review message for merge request {mr_id}")
 
         def handle_push(payload):
             project_id = payload["project_id"]
@@ -79,6 +83,7 @@ class GitlabReviewChannel(InputChannel):
             comment_url = f"{self.gitlab_url}/projects/{project_id}/repository/commits/{commit_id}/comments"
             comment_payload = {"note": answer}
             comment_response = requests.post(comment_url, headers=headers, json=comment_payload)
+            logger.info(f"Posted comment for commit {commit_id}")
 
         def handle_request(payload):
             if payload.get("object_kind") == "merge_request":
@@ -90,9 +95,11 @@ class GitlabReviewChannel(InputChannel):
         async def receive(request: Request) -> HTTPResponse:
             verify_token = request.headers.get('X-Gitlab-Token')
             if verify_token != self.token:
+                logger.warning("Token verification failed")
                 return response.json({"status": "error"}, status=401)
             payload = request.json
             threading.Thread(target=handle_request, args=(payload,)).start()
+            logger.info("Received webhook, started new thread to handle request")
             return response.json({"status": "ok"}, status=200)
 
         return hook
