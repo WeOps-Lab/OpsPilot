@@ -61,6 +61,7 @@ class GitlabReviewChannel(InputChannel):
             mr_id = payload["object_attributes"]["iid"]
             changes_url = f"{self.gitlab_url}/projects/{project_id}/merge_requests/{mr_id}/changes"
 
+            logger.info(f'开始审核merge request: {mr_id}')
             headers = {"Private-Token": self.gitlab_token}
             rs = requests.get(changes_url, headers=headers)
             mr_changes = rs.json()
@@ -68,10 +69,12 @@ class GitlabReviewChannel(InputChannel):
             diffs = "\n".join(diffs)
             review_msg = self.chat_service.chat(str(uuid.uuid4()), diffs)
             review_msg = f'@{payload["user_username"]}:' + review_msg
-            logger.info(f'审核结果：{review_msg}')
+            logger.info(f'[{mr_id}]审核结果：{review_msg}')
+
             comment_url = f"{self.gitlab_url}/projects/{project_id}/merge_requests/{mr_id}/notes"
             comment_payload = {"body": review_msg}
             comment_response = requests.post(comment_url, headers=headers, json=comment_payload)
+            comment_response.raise_for_status()
             logger.info(f"Posted review message for merge request {mr_id}")
 
         def handle_push(payload):
@@ -79,17 +82,19 @@ class GitlabReviewChannel(InputChannel):
             commit_id = payload["after"]
             commit_url = f"{self.gitlab_url}/projects/{project_id}/repository/commits/{commit_id}/diff"
 
+            logger.info(f'开始审核commit: {commit_id}')
             headers = {"Private-Token": self.gitlab_token}
             rs = requests.get(commit_url, headers=headers)
             changes = rs.json()
             changes_string = ''.join([str(change) for change in changes])
             answer = self.chat_service.chat(str(uuid.uuid4()), changes_string)
             answer = f'@{payload["user_username"]}:' + answer
-            logger.info(f'审核结果：{answer}')
+            logger.info(f'[{commit_id}]审核结果：{answer}')
 
             comment_url = f"{self.gitlab_url}/projects/{project_id}/repository/commits/{commit_id}/comments"
             comment_payload = {"note": answer}
             comment_response = requests.post(comment_url, headers=headers, json=comment_payload)
+            comment_response.raise_for_status()
             logger.info(f"Posted comment for commit {commit_id}")
 
         def handle_request(payload):
