@@ -2,7 +2,8 @@ import inspect
 import threading
 import uuid
 from typing import Text, Optional, Dict, Any, Callable, Awaitable
-
+from urllib.parse import quote
+import tiktoken
 import requests
 from loguru import logger
 from rasa.core.channels import InputChannel, UserMessage
@@ -52,6 +53,11 @@ class GitlabReviewChannel(InputChannel):
                 logger.warning("Token verification failed")
                 return response.json({"status": "error"}, status=401)
 
+        def num_tokens_from_string(string: str) -> int:
+            encoding = tiktoken.get_encoding('cl100k_base')
+            num_tokens = len(encoding.encode(string))
+            return num_tokens
+
         def handle_merge_request(payload):
             if payload["object_attributes"]["action"] != "open":
                 logger.info("Merge request is not open, skipping")
@@ -61,21 +67,44 @@ class GitlabReviewChannel(InputChannel):
             mr_id = payload["object_attributes"]["iid"]
             changes_url = f"{self.gitlab_url}/projects/{project_id}/merge_requests/{mr_id}/changes"
 
-            logger.info(f'开始审核merge request: {mr_id}')
+            logger.info(f'Starting to review merge request: {mr_id}')
             headers = {"Private-Token": self.gitlab_token}
             rs = requests.get(changes_url, headers=headers)
             mr_changes = rs.json()
-            diffs = [change["diff"] for change in mr_changes["changes"]]
-            diffs = "\n".join(diffs)
-            review_msg = self.chat_service.chat(str(uuid.uuid4()), diffs)
+
+            changed_files = []
+            for change in mr_changes["changes"]:
+                if "new_path" in change:  # Use old_path if you want the version before the changes.
+                    file_path = change["new_path"]
+                    file_content = get_file_content(project_id, file_path,
+                                                    payload["object_attributes"]["last_commit"]["id"])
+                    changed_files.append({"file_path": file_path, "content": file_content, "diff": change["diff"]})
+
+            changes_string = '\n'.join(
+                [f"File: {file['file_path']}\n---\n{file['content']}\n--\nCommit Diff:\n{file['diff']}" for file in
+                 changed_files])
+
+            if num_tokens_from_string(changes_string) > 30000:
+                logger.warning(f'[{mr_id}] The content of the file is too long to review.')
+                return f'[{mr_id}] The content of the file is too long to review.'
+
+            review_msg = self.chat_service.chat(str(uuid.uuid4()), changes_string)
             review_msg = f'@{payload["user_username"]}:' + review_msg
-            logger.info(f'[{mr_id}]审核结果：{review_msg}')
+            logger.info(f'[{mr_id}]Review result：{review_msg}')
 
             comment_url = f"{self.gitlab_url}/projects/{project_id}/merge_requests/{mr_id}/notes"
             comment_payload = {"body": review_msg}
             comment_response = requests.post(comment_url, headers=headers, json=comment_payload)
             comment_response.raise_for_status()
             logger.info(f"Posted review message for merge request {mr_id}")
+            return review_msg
+
+        def get_file_content(project_id, file_path, commit_id):
+            quoted_file_path = quote(file_path, safe='')
+            file_url = f"{self.gitlab_url}/projects/{project_id}/repository/files/{quoted_file_path}/raw?ref={commit_id}"
+            headers = {"Private-Token": self.gitlab_token}
+            rs = requests.get(file_url, headers=headers)
+            return rs.text
 
         def handle_push(payload):
             project_id = payload["project_id"]
@@ -86,7 +115,20 @@ class GitlabReviewChannel(InputChannel):
             headers = {"Private-Token": self.gitlab_token}
             rs = requests.get(commit_url, headers=headers)
             changes = rs.json()
-            changes_string = ''.join([str(change) for change in changes])
+
+            changed_files = []
+            for change in changes:
+                if "new_path" in change:  # Use old_path if you want the version before the changes.
+                    file_path = change["new_path"]
+                    file_content = get_file_content(project_id, file_path, commit_id)
+                    changed_files.append({"file_path": file_path, "content": file_content, "diff": change["diff"]})
+            changes_string = '\n'.join(
+                [f"File: {file['file_path']}\n---\n{file['content']}\n--\nCommit Diff:\n{file['diff']}" for file in
+                 changed_files])
+            if num_tokens_from_string(changes_string) >= 30000:
+                logger.warning(f'[{commit_id}]文件内容过长，不进行审核')
+                return f'[{commit_id}]文件内容过长，不进行审核'
+
             answer = self.chat_service.chat(str(uuid.uuid4()), changes_string)
             answer = f'@{payload["user_username"]}:' + answer
             logger.info(f'[{commit_id}]审核结果：{answer}')
@@ -96,12 +138,14 @@ class GitlabReviewChannel(InputChannel):
             comment_response = requests.post(comment_url, headers=headers, json=comment_payload)
             comment_response.raise_for_status()
             logger.info(f"Posted comment for commit {commit_id}")
+            return answer
 
         def handle_request(payload):
             if payload.get("object_kind") == "merge_request":
-                handle_merge_request(payload)
+                content = handle_merge_request(payload)
             elif payload.get("object_kind") == "push":
-                handle_push(payload)
+                content = handle_push(payload)
+            requests.post('http://localhost:5055/webhooks/notification_bot_channel', json={"content": content})
 
         @hook.route("/webhook", methods=["POST"])
         async def receive(request: Request) -> HTTPResponse:

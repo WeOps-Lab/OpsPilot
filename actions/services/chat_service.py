@@ -30,7 +30,7 @@ class ChatService:
             self.app_url + '/api/v1/chat/completions',
             headers=headers,
             data=json.dumps(data),
-            verify=False
+            # verify=False
         )
         response.raise_for_status()
 
