@@ -1,4 +1,5 @@
 import inspect
+import json
 import threading
 import uuid
 from typing import Text, Optional, Dict, Any, Callable, Awaitable
@@ -151,8 +152,10 @@ class GitlabReviewChannel(InputChannel):
                 content = f'Reivew失败: {str(e)}'
 
             # TODO:临时用着..
+            headers = {"Content-Type": "application/json"}
             requests.post(f'http://localhost:5005/webhooks/notification_bot_channel?secret_token={self.secret_token}',
-                          json={"content": content})
+                          headers=headers,
+                          data=json.dumps({"content": content}))
 
         @hook.route("/webhook", methods=["POST"])
         async def receive(request: Request) -> HTTPResponse:
