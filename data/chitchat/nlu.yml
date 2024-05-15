@@ -11,6 +11,7 @@ nlu:
       - 你有什么特长
       - help
       - 帮助
+      
 
   - intent: chitchat/hi
     examples: |

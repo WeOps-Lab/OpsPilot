@@ -153,9 +153,13 @@ class GitlabReviewChannel(InputChannel):
 
             # TODO:临时用着..
             headers = {"Content-Type": "application/json"}
+
+            # TODO: 临时用着，不应该在这里写切字符串的逻辑
             requests.post(f'http://localhost:5005/webhooks/notification_bot_channel?secret_token={self.secret_token}',
                           headers=headers,
-                          data=json.dumps({"content": content}))
+                          data=json.dumps({
+                              "content": f'@{payload["user_name"].split("[")[0]} {content}'
+                          }))
 
         @hook.route("/webhook", methods=["POST"])
         async def receive(request: Request) -> HTTPResponse:
