@@ -30,7 +30,7 @@ class NotificationBotChannel(InputChannel):
             self, on_new_message: Callable[[UserMessage], Awaitable[None]]
     ) -> Blueprint:
         webhook = Blueprint(
-            "enterprise_wechat_jenkins_notification{}".format(type(self).__name__),
+            "notification_bot_channel{}".format(type(self).__name__),
             inspect.getmodule(self).__name__,
         )
 
@@ -43,7 +43,7 @@ class NotificationBotChannel(InputChannel):
             if request.args.get('secret_token') != self.secret_token:
                 return response.json({"status": "error"}, status=401)
 
-            body = request.load_json()
+            body = request.json
             content = body.get("content")
             EnterpriseWechatBotUtils.send_wechat_notification(self.enterprise_bot_url, content)
             return response.json({"status": "ok"})

@@ -16,14 +16,14 @@ class GitlabReviewChannel(InputChannel):
     def name(self) -> Text:
         return "gitlab_review_channel"
 
-    def __init__(self, token, gitlab_token, fastgpt_url, fastgpt_key, gitlab_url) -> None:
+    def __init__(self, token, gitlab_token, fastgpt_url, fastgpt_key, gitlab_url, secret_token) -> None:
         super().__init__()
         self.token = token
         self.gitlab_token = gitlab_token
         self.fastgpt_key = fastgpt_key
         self.gitlab_url = gitlab_url
         self.chat_service = ChatService(fastgpt_url, fastgpt_key)
-
+        self.secret_token = secret_token
         logger.info("GitlabReviewChannel initialized")
 
     @classmethod
@@ -33,7 +33,8 @@ class GitlabReviewChannel(InputChannel):
             credentials.get("gitlab_token"),
             credentials.get("fastgpt_url"),
             credentials.get("fastgpt_key"),
-            credentials.get('gitlab_url')
+            credentials.get('gitlab_url'),
+            credentials.get('secret_token')
         )
 
     def blueprint(
@@ -141,11 +142,17 @@ class GitlabReviewChannel(InputChannel):
             return answer
 
         def handle_request(payload):
-            if payload.get("object_kind") == "merge_request":
-                content = handle_merge_request(payload)
-            elif payload.get("object_kind") == "push":
-                content = handle_push(payload)
-            requests.post('http://localhost:5055/webhooks/notification_bot_channel', json={"content": content})
+            try:
+                if payload.get("object_kind") == "merge_request":
+                    content = handle_merge_request(payload)
+                elif payload.get("object_kind") == "push":
+                    content = handle_push(payload)
+            except Exception as e:
+                content = f'Reivew失败: {str(e)}'
+
+            # TODO:临时用着..
+            requests.post(f'http://localhost:5005/webhooks/notification_bot_channel?secret_token={self.secret_token}',
+                          json={"content": content})
 
         @hook.route("/webhook", methods=["POST"])
         async def receive(request: Request) -> HTTPResponse:
