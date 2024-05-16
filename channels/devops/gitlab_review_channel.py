@@ -114,7 +114,7 @@ class GitlabReviewChannel(InputChannel):
             quoted_file_path = quote(file_path, safe='')
             file_url = f"{self.gitlab_url}/projects/{project_id}/repository/files/{quoted_file_path}/raw?ref={commit_id}"
             headers = {"Private-Token": self.gitlab_token}
-            rs = requests.get(file_url, headers=headers, verify=False)
+            rs = requests.get(file_url, headers=headers)
             return rs.text
 
         def handle_push(payload):
@@ -124,7 +124,7 @@ class GitlabReviewChannel(InputChannel):
 
             logger.info(f'开始审核commit: {commit_id}')
             headers = {"Private-Token": self.gitlab_token}
-            rs = requests.get(commit_url, headers=headers, verify=False)
+            rs = requests.get(commit_url, headers=headers)
             changes = rs.json()
 
             changed_files = []
