@@ -12,4 +12,4 @@ loguru==0.7.2
 ipython==8.8.0
 azure-cognitiveservices-vision-computervision==0.9.0
 pandas==2.2.2
-tiktoken
+tiktoken==0.7.0
