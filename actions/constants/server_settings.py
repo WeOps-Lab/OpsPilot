@@ -45,6 +45,11 @@ class ServerSettings(BaseSettings):
     salt_api_password: Optional[str] = None
     fastgpt_automation_key: Optional[str] = None
 
+    rabbitmq_host: Optional[str] = None
+    rabbitmq_port: Optional[int] = None
+    rabbitmq_username: Optional[str] = None
+    rabbitmq_password: Optional[str] = None
+
     class Config:
         env_file = ".env"
 

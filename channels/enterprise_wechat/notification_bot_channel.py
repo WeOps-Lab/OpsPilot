@@ -2,11 +2,13 @@ import inspect
 from http.client import HTTPResponse
 from typing import Text, Optional, Dict, Any, Callable, Awaitable
 
+from loguru import logger
 from rasa.core.channels import InputChannel, UserMessage
 from requests import Request
 from sanic import Blueprint, response
 
 from utils.enterprise_wechat_bot_utils import EnterpriseWechatBotUtils
+from utils.eventbus import EventBus
 
 
 class NotificationBotChannel(InputChannel):
@@ -18,6 +20,14 @@ class NotificationBotChannel(InputChannel):
 
         self.enterprise_bot_url = enterprise_bot_url
         self.secret_token = secret_token
+        self.event_bus = EventBus()
+        self.event_bus.consume('enterprise_wechat_bot_channel', self.recieve_event)
+        logger.info('NotificationBotChannel init success')
+
+    def recieve_event(self, event):
+        if 'notification_content' in event:
+            logger.info(f'NotificationBotChannel recieve event: {event}')
+            EnterpriseWechatBotUtils.send_wechat_notification(self.enterprise_bot_url, event['notification_content'])
 
     @classmethod
     def from_credentials(cls, credentials: Optional[Dict[Text, Any]]) -> "InputChannel":

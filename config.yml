@@ -25,7 +25,7 @@ pipeline:
     max_ngram: 4
 
   - name: DIETClassifier
-    epochs: 500
+    epochs: 300
     constrain_similarities: true
     evaluate_on_number_of_examples: 0
     evaluate_every_number_of_epochs: 100

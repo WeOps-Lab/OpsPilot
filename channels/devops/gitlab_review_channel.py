@@ -1,5 +1,6 @@
 import inspect
 import json
+import re
 import threading
 import uuid
 from typing import Text, Optional, Dict, Any, Callable, Awaitable
@@ -11,6 +12,7 @@ from rasa.core.channels import InputChannel, UserMessage
 from sanic import Blueprint, Request, HTTPResponse, response
 
 from actions.services.chat_service import ChatService
+from utils.eventbus import EventBus
 
 
 class GitlabReviewChannel(InputChannel):
@@ -24,7 +26,7 @@ class GitlabReviewChannel(InputChannel):
         self.fastgpt_key = fastgpt_key
         self.gitlab_url = gitlab_url
         self.chat_service = ChatService(fastgpt_url, fastgpt_key)
-        self.secret_token = secret_token
+        self.event_bus = EventBus()
         logger.info("GitlabReviewChannel initialized")
 
     @classmethod
@@ -60,6 +62,12 @@ class GitlabReviewChannel(InputChannel):
             num_tokens = len(encoding.encode(string))
             return num_tokens
 
+        def filter_diff_content(diff_content):
+            filtered_content = re.sub(r'(^-.*\n)', '', diff_content, flags=re.MULTILINE)
+            processed_code = '\n'.join(
+                [line[1:] if line.startswith('+') else line for line in filtered_content.split('\n')])
+            return processed_code
+
         def handle_merge_request(payload):
             if payload["object_attributes"]["action"] != "open":
                 logger.info("Merge request is not open, skipping")
@@ -80,10 +88,11 @@ class GitlabReviewChannel(InputChannel):
                     file_path = change["new_path"]
                     file_content = get_file_content(project_id, file_path,
                                                     payload["object_attributes"]["last_commit"]["id"])
-                    changed_files.append({"file_path": file_path, "content": file_content, "diff": change["diff"]})
+                    changed_files.append(
+                        {"file_path": file_path, "content": file_content, "diff": filter_diff_content(change["diff"])})
 
             changes_string = '\n'.join(
-                [f"File: {file['file_path']}\n---\n{file['content']}\n--\nCommit Diff:\n{file['diff']}" for file in
+                [f"完整代码: {file['file_path']}\n---\n{file['content']}\n--\n变更部分:\n{file['diff']}" for file in
                  changed_files])
 
             if num_tokens_from_string(changes_string) > 30000:
@@ -105,7 +114,7 @@ class GitlabReviewChannel(InputChannel):
             quoted_file_path = quote(file_path, safe='')
             file_url = f"{self.gitlab_url}/projects/{project_id}/repository/files/{quoted_file_path}/raw?ref={commit_id}"
             headers = {"Private-Token": self.gitlab_token}
-            rs = requests.get(file_url, headers=headers)
+            rs = requests.get(file_url, headers=headers, verify=False)
             return rs.text
 
         def handle_push(payload):
@@ -115,7 +124,7 @@ class GitlabReviewChannel(InputChannel):
 
             logger.info(f'开始审核commit: {commit_id}')
             headers = {"Private-Token": self.gitlab_token}
-            rs = requests.get(commit_url, headers=headers)
+            rs = requests.get(commit_url, headers=headers, verify=False)
             changes = rs.json()
 
             changed_files = []
@@ -123,9 +132,10 @@ class GitlabReviewChannel(InputChannel):
                 if "new_path" in change:  # Use old_path if you want the version before the changes.
                     file_path = change["new_path"]
                     file_content = get_file_content(project_id, file_path, commit_id)
-                    changed_files.append({"file_path": file_path, "content": file_content, "diff": change["diff"]})
+                    changed_files.append(
+                        {"file_path": file_path, "content": file_content, "diff": filter_diff_content(change["diff"])})
             changes_string = '\n'.join(
-                [f"File: {file['file_path']}\n---\n{file['content']}\n--\nCommit Diff:\n{file['diff']}" for file in
+                [f"完整代码: {file['file_path']}\n---\n{file['content']}\n--\n 变更部分 :\n{file['diff']}" for file in
                  changed_files])
             if num_tokens_from_string(changes_string) >= 30000:
                 logger.warning(f'[{commit_id}]文件内容过长，不进行审核')
@@ -150,16 +160,8 @@ class GitlabReviewChannel(InputChannel):
                     content = handle_push(payload)
             except Exception as e:
                 content = f'Reivew失败: {str(e)}'
-
-            # TODO:临时用着..
-            headers = {"Content-Type": "application/json"}
-
-            # TODO: 临时用着，不应该在这里写切字符串的逻辑
-            requests.post(f'http://localhost:5005/webhooks/notification_bot_channel?secret_token={self.secret_token}',
-                          headers=headers,
-                          data=json.dumps({
-                              "content": f'@{payload["user_name"].split("[")[0]} {content}'
-                          }))
+            self.event_bus.publish(
+                json.dumps({"notification_content": f'@{payload["user_name"].split("[")[0]} {content}'}))
 
         @hook.route("/webhook", methods=["POST"])
         async def receive(request: Request) -> HTTPResponse:
