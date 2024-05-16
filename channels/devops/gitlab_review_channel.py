@@ -124,7 +124,7 @@ class GitlabReviewChannel(InputChannel):
 
             logger.info(f'开始审核commit: {commit_id}')
             headers = {"Private-Token": self.gitlab_token}
-            rs = requests.get(commit_url, headers=headers)
+            rs = requests.get(commit_url, headers=headers, )
             changes = rs.json()
 
             changed_files = []
@@ -161,7 +161,7 @@ class GitlabReviewChannel(InputChannel):
             except Exception as e:
                 content = f'Reivew失败: {str(e)}'
             self.event_bus.publish(
-                json.dumps({"notification_content": f'@{payload["user_name"].split("[")[0]} {content}'}))
+                json.dumps({"notification_content": f'@{payload["user_username"].split("[")[0]} {content}'}))
 
         @hook.route("/webhook", methods=["POST"])
         async def receive(request: Request) -> HTTPResponse:
