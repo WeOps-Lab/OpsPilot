@@ -22,7 +22,7 @@ class NotificationBotChannel(InputChannel):
         self.secret_token = secret_token
         self.event_bus = EventBus()
         self.event_bus.consume('enterprise_wechat_bot_channel', self.recieve_event)
-        self.exclude_events = self.exclude_events.split(',')
+        self.exclude_events = exclude_events
         logger.info('NotificationBotChannel init success')
 
     def recieve_event(self, event):
