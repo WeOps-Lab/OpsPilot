@@ -34,7 +34,8 @@ class NotificationBotChannel(InputChannel):
     def from_credentials(cls, credentials: Optional[Dict[Text, Any]]) -> "InputChannel":
         return cls(
             credentials.get("enterprise_bot_url"),
-            credentials.get("secret_token")
+            credentials.get("secret_token"),
+            credentials.get("exclude_events")
         )
 
     def blueprint(
