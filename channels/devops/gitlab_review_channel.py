@@ -12,7 +12,7 @@ from rasa.core.channels import InputChannel, UserMessage
 from sanic import Blueprint, Request, HTTPResponse, response
 
 from actions.services.chat_service import ChatService
-from utils.eventbus import EventBus
+from utils.eventbus import EventBus, CODE_REVIEW_EVENT
 
 
 class GitlabReviewChannel(InputChannel):
@@ -161,7 +161,10 @@ class GitlabReviewChannel(InputChannel):
             except Exception as e:
                 content = f'Reivew失败: {str(e)}'
             self.event_bus.publish(
-                json.dumps({"notification_content": f'@{payload["user_username"].split("[")[0]} {content}'}))
+                json.dumps({
+                    "notification_content": f'@{payload["user_username"].split("[")[0]} {content}',
+                    "event_type": CODE_REVIEW_EVENT
+                }))
 
         @hook.route("/webhook", methods=["POST"])
         async def receive(request: Request) -> HTTPResponse:

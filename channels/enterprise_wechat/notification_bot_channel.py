@@ -8,24 +8,25 @@ from requests import Request
 from sanic import Blueprint, response
 
 from utils.enterprise_wechat_bot_utils import EnterpriseWechatBotUtils
-from utils.eventbus import EventBus
+from utils.eventbus import EventBus, CODE_REVIEW_EVENT
 
 
 class NotificationBotChannel(InputChannel):
     def name(self) -> Text:
         return "notification_bot_channel"
 
-    def __init__(self, enterprise_bot_url, secret_token) -> None:
+    def __init__(self, enterprise_bot_url, secret_token, exclude_events) -> None:
         super().__init__()
 
         self.enterprise_bot_url = enterprise_bot_url
         self.secret_token = secret_token
         self.event_bus = EventBus()
         self.event_bus.consume('enterprise_wechat_bot_channel', self.recieve_event)
+        self.exclude_events = self.exclude_events
         logger.info('NotificationBotChannel init success')
 
     def recieve_event(self, event):
-        if 'notification_content' in event:
+        if event['event_type'] == CODE_REVIEW_EVENT:
             logger.info(f'NotificationBotChannel recieve event: {event}')
             EnterpriseWechatBotUtils.send_wechat_notification(self.enterprise_bot_url, event['notification_content'])
 

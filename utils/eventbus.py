@@ -6,6 +6,8 @@ from loguru import logger
 
 from actions.constants.server_settings import server_settings
 
+CODE_REVIEW_EVENT = "code_review_event"
+
 
 class EventBus:
     def publish(self, messages):
