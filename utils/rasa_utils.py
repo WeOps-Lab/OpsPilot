@@ -35,7 +35,7 @@ class RasaUtils:
                     tiktoken.get_encoding('cl100k_base').encode(conversation_history)) >= limit_token:
                 break
 
-            conversation_history += f"{event['text']}\n"
+            conversation_history += f"{'ai:' if event.get('event')=='bot' else 'user:'} {event['text']}\n"
         return conversation_history
 
     @staticmethod
