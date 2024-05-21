@@ -21,4 +21,4 @@ class ServerSettings(BaseSettings):
 
 
 server_settings = ServerSettings()
-server_settings.prompt = yaml.load(open('prompt.yaml', 'r', encoding='utf-8'))
+server_settings.prompt = yaml.safe_load(open('prompt.yaml', 'r', encoding='utf-8'))
