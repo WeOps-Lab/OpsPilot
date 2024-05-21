@@ -1,0 +1,11 @@
+venv
+.venv
+.idea
+.vscode
+requirements.txt
+.env
+cache
+models/*
+tracker.db
+tensorboard
+__pycache__

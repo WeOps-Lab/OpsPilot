@@ -1,0 +1,17 @@
+version: "3.1"
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
+
+intents:
+  - out_of_scope
+  - EXTERNAL_UTTER
+  - chitchat
+
+actions:
+  - action_llm_fallback
+  - action_external_utter
+
+entities:
+  - content

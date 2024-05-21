@@ -1,0 +1,35 @@
+version: '3.3'
+services:
+  opspilot-server:
+    image: ccr.ccs.tencentyun.com/megalab/ops-pilot
+    restart: always
+    command:
+      - rasa
+      - run
+      - --enable-api
+      - --cors
+      - "*"
+      - --endpoints
+      - ./endpoints.yml
+      - --credentials
+      - ./credentials.yml
+    ports:
+      - 5005:5005
+    volumes:
+      - ./conf/endpoints.yml:/apps/endpoints.yml
+      - ./conf/credentials.yml:/apps/credentials.yml
+    env_file:
+      - .env
+  opspilot-action-server:
+    image: ccr.ccs.tencentyun.com/megalab/ops-pilot
+    restart: always
+    volumes:
+      - ./conf/endpoints.yml:/apps/endpoints.yml
+      - ./conf/credentials.yml:/apps/credentials.yml
+    command:
+      - rasa
+      - run
+      - actions
+      - --auto-reload
+    env_file:
+      - .env
