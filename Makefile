@@ -33,3 +33,12 @@ finetune:
 
 visualize:
 	rasa visualize -d ./configs/bert/data
+
+DOC_IMAGE_NAME ?= ops-pilot-doc:latest
+.PHONY: build-doc
+build-doc:
+	cd docs/site && docker build . -t $(DOC_IMAGE_NAME)
+
+.PHONY: push-doc
+push-doc: build-doc
+	docker push $(DOC_IMAGE_NAME)
