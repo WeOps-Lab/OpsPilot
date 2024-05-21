@@ -31,7 +31,7 @@ class ActionLLMFallback(Action):
         user_msg = RasaUtils.load_chat_history(tracker, server_settings.chatgpt_model_max_history)
 
         try:
-            RasaUtils.log_info(tracker, f"用户输入的信息为:{user_msg}")
+            RasaUtils.log_info(tracker, f"用户输入的信息为:{tracker.latest_message['text']}")
 
             if user_msg != '':
                 response_msg = self.llm_driver.chat(user_msg)
@@ -41,6 +41,6 @@ class ActionLLMFallback(Action):
             return []
 
         except Exception as e:
-            RasaUtils.log_error(tracker, f"请求服务异常:{e}")
+            RasaUtils.log_error(tracker, f"请求服务异常:{e},用户输入的信息为:{user_msg}")
             dispatcher.utter_message(text="OpsPilot服务异常，请稍后重试")
             return [UserUtteranceReverted()]
