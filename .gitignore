@@ -10,4 +10,5 @@ tracker.db
 tensorboard
 __pycache__
 endpoints-prod.yml
+.rasa
 credentials-prod.yml

@@ -7,7 +7,6 @@ session_config:
 intents:
   - out_of_scope
   - EXTERNAL_UTTER
-  - chitchat
 
 actions:
   - action_llm_fallback

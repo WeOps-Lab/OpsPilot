@@ -3,7 +3,7 @@ install:
     pip-sync -v
 
 train-bert:
-    NUMEXPR_MAX_THREADS=16 rasa train --domain ./configs/bert/data --data ./configs/bert/data -c ./configs/bert/config.yml --fixed-model-name ops-pilot
+    NUMEXPR_MAX_THREADS=16 rasa train --domain ./configs/basic/data --data ./configs/basic/data -c ./configs/basic/config.yml --fixed-model-name ops-pilot
 
 run:
     RASA_TELEMETRY_ENABLED=false rasa run --enable-api --cors "*" --endpoints ./configs/endpoints.yml --credentials ./configs/credentials.yml

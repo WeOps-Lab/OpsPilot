@@ -14,8 +14,3 @@ rules:
     steps:
       - intent: out_of_scope
       - action: action_llm_fallback
-
-  - rule: chitchat
-    steps:
-      - intent: chitchat
-      - action: utter_chitchat
