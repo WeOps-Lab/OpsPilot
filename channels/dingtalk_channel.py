@@ -70,12 +70,14 @@ class DingTalkChannel(InputChannel):
             self.event_bus = EventBus()
             self.event_bus.consume('enterprise_wechat_bot_channel', self.recieve_event)
 
+        logger.info('钉钉机器人通道已启动')
+
     @classmethod
     def from_credentials(cls, credentials: Optional[Dict[Text, Any]]) -> "InputChannel":
         return cls(
             credentials.get("client_id"),
             credentials.get("client_secret"),
-            credentials.get("enable_eventbus", False)
+            credentials.get("enable_eventbus")
         )
 
     def blueprint(
