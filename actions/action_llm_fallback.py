@@ -28,7 +28,7 @@ class ActionLLMFallback(Action):
             RasaUtils.log_info(tracker, f"当前处于[{tracker.active_loop_name}]循环中,不执行Fallback操作")
             return []
 
-        user_msg = RasaUtils.load_chat_history(tracker, server_settings.chatgpt_model_max_history)
+        user_msg = RasaUtils.load_chat_history(tracker, server_settings.chatgpt_model_max_history, 12000)
 
         try:
             RasaUtils.log_info(tracker, f"用户输入的信息为:{tracker.latest_message['text']}")

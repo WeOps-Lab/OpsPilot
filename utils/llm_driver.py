@@ -4,7 +4,7 @@ from core.server_settings import server_settings
 
 
 class LLMDriver:
-    def __init__(self, prompt: str, model="gpt-3.5-turbo-16k", temperature=0.7, max_tokens=16000):
+    def __init__(self, prompt: str, model="gpt-3.5-turbo-16k", temperature=0.7, max_tokens=4000):
         self.prompt = prompt
         self.model = model
         self.temperature = temperature

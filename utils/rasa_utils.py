@@ -1,3 +1,4 @@
+import tiktoken
 from rasa_sdk import Tracker
 from loguru import logger
 
@@ -12,7 +13,7 @@ class RasaUtils:
         logger.info(f'通道:[{tracker.get_latest_input_channel()}],会话ID:[{tracker.sender_id}]. {content}')
 
     @staticmethod
-    def load_chat_history(tracker: Tracker, max_history: int):
+    def load_chat_history(tracker: Tracker, max_history: int, limit_token=None):
         """
         获取聊天历史对话记录
         :param tracker:
@@ -26,15 +27,15 @@ class RasaUtils:
             )
         )
 
-        user_messages = []
-        for event in reversed(events):
-            if len(user_messages) >= max_history:
-                break
-            user_messages.insert(0, event)
-
         conversation_history = ""
-        for user_message in user_messages:
-            conversation_history += f"{user_message['text']}\n"
+        for index, event in enumerate(reversed(events)):
+            if index >= max_history:
+                break
+            if limit_token is not None and len(
+                    tiktoken.get_encoding('cl100k_base').encode(conversation_history)) >= limit_token:
+                break
+
+            conversation_history += f"{event['text']}\n"
         return conversation_history
 
     @staticmethod
