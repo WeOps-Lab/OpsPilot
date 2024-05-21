@@ -1,5 +1,5 @@
 action_llm_fallback:
-  prompt: ""
+  prompt: "你是一个AI助理，你正在与我进行对话，在与你对话的过程中，我会将历史对话作为上下文发给你，接下来请回复我的问题吧"
 
 gitlab_review_channel:
   prompt: |

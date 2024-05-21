@@ -28,19 +28,21 @@ class ActionLLMFallback(Action):
             RasaUtils.log_info(tracker, f"当前处于[{tracker.active_loop_name}]循环中,不执行Fallback操作")
             return []
 
-        user_msg = RasaUtils.load_chat_history(tracker, server_settings.chatgpt_model_max_history, 12000)
+        converation_history = RasaUtils.load_chat_history(tracker, server_settings.chatgpt_model_max_history, 12000)
 
+        user_prompt = '对话历史：\n' + converation_history + '\n'
+        user_prompt += '本次对话内容：\n' + tracker.latest_message['text']
         try:
             RasaUtils.log_info(tracker, f"用户输入的信息为:{tracker.latest_message['text']}")
 
-            if user_msg != '':
-                response_msg = self.llm_driver.chat(user_msg)
+            if tracker.latest_message['text'] != '':
+                response_msg = self.llm_driver.chat(user_prompt)
                 dispatcher.utter_message(text=response_msg)
 
                 RasaUtils.log_info(tracker, f"返回的信息为:{response_msg}")
             return []
 
         except Exception as e:
-            RasaUtils.log_error(tracker, f"请求服务异常:{e},用户输入的信息为:{user_msg}")
+            RasaUtils.log_error(tracker, f"请求服务异常:{e},用户输入的信息为:{user_prompt}")
             dispatcher.utter_message(text="OpsPilot服务异常，请稍后重试")
             return [UserUtteranceReverted()]

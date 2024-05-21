@@ -23,7 +23,7 @@ class RasaUtils:
         events = list(
             filter(
                 lambda x: x.get("event") == "user" or x.get("event") == "bot",
-                tracker.events,
+                tracker.events[:-1],
             )
         )
 
@@ -35,7 +35,7 @@ class RasaUtils:
                     tiktoken.get_encoding('cl100k_base').encode(conversation_history)) >= limit_token:
                 break
 
-            conversation_history += f"{'ai:' if event.get('event')=='bot' else 'user:'} {event['text']}\n"
+            conversation_history += f"{'assistant:' if event.get('event') == 'bot' else 'user:'} {event['text']}\n"
         return conversation_history
 
     @staticmethod
