@@ -5,8 +5,9 @@ import threading
 import uuid
 from typing import Text, Optional, Dict, Any, Callable, Awaitable
 from urllib.parse import quote
-import tiktoken
+
 import requests
+import requestsrar
 from loguru import logger
 from rasa.core.channels import InputChannel, UserMessage
 from sanic import Blueprint, Request, HTTPResponse, response
@@ -26,7 +27,7 @@ class GitlabReviewChannel(InputChannel):
         self.gitlab_token = gitlab_token
         self.gitlab_url = gitlab_url
 
-        self.llm = LLMDriver(server_settings.prompt)
+        self.llm = LLMDriver()
         self.event_bus = EventBus()
 
     @classmethod
@@ -54,11 +55,6 @@ class GitlabReviewChannel(InputChannel):
             else:
                 logger.warning("Token verification failed")
                 return response.json({"status": "error"}, status=401)
-
-        def num_tokens_from_string(string: str) -> int:
-            encoding = tiktoken.get_encoding('cl100k_base')
-            num_tokens = len(encoding.encode(string))
-            return num_tokens
 
         def filter_diff_content(diff_content):
             filtered_content = re.sub(r'(^-.*\n)', '', diff_content, flags=re.MULTILINE)
@@ -93,11 +89,7 @@ class GitlabReviewChannel(InputChannel):
                 [f"完整代码: {file['file_path']}\n---\n{file['content']}\n--\n变更部分:\n{file['diff']}" for file in
                  changed_files])
 
-            if num_tokens_from_string(changes_string) > 30000:
-                logger.warning(f'[{mr_id}] The content of the file is too long to review.')
-                return f'[{mr_id}] The content of the file is too long to review.'
-
-            review_msg = self.llm.chat(changes_string)
+            review_msg = self.llm.chat(server_settings.prompt['gitlab_review_channel']['prompt'], changes_string)
             review_msg = f'@{payload["user_username"]}:' + review_msg
             logger.info(f'[{mr_id}]Review result：{review_msg}')
 
@@ -135,11 +127,8 @@ class GitlabReviewChannel(InputChannel):
             changes_string = '\n'.join(
                 [f"完整代码: {file['file_path']}\n---\n{file['content']}\n--\n 变更部分 :\n{file['diff']}" for file in
                  changed_files])
-            if num_tokens_from_string(changes_string) >= 30000:
-                logger.warning(f'[{commit_id}]文件内容过长，不进行审核')
-                return f'[{commit_id}]文件内容过长，不进行审核'
 
-            answer = self.llm.chat(changes_string)
+            answer = self.llm.chat(server_settings.prompt['gitlab_review_channel']['prompt'], changes_string)
             answer = f'@{payload["user_username"]}:' + answer
             logger.info(f'[{commit_id}]审核结果：{answer}')
 

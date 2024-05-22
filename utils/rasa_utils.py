@@ -13,7 +13,7 @@ class RasaUtils:
         logger.info(f'通道:[{tracker.get_latest_input_channel()}],会话ID:[{tracker.sender_id}]. {content}')
 
     @staticmethod
-    def load_chat_history(tracker: Tracker, max_history: int, limit_token=None):
+    def load_chat_history(tracker: Tracker):
         """
         获取聊天历史对话记录
         :param tracker:
@@ -23,20 +23,11 @@ class RasaUtils:
         events = list(
             filter(
                 lambda x: x.get("event") == "user" or x.get("event") == "bot",
-                tracker.events[:-1],
+                tracker.events,
             )
         )
-
-        conversation_history = ""
-        for index, event in enumerate(reversed(events)):
-            if index >= max_history:
-                break
-            if limit_token is not None and len(
-                    tiktoken.get_encoding('cl100k_base').encode(conversation_history)) >= limit_token:
-                break
-
-            conversation_history += f"{'assistant:' if event.get('event') == 'bot' else 'user:'} {event['text']}\n"
-        return conversation_history
+        events = list(reversed(events))
+        return events
 
     @staticmethod
     def get_tracker_entity(tracker: Tracker, entity_key: str):

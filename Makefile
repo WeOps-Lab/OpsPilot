@@ -1,15 +1,19 @@
 install:
-    pip-compile -v
-    pip-sync -v
+	pip-compile -v
+	pip-sync -v
 
-train-bert:
-    NUMEXPR_MAX_THREADS=16 rasa train --domain ./configs/basic/data --data ./configs/basic/data -c ./configs/basic/config.yml --fixed-model-name ops-pilot
+venv-install:
+	./.venv/bin/pip-compile -v
+	./.venv/bin/pip-sync
+
+train:
+	NUMEXPR_MAX_THREADS=16 rasa train --domain ./configs/basic/data --data ./configs/basic/data -c ./configs/basic/config.yml --fixed-model-name ops-pilot
+
+shell:
+	rasa shell --endpoints ./configs/endpoints.yml --credentials ./configs/credentials.yml
 
 run:
     RASA_TELEMETRY_ENABLED=false rasa run --enable-api --cors "*" --endpoints ./configs/endpoints.yml --credentials ./configs/credentials.yml
-
-shell:
-	rasa shell
 
 actions:
 	rasa run actions --auto-reload
