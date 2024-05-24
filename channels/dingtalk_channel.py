@@ -68,7 +68,7 @@ class DingTalkChannel(InputChannel):
 
         if self.enable_eventbus:
             self.event_bus = EventBus()
-            self.event_bus.consume('enterprise_wechat_bot_channel', self.recieve_event)
+            self.event_bus.consume('enterprise_wechat_bot_channel', self.receive_event)
 
         logger.info('钉钉机器人通道已启动')
 
