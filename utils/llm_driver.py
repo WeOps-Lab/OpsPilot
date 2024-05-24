@@ -35,10 +35,11 @@ class LLMDriver:
             )).json()['context']
         content = ''
         for r in result:
-            content += r + '\n'
+            content += r.replace('{', '').replace('}', '') + '\n'
         return content
 
     def chat(self, system_message_prompt: str, user_message: str, enable_rag=False):
+
         system_message_prompt = SystemMessagePromptTemplate.from_template(system_message_prompt)
 
         human_template = "{text}"
@@ -48,7 +49,7 @@ class LLMDriver:
 
         if enable_rag:
             rag_result = self.rag_search(user_message)
-            user_message = f"背景知识:{user_message}\n\n{rag_result}"
+            user_message = f"\n\n背景知识:{rag_result}\n\n我的问题是:{user_message}"
         result = chain.run(user_message)
         return result
 
@@ -64,6 +65,6 @@ class LLMDriver:
 
         if enable_rag:
             rag_result = self.rag_search(query)
-            query = f"背景知识:{query}\n\n{rag_result}"
+            query = f"\n\n背景知识:{rag_result}\n\n我的问题是:{query}"
         answer = llm_chain.predict(input=query)
         return answer
