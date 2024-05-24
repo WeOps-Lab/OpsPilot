@@ -49,6 +49,7 @@ class ActionLLMFallback(Action):
             return []
 
         except Exception as e:
+
             RasaUtils.log_error(tracker, f"请求服务异常:{e},用户输入的信息为:{tracker.latest_message['text']}")
             dispatcher.utter_message(text="OpsPilot服务异常，请稍后重试")
             return [UserUtteranceReverted()]

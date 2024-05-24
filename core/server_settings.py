@@ -14,6 +14,9 @@ class ServerSettings(BaseSettings):
     openai_api_key: Optional[str] = None
     openai_base_url: Optional[str] = None
 
+    munchkin_api_key: Optional[str] = None
+    munchkin_base_url: Optional[str] = None
+    munchkin_knowledge_base_ids: Optional[str] = None
     prompt: Optional[dict] = None
 
     class Config:
