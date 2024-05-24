@@ -22,7 +22,7 @@ class EnterpriseWechatBotChannel(InputChannel):
 
         if enable_eventbus:
             self.event_bus = EventBus()
-            self.event_bus.consume('enterprise_wechat_bot_channel', self.recieve_event)
+            self.event_bus.consume('enterprise_wechat_bot_channel', self.receive_event)
 
     def send_enterprise_wechat_bot_message(self, url: str, content: str):
         """
@@ -43,7 +43,7 @@ class EnterpriseWechatBotChannel(InputChannel):
 
         return response.json()
 
-    def recieve_event(self, event):
+    def receive_event(self, event):
         if self.event_bus.is_notification_event(event):
             self.send_enterprise_wechat_bot_message(self.enterprise_bot_url,
                                                     self.event_bus.get_notification_event_content(event))
