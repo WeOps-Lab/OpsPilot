@@ -12,9 +12,8 @@ ADD ./cache ./cache
 ADD ./channels ./channels
 ADD ./compoments ./compoments
 ADD ./models ./models
-ADD ./configs/credentials.yml ./credentials.yml
-ADD ./configs/endpoints.yml ./endpoints.yml
 ADD ./libs ./libs
 ADD ./utils ./utils
+ADD ./ops_pilot_cli.py ./ops_pilot_cli.py
 
 WORKDIR /apps
