@@ -11,7 +11,6 @@ ADD ./actions ./actions
 ADD ./cache ./cache
 ADD ./channels ./channels
 ADD ./compoments ./compoments
-ADD ./models ./models
 ADD ./libs ./libs
 ADD ./utils ./utils
 ADD ./ops_pilot_cli.py ./ops_pilot_cli.py
