@@ -6,6 +6,8 @@ requirements.txt
 .env
 cache
 
+.pytest_cache
+
 pilot/models/*
 pilot/tracker.db
 pilot/tensorboard

@@ -1,6 +1,0 @@
-.env
-/.idea/
-/venv/
-/.venv/
-/logs/
-*.sqlite3

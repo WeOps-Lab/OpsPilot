@@ -11,6 +11,12 @@ POSTGREST_BASE_URL = os.getenv('POSTGREST_BASE_URL', '')
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
+    'unfold',
+    'unfold.contrib.filters',
+    'unfold.contrib.forms',
+    'unfold.contrib.import_export',
+    'unfold.contrib.guardian',
+    'unfold.contrib.simple_history',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -19,21 +25,30 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_comment_migrate',
     'debug_toolbar',
+    'django_select2',
     'import_export',
     'corsheaders',
     'rest_framework',
     'django_filters',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'rest_framework.authtoken',
     'auditlog',
     'drf_yasg',
     'django_celery_beat',
     'django_celery_results',
+    'django_minio_backend',
+    'django_yaml_field',
+    'django_ace',
 ]
 
 INSTALLED_APPS += [
     'apps.core',
-    'apps.ops_pilot',
+    'apps.model_provider_mgmt',
+    'apps.knowledge_mgmt',
+    'apps.channel_mgmt',
+    'apps.contentpack_mgmt',
+    'apps.bot_mgmt',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

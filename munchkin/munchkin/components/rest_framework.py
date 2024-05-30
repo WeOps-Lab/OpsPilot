@@ -17,12 +17,14 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": [
         # 'apps.core.middlewares.keycloak_permission_middleware.KeyCloakPermissionMiddleware'
-        # "rest_framework.permissions.IsAuthenticated",  # 只有经过身份认证确定用户身份才能访问
+        "rest_framework.permissions.IsAuthenticated",  # 只有经过身份认证确定用户身份才能访问
+        # 'rest_framework.authentication.TokenAuthentication'
         # 'rest_framework.permissions.IsAdminUser', # is_staff=True才能访问 —— 管理员(员工)权限
-        "rest_framework.permissions.AllowAny",  # 允许所有
+        # "rest_framework.permissions.AllowAny",  # 允许所有
         # 'rest_framework.permissions.IsAuthenticatedOrReadOnly', # 有身份 或者 只读访问(self.list,self.retrieve)
     ],
 }

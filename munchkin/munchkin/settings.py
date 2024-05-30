@@ -9,5 +9,8 @@ include(
     'components/database.py',
     'components/rest_framework.py',
     'components/celery.py',
+    'components/minio.py',
+    'components/elasticsearch.py',
+    'components/unfold.py',
     optional('local_settings.py'),
 )

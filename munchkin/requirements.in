@@ -1,33 +1,55 @@
 Django==4.2.7
 python-dotenv==1.0.0
 django-split-settings==1.2.0
-daphne==4.0.0
-whitenoise==6.5.0
-psycopg2-binary==2.9.9
 django-comment-migrate==0.1.7
-django-debug-toolbar==4.2.0
+psycopg2-binary==2.9.9
 django-import-export==3.3.6
 django-cors-headers==4.2.0
+langchain==0.2.0
 
 djangorestframework==3.14.0
 django-filter==23.2
 djangorestframework_simplejwt==5.3.0
+drf-yasg==1.21.7
 
 django-celery-beat==2.5.0
 django-celery-results==2.5.0
 sqlalchemy==2.0.20
 flower==2.0.1
 
-drf-yasg==1.21.7
+daphne==4.0.0
+whitenoise==6.5.0
+
+django-debug-toolbar==4.2.0
 
 requests==2.31.0
-
 pycryptodome==3.20.0
 
 redis==5.0.1
 django-auditlog==2.3.0
-
-python-keycloak==3.7.0
 singleton-decorator==1.0.0
 pydantic==2.5.3
 wrapt==1.16.0
+python-keycloak==3.7.0
+
+django-unfold==0.25.0
+django-guardian==2.4.0
+django-simple-history==3.5.0
+django-minio-backend==3.6.0
+fastembed==0.2.7
+langchain-community==0.2.0
+
+pytest-django==4.8.0
+
+unstructured==0.14.2
+markdown==3.6
+
+langchain-elasticsearch==0.2.1
+langchain-openai==0.1.7
+docx2txt==0.8
+
+unstructured[all-docs]
+django-select2==8.1.2
+django-yaml-field==0.1.0
+django-ace==1.32.4
+pika==1.3.2

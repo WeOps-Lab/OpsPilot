@@ -11,7 +11,7 @@ if os.getenv('ENABLE_CELERY', 'False').lower() == 'true':
     CELERY_TIMEZONE = settings.TIME_ZONE  # celery 时区问题
     CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND')
     CELERY_BEAT_SCHEDULER = os.getenv('CELERY_BEAT_SCHEDULER')  # Backend数据库
-
+    CELERY_IMPORTS = ('apps.core.tasks', 'apps.knowledge_mgmt', 'apps.contentpack_mgmt')
     CELERY_BEAT_SCHEDULE = {
         'auditlog_flush_task': {
             'task': 'munchkin.app.core.tasks.auditlog_flush_task',
