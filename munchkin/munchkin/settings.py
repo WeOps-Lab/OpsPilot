@@ -12,5 +12,6 @@ include(
     'components/minio.py',
     'components/elasticsearch.py',
     'components/unfold.py',
+    'components/kubernetes.py',
     optional('local_settings.py'),
 )
