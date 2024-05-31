@@ -14,4 +14,4 @@ ADD ./templates ./templates
 ADD ./munchkin ./munchkin
 ADD ./Makefile ./Makefile
 ADD ./manage.py ./manage.py
-ADD ./ntlk_data /root/ntlk_data
+ADD ./nltk_data /root/nltk_data
