@@ -1,8 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
-  name: train-pilot-{{bot_id}}
-  namespace: argo
+  name: {{workflow_id}}
 spec:
   ttlStrategy:
     secondsAfterCompletion: 600
@@ -13,13 +12,15 @@ spec:
     - name: pilot
       container:
         image: ccr.ccs.tencentyun.com/megalab/pilot:2
-        command: [ "/bin/bash", "-c" ]
-        args: |
-          ps -ef|wc -l  &&
-          ps -ef &&
-          echo $BOT_ID
+        command: [ "/bin/bash" ]
+        args:
+          - -c
+          - |
+            ps -ef|wc -l  &&
+            ps -ef &&
+            echo $BOT_ID
         env:
           - name: TZ
             value: Asia/Shanghai
           - name: BOT_ID
-            value: {{bot_id}}
+            value: "{{bot_id}}"
