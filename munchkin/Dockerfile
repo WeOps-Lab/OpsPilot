@@ -7,12 +7,7 @@ ADD ./requirements.in ./requirements.in
 RUN pip-compile -v
 RUN pip-sync -v
 
-ADD ./actions ./actions
-ADD ./cache ./cache
-ADD ./channels ./channels
-ADD ./compoments ./compoments
-ADD ./libs ./libs
-ADD ./utils ./utils
-ADD ./ops_pilot_cli.py ./ops_pilot_cli.py
-
-WORKDIR /apps
+ADD ./apps ./apps
+ADD ./munckin ./munchkin
+ADD ./Makefile ./Makefile
+ADD ./manage.py ./manage.py
