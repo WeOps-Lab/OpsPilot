@@ -14,5 +14,5 @@ ADD ./compoments ./compoments
 ADD ./libs ./libs
 ADD ./utils ./utils
 ADD ./ops_pilot_cli.py ./ops_pilot_cli.py
-
+ADD ./core ./core
 WORKDIR /apps
