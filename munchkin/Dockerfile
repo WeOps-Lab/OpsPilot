@@ -8,6 +8,12 @@ RUN pip-compile -v
 RUN pip-sync -v
 
 ADD ./apps ./apps
+ADD ./models ./models
+ADD ./k8s-template ./k8s-template
+ADD ./templates ./templates
 ADD ./munckin ./munchkin
 ADD ./Makefile ./Makefile
 ADD ./manage.py ./manage.py
+
+RUN python manage.py collectstatic --noinput
+ADD ./assets ./assets
