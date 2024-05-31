@@ -9,7 +9,7 @@ RUN pip-sync -v
 
 ADD ./apps ./apps
 ADD ./models ./models
-ADD ./k8s-template ./k8s-template
+ADD ./k8s-templates ./k8s-templates
 ADD ./templates ./templates
 ADD ./munckin ./munchkin
 ADD ./Makefile ./Makefile
