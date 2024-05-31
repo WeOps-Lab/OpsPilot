@@ -14,6 +14,7 @@ ADD ./templates ./templates
 ADD ./munchkin ./munchkin
 ADD ./Makefile ./Makefile
 ADD ./manage.py ./manage.py
+ADD ./.env ./.env
 
 RUN python manage.py collectstatic --noinput
 ADD ./assets ./assets
