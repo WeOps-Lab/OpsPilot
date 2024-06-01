@@ -9,6 +9,7 @@ DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 POSTGREST_BASE_URL = os.getenv('POSTGREST_BASE_URL', '')
 
 ALLOWED_HOSTS = ['*']
+CORS_ALLOWED_ORIGINS = ["*"]
 
 INSTALLED_APPS = [
     'unfold',
