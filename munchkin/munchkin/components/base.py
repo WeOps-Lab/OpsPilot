@@ -9,7 +9,9 @@ DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 POSTGREST_BASE_URL = os.getenv('POSTGREST_BASE_URL', '')
 
 ALLOWED_HOSTS = ['*']
-CORS_ALLOWED_ORIGINS = ["*"]
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 
 INSTALLED_APPS = [
     'unfold',
@@ -52,6 +54,7 @@ INSTALLED_APPS += [
     'apps.bot_mgmt',
 ]
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
