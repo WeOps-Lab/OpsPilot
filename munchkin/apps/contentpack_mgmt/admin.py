@@ -12,6 +12,7 @@ from apps.contentpack_mgmt.models import BotActions, BotActionRule, RasaEntity, 
     RasaStories, RasaResponse, RasaResponseCorpus, RasaForms, RasaSlots, ContentPack, RasaModel
 
 from apps.contentpack_mgmt.tasks.contentpack_task import build_rasa_train_data
+from apps.core.utils.kubernetes_client import KubernetesClient
 
 
 @admin.register(BotActions)
@@ -359,7 +360,7 @@ class RasaModelAdmin(ModelAdmin):
     formfield_overrides = {YAMLField: {
         "widget": AceWidget(mode="yaml", theme='chrome', width='700px')}
     }
-    actions_row = ['build_train_data']
+    actions_row = ['build_train_data', 'train_pilot']
 
     fieldsets = (
         (None, {
@@ -377,4 +378,16 @@ class RasaModelAdmin(ModelAdmin):
     def build_train_data(self, request: HttpRequest, object_id: int):
         build_rasa_train_data.delay(object_id)
         messages.success(request, '开始生成语料')
+        return redirect(reverse('admin:contentpack_mgmt_rasamodel_changelist'))
+
+    @action(description='训练', url_path="train_pilot")
+    def train_pilot(self, request: HttpRequest, object_id: int):
+        client = KubernetesClient()
+
+        workflow_id = client.train_pilot(object_id)
+        model = RasaModel.objects.get(id=object_id)
+        model.workflow_id = workflow_id
+        model.save()
+
+        messages.success(request, '开始训练')
         return redirect(reverse('admin:contentpack_mgmt_rasamodel_changelist'))

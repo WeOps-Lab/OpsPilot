@@ -6,6 +6,7 @@ from nanoid import generate
 from apps.core.utils.template_loader import core_template
 from munchkin.components.kubernetes import KUBE_CONFIG_FILE
 from kubernetes import config, client
+from rest_framework.authtoken.models import Token
 
 
 class KubernetesClient:
@@ -31,12 +32,16 @@ class KubernetesClient:
         self.argo_resource_version = "v1alpha1"
 
     def train_pilot(self, bot_id):
+        """
+        启动Pilot训练任务
+        """
         uid = generate('1234567890abcdef', 10)
         template = core_template.get_template('pilot/train-pilot.yml')
-
+        token = Token.objects.first()
         workflow_id = f'train-pilot-{uid}'
         dynamic_args = {
             "bot_id": bot_id,
+            "munchkin_token": token.key,
             "workflow_id": workflow_id
         }
         result = template.render(dynamic_args)

@@ -27,6 +27,6 @@ spec:
           - name: MUNCHKIN_BOT_ID
             value: "{{bot_id}}"
           - name: MUNCHKIN_API_KEY
-            value: ""
+            value: "{{munchkin_token}}"
           - name: MUNCHKIN_BASE_URL
             value: http://munchkin.ops-pilot:8000

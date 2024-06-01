@@ -33,7 +33,7 @@ init-buckets:
 	python manage.py initialize_buckets
 
 celery:
-	celery -A munchkin worker -B --loglevel=info
+	celery -A munchkin worker -B --loglevel=info --pool threads
 
 celery-inspect:
 	celery -A munchkin inspect scheduled

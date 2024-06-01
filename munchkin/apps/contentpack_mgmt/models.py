@@ -40,7 +40,7 @@ class RasaModel(models.Model):
                                        blank=True,
                                        storage=MinioBackend(bucket_name='munchkin-private'),
                                        upload_to='rasa_train_data')
-
+    workflow_id = models.CharField(max_length=255, verbose_name='训练任务ID', null=True, blank=True)
     pipeline_config = YAMLField(verbose_name='模型配置', default={
         "pipeline": [
             {"name": "KeywordIntentClassifier", "case_sensitive": True},
