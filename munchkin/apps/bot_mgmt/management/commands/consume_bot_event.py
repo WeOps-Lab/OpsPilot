@@ -27,6 +27,7 @@ class Command(BaseCommand):
         logger.info(f'获取到{bots.count()}个机器人,开始消费消息队列......')
 
         for bot in bots:
+            channel.queue_declare(queue=f'bot-id-{bot.id}')
             for method_frame, properties, body in channel.consume(f'bot-id-{bot.id}'):
                 message = json.loads(body.decode())
                 logger.debug(f'获取到消息:{message}')

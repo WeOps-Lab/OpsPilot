@@ -5,6 +5,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
+CSRF_TRUSTED_ORIGINS_CONFIGS = os.getenv('CSRF_TRUSTED_ORIGINS', '')
+if CSRF_TRUSTED_ORIGINS_CONFIGS:
+    CSRF_TRUSTED_ORIGINS = CSRF_TRUSTED_ORIGINS_CONFIGS.split(',')
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 POSTGREST_BASE_URL = os.getenv('POSTGREST_BASE_URL', '')
 
