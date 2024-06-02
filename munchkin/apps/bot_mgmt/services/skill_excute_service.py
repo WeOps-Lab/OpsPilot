@@ -3,7 +3,7 @@ from typing import Dict
 from langchain_community.embeddings import FastEmbedEmbeddings
 from langchain_elasticsearch import ElasticsearchRetriever
 from langchain.memory import ChatMessageHistory
-from apps.contentpack_mgmt.models import BotActions
+from apps.contentpack_mgmt.models import BotActions, BotActionRule
 from loguru import logger
 
 from apps.core.utils.llm_driver import LLMDriver
@@ -12,7 +12,7 @@ from munchkin.components.elasticsearch import ELASTICSEARCH_URL, ELASTICSEARCH_P
 
 
 class SkillExecuteService:
-    def execute_skill(self, bot_id, action_name, user_message, chat_history):
+    def execute_skill(self, bot_id, action_name, user_message, chat_history, sender_id):
         logger.info(f'执行[{bot_id}]的[{action_name}]动作,用户消息: {user_message}')
 
         context = ''
@@ -51,6 +51,13 @@ class SkillExecuteService:
 
         llm_driver = LLMDriver()
         llm_model = llm_skill.llm_model
+
+        system_skill_prompt = bot_actions.llm_skill.skill_prompt
+
+        if sender_id:
+            if BotActionRule.objects.filter(rule_user__user_id__in=sender_id).exists():
+                logger.info(f'识别到用户[{sender_id}]的个性化规则,切换系统技能提示词')
+                system_skill_prompt = BotActionRule.objects.filter(rule_user__user_id__in=sender_id).first().prompt
         if bot_actions.llm_skill.enable_conversation_history:
             llm_chat_history = ChatMessageHistory()
             for event in chat_history:
@@ -63,7 +70,7 @@ class SkillExecuteService:
                 result = llm_driver.openai_chat_with_history(
                     openai_base_url=llm_model.llm_config['openai_base_url'],
                     openai_api_key=llm_model.llm_config['openai_api_key'],
-                    system_message_prompt=bot_actions.llm_skill.skill_prompt,
+                    system_message_prompt=system_skill_prompt,
                     user_message=user_message,
                     message_history=llm_chat_history,
                     window_size=bot_actions.llm_skill.conversation_window_size,
@@ -77,7 +84,7 @@ class SkillExecuteService:
                 result = llm_driver.openai_chat(
                     openai_base_url=llm_model.llm_config['openai_base_url'],
                     openai_api_key=llm_model.llm_config['openai_api_key'],
-                    system_message_prompt=bot_actions.llm_skill.skill_prompt,
+                    system_message_prompt=system_skill_prompt,
                     user_message=user_message,
                     model=llm_model.llm_model,
                     temperature=0.7
