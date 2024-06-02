@@ -1,0 +1,14 @@
+FROM ubuntu:22.04
+
+# 更换为腾讯源
+RUN sed -i 's/archive.ubuntu.com/mirrors.cloud.tencent.com/g' /etc/apt/sources.list && \
+    sed -i 's/security.ubuntu.com/mirrors.cloud.tencent.com/g' /etc/apt/sources.list && \
+    sed -i 's/ports.ubuntu.com/mirrors.cloud.tencent.com/g' /etc/apt/sources.list
+RUN apt-get update 
+RUN apt-get install -y libhdf5-dev iftop  net-tools iputils-ping  vim
+RUN apt-get install -y python3 python3-pip build-essential
+RUN apt-get install unzip wget curl -y
+RUN apt-get install pkg-config libssl-dev libffi-dev -y
+RUN apt-get install -y supervisor
+RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+RUN pip install pip-tools

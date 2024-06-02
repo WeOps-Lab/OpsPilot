@@ -1,5 +1,6 @@
 import os.path
 import tempfile
+
 import elasticsearch
 from celery import shared_task
 from dotenv import load_dotenv
@@ -8,11 +9,10 @@ from langchain_community.document_loaders import UnstructuredMarkdownLoader
 from langchain_elasticsearch import ElasticsearchStore
 from langchain_text_splitters import RecursiveCharacterTextSplitter, MarkdownHeaderTextSplitter
 from loguru import logger
-from tqdm import tqdm
 
-from apps.model_provider_mgmt.models import EmbedModelChoices
 from apps.knowledge_mgmt.models import KnowledgeBaseFolder, FileKnowledge
 from apps.knowledge_mgmt.utils import get_index_name
+from apps.model_provider_mgmt.models import EmbedModelChoices
 from munchkin.components.elasticsearch import ELASTICSEARCH_URL, ELASTICSEARCH_PASSWORD
 
 load_dotenv()

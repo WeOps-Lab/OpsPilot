@@ -12,21 +12,21 @@ spec:
     - name: pilot
       container:
         image: ccr.ccs.tencentyun.com/megalab/pilot:2
+        imagePullPolicy: Never
         command: [ "/bin/bash" ]
         args:
           - -c
           - |
-            python ops_pilot_cli.py 
-            python ops_pilot_cli.py download_train_data
-            python ops_pilot_cli.py unzip_train_data
+            python3 ops_pilot_cli.py download_train_data
+            python3 ops_pilot_cli.py unzip_train_data
             rasa train --domain ./data/data --data ./data/data -c ./data/config.yml --fixed-model-name ops-pilot
-            python ops_pilot_cli.py upload_train_model
+            python3 ops_pilot_cli.py upload_train_model
         env:
           - name: TZ
             value: Asia/Shanghai
-          - name: MUNCHKIN_BOT_ID
-            value: "{{bot_id}}"
+          - name: RASA_MODEL_ID
+            value: "{{model_id}}"
           - name: MUNCHKIN_API_KEY
             value: "{{munchkin_token}}"
           - name: MUNCHKIN_BASE_URL
-            value: http://munchkin.ops-pilot:8000
+            value: "{{munchkin_url}}"

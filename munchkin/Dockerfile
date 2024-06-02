@@ -1,8 +1,6 @@
-FROM python:3.10
+FROM ccr.ccs.tencentyun.com/megalab/pilot-base
 WORKDIR /apps
 
-RUN pip config set global.index-url https://mirrors.cloud.tencent.com/pypi/simple
-RUN pip install pip-tools
 ADD ./requirements.in ./requirements.in
 RUN pip-compile -v
 RUN pip-sync -v

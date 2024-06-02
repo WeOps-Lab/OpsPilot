@@ -1,3 +1,4 @@
+import os
 import subprocess
 
 import fire
@@ -9,12 +10,14 @@ import shutil
 from core.server_settings import server_settings
 import zipfile
 
+load_dotenv()
+
 
 class BootStrap(object):
     def download_train_data(self):
         logger.info("Downloading train data")
         response = requests.get(
-            server_settings.munchkin_base_url + f'/api/contentpack/train_data_download?bot_id={server_settings.munchkin_bot_id}',
+            server_settings.munchkin_base_url + f'/api/contentpack/train_data_download?model_id={os.getenv("RASA_MODEL_ID")}',
             headers={
                 'Authorization': f'TOKEN {server_settings.munchkin_api_key}',
                 'Content-Type': 'application/json'
@@ -42,7 +45,7 @@ class BootStrap(object):
         with open('models/ops-pilot.tar.gz', 'rb') as f:
             files = {'file': f}
             response = requests.post(
-                server_settings.munchkin_base_url + f'/api/contentpack/model_upload?bot_id={server_settings.munchkin_bot_id}',
+                server_settings.munchkin_base_url + f'/api/contentpack/model_upload?model_id={os.getenv("RASA_MODEL_ID")}',
                 headers={
                     'Authorization': f'TOKEN {server_settings.munchkin_api_key}',
                 },
@@ -88,6 +91,15 @@ class BootStrap(object):
                 'db': 'tracker.db',
                 'username': '',
                 'password': ''
+            },
+            'event_broker': {
+                'type': 'pika',
+                'url': 'rabbitmq-service',
+                'username': server_settings.rabbitmq_username,
+                'password': server_settings.rabbitmq_password,
+                'queues': [
+                    f'bot-id-{server_settings.munchkin_bot_id}'
+                ]
             }
         }
         with open('data/endpoints.yml', 'w', encoding='utf-8') as f:

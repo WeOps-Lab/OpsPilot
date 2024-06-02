@@ -17,11 +17,7 @@ from apps.bot_mgmt.models import Bot
 from apps.contentpack_mgmt.models import RasaModel
 import hashlib
 
-
-class RasaModelSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = RasaModel
-        fields = '__all__'
+from apps.contentpack_mgmt.serializers import RasaModelSerializer
 
 
 class RasaModelViewSet(ModelViewSet):
@@ -42,21 +38,10 @@ class TrainDataDownloadView(APIView):
         responses={200: openapi.Response(description="File downloaded successfully")}
     )
     def get(self, request, format=None):
-        try:
-            bot_id = request.query_params.get('bot_id')
-            bot = Bot.objects.filter(id=bot_id).first()
-        except Bot.DoesNotExist:
-            raise NotFound("Bot with given id not found")
-
+        model_id = request.query_params.get('model_id')
+        rasa_model = RasaModel.objects.get(id=model_id)
         storage = MinioBackend(bucket_name='munchkin-private')
-        file = storage.open(bot.rasa_model.train_data_file.name, 'rb')
-
-        # Calculate ETag
-        data = file.read()
-
-        # Reset file pointer to start
-        file.seek(0)
-
+        file = storage.open(rasa_model.train_data_file.name, 'rb')
         response = FileResponse(file)
 
         return response
@@ -70,17 +55,17 @@ class ModelUploadView(APIView):
     )
     def post(self, request, format=None):
         file_obj = request.FILES.get('file')
-        bot_id = request.query_params.get('bot_id')
+        model_id = request.query_params.get('model_id')
 
         if not file_obj or not isinstance(file_obj, InMemoryUploadedFile):
             return Response({"detail": "No file was provided or the provided file is invalid."},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        if not bot_id:
+        if not model_id:
             return Response({"detail": "No bot_id was provided."},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        rasa_model = Bot.objects.filter(id=bot_id).first().rasa_model
+        rasa_model = RasaModel.objects.get(id=model_id)
         rasa_model.model_file = File(file_obj, name=os.path.basename(file_obj.name))
         rasa_model.save()
 

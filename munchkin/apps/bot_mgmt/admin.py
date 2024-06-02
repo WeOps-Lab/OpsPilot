@@ -1,11 +1,13 @@
-from django.contrib import admin
+from django.contrib import admin, messages
+from django.http import HttpRequest
+from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.html import format_html
-from django_yaml_field import YAMLField
 from unfold.admin import ModelAdmin
+from unfold.decorators import action
 
 from apps.bot_mgmt.models import Bot, BotConversationHistory
-from django_ace import AceWidget
+from apps.core.utils.kubernetes_client import KubernetesClient
 
 
 @admin.register(Bot)
@@ -15,6 +17,7 @@ class BotAdmin(ModelAdmin):
     list_filter = ['name']
     list_display_links = ['name', 'rasa_model_link', 'channels_link']
     ordering = ['id']
+    actions_row = ['start_pilot', 'stop_pilot']
     filter_horizontal = ['channels']
     fieldsets = (
         ('基本信息', {
@@ -42,6 +45,20 @@ class BotAdmin(ModelAdmin):
         return format_html('<a href="{}">{}</a>', link, obj.rasa_model)
 
     rasa_model_link.short_description = '模型'
+
+    @action(description='上线', url_path="start_pilot")
+    def start_pilot(self, request: HttpRequest, object_id: int):
+        client = KubernetesClient('argo')
+        client.start_pilot(object_id)
+        messages.success(request, '机器人上线')
+        return redirect(reverse('admin:bot_mgmt_bot_changelist'))
+
+    @action(description='下线', url_path="stop_pilot")
+    def stop_pilot(self, request: HttpRequest, object_id: int):
+        client = KubernetesClient('argo')
+        client.stop_pilot(object_id)
+        messages.success(request, '机器人下线')
+        return redirect(reverse('admin:bot_mgmt_bot_changelist'))
 
 
 @admin.register(BotConversationHistory)

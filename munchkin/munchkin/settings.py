@@ -13,5 +13,7 @@ include(
     'components/elasticsearch.py',
     'components/unfold.py',
     'components/kubernetes.py',
+    'components/conversation_mq.py',
+    'components/pilot.py',
     optional('local_settings.py'),
 )

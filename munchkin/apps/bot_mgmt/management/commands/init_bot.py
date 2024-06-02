@@ -9,10 +9,10 @@ class Command(BaseCommand):
     help = '初始化机器人'
 
     def handle(self, *args, **options):
-        Channel.objects.filter(channel_type=CHANNEL_CHOICES.WEB).first()
         rasa_model = RasaModel.objects.filter(name='核心模型').first()
-        ops_pilot = Bot.objects.create(name='OpsPilot', description='智能运维助理',
-                                       assistant_id='ops_pilot',
-                                       rasa_model=rasa_model)
-        ops_pilot.channels.add(Channel.objects.get(channel_type=CHANNEL_CHOICES.WEB))
-        ops_pilot.save()
+        ops_pilot, created = Bot.objects.get_or_create(name='OpsPilot', description='智能运维助理',
+                                                       assistant_id='ops_pilot',
+                                                       rasa_model=rasa_model)
+        if created:
+            ops_pilot.channels.add(Channel.objects.get(channel_type=CHANNEL_CHOICES.WEB))
+            ops_pilot.save()

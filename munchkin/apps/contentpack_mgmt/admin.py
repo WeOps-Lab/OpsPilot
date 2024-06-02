@@ -12,6 +12,7 @@ from apps.contentpack_mgmt.models import BotActions, BotActionRule, RasaEntity, 
     RasaStories, RasaResponse, RasaResponseCorpus, RasaForms, RasaSlots, ContentPack, RasaModel
 
 from apps.contentpack_mgmt.tasks.contentpack_task import build_rasa_train_data
+
 from apps.core.utils.kubernetes_client import KubernetesClient
 
 
@@ -351,7 +352,7 @@ class ContentPackAdmin(ModelAdmin):
 
 @admin.register(RasaModel)
 class RasaModelAdmin(ModelAdmin):
-    list_display = ['name', 'model_file', 'description']
+    list_display = ['name', 'train_data_file', 'model_file', 'description']
     search_fields = ['name']
     list_filter = ['name']
     list_display_links = ['name']
@@ -382,7 +383,7 @@ class RasaModelAdmin(ModelAdmin):
 
     @action(description='训练', url_path="train_pilot")
     def train_pilot(self, request: HttpRequest, object_id: int):
-        client = KubernetesClient()
+        client = KubernetesClient('argo')
 
         workflow_id = client.train_pilot(object_id)
         model = RasaModel.objects.get(id=object_id)

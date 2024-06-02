@@ -22,3 +22,4 @@ pilot/graph.html
 munchkin/templates/*
 munchkin/assets
 munchkin/db.sqlite3
+munchkin/nltk_data

@@ -8,6 +8,7 @@ class Command(BaseCommand):
     help = '下载模型'
 
     def handle(self, *args, **options):
+        logger.info('下载nltk数据')
         nltk.download('all')
 
         fastembed_models = [

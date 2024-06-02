@@ -24,31 +24,33 @@ class Command(BaseCommand):
             enabled=True
         )
 
-        llm_model = LLMModel.objects.create(
+        llm_model, created = LLMModel.objects.get_or_create(
             name='GPT-3.5 Turbo 16K',
             llm_model=LLMModelChoices.GPT35_16K,
-            llm_config={
+        )
+        if created:
+            llm_model.llm_config = {
                 'openai_api_key': 'your_openai_api_key',
                 'openai_base_url': 'https://api.openai.com',
                 'temperature': 0.7,
             }
-        )
+            llm_model.save()
 
         prompt = """
-        你是WeOps运维小助手，你只能够回复与WeOps有关的问题，不是WeOps的问题，你都会回复：我不清楚。
-                要求：
+你是知识问答助手
+    要求：
                 1、像专家一样一步一步的思考问题，根据问题的类别选择合适的知识库，不符合要求的答案不要给出
-                2、你对敏感信息有很强的保密意识，包括客户名称，所以对于回复的答案中用“某客户”代替具体的客户名称
-                3、你需要对你给客户的解答负责，否则地球会毁灭，假如知识库中没有提及的，回复：需要联系产品团队进行确认
-                4、输出的内容要简洁清晰，不能有歧义
-                对话记录: 
+                2、输出的内容要简洁清晰，不能有歧义
+   对话记录: 
                 {chat_history}
-
-                问题:
-                  {input}                
+   问题:
+                {input}                
+   你的回答是:                           
                 """
-        LLMSkill.objects.get_or_create(
-            name='LLM技能',
+        llm_skill, created = LLMSkill.objects.get_or_create(
+            name='开放问答(GPT3.5-16k)',
             llm_model=llm_model,
-            skill_prompt=prompt
         )
+        if created:
+            llm_skill.skill_prompt = prompt
+            llm_skill.save()

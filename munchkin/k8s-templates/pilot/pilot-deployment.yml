@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pilot-{{bot_id}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pilot-{{bot_id}}
+  template:
+    metadata:
+      labels:
+        app: pilot-{{bot_id}}
+    spec:
+      containers:
+        - name: pilot-{{bot_id}}
+          image: ccr.ccs.tencentyun.com/megalab/pilot:2
+          imagePullPolicy: Never
+          command: [ "/bin/bash" ]
+          args:
+            - -c
+            - |
+              mkdir -p data
+              python3 ops_pilot_cli.py get_bot_config_data
+              supervisord -n
+          env:
+            - name: TZ
+              value: "Asia/Shanghai"
+            - name: RASA_TELEMETRY_ENABLED
+              value: "false"
+            - name: MUNCHKIN_BOT_ID
+              value: "{{bot_id}}"
+            - name: MUNCHKIN_API_KEY
+              value: "{{api_key}}"
+            - name: MUNCHKIN_BASE_URL
+              value: "{{base_url}}"
+            - name: RABBITMQ_HOST
+              value: "{{rabbitmq_host}}"
+            - name: RABBITMQ_PORT
+              value: "{{rabbitmq_port}}"
+            - name: RABBITMQ_USERNAME
+              value: "{{rabbitmq_user}}"
+            - name: RABBITMQ_PASSWORD
+              value: "{{rabbitmq_password}}"
+          ports:
+            - containerPort: 5005
+            - containerPort: 5055

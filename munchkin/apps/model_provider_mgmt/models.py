@@ -33,7 +33,7 @@ class LLMSkill(models.Model):
     conversation_window_size = models.IntegerField(default=10, verbose_name='对话窗口大小')
 
     enable_rag = models.BooleanField(default=False, verbose_name='启用RAG')
-    knowledge_base_folders = models.ManyToManyField(KnowledgeBaseFolder, null=True, blank=True, verbose_name='知识库')
+    knowledge_base_folders = models.ManyToManyField(KnowledgeBaseFolder, blank=True, verbose_name='知识库')
     rag_top_k = models.IntegerField(default=5, verbose_name='RAG返回结果数量')
     rag_num_candidates = models.IntegerField(default=1000, verbose_name='RAG向量候选数量')
 

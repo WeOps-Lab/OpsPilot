@@ -25,7 +25,7 @@ class EmbedProviderAdmin(ModelAdmin):
 
 @admin.register(LLMModel)
 class LLMModelAdmin(ModelAdmin):
-    list_display = ['name']
+    list_display = ['name', 'llm_model']
     search_fields = ['name']
     list_filter = ['llm_model']
     list_display_links = ['name']

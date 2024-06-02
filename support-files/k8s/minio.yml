@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: minio
+  namespace: ops-pilot
+spec:
+  serviceName: minio
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      containers:
+        - name: minio
+          image: minio/minio:RELEASE.2024-05-01T01-11-10Z-cpuv1
+
+          args:
+            - server
+            - --console-address
+            - ":9001"
+            - /data
+          env:
+            - name: MINIO_ROOT_USER
+              value: "minio"
+            - name: MINIO_ROOT_PASSWORD
+              value: "minio_password"
+          ports:
+            - containerPort: 9000
+            - containerPort: 9001
+          volumeMounts:
+            - name: minio-data
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: minio-data
+      spec:
+        storageClassName: hostpath
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio
+  namespace: ops-pilot
+spec:
+  selector:
+    app: minio
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 9000
+      targetPort: 9000
+      name: http
+      nodePort: 30004
+    - protocol: TCP
+      port: 9001
+      targetPort: 9001
+      name: console
+      nodePort: 30005

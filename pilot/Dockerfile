@@ -1,8 +1,6 @@
-FROM python:3.10
+FROM ccr.ccs.tencentyun.com/megalab/pilot-base
 WORKDIR /apps
 
-RUN pip config set global.index-url https://mirrors.cloud.tencent.com/pypi/simple
-RUN pip install pip-tools
 ADD ./requirements.in ./requirements.in
 RUN pip-compile -v
 RUN pip-sync -v
@@ -15,4 +13,7 @@ ADD ./libs ./libs
 ADD ./utils ./utils
 ADD ./ops_pilot_cli.py ./ops_pilot_cli.py
 ADD ./core ./core
-WORKDIR /apps
+
+ADD ./support-files/supervisor/ops-pilot.conf /etc/supervisor/conf.d/ops-pilot.conf
+ADD ./support-files/supervisor/ops-pilot-action.conf /etc/supervisor/conf.d/ops-pilot-action.conf
+RUN apt-get reinstall supervisor -y 

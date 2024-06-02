@@ -17,7 +17,6 @@ class ServerSettings(BaseSettings):
     munchkin_bot_id: Optional[str] = None
     munchkin_api_key: Optional[str] = None
     munchkin_base_url: Optional[str] = None
-    munchkin_knowledge_base_ids: Optional[str] = None
 
     class Config:
         env_file = ".env"

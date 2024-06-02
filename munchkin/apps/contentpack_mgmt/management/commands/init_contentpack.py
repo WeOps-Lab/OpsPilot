@@ -1,49 +1,54 @@
 from django.core.management import BaseCommand
 
-from apps.channel_mgmt.models import Channel, CHANNEL_CHOICES
-from apps.contentpack_mgmt.models import ContentPack, RasaModel, BotActions, BotActionRule, RasaEntity, Intent, \
+from apps.contentpack_mgmt.models import ContentPack, RasaModel, BotActions, RasaEntity, Intent, \
     IntentCorpus, RasaRules
-from apps.model_provider_mgmt.models import LLMModel, LLMModelChoices
+from apps.model_provider_mgmt.models import LLMSkill
 
 
 class Command(BaseCommand):
     help = '初始化'
 
     def handle(self, *args, **options):
-        content_pack = ContentPack.objects.create(name='核心扩展包', description='核心扩展包')
+        content_pack, created = ContentPack.objects.get_or_create(name='核心扩展包', description='核心扩展包')
 
-        policies_config = """
-        
-        """
+        rasa_model, created = RasaModel.objects.get_or_create(name='核心模型', description='核心模型')
+        if created:
+            rasa_model.pipeline_config = {"pipeline": [
+                {
+                    "name": "KeywordIntentClassifier",
+                    "case_sensitive": True
+                },
+                {
+                    "name": "FallbackClassifier", "threshold": 0.7,
+                    "ambiguity_threshold": 0.1
+                }
+            ]}
+            rasa_model.policies_config = {"policies": [
+                {
+                    "name": "RulePolicy",
+                    "core_fallback_threshold": 0.4,
+                    "core_fallback_action_name": "action_llm_fallback"
+                }
+            ]}
+            rasa_model.content_packs.add(content_pack)
+            rasa_model.save()
 
-        rasa_model = RasaModel.objects.create(name='核心模型', description='核心模型',
-                                              pipeline_config={"pipeline": [
-                                                  {"name": "KeywordIntentClassifier", "case_sensitive": True},
-                                                  {"name": "FallbackClassifier", "threshold": 0.7,
-                                                   "ambiguity_threshold": 0.1}
-                                              ]},
-                                              policies_config={"policies": [
-                                                  {
-                                                      "name": "RulePolicy",
-                                                      "core_fallback_threshold": 0.4,
-                                                      "core_fallback_action_name": "action_llm_fallback"
-                                                  }
-                                              ]})
-        rasa_model.content_packs.add(content_pack)
-        rasa_model.save()
+        entity, created = BotActions.objects.get_or_create(content_pack=content_pack,
+                                                           name='action_llm_fallback',
+                                                           description='开放型对话')
+        if created:
+            llm_skill = LLMSkill.objects.filter(name='开放问答(GPT3.5-16k)').first()
+            entity.llm_skill = llm_skill
+            entity.save()
 
-        action_llm_fallback_action = BotActions.objects.create(content_pack=content_pack,
-                                                               name='action_llm_fallback',
-                                                               description='开放型对话')
+        BotActions.objects.get_or_create(content_pack=content_pack,
+                                         name='action_external_utter',
+                                         description='人工介入')
 
-        action_external_utter_action = BotActions.objects.create(content_pack=content_pack,
-                                                                 name='action_external_utter',
-                                                                 description='人工介入')
+        RasaEntity.objects.get_or_create(name='content', description='人工介入回复内容', content_pack=content_pack)
 
-        RasaEntity.objects.create(name='content', description='人工介入回复内容', content_pack=content_pack)
-
-        Intent.objects.create(name='out_of_scope', description='大模型回复', content_pack=content_pack)
-        Intent.objects.create(name='EXTERNAL_UTTER', description='人工回复', content_pack=content_pack)
+        Intent.objects.get_or_create(name='out_of_scope', description='大模型回复', content_pack=content_pack)
+        Intent.objects.get_or_create(name='EXTERNAL_UTTER', description='人工回复', content_pack=content_pack)
 
         out_of_scope_corpus = [
             '今天天气怎么样', '总结', '总结上述内容', '总结一下',
@@ -53,19 +58,38 @@ class Command(BaseCommand):
             '我要申请笔记本', '帮我查一下这个服务器的信息', '申请一下仓库权限'
         ]
         for corpus in out_of_scope_corpus:
-            IntentCorpus.objects.create(intent=Intent.objects.get(name='out_of_scope'), corpus=corpus)
+            IntentCorpus.objects.get_or_create(intent=Intent.objects.get(name='out_of_scope'), corpus=corpus)
 
-        RasaRules.objects.create(
+        entity, created = RasaRules.objects.get_or_create(
             content_pack=content_pack,
-            name='主动回复',
-            rule_steps={"steps": [{"intent": "EXTERNAL_UTTER"}, {"action": "action_external_utter"}]})
+            name='主动回复')
+        if created:
+            entity.rule_steps = {
+                "steps": [
+                    {"intent": "EXTERNAL_UTTER"}, {"action": "action_external_utter"}
+                ]
+            }
+            entity.save()
 
-        RasaRules.objects.create(
+        entity, created = RasaRules.objects.get_or_create(
             content_pack=content_pack,
-            name='Fallback',
-            rule_steps={"steps": [{"intent": "nlu_fallback"}, {"action": "action_llm_fallback"}]})
+            name='Fallback')
+        if created:
+            entity.rule_steps = {
+                "steps": [
+                    {"intent": "nlu_fallback"},
+                    {"action": "action_llm_fallback"}
+                ]}
+            entity.save()
 
-        RasaRules.objects.create(
+        entity, created = RasaRules.objects.get_or_create(
             content_pack=content_pack,
-            name='out_of_scope',
-            rule_steps={"steps": [{"intent": "out_of_scope"}, {"action": "action_llm_fallback"}]})
+            name='out_of_scope')
+        if created:
+            entity.rule_steps = {
+                "steps": [
+                    {"intent": "out_of_scope"},
+                    {"action": "action_llm_fallback"}
+                ]
+            }
+            entity.save()
