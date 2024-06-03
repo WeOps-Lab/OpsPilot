@@ -59,12 +59,18 @@ def general_parse_embed(knowledge_base_folder_id):
         knowledge_base_folder.train_progress = 0
         knowledge_base_folder.save()
 
+        model_configs = knowledge_base_folder.embed_model.embed_config
         if knowledge_base_folder.embed_model.embed_model == EmbedModelChoices.FASTEMBED:
             from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
-            model_configs = knowledge_base_folder.embed_model.embed_config
             embedding = FastEmbedEmbeddings(model_name=model_configs['model'], cache_dir='models')
+            logger.info(f'初始化FastEmbed模型成功')
 
-        logger.info(f'初始化FastEmbed模型成功')
+        if knowledge_base_folder.embed_model.embed_model == EmbedModelChoices.OPENAI:
+            from langchain_openai import OpenAIEmbeddings
+            embedding = OpenAIEmbeddings(model=model_configs['model'],
+                                         openai_api_key=model_configs['openai_api_key'],
+                                         openai_api_base=model_configs['openai_base_url'])
+            logger.info(f'初始化OpenAI模型成功')
 
         file_knowledges = FileKnowledge.objects.filter(knowledge_base_folder=knowledge_base_folder).all()
         knowledges = []

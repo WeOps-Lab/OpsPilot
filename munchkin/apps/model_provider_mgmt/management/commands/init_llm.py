@@ -7,6 +7,16 @@ class Command(BaseCommand):
     help = '初始化模型数据'
 
     def handle(self, *args, **options):
+        obj, created = EmbedProvider.objects.get_or_create(name='text-embedding-ada-002',
+                                                           embed_model=EmbedModelChoices.OPENAI)
+        if created:
+            obj.embed_config = {
+                'model': 'text-embedding-ada-002',
+                'openai_api_key': 'your_openai_api_key',
+                'openai_base_url': 'https://api.openai.com',
+            }
+            obj.save()
+
         EmbedProvider.objects.get_or_create(
             name='FastEmbed(BAAI/bge-small-en-v1.5)',
             embed_model=EmbedModelChoices.FASTEMBED,

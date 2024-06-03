@@ -3,6 +3,8 @@ from typing import Dict
 from langchain_community.embeddings import FastEmbedEmbeddings
 from langchain_elasticsearch import ElasticsearchRetriever
 from langchain.memory import ChatMessageHistory
+from langchain_openai import OpenAIEmbeddings
+
 from apps.contentpack_mgmt.models import BotActions, BotActionRule
 from loguru import logger
 
@@ -25,10 +27,13 @@ class SkillExecuteService:
         if llm_skill.enable_rag:
             knowledge_base_folder_list = bot_actions.llm_skill.knowledge_base_folders.all()
             for knowledge_base_folder in knowledge_base_folder_list:
+                model_configs = knowledge_base_folder.embed_model.embed_config
                 if knowledge_base_folder.embed_model.embed_model == EmbedModelChoices.FASTEMBED:
-                    model_configs = knowledge_base_folder.embed_model.embed_config
                     embedding = FastEmbedEmbeddings(model_name=model_configs['model'], cache_dir='models')
-
+                if knowledge_base_folder.embed_model.embed_model == EmbedModelChoices.OPENAI:
+                    embedding = OpenAIEmbeddings(model=model_configs['model'],
+                                                 openai_api_key=model_configs['openai_api_key'],
+                                                 openai_api_base=model_configs['openai_base_url'])
                 index_name = f"knowledge_base_{knowledge_base_folder.id}"
 
                 vector_retriever = ElasticsearchRetriever.from_es_params(

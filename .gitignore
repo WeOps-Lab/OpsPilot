@@ -23,3 +23,5 @@ munchkin/templates/*
 munchkin/assets
 munchkin/db.sqlite3
 munchkin/nltk_data
+site/node_modules
+site/pnpm-lock.yaml

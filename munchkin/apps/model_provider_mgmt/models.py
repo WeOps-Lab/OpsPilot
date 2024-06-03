@@ -47,6 +47,7 @@ class LLMSkill(models.Model):
 
 class EmbedModelChoices(models.TextChoices):
     FASTEMBED = 'fastembed', 'FastEmbed'
+    OPENAI = 'openai', 'OpenAI'
 
 
 class EmbedProvider(models.Model):
