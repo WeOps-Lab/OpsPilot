@@ -35,13 +35,27 @@ class Command(BaseCommand):
         )
 
         llm_model, created = LLMModel.objects.get_or_create(
-            name='GPT-3.5 Turbo 16K',
-            llm_model=LLMModelChoices.GPT35_16K,
+            name='GPT-4 32K',
+            llm_model=LLMModelChoices.CHAT_GPT,
         )
         if created:
             llm_model.llm_config = {
                 'openai_api_key': 'your_openai_api_key',
                 'openai_base_url': 'https://api.openai.com',
+                'temperature': 0.7,
+                'model': 'gpt-4-32k',
+            }
+            llm_model.save()
+
+        llm_model, created = LLMModel.objects.get_or_create(
+            name='GPT-3.5 Turbo 16K',
+            llm_model=LLMModelChoices.CHAT_GPT,
+        )
+        if created:
+            llm_model.llm_config = {
+                'openai_api_key': 'your_openai_api_key',
+                'openai_base_url': 'https://api.openai.com',
+                'model': 'gpt-3.5-turbo-16k',
                 'temperature': 0.7,
             }
             llm_model.save()

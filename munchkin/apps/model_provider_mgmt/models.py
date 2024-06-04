@@ -1,11 +1,16 @@
-from django.db import models
+import base64
 
+from django.db import models
+from django.utils.functional import cached_property
 from apps.core.encoders import PrettyJSONEncoder
 from apps.knowledge_mgmt.models import KnowledgeBaseFolder
+from cryptography.fernet import Fernet
+
+from munchkin.components.base import SECRET_KEY
 
 
 class LLMModelChoices(models.TextChoices):
-    GPT35_16K = 'gpt-3.5-turbo-16k', 'GPT-3.5 Turbo 16K'
+    CHAT_GPT = 'chat-gpt', 'ChatGPT'
 
 
 class LLMModel(models.Model):
@@ -17,6 +22,34 @@ class LLMModel(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        key = base64.urlsafe_b64encode(SECRET_KEY.encode()[:32])
+        cipher_suite = Fernet(key)
+        if self.llm_model == LLMModelChoices.CHAT_GPT:
+            openai_api_key = self.llm_config.get('openai_api_key')
+            if openai_api_key:
+                try:
+                    cipher_suite.decrypt(openai_api_key.encode())
+                except Exception:
+                    encrypted_key = cipher_suite.encrypt(openai_api_key.encode())
+                    self.llm_config['openai_api_key'] = encrypted_key.decode()
+            super().save(*args, **kwargs)
+
+    @cached_property
+    def decrypted_llm_config(self):
+        key = base64.urlsafe_b64encode(SECRET_KEY.encode()[:32])
+        cipher_suite = Fernet(key)
+        llm_config_decrypted = self.llm_config.copy()
+        if self.llm_model == LLMModelChoices.CHAT_GPT:
+            encrypted_openai_api_key = self.llm_config.get('openai_api_key')
+            if encrypted_openai_api_key:
+                try:
+                    decrypted_key = cipher_suite.decrypt(encrypted_openai_api_key.encode())
+                    llm_config_decrypted['openai_api_key'] = decrypted_key.decode()
+                except Exception:
+                    pass
+        return llm_config_decrypted
 
     class Meta:
         verbose_name = "LLM模型"
@@ -57,6 +90,34 @@ class EmbedProvider(models.Model):
     embed_config = models.JSONField(verbose_name='嵌入配置', blank=True, null=True, encoder=PrettyJSONEncoder,
                                     default=dict)
     enabled = models.BooleanField(default=True, verbose_name='是否启用')
+
+    def save(self, *args, **kwargs):
+        key = base64.urlsafe_b64encode(SECRET_KEY.encode()[:32])
+        cipher_suite = Fernet(key)
+        if self.embed_model == EmbedModelChoices.OPENAI:
+            openai_api_key = self.embed_config.get('openai_api_key')
+            if openai_api_key:
+                try:
+                    cipher_suite.decrypt(openai_api_key.encode())
+                except Exception:
+                    encrypted_key = cipher_suite.encrypt(openai_api_key.encode())
+                    self.embed_config['openai_api_key'] = encrypted_key.decode()
+            super().save(*args, **kwargs)
+
+    @cached_property
+    def decrypted_embed_config(self):
+        key = base64.urlsafe_b64encode(SECRET_KEY.encode()[:32])
+        cipher_suite = Fernet(key)
+        embed_config_decrypted = self.embed_config.copy()
+        if self.embed_model == LLMModelChoices.CHAT_GPT:
+            encrypted_openai_api_key = self.embed_config.get('openai_api_key')
+            if encrypted_openai_api_key:
+                try:
+                    decrypted_key = cipher_suite.decrypt(encrypted_openai_api_key.encode())
+                    embed_config_decrypted['openai_api_key'] = decrypted_key.decode()
+                except Exception:
+                    pass
+        return embed_config_decrypted
 
     def __str__(self):
         return self.name

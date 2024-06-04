@@ -1,13 +1,12 @@
 from typing import Dict
 
-from langchain_community.embeddings import FastEmbedEmbeddings
 from langchain_elasticsearch import ElasticsearchRetriever
 from langchain.memory import ChatMessageHistory
-from langchain_openai import OpenAIEmbeddings
 
 from apps.contentpack_mgmt.models import BotActions, BotActionRule
 from loguru import logger
 
+from apps.core.utils.embedding_driver import EmbeddingDriver
 from apps.core.utils.llm_driver import LLMDriver
 from apps.model_provider_mgmt.models import EmbedModelChoices, LLMModelChoices
 from munchkin.components.elasticsearch import ELASTICSEARCH_URL, ELASTICSEARCH_PASSWORD
@@ -27,13 +26,8 @@ class SkillExecuteService:
         if llm_skill.enable_rag:
             knowledge_base_folder_list = bot_actions.llm_skill.knowledge_base_folders.all()
             for knowledge_base_folder in knowledge_base_folder_list:
-                model_configs = knowledge_base_folder.embed_model.embed_config
-                if knowledge_base_folder.embed_model.embed_model == EmbedModelChoices.FASTEMBED:
-                    embedding = FastEmbedEmbeddings(model_name=model_configs['model'], cache_dir='models')
-                if knowledge_base_folder.embed_model.embed_model == EmbedModelChoices.OPENAI:
-                    embedding = OpenAIEmbeddings(model=model_configs['model'],
-                                                 openai_api_key=model_configs['openai_api_key'],
-                                                 openai_api_base=model_configs['openai_base_url'])
+                embedding = EmbeddingDriver().get_embedding(knowledge_base_folder.embed_model)
+
                 index_name = f"knowledge_base_{knowledge_base_folder.id}"
 
                 vector_retriever = ElasticsearchRetriever.from_es_params(
@@ -54,8 +48,8 @@ class SkillExecuteService:
                 for r in result:
                     context += r.page_content.replace('{', '').replace('}', '') + '\n'
 
-        llm_driver = LLMDriver()
         llm_model = llm_skill.llm_model
+        llm_driver = LLMDriver(llm_model)
 
         system_skill_prompt = bot_actions.llm_skill.skill_prompt
 
@@ -71,29 +65,20 @@ class SkillExecuteService:
                 elif event['event'] == 'bot':
                     llm_chat_history.add_ai_message(event['text'])
 
-            if llm_model.llm_model == LLMModelChoices.GPT35_16K:
-                result = llm_driver.openai_chat_with_history(
-                    openai_base_url=llm_model.llm_config['openai_base_url'],
-                    openai_api_key=llm_model.llm_config['openai_api_key'],
-                    system_message_prompt=system_skill_prompt,
-                    user_message=user_message,
-                    message_history=llm_chat_history,
-                    window_size=bot_actions.llm_skill.conversation_window_size,
-                    rag_content=context,
-                    model=llm_model.llm_model,
-                    temperature=0.7
-                )
+            result = llm_driver.openai_chat_with_history(
+                system_message_prompt=system_skill_prompt,
+                user_message=user_message,
+                message_history=llm_chat_history,
+                window_size=bot_actions.llm_skill.conversation_window_size,
+                rag_content=context
+            )
 
         else:
-            if llm_model.llm_model == LLMModelChoices.GPT35_16K:
-                result = llm_driver.openai_chat(
-                    openai_base_url=llm_model.llm_config['openai_base_url'],
-                    openai_api_key=llm_model.llm_config['openai_api_key'],
-                    system_message_prompt=system_skill_prompt,
-                    user_message=user_message,
-                    model=llm_model.llm_model,
-                    temperature=0.7
-                )
+            result = llm_driver.chat(
+                llm_model.llm_model,
+                system_message_prompt=system_skill_prompt,
+                user_message=user_message,
+            )
 
         if result.startswith("AI:"):
             result = result[4:]
