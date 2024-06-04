@@ -34,7 +34,7 @@ class LLMModel(models.Model):
                 except Exception:
                     encrypted_key = cipher_suite.encrypt(openai_api_key.encode())
                     self.llm_config['openai_api_key'] = encrypted_key.decode()
-            super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     @cached_property
     def decrypted_llm_config(self):
@@ -102,7 +102,7 @@ class EmbedProvider(models.Model):
                 except Exception:
                     encrypted_key = cipher_suite.encrypt(openai_api_key.encode())
                     self.embed_config['openai_api_key'] = encrypted_key.decode()
-            super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     @cached_property
     def decrypted_embed_config(self):
