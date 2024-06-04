@@ -109,7 +109,7 @@ class EmbedProvider(models.Model):
         key = base64.urlsafe_b64encode(SECRET_KEY.encode()[:32])
         cipher_suite = Fernet(key)
         embed_config_decrypted = self.embed_config.copy()
-        if self.embed_model == LLMModelChoices.CHAT_GPT:
+        if self.embed_model == EmbedModelChoices.OPENAI:
             encrypted_openai_api_key = self.embed_config.get('openai_api_key')
             if encrypted_openai_api_key:
                 try:
