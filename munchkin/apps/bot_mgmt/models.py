@@ -1,10 +1,7 @@
 from django.db import models
 
-from apps.channel_mgmt.models import Channel, ChannelUserGroup, ChannelUser
+from apps.channel_mgmt.models import Channel, ChannelUser
 from apps.contentpack_mgmt.models import RasaModel
-from apps.knowledge_mgmt.models import KnowledgeBaseFolder
-from apps.model_provider_mgmt.models import LLMModel
-from django_yaml_field import YAMLField
 
 
 class Bot(models.Model):
@@ -15,6 +12,13 @@ class Bot(models.Model):
 
     assistant_id = models.CharField(max_length=255, verbose_name='机器人ID', default='')
     rasa_model = models.ForeignKey(RasaModel, on_delete=models.CASCADE, verbose_name='模型', blank=True, null=True)
+
+    enable_bot_domain = models.BooleanField(verbose_name='启用域名', default=False)
+    enable_ssl = models.BooleanField(verbose_name='启用SSL', default=False)
+    bot_domain = models.CharField(max_length=255, verbose_name='域名', default='localhost')
+
+    enable_node_port = models.BooleanField(verbose_name='启用端口映射', default=False)
+    node_port = models.IntegerField(verbose_name='端口映射', default=5005)
 
     def __str__(self):
         return self.name

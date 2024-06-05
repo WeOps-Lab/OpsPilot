@@ -12,7 +12,9 @@ from apps.core.utils.kubernetes_client import KubernetesClient
 
 @admin.register(Bot)
 class BotAdmin(ModelAdmin):
-    list_display = ['name', 'assistant_id', 'rasa_model_link', 'channels_link']
+    list_display = ['name', 'assistant_id', 'rasa_model_link', 'channels_link', 'enable_bot_domain', 'bot_domain',
+                    'enable_ssl',
+                    'enable_node_port', 'node_port']
     search_fields = ['name']
     list_filter = ['name']
     list_display_links = ['name', 'rasa_model_link', 'channels_link']
@@ -28,6 +30,8 @@ class BotAdmin(ModelAdmin):
         }),
         ('通道', {
             'fields': ('channels',)
+        }), ('高级设置', {
+            'fields': ('enable_bot_domain', 'enable_ssl', 'bot_domain', 'enable_node_port', 'node_port'),
         })
     )
 
@@ -49,7 +53,8 @@ class BotAdmin(ModelAdmin):
     @action(description='上线', url_path="start_pilot")
     def start_pilot(self, request: HttpRequest, object_id: int):
         client = KubernetesClient('argo')
-        client.start_pilot(object_id)
+        bot = Bot.objects.get(id=object_id)
+        client.start_pilot(bot)
         messages.success(request, '机器人上线')
         return redirect(reverse('admin:bot_mgmt_bot_changelist'))
 
