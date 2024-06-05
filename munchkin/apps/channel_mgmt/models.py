@@ -1,7 +1,8 @@
 from django.db import models
+from django.utils.functional import cached_property
 from django_yaml_field import YAMLField
 
-from apps.core.encoders import PrettyJSONEncoder
+from apps.core.mixinx import EncryptableMixin
 
 
 class CHANNEL_CHOICES(models.TextChoices):
@@ -12,11 +13,51 @@ class CHANNEL_CHOICES(models.TextChoices):
     GITLAB = ('gitlab', 'GitLab')
 
 
-class Channel(models.Model):
+class Channel(models.Model, EncryptableMixin):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, verbose_name='名称')
     channel_type = models.CharField(max_length=100, choices=CHANNEL_CHOICES.choices, verbose_name='类型')
     channel_config = YAMLField(verbose_name='通道配置', blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if self.channel_type == CHANNEL_CHOICES.GITLAB:
+            self.encrypt_field('secret_token', self.channel_config)
+
+        if self.channel_type == CHANNEL_CHOICES.DING_TALK:
+            self.encrypt_field('client_id', self.channel_config)
+            self.encrypt_field('client_secret', self.channel_config)
+
+        if self.channel_type == CHANNEL_CHOICES.ENTERPRISE_WECHAT:
+            self.encrypt_field('secret_token', self.channel_config)
+            self.encrypt_field('aes_key', self.channel_config)
+            self.encrypt_field('secret', self.channel_config)
+            self.encrypt_field('token', self.channel_config)
+
+        if self.channel_type == CHANNEL_CHOICES.ENTERPRISE_WECHAT_BOT:
+            self.encrypt_field('secret_token', self.channel_config)
+
+        super().save(*args, **kwargs)
+
+    @cached_property
+    def decrypted_channel_config(self):
+        decrypted_config = self.channel_config.copy()
+        if self.channel_type == CHANNEL_CHOICES.GITLAB:
+            self.decrypt_field('secret_token', decrypted_config)
+
+        if self.channel_type == CHANNEL_CHOICES.DING_TALK:
+            self.decrypt_field('client_id', decrypted_config)
+            self.decrypt_field('client_secret', decrypted_config)
+
+        if self.channel_type == CHANNEL_CHOICES.ENTERPRISE_WECHAT:
+            self.decrypt_field('secret_token', decrypted_config)
+            self.decrypt_field('aes_key', decrypted_config)
+            self.decrypt_field('secret', decrypted_config)
+            self.decrypt_field('token', decrypted_config)
+
+        if self.channel_type == CHANNEL_CHOICES.ENTERPRISE_WECHAT_BOT:
+            self.decrypt_field('secret_token', decrypted_config)
+
+        return decrypted_config
 
     class Meta:
         verbose_name = '消息通道'
