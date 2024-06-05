@@ -21,20 +21,26 @@ class Channel(models.Model, EncryptableMixin):
 
     def save(self, *args, **kwargs):
         if self.channel_type == CHANNEL_CHOICES.GITLAB:
-            self.encrypt_field('secret_token', self.channel_config)
+            self.encrypt_field('secret_token',
+                               self.channel_config['channels.gitlab_review_channel.GitlabReviewChannel'])
 
         if self.channel_type == CHANNEL_CHOICES.DING_TALK:
-            self.encrypt_field('client_id', self.channel_config)
-            self.encrypt_field('client_secret', self.channel_config)
+            self.encrypt_field('client_id', self.channel_config['channels.dingtalk_channel.DingTalkChannel'])
+            self.encrypt_field('client_secret', self.channel_config['channels.dingtalk_channel.DingTalkChannel'])
 
         if self.channel_type == CHANNEL_CHOICES.ENTERPRISE_WECHAT:
-            self.encrypt_field('secret_token', self.channel_config)
-            self.encrypt_field('aes_key', self.channel_config)
-            self.encrypt_field('secret', self.channel_config)
-            self.encrypt_field('token', self.channel_config)
+            self.encrypt_field('secret_token',
+                               self.channel_config['channels.enterprise_wechat_channel.EnterpriseWechatChannel'])
+            self.encrypt_field('aes_key',
+                               self.channel_config['channels.enterprise_wechat_channel.EnterpriseWechatChannel'])
+            self.encrypt_field('secret',
+                               self.channel_config['channels.enterprise_wechat_channel.EnterpriseWechatChannel'])
+            self.encrypt_field('token',
+                               self.channel_config['channels.enterprise_wechat_channel.EnterpriseWechatChannel'])
 
         if self.channel_type == CHANNEL_CHOICES.ENTERPRISE_WECHAT_BOT:
-            self.encrypt_field('secret_token', self.channel_config)
+            self.encrypt_field('secret_token',
+                               self.channel_config['channels.enterprise_wechat_bot_channel.EnterpriseWechatBotChannel'])
 
         super().save(*args, **kwargs)
 
@@ -42,20 +48,23 @@ class Channel(models.Model, EncryptableMixin):
     def decrypted_channel_config(self):
         decrypted_config = self.channel_config.copy()
         if self.channel_type == CHANNEL_CHOICES.GITLAB:
-            self.decrypt_field('secret_token', decrypted_config)
+            self.decrypt_field('secret_token', decrypted_config['channels.gitlab_review_channel.GitlabReviewChannel'])
 
         if self.channel_type == CHANNEL_CHOICES.DING_TALK:
-            self.decrypt_field('client_id', decrypted_config)
-            self.decrypt_field('client_secret', decrypted_config)
+            self.decrypt_field('client_id', decrypted_config['channels.dingtalk_channel.DingTalkChannel'])
+            self.decrypt_field('client_secret', decrypted_config['channels.dingtalk_channel.DingTalkChannel'])
 
         if self.channel_type == CHANNEL_CHOICES.ENTERPRISE_WECHAT:
-            self.decrypt_field('secret_token', decrypted_config)
-            self.decrypt_field('aes_key', decrypted_config)
-            self.decrypt_field('secret', decrypted_config)
-            self.decrypt_field('token', decrypted_config)
+            self.decrypt_field('secret_token',
+                               decrypted_config['channels.enterprise_wechat_channel.EnterpriseWechatChannel'])
+            self.decrypt_field('aes_key',
+                               decrypted_config['channels.enterprise_wechat_channel.EnterpriseWechatChannel'])
+            self.decrypt_field('secret', decrypted_config['channels.enterprise_wechat_channel.EnterpriseWechatChannel'])
+            self.decrypt_field('token', decrypted_config['channels.enterprise_wechat_channel.EnterpriseWechatChannel'])
 
         if self.channel_type == CHANNEL_CHOICES.ENTERPRISE_WECHAT_BOT:
-            self.decrypt_field('secret_token', decrypted_config)
+            self.decrypt_field('secret_token',
+                               decrypted_config['channels.enterprise_wechat_bot_channel.EnterpriseWechatBotChannel'])
 
         return decrypted_config
 
