@@ -1,17 +1,20 @@
+import copy
 import os.path
 import tempfile
+import time
 
 import elasticsearch
 from celery import shared_task
 from dotenv import load_dotenv
 from langchain_community.document_loaders import UnstructuredFileLoader
 from langchain_community.document_loaders import UnstructuredMarkdownLoader
+from langchain_core.documents import Document
 from langchain_elasticsearch import ElasticsearchStore
 from langchain_text_splitters import RecursiveCharacterTextSplitter, MarkdownHeaderTextSplitter
 from loguru import logger
 
 from apps.knowledge_mgmt.models import KnowledgeBaseFolder, FileKnowledge
-from apps.knowledge_mgmt.utils import get_index_name
+from apps.knowledge_mgmt.utils import get_index_name, excel_to_dict_all_sheets
 from apps.model_provider_mgmt.models import EmbedModelChoices
 from munchkin.components.elasticsearch import ELASTICSEARCH_URL, ELASTICSEARCH_PASSWORD
 
@@ -37,6 +40,24 @@ def train_file_knowledgebase(knowledge, chunk_size, chunk_overlap):
             md_header_splits = markdown_splitter.split_text(loader.load()[0].page_content)
             text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
             return text_splitter.split_documents(md_header_splits)
+        elif file_type in [".xls", ".xlsx", ".xlsm", ".xlt"]:
+            def _enrich_meta(_data: dict):
+                _data.update(**{
+                    "created_at": int(time.time() * 1000),
+                    "created_by": "admin",
+                    "updated_at": int(time.time() * 1000),
+                    "updated_by": "admin"
+                })
+                return _data
+
+            for record in excel_to_dict_all_sheets(f, chunk_size):
+                documents = []
+                metadata = list(map(_enrich_meta, copy.deepcopy(record)))
+
+                for i, row in enumerate(record):
+                    content = " ".join([str(_field) for _field in row.values()])
+                    documents.append(Document(page_content=content, metadata=metadata[i]))
+            return documents
         else:
             loader = UnstructuredFileLoader(f.name, mode='single')
             text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
