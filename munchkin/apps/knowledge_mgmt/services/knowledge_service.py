@@ -1,16 +1,9 @@
-import copy
-import json
 from typing import Dict
 
 from langchain_community.embeddings import FastEmbedEmbeddings
 from langchain_elasticsearch import ElasticsearchRetriever
-from langchain.memory import ChatMessageHistory
-from apps.contentpack_mgmt.models import BotActions, BotActionRule
-from loguru import logger
-
-from apps.core.utils.llm_driver import LLMDriver
 from apps.knowledge_mgmt.models import KnowledgeBaseFolder
-from apps.model_provider_mgmt.models import EmbedModelChoices, LLMModelChoices
+from apps.model_provider_mgmt.models import EmbedModelChoices
 from munchkin.components.elasticsearch import ELASTICSEARCH_URL, ELASTICSEARCH_PASSWORD
 
 
