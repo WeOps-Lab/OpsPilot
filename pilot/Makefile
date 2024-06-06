@@ -47,7 +47,7 @@ visualize:
 DOC_IMAGE_NAME ?= ops-pilot-doc:latest
 .PHONY: build-doc
 build-doc:
-	cd docs/site && docker build . -t $(DOC_IMAGE_NAME)
+	cd ../site && docker build . -t $(DOC_IMAGE_NAME)
 
 .PHONY: push-doc
 push-doc: build-doc
