@@ -30,7 +30,7 @@ class LLMModel(models.Model, EncryptableMixin):
         llm_config_decrypted = self.llm_config.copy()
 
         if self.llm_model == LLMModelChoices.CHAT_GPT:
-            self.decrypt_field('openai_api_key', self.llm_config)
+            self.decrypt_field('openai_api_key', llm_config_decrypted)
         return llm_config_decrypted
 
     class Meta:

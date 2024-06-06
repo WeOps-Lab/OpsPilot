@@ -75,7 +75,6 @@ class SkillExecuteService:
 
         else:
             result = llm_driver.chat(
-                llm_model.llm_model,
                 system_message_prompt=system_skill_prompt,
                 user_message=user_message,
             )
