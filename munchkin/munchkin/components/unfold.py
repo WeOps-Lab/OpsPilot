@@ -189,6 +189,10 @@ UNFOLD = {
                         "link": reverse_lazy("admin:model_provider_mgmt_embedprovider_changelist"),
                     },
                     {
+                        "title": "Rerank模型",
+                        "link": reverse_lazy("admin:model_provider_mgmt_rerankprovider_changelist"),
+                    },
+                    {
                         "title": "LLM模型",
                         "link": reverse_lazy("admin:model_provider_mgmt_llmmodel_changelist"),
                     },

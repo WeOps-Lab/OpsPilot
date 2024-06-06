@@ -1,12 +1,15 @@
 from typing import Dict
 
+from BCEmbedding.tools.langchain import BCERerank
 from langchain.memory import ChatMessageHistory
+from langchain.retrievers import ContextualCompressionRetriever
 from langchain_elasticsearch import ElasticsearchRetriever
 from loguru import logger
 
 from apps.contentpack_mgmt.models import BotActions, BotActionRule
 from apps.core.utils.embedding_driver import EmbeddingDriver
 from apps.core.utils.llm_driver import LLMDriver
+from apps.model_provider_mgmt.models import RerankModelChoices
 from munchkin.components.elasticsearch import ELASTICSEARCH_URL, ELASTICSEARCH_PASSWORD
 
 
@@ -41,7 +44,19 @@ class SkillExecuteService:
                     password=ELASTICSEARCH_PASSWORD
                 )
 
-                result = vector_retriever.invoke(user_message)
+                if knowledge_base_folder.enable_rerank is False:
+                    result = vector_retriever.invoke(user_message)
+                else:
+                    if knowledge_base_folder.rerank_model.rerank_model == RerankModelChoices.BCE:
+                        reranker_args = {'model': knowledge_base_folder.rerank_model.rerank_config['model'],
+                                         'top_n': knowledge_base_folder.rerank_top_k}
+                        reranker = BCERerank(**reranker_args)
+
+                    compression_retriever = ContextualCompressionRetriever(
+                        base_compressor=reranker, base_retriever=vector_retriever
+                    )
+                    result = compression_retriever.get_relevant_documents(user_message)
+                    logger.info(f'Rerank结果: {result}')
 
                 for r in result:
                     context += r.page_content.replace('{', '').replace('}', '') + '\n'

@@ -1,12 +1,28 @@
 from django.core.management import BaseCommand
 
-from apps.model_provider_mgmt.models import EmbedProvider, EmbedModelChoices, LLMModel, LLMModelChoices, LLMSkill
+from apps.model_provider_mgmt.models import EmbedProvider, EmbedModelChoices, LLMModel, LLMModelChoices, LLMSkill, \
+    RerankProvider, RerankModelChoices
 
 
 class Command(BaseCommand):
     help = '初始化模型数据'
 
     def handle(self, *args, **options):
+        obj, created = RerankProvider.objects.get_or_create(name='bce-reranker-base_v1',
+                                                            rerank_model=RerankModelChoices.BCE)
+        if created:
+            obj.rerank_config = {
+                'model': './models/bce-reranker-base_v1',
+            }
+            obj.save()
+        obj, created = EmbedProvider.objects.get_or_create(name='bce-embedding-base_v1',
+                                                           embed_model=EmbedModelChoices.BCEEMBEDDING)
+        if created:
+            obj.embed_config = {
+                'model': './models/bce-embedding-base_v1',
+            }
+            obj.save()
+
         obj, created = EmbedProvider.objects.get_or_create(name='text-embedding-ada-002',
                                                            embed_model=EmbedModelChoices.OPENAI)
         if created:

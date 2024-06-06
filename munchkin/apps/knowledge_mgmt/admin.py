@@ -54,7 +54,12 @@ class KnowledgeBaseFolderAdmin(ModelAdmin):
 
         ('分块解析', {
             'fields': ('enable_general_parse', ('general_parse_chunk_size', 'general_parse_chunk_overlap'))
-        })
+        }),
+
+        ('结果重排', {
+            'fields': ('enable_rerank', 'rerank_model', 'rerank_top_k')
+        }),
+
     )
 
     @action(description='训练', url_path="train_embed_model")
