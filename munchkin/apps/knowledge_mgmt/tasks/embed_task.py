@@ -13,7 +13,6 @@ from loguru import logger
 from apps.core.utils.embedding_driver import EmbeddingDriver
 from apps.knowledge_mgmt.models import KnowledgeBaseFolder, FileKnowledge
 from apps.knowledge_mgmt.utils import get_index_name
-from apps.model_provider_mgmt.models import EmbedModelChoices
 from munchkin.components.elasticsearch import ELASTICSEARCH_URL, ELASTICSEARCH_PASSWORD
 
 load_dotenv()
