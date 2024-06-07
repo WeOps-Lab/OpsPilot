@@ -32,8 +32,11 @@ class KnowledgeBaseFolder(models.Model):
     enable_text_search = models.BooleanField(default=True, verbose_name='文本检索')
     text_search_weight = models.FloatField(default=0.9, verbose_name='文本检索权重')
 
+    enable_qa_generation = models.BooleanField(default=True, verbose_name='问答生成')
+
     enable_rerank = models.BooleanField(default=False, verbose_name='启用Rerank')
-    rerank_model = models.ForeignKey('model_provider_mgmt.RerankProvider', on_delete=models.CASCADE, verbose_name='Rerank模型', blank=True,
+    rerank_model = models.ForeignKey('model_provider_mgmt.RerankProvider', on_delete=models.CASCADE,
+                                     verbose_name='Rerank模型', blank=True,
                                      null=True)
     rerank_top_k = models.IntegerField(default=5, verbose_name='Rerank返回结果数量')
 

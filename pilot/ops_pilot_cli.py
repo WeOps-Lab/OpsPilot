@@ -61,7 +61,7 @@ class BootStrap(object):
             },
         }
         response = requests.get(
-            server_settings.munchkin_base_url + f'/api/bot?id={server_settings.munchkin_bot_id}',
+            server_settings.munchkin_base_url + f'/api/bot/{server_settings.munchkin_bot_id}',
             headers={
                 'Authorization': f'TOKEN {server_settings.munchkin_api_key}',
                 'Content-Type': 'application/json'
@@ -70,7 +70,7 @@ class BootStrap(object):
         response.raise_for_status()
 
         result = response.json()
-        for channel in result['results'][0]['channels']:
+        for channel in result['channels']:
             credentials.update(channel['channel_config'])
 
         with open('data/credentials.yml', 'w', encoding='utf-8') as f:
