@@ -4,6 +4,7 @@ import tempfile
 import elasticsearch
 from celery import shared_task
 from dotenv import load_dotenv
+from langchain.chains.qa_generation.base import QAGenerationChain
 from langchain_community.document_loaders import UnstructuredFileLoader
 from langchain_community.document_loaders import UnstructuredMarkdownLoader
 from langchain_core.documents import Document
@@ -80,12 +81,13 @@ def general_parse_embed(knowledge_base_folder_id):
                                                               knowledge_base_folder.general_parse_chunk_overlap)
             if knowledge_base_folder.enable_general_parse:
                 llm_driver = LLMDriver(knowledge_base_folder.qa_generation_llm)
-                gen_chain = QAGenerateChain.from_llm(llm_driver.get_qa_client())
-                raw_data = [{"doc": t.page_content} for t in knowledge_docs]
-                qa_examples = gen_chain.apply_and_parse(raw_data[:5])
-                for obj in qa_examples:
-                    doc = Document(page_content=f'问题:[{obj["qa_pairs"]["query"]}] 答案:[{obj["qa_pairs"]["answer"]}]')
-                    knowledges.append(doc)
+                gen_chain = QAGenerationChain.from_llm(llm_driver.get_qa_client())
+                for doc in tqdm(knowledge_docs):
+                    qa = gen_chain.run(doc.page_content)
+                    for obj in qa:
+                        logger.info(f'Question: {obj["question"]}, Answer: {obj["answer"]}')
+                        qa_doc = Document(page_content=f'问题:[{obj["question"]}] 答案:[{obj["answer"]}]')
+                        knowledges.append(qa_doc)
             db = ElasticsearchStore.from_documents(knowledge_docs, embedding, es_connection=es,
                                                    index_name=index_name)
             db.client.indices.refresh(index=index_name)
