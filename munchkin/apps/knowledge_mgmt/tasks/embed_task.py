@@ -6,14 +6,18 @@ from celery import shared_task
 from dotenv import load_dotenv
 from langchain_community.document_loaders import UnstructuredFileLoader
 from langchain_community.document_loaders import UnstructuredMarkdownLoader
+from langchain_core.documents import Document
 from langchain_elasticsearch import ElasticsearchStore
 from langchain_text_splitters import RecursiveCharacterTextSplitter, MarkdownHeaderTextSplitter
 from loguru import logger
+from tqdm import tqdm
 
 from apps.core.utils.embedding_driver import EmbeddingDriver
+from apps.core.utils.llm_driver import LLMDriver
 from apps.knowledge_mgmt.models import KnowledgeBaseFolder, FileKnowledge
 from apps.knowledge_mgmt.utils import get_index_name
 from munchkin.components.elasticsearch import ELASTICSEARCH_URL, ELASTICSEARCH_PASSWORD
+from langchain.evaluation.qa import QAGenerateChain
 
 load_dotenv()
 
@@ -68,14 +72,20 @@ def general_parse_embed(knowledge_base_folder_id):
             knowledges.append(obj)
 
         total_knowledges = len(knowledges)
-        for index, knowledge in enumerate(knowledges):
-            logger.info(f'训练知识:[{knowledge.title}]')
+        for index, knowledge in tqdm(enumerate(knowledges)):
 
             if knowledge_base_folder.enable_general_parse:
                 if isinstance(knowledge, FileKnowledge):
                     knowledge_docs = train_file_knowledgebase(knowledge, knowledge_base_folder.general_parse_chunk_size,
                                                               knowledge_base_folder.general_parse_chunk_overlap)
-
+            if knowledge_base_folder.enable_general_parse:
+                llm_driver = LLMDriver(knowledge_base_folder.qa_generation_llm)
+                gen_chain = QAGenerateChain.from_llm(llm_driver.get_qa_client())
+                raw_data = [{"doc": t.page_content} for t in knowledge_docs]
+                qa_examples = gen_chain.apply_and_parse(raw_data[:5])
+                for obj in qa_examples:
+                    doc = Document(page_content=f'问题:[{obj["qa_pairs"]["query"]}] 答案:[{obj["qa_pairs"]["answer"]}]')
+                    knowledges.append(doc)
             db = ElasticsearchStore.from_documents(knowledge_docs, embedding, es_connection=es,
                                                    index_name=index_name)
             db.client.indices.refresh(index=index_name)
