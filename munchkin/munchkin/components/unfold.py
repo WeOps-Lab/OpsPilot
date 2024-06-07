@@ -16,7 +16,6 @@ UNFOLD = {
                 "contentpack_mgmt.rasaresponsecorpus",
                 "contentpack_mgmt.rasaentity",
                 "contentpack_mgmt.botactions",
-                "contentpack_mgmt.botactionrule",
             ],
             "items": [
                 {
@@ -30,10 +29,6 @@ UNFOLD = {
                 {
                     "title": "动作",
                     "link": reverse_lazy("admin:contentpack_mgmt_botactions_changelist"),
-                },
-                {
-                    "title": "动作规则",
-                    "link": reverse_lazy("admin:contentpack_mgmt_botactionrule_changelist"),
                 },
                 {
                     "title": "对话规则",
@@ -61,6 +56,22 @@ UNFOLD = {
                 },
             ]
 
+        },
+        {
+            "models": [
+                "model_provider_mgmt.llmmodel",
+                "model_provider_mgmt.llmskill",
+            ],
+            "items": [
+                {
+                    "title": "LLM模型",
+                    "link": reverse_lazy("admin:model_provider_mgmt_llmmodel_changelist"),
+                },
+                {
+                    "title": "LLM技能",
+                    "link": reverse_lazy("admin:model_provider_mgmt_llmskill_changelist"),
+                }
+            ]
         },
         {
             "models": [
@@ -176,6 +187,10 @@ UNFOLD = {
                         "link": reverse_lazy("admin:bot_mgmt_bot_changelist"),
                     },
                     {
+                        "title": "动作规则",
+                        "link": reverse_lazy("admin:bot_mgmt_botskillrule_changelist"),
+                    },
+                    {
                         "title": "对话记录",
                         "link": reverse_lazy("admin:bot_mgmt_botconversationhistory_changelist"),
                     }
@@ -195,10 +210,6 @@ UNFOLD = {
                     {
                         "title": "LLM模型",
                         "link": reverse_lazy("admin:model_provider_mgmt_llmmodel_changelist"),
-                    },
-                    {
-                        "title": "LLM技能",
-                        "link": reverse_lazy("admin:model_provider_mgmt_llmskill_changelist"),
                     }
                 ]
             },

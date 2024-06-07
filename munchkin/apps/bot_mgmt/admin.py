@@ -6,7 +6,7 @@ from django.utils.html import format_html
 from unfold.admin import ModelAdmin
 from unfold.decorators import action
 
-from apps.bot_mgmt.models import Bot, BotConversationHistory
+from apps.bot_mgmt.models import Bot, BotConversationHistory, BotSkillRule
 from apps.core.utils.kubernetes_client import KubernetesClient
 
 
@@ -20,13 +20,16 @@ class BotAdmin(ModelAdmin):
     list_display_links = ['name', 'rasa_model_link', 'channels_link']
     ordering = ['id']
     actions_row = ['start_pilot', 'stop_pilot']
-    filter_horizontal = ['channels']
+    filter_horizontal = ['channels', 'llm_skills']
     fieldsets = (
         ('基本信息', {
             'fields': ('name', 'assistant_id', 'description')
         }),
         ('模型设置', {
             'fields': ('rasa_model',)
+        }),
+        ('LLM技能', {
+            'fields': ('llm_skills',)
         }),
         ('通道', {
             'fields': ('channels',)
@@ -64,6 +67,16 @@ class BotAdmin(ModelAdmin):
         client.stop_pilot(object_id)
         messages.success(request, '机器人下线')
         return redirect(reverse('admin:bot_mgmt_bot_changelist'))
+
+
+@admin.register(BotSkillRule)
+class BotActionRuleAdmin(ModelAdmin):
+    list_display = ['name', 'bot_id', 'skill', 'channel']
+    search_fields = ['name']
+    list_filter = ['name']
+    list_display_links = ['name']
+    ordering = ['id']
+    filter_horizontal = ['rule_user_groups', 'rule_user']
 
 
 @admin.register(BotConversationHistory)

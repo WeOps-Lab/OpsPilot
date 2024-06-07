@@ -13,6 +13,8 @@ class Bot(models.Model):
     assistant_id = models.CharField(max_length=255, verbose_name='机器人ID', default='')
     rasa_model = models.ForeignKey(RasaModel, on_delete=models.CASCADE, verbose_name='模型', blank=True, null=True)
 
+    llm_skills = models.ManyToManyField('model_provider_mgmt.LLMSkill', verbose_name='LLM技能', blank=True)
+
     enable_bot_domain = models.BooleanField(verbose_name='启用域名', default=False)
     enable_ssl = models.BooleanField(verbose_name='启用SSL', default=False)
     bot_domain = models.CharField(max_length=255, verbose_name='域名', default='localhost')
@@ -32,6 +34,27 @@ BOT_CONVERSATION_ROLE_CHOICES = [
     ('user', '用户'),
     ('bot', '机器人')
 ]
+
+
+class BotSkillRule(models.Model):
+    id = models.AutoField(primary_key=True)
+    bot_id = models.ForeignKey(Bot, on_delete=models.CASCADE, verbose_name='机器人', blank=True, null=True)
+    name = models.CharField(max_length=255, verbose_name='规则名称')
+    skill = models.ForeignKey('model_provider_mgmt.LLMSkill', on_delete=models.CASCADE, verbose_name='LLM技能')
+    description = models.TextField(blank=True, null=True, verbose_name='描述')
+    prompt = models.TextField(blank=True, null=True, verbose_name='提示词')
+    channel = models.ForeignKey('channel_mgmt.Channel', on_delete=models.CASCADE, verbose_name='生效通道',
+                                blank=True)
+    rule_user_groups = models.ManyToManyField('channel_mgmt.ChannelUserGroup', verbose_name='生效用户组',
+                                              blank=True)
+    rule_user = models.ManyToManyField(ChannelUser, verbose_name='生效用户', blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = '动作规则'
+        verbose_name_plural = verbose_name
 
 
 class BotConversationHistory(models.Model):

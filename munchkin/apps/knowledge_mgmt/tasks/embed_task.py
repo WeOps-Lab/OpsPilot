@@ -79,15 +79,7 @@ def general_parse_embed(knowledge_base_folder_id):
                 if isinstance(knowledge, FileKnowledge):
                     knowledge_docs = train_file_knowledgebase(knowledge, knowledge_base_folder.general_parse_chunk_size,
                                                               knowledge_base_folder.general_parse_chunk_overlap)
-            if knowledge_base_folder.enable_general_parse:
-                llm_driver = LLMDriver(knowledge_base_folder.qa_generation_llm)
-                gen_chain = QAGenerationChain.from_llm(llm_driver.get_qa_client())
-                for doc in tqdm(knowledge_docs):
-                    qa = gen_chain.run(doc.page_content)
-                    for obj in qa:
-                        logger.info(f'Question: {obj["question"]}, Answer: {obj["answer"]}')
-                        qa_doc = Document(page_content=f'问题:[{obj["question"]}] 答案:[{obj["answer"]}]')
-                        knowledges.append(qa_doc)
+
             db = ElasticsearchStore.from_documents(knowledge_docs, embedding, es_connection=es,
                                                    index_name=index_name)
             db.client.indices.refresh(index=index_name)

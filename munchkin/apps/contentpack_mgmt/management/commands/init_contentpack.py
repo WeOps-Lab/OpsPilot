@@ -33,13 +33,9 @@ class Command(BaseCommand):
             rasa_model.content_packs.add(content_pack)
             rasa_model.save()
 
-        entity, created = BotActions.objects.get_or_create(content_pack=content_pack,
-                                                           name='action_llm_fallback',
-                                                           description='开放型对话')
-        if created:
-            llm_skill = LLMSkill.objects.filter(name='开放问答(GPT3.5-16k)').first()
-            entity.llm_skill = llm_skill
-            entity.save()
+        BotActions.objects.get_or_create(content_pack=content_pack,
+                                         name='action_llm_fallback',
+                                         description='开放型对话')
 
         BotActions.objects.get_or_create(content_pack=content_pack,
                                          name='action_external_utter',

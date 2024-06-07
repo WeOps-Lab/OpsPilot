@@ -8,7 +8,7 @@ from django_ace import AceWidget
 from django_yaml_field import YAMLField
 from unfold.admin import ModelAdmin
 
-from apps.contentpack_mgmt.models import BotActions, BotActionRule, RasaEntity, Intent, IntentCorpus, RasaRules, \
+from apps.contentpack_mgmt.models import BotActions, RasaEntity, Intent, IntentCorpus, RasaRules, \
     RasaStories, RasaResponse, RasaResponseCorpus, RasaForms, RasaSlots, ContentPack, RasaModel
 
 from apps.contentpack_mgmt.tasks.contentpack_task import build_rasa_train_data
@@ -42,31 +42,6 @@ class BotActionsInline(admin.TabularInline):
 
     def has_add_permission(self, request, obj=None):
         return False
-
-
-@admin.register(BotActionRule)
-class BotActionRuleAdmin(ModelAdmin):
-    list_display = ['name', 'bot_action_link', 'channel_link']
-    search_fields = ['name']
-    list_filter = ['name']
-    list_display_links = ['name']
-    ordering = ['id']
-    filter_horizontal = ['rule_user_groups', 'rule_user']
-
-    def bot_action_link(self, obj):
-        link = reverse("admin:contentpack_mgmt_botactions_change", args=[obj.bot_action.id])
-        return format_html('<a href="{}">{}</a>', link, obj.bot_action)
-
-    bot_action_link.short_description = '动作'
-
-    def channel_link(self, obj):
-        if obj.channel is None:
-            return '-'
-        else:
-            link = reverse("admin:channel_mgmt_channel_change", args=[obj.channel.id])
-            return format_html('<a href="{}">{}</a>', link, obj.channel)
-
-    channel_link.short_description = '通道'
 
 
 @admin.register(RasaEntity)
