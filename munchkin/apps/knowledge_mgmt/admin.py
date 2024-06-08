@@ -1,29 +1,113 @@
 from django.contrib import admin
 from django.contrib import messages
+from django.db.models import TextField
 from django.forms import Media
 from django.http import HttpRequest
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.html import format_html
 from unfold.admin import ModelAdmin
+from unfold.contrib.forms.widgets import WysiwygWidget
 from unfold.decorators import action
-from apps.knowledge_mgmt.models import KnowledgeBaseFolder, FileKnowledge
+from apps.knowledge_mgmt.models import KnowledgeBaseFolder, FileKnowledge, ManualKnowledge, WebPageKnowledge
 from apps.knowledge_mgmt.tasks.embed_task import general_parse_embed
+
+
+@admin.register(WebPageKnowledge)
+class WebPageKnowledgeAdmin(ModelAdmin):
+    list_display = ['knowledge_base_folder_link', 'title', 'url']
+    search_fields = ['knowledge_base_folder', 'title']
+    list_display_links = ['title']
+    list_filter = ['knowledge_base_folder']
+    ordering = ['id']
+    filter_horizontal = []
+    fieldsets = (
+        ('', {
+            'fields': ('knowledge_base_folder', 'title', 'url')
+        }),
+    )
+
+    def knowledge_base_folder_link(self, obj):
+        link = reverse("admin:knowledge_mgmt_knowledgebasefolder_change", args=[obj.knowledge_base_folder.id])
+        return format_html('<a href="{}">{}</a>', link, obj.knowledge_base_folder)
+
+    knowledge_base_folder_link.short_description = '知识库'
+
+
+@admin.register(ManualKnowledge)
+class ManualKnowledgeAdmin(ModelAdmin):
+    list_display = ['title', 'knowledge_base_folder_link']
+    search_fields = ['title']
+    list_display_links = ['title']
+    list_filter = ['knowledge_base_folder']
+    ordering = ['id']
+    filter_horizontal = []
+    fieldsets = (
+        ('', {
+            'fields': ('knowledge_base_folder', 'title', 'content')
+        }),
+    )
+    formfield_overrides = {
+        TextField: {
+            "widget": WysiwygWidget,
+        },
+    }
+
+    def knowledge_base_folder_link(self, obj):
+        link = reverse("admin:knowledge_mgmt_knowledgebasefolder_change", args=[obj.knowledge_base_folder.id])
+        return format_html('<a href="{}">{}</a>', link, obj.knowledge_base_folder)
+
+    knowledge_base_folder_link.short_description = '知识库'
 
 
 @admin.register(FileKnowledge)
 class KnowledgeAdmin(ModelAdmin):
-    list_display = ['title', 'file']
-    search_fields = ['title']
+    list_display = ['knowledge_base_folder_link', 'title', 'file']
+    search_fields = ['knowledge_base_folder', 'title']
     list_display_links = ['title']
+    list_filter = ['knowledge_base_folder']
     ordering = ['id']
     filter_horizontal = []
     readonly_fields = ['title']
+    fieldsets = (
+        ('', {
+            'fields': ('knowledge_base_folder', 'title', 'file')
+        }),
+    )
+
+    def knowledge_base_folder_link(self, obj):
+        link = reverse("admin:knowledge_mgmt_knowledgebasefolder_change", args=[obj.knowledge_base_folder.id])
+        return format_html('<a href="{}">{}</a>', link, obj.knowledge_base_folder)
+
+    knowledge_base_folder_link.short_description = '知识库'
 
 
-class KnowledgeStackedInline(admin.TabularInline):
+class FileKnowledgeInline(admin.TabularInline):
     model = FileKnowledge
     readonly_fields = ['title']
+
+
+class WebPageKnowledgeInline(admin.TabularInline):
+    model = WebPageKnowledge
+    fieldsets = (
+        ('', {
+            'fields': ('title', 'url')
+        }),
+    )
+
+
+class ManualKnowledgeInline(admin.StackedInline):
+    model = ManualKnowledge
+    fieldsets = (
+        ('', {
+            'fields': ('title', 'content')
+        }),
+    )
+    formfield_overrides = {
+        TextField: {
+            "widget": WysiwygWidget,
+        },
+    }
 
 
 @admin.register(KnowledgeBaseFolder)
@@ -36,7 +120,7 @@ class KnowledgeBaseFolderAdmin(ModelAdmin):
     ordering = ['id']
     filter_horizontal = []
     actions_row = ['train_embed']
-    inlines = [KnowledgeStackedInline]
+    inlines = [FileKnowledgeInline, WebPageKnowledgeInline, ManualKnowledgeInline]
     readonly_fields = ['train_status']
     save_as = True
 

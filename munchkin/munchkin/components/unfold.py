@@ -113,11 +113,21 @@ UNFOLD = {
         {
             "models": [
                 "knowledge_mgmt.fileknowledge",
+                "knowledge_mgmt.manualknowledge",
+                "knowledge_mgmt.webpageknowledge",
             ],
             "items": [
                 {
                     "title": "文件知识",
                     "link": reverse_lazy("admin:knowledge_mgmt_fileknowledge_changelist"),
+                },
+                {
+                    "title": "手工录入",
+                    "link": reverse_lazy("admin:knowledge_mgmt_manualknowledge_changelist"),
+                },
+                {
+                    "title": "网页知识",
+                    "link": reverse_lazy("admin:knowledge_mgmt_webpageknowledge_changelist"),
                 }
             ]
         },

@@ -4,9 +4,9 @@ import tempfile
 import elasticsearch
 from celery import shared_task
 from dotenv import load_dotenv
-from langchain.chains.qa_generation.base import QAGenerationChain
-from langchain_community.document_loaders import UnstructuredFileLoader
+from langchain_community.document_loaders import UnstructuredFileLoader, AsyncHtmlLoader
 from langchain_community.document_loaders import UnstructuredMarkdownLoader
+from langchain_community.document_transformers import BeautifulSoupTransformer
 from langchain_core.documents import Document
 from langchain_elasticsearch import ElasticsearchStore
 from langchain_text_splitters import RecursiveCharacterTextSplitter, MarkdownHeaderTextSplitter
@@ -14,11 +14,9 @@ from loguru import logger
 from tqdm import tqdm
 
 from apps.core.utils.embedding_driver import EmbeddingDriver
-from apps.core.utils.llm_driver import LLMDriver
-from apps.knowledge_mgmt.models import KnowledgeBaseFolder, FileKnowledge
+from apps.knowledge_mgmt.models import KnowledgeBaseFolder, FileKnowledge, ManualKnowledge, WebPageKnowledge
 from apps.knowledge_mgmt.utils import get_index_name
 from munchkin.components.elasticsearch import ELASTICSEARCH_URL, ELASTICSEARCH_PASSWORD
-from langchain.evaluation.qa import QAGenerateChain
 
 load_dotenv()
 
@@ -72,13 +70,36 @@ def general_parse_embed(knowledge_base_folder_id):
         for obj in file_knowledges:
             knowledges.append(obj)
 
+        manual_knowledges = ManualKnowledge.objects.filter(knowledge_base_folder=knowledge_base_folder).all()
+        for obj in manual_knowledges:
+            knowledges.append(obj)
+
+        web_page_knowledges = WebPageKnowledge.objects.filter(knowledge_base_folder=knowledge_base_folder).all()
+        for obj in web_page_knowledges:
+            knowledges.append(obj)
+
         total_knowledges = len(knowledges)
         for index, knowledge in tqdm(enumerate(knowledges)):
-
+            knowledge_docs = []
             if knowledge_base_folder.enable_general_parse:
                 if isinstance(knowledge, FileKnowledge):
-                    knowledge_docs = train_file_knowledgebase(knowledge, knowledge_base_folder.general_parse_chunk_size,
-                                                              knowledge_base_folder.general_parse_chunk_overlap)
+                    knowledge_docs += train_file_knowledgebase(knowledge,
+                                                               knowledge_base_folder.general_parse_chunk_size,
+                                                               knowledge_base_folder.general_parse_chunk_overlap)
+                elif isinstance(knowledge, ManualKnowledge):
+                    text_splitter = RecursiveCharacterTextSplitter(
+                        chunk_size=knowledge_base_folder.general_parse_chunk_size,
+                        chunk_overlap=knowledge_base_folder.general_parse_chunk_overlap)
+                    knowledge_docs += text_splitter.split_documents([Document(knowledge.content)])
+                elif isinstance(knowledge, WebPageKnowledge):
+                    loader = AsyncHtmlLoader(knowledge.url)
+                    docs = loader.load()
+                    transformer = BeautifulSoupTransformer()
+                    docs = transformer.transform_documents(docs)
+                    text_splitter = RecursiveCharacterTextSplitter(
+                        chunk_size=knowledge_base_folder.general_parse_chunk_size,
+                        chunk_overlap=knowledge_base_folder.general_parse_chunk_overlap)
+                    knowledge_docs += text_splitter.split_documents(docs)
 
             db = ElasticsearchStore.from_documents(knowledge_docs, embedding, es_connection=es,
                                                    index_name=index_name)
