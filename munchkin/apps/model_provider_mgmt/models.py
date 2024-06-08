@@ -42,6 +42,7 @@ class LLMSkill(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, unique=True, verbose_name='名称')
     llm_model = models.ForeignKey(LLMModel, on_delete=models.CASCADE, verbose_name='LLM模型', blank=True, null=True)
+    skill_id = models.CharField(max_length=255, verbose_name='技能ID', blank=True, null=True)
     skill_prompt = models.TextField(blank=True, null=True, verbose_name='技能提示词')
 
     enable_conversation_history = models.BooleanField(default=False, verbose_name='启用对话历史')

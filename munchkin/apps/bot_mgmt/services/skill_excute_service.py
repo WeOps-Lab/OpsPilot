@@ -21,7 +21,7 @@ class SkillExecuteService:
         context = ''
 
         bot = Bot.objects.get(id=bot_id)
-        llm_skill = bot.llm_skills.filter(name=action_name).first()
+        llm_skill = bot.llm_skills.filter(skill_id=action_name).first()
 
         if llm_skill.enable_rag:
             knowledge_base_folder_list = llm_skill.knowledge_base_folders.all()
