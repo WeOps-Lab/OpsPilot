@@ -10,6 +10,7 @@ from apps.bot_mgmt.models import Bot, BotSkillRule
 from apps.contentpack_mgmt.models import BotActions
 from apps.core.utils.embedding_driver import EmbeddingDriver
 from apps.core.utils.llm_driver import LLMDriver
+from apps.knowledge_mgmt.services.knowledge_search_service import KnowledgeSearchService
 from apps.model_provider_mgmt.models import RerankModelChoices
 from munchkin.components.elasticsearch import ELASTICSEARCH_URL, ELASTICSEARCH_PASSWORD
 
@@ -25,40 +26,10 @@ class SkillExecuteService:
 
         if llm_skill.enable_rag:
             knowledge_base_folder_list = llm_skill.knowledge_base_folders.all()
-            for knowledge_base_folder in knowledge_base_folder_list:
-                embedding = EmbeddingDriver().get_embedding(knowledge_base_folder.embed_model)
-
-                index_name = f"knowledge_base_{knowledge_base_folder.id}"
-
-                vector_retriever = ElasticsearchRetriever.from_es_params(
-                    index_name=index_name,
-                    body_func=lambda x: self.vector_query(x, embedding,
-                                                          knowledge_base_folder.rag_k,
-                                                          knowledge_base_folder.rag_num_candidates,
-                                                          knowledge_base_folder.text_search_weight,
-                                                          knowledge_base_folder.vector_search_weight),
-                    content_field='text',
-                    url=ELASTICSEARCH_URL,
-                    username='elastic',
-                    password=ELASTICSEARCH_PASSWORD
-                )
-
-                if knowledge_base_folder.enable_rerank is False:
-                    result = vector_retriever.invoke(user_message)
-                else:
-                    if knowledge_base_folder.rerank_model.rerank_model == RerankModelChoices.BCE:
-                        reranker_args = {'model': knowledge_base_folder.rerank_model.rerank_config['model'],
-                                         'top_n': knowledge_base_folder.rerank_top_k}
-                        reranker = BCERerank(**reranker_args)
-
-                    compression_retriever = ContextualCompressionRetriever(
-                        base_compressor=reranker, base_retriever=vector_retriever
-                    )
-                    result = compression_retriever.get_relevant_documents(user_message)
-                    logger.info(f'Rerank结果: {result}')
-
-                for r in result:
-                    context += r.page_content.replace('{', '').replace('}', '') + '\n'
+            knowledge_search_service = KnowledgeSearchService()
+            result = knowledge_search_service.search(knowledge_base_folder_list, user_message)
+            for r in result:
+                context += r.page_content.replace('{', '').replace('}', '') + '\n'
 
         llm_model = llm_skill.llm_model
         llm_driver = LLMDriver(llm_model)
@@ -96,30 +67,3 @@ class SkillExecuteService:
 
         return result
 
-    def vector_query(self, search_query: str, embeddings,
-                     k, num_candidates,
-                     text_search_weight=0.9,
-                     vector_search_weight=0.1) -> Dict:
-        vector = embeddings.embed_query(search_query)
-        return {
-            "query": {
-                "match": {
-                    'text': {
-                        "query": search_query,
-                        "boost": text_search_weight
-                    }
-                },
-            },
-            "knn": {
-                "field": 'vector',
-                "query_vector": vector,
-                "k": k,
-                "num_candidates": num_candidates,
-                "filter": {
-                    "term": {
-                        "text": "knowledge_base",
-                    },
-                },
-                "boost": vector_search_weight
-            }
-        }

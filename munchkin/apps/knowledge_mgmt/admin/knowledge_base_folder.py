@@ -10,76 +10,7 @@ from unfold.admin import ModelAdmin
 from unfold.contrib.forms.widgets import WysiwygWidget
 from unfold.decorators import action
 from apps.knowledge_mgmt.models import KnowledgeBaseFolder, FileKnowledge, ManualKnowledge, WebPageKnowledge
-from apps.knowledge_mgmt.tasks.embed_task import general_parse_embed
-
-
-@admin.register(WebPageKnowledge)
-class WebPageKnowledgeAdmin(ModelAdmin):
-    list_display = ['knowledge_base_folder_link', 'title', 'url']
-    search_fields = ['knowledge_base_folder', 'title']
-    list_display_links = ['title']
-    list_filter = ['knowledge_base_folder']
-    ordering = ['id']
-    filter_horizontal = []
-    fieldsets = (
-        ('', {
-            'fields': ('knowledge_base_folder', 'title', 'url')
-        }),
-    )
-
-    def knowledge_base_folder_link(self, obj):
-        link = reverse("admin:knowledge_mgmt_knowledgebasefolder_change", args=[obj.knowledge_base_folder.id])
-        return format_html('<a href="{}">{}</a>', link, obj.knowledge_base_folder)
-
-    knowledge_base_folder_link.short_description = '知识库'
-
-
-@admin.register(ManualKnowledge)
-class ManualKnowledgeAdmin(ModelAdmin):
-    list_display = ['title', 'knowledge_base_folder_link']
-    search_fields = ['title']
-    list_display_links = ['title']
-    list_filter = ['knowledge_base_folder']
-    ordering = ['id']
-    filter_horizontal = []
-    fieldsets = (
-        ('', {
-            'fields': ('knowledge_base_folder', 'title', 'content')
-        }),
-    )
-    formfield_overrides = {
-        TextField: {
-            "widget": WysiwygWidget,
-        },
-    }
-
-    def knowledge_base_folder_link(self, obj):
-        link = reverse("admin:knowledge_mgmt_knowledgebasefolder_change", args=[obj.knowledge_base_folder.id])
-        return format_html('<a href="{}">{}</a>', link, obj.knowledge_base_folder)
-
-    knowledge_base_folder_link.short_description = '知识库'
-
-
-@admin.register(FileKnowledge)
-class KnowledgeAdmin(ModelAdmin):
-    list_display = ['knowledge_base_folder_link', 'title', 'file']
-    search_fields = ['knowledge_base_folder', 'title']
-    list_display_links = ['title']
-    list_filter = ['knowledge_base_folder']
-    ordering = ['id']
-    filter_horizontal = []
-    readonly_fields = ['title']
-    fieldsets = (
-        ('', {
-            'fields': ('knowledge_base_folder', 'title', 'file')
-        }),
-    )
-
-    def knowledge_base_folder_link(self, obj):
-        link = reverse("admin:knowledge_mgmt_knowledgebasefolder_change", args=[obj.knowledge_base_folder.id])
-        return format_html('<a href="{}">{}</a>', link, obj.knowledge_base_folder)
-
-    knowledge_base_folder_link.short_description = '知识库'
+from apps.knowledge_mgmt.tasks.embed_task import general_embed
 
 
 class FileKnowledgeInline(admin.TabularInline):
@@ -150,7 +81,7 @@ class KnowledgeBaseFolderAdmin(ModelAdmin):
 
     @action(description='训练', url_path="train_embed_model")
     def train_embed(self, request: HttpRequest, object_id: int):
-        general_parse_embed.delay(object_id)
+        general_embed.delay(object_id)
         messages.success(request, '开始训练')
         return redirect(reverse('admin:knowledge_mgmt_knowledgebasefolder_changelist'))
 
