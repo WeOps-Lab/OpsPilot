@@ -135,6 +135,7 @@ def general_embed(knowledge_base_folder_id):
                 elif isinstance(knowledge, ManualKnowledge):
                     logger.debug(f'开始处理手动知识: {knowledge.title}')
                     knowledge_docs += embed_manual_knowledgebase(knowledge_base_folder, knowledge)
+
                     logger.info(f'手动知识[{knowledge.title}]共提取[{len(knowledge_docs)}]个文档片段')
 
                 elif isinstance(knowledge, WebPageKnowledge):
@@ -145,6 +146,8 @@ def general_embed(knowledge_base_folder_id):
             for doc in knowledge_docs:
                 doc.metadata['knowledge_id'] = knowledge.id
                 doc.metadata['knowledge_folder_id'] = knowledge_base_folder_id
+                for key, value in knowledge.custom_metadata.items():
+                    doc.metadata[key] = value
 
             logger.debug(f'开始生成知识库[{knowledge_base_folder_id}]的Embedding索引')
             db = ElasticsearchStore.from_documents(knowledge_docs, embedding, es_connection=es,

@@ -1,9 +1,6 @@
-from typing import List
-
 from django.http import JsonResponse
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from langchain_core.documents import Document
 from rest_framework import viewsets
 from rest_framework.decorators import action
 
@@ -19,6 +16,7 @@ class KnowledgeSearchViewSet(viewsets.ViewSet):
                 "knowledgebase_folder_ids": openapi.Schema(type=openapi.TYPE_ARRAY,
                                                            items=openapi.Schema(type=openapi.TYPE_INTEGER)),
                 "query": openapi.Schema(type=openapi.TYPE_STRING),
+                "metadata": openapi.Schema(type=openapi.TYPE_OBJECT),
             },
         ),
     )
@@ -27,10 +25,11 @@ class KnowledgeSearchViewSet(viewsets.ViewSet):
         data = request.data
         knowledgebase_folder_ids = data.get("knowledgebase_folder_ids")
         query = data.get("query")
+        metadata = data.get("metadata", {})
 
         service = KnowledgeSearchService()
         knowledgebase_folders = KnowledgeBaseFolder.objects.filter(id__in=knowledgebase_folder_ids)
-        docs = service.search(knowledgebase_folders, query)
+        docs = service.search(knowledgebase_folders, query, metadata)
         results = {
             'chunks': []
         }

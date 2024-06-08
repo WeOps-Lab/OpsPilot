@@ -8,6 +8,7 @@ class WebPageKnowledge(models.Model):
     knowledge_base_folder = models.ForeignKey('knowledge_mgmt.KnowledgeBaseFolder', verbose_name='知识', blank=True,
                                               null=True,
                                               on_delete=models.CASCADE)
+    custom_metadata = models.JSONField(verbose_name='自定义元数据', blank=True, null=True, default=dict)
 
     def __str__(self):
         return self.title

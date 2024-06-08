@@ -1,7 +1,9 @@
 from django.contrib import admin
 from django.db.models import TextField
+from django.forms import JSONField
 from django.urls import reverse
 from django.utils.html import format_html
+from django_ace import AceWidget
 from unfold.admin import ModelAdmin
 from unfold.contrib.forms.widgets import WysiwygWidget
 
@@ -19,9 +21,14 @@ class FileKnowledgeAdmin(ModelAdmin):
     readonly_fields = ['title']
     fieldsets = (
         ('', {
-            'fields': ('knowledge_base_folder', 'title', 'file')
+            'fields': ('knowledge_base_folder', 'title', 'file', 'custom_metadata')
         }),
     )
+    formfield_overrides = {
+        JSONField: {
+            "widget": AceWidget(mode="json", theme='chrome', width='700px')
+        }
+    }
 
     def knowledge_base_folder_link(self, obj):
         link = reverse("admin:knowledge_mgmt_knowledgebasefolder_change", args=[obj.knowledge_base_folder.id])

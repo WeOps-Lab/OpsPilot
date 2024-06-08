@@ -12,6 +12,7 @@ class FileKnowledge(models.Model):
                             storage=MinioBackend(bucket_name='munchkin-private'),
                             upload_to=iso_date_prefix,
                             validators=[FileExtensionValidator(allowed_extensions=KNKOWLEDGE_TYPES)])
+    custom_metadata = models.JSONField(verbose_name='自定义元数据', blank=True, null=True, default=dict)
 
     knowledge_base_folder = models.ForeignKey('knowledge_mgmt.KnowledgeBaseFolder', verbose_name='知识', blank=True,
                                               null=True,
