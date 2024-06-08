@@ -4,10 +4,9 @@
 
 ## Embed模型
 
-
+* [FastEmbed](https://qdrant.github.io/fastembed/)
+* [BCEmbedding](https://github.com/netease-youdao/BCEmbedding)
 
 ## LLM模型
-
-
 
 ## LLM技能

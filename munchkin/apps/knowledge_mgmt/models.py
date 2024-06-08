@@ -12,21 +12,23 @@ TRAIN_STATUS_CHOICES = [
 
 class KnowledgeBaseFolder(models.Model):
     id = models.AutoField(primary_key=True)
+
     name = models.CharField(max_length=255, unique=True, verbose_name='名称')
     description = models.TextField(verbose_name='描述')
     embed_model = models.ForeignKey('model_provider_mgmt.EmbedProvider', on_delete=models.CASCADE,
                                     verbose_name='嵌入模型')
+
     train_status = models.IntegerField(default=0, choices=TRAIN_STATUS_CHOICES, verbose_name='状态')
     train_progress = models.FloatField(default=0, verbose_name='训练进度')
 
     enable_general_parse = models.BooleanField(default=True, verbose_name='分块解析')
-    general_parse_chunk_size = models.IntegerField(default=1000, verbose_name='分块大小')
-    general_parse_chunk_overlap = models.IntegerField(default=100, verbose_name='分块重叠')
+    general_parse_chunk_size = models.IntegerField(default=256, verbose_name='分块大小')
+    general_parse_chunk_overlap = models.IntegerField(default=32, verbose_name='分块重叠')
 
     enable_vector_search = models.BooleanField(default=True, verbose_name='向量检索')
     vector_search_weight = models.FloatField(default=0.1, verbose_name='向量检索权重')
 
-    rag_k = models.IntegerField(default=5, verbose_name='返回结果数量')
+    rag_k = models.IntegerField(default=50, verbose_name='返回结果数量')
     rag_num_candidates = models.IntegerField(default=1000, verbose_name='候选数量')
 
     enable_text_search = models.BooleanField(default=True, verbose_name='文本检索')
@@ -36,7 +38,7 @@ class KnowledgeBaseFolder(models.Model):
     rerank_model = models.ForeignKey('model_provider_mgmt.RerankProvider', on_delete=models.CASCADE,
                                      verbose_name='Rerank模型', blank=True,
                                      null=True)
-    rerank_top_k = models.IntegerField(default=5, verbose_name='Rerank返回结果数量')
+    rerank_top_k = models.IntegerField(default=10, verbose_name='Rerank返回结果数量')
 
     def __str__(self):
         return self.name
