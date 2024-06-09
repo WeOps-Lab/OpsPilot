@@ -1,18 +1,9 @@
-from typing import Dict
-
-from BCEmbedding.tools.langchain import BCERerank
 from langchain.memory import ChatMessageHistory
-from langchain.retrievers import ContextualCompressionRetriever
-from langchain_elasticsearch import ElasticsearchRetriever
 from loguru import logger
 
 from apps.bot_mgmt.models import Bot, BotSkillRule
-from apps.contentpack_mgmt.models import BotActions
-from apps.core.utils.embedding_driver import EmbeddingDriver
 from apps.core.utils.llm_driver import LLMDriver
 from apps.knowledge_mgmt.services.knowledge_search_service import KnowledgeSearchService
-from apps.model_provider_mgmt.models import RerankModelChoices
-from munchkin.components.elasticsearch import ELASTICSEARCH_URL, ELASTICSEARCH_PASSWORD
 
 
 class SkillExecuteService:

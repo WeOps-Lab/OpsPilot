@@ -13,7 +13,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter, MarkdownHea
 from loguru import logger
 from tqdm import tqdm
 
-from apps.core.utils.embedding_driver import EmbeddingDriver
+from apps.model_provider_mgmt.services.embedding_service import EmbeddingService
 from apps.knowledge_mgmt.models import KnowledgeBaseFolder, FileKnowledge, ManualKnowledge, WebPageKnowledge
 from munchkin.components.elasticsearch import ELASTICSEARCH_URL, ELASTICSEARCH_PASSWORD
 
@@ -104,7 +104,7 @@ def general_embed(knowledge_base_folder_id):
         knowledge_base_folder.save()
 
         logger.info(f'获取Embedding模型: {knowledge_base_folder.embed_model}')
-        embedding = EmbeddingDriver().get_embedding(knowledge_base_folder.embed_model)
+        embedding = EmbeddingService().get_embedding(knowledge_base_folder.embed_model)
 
         knowledges = []
 
