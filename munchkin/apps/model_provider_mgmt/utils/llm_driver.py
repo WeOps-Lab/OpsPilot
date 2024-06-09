@@ -40,10 +40,10 @@ class LLMDriver:
         result = chain.run(user_message)
         return result
 
-    def openai_chat_with_history(self,
-                                 system_message_prompt, user_message,
-                                 message_history, window_size=10,
-                                 rag_content=''):
+    def chat_with_history(self,
+                          system_message_prompt, user_message,
+                          message_history, window_size=10,
+                          rag_content=''):
 
         if rag_content:
             system_message_prompt = f"\n\n背景知识:{rag_content}\n\n{system_message_prompt}"

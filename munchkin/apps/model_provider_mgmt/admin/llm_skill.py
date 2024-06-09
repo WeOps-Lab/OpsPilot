@@ -18,6 +18,23 @@ class LLMSkillAdmin(ModelAdmin):
     ordering = ['id']
     filter_horizontal = ['knowledge_base_folders']
 
+    fieldsets = [
+        (None, {
+            'fields': ['name', 'llm_model', 'skill_id', 'skill_prompt']
+        }),
+        (
+            '对话增强',
+            {
+                'fields': ['enable_conversation_history', 'conversation_window_size'],
+            }
+        ),
+        (
+            '知识库',
+            {
+                'fields': ['enable_rag', 'knowledge_base_folders'],
+            }
+        )
+    ]
     formfield_overrides = {
         JSONField: {
             "widget": AceWidget(mode="json", theme='chrome', width='700px')
