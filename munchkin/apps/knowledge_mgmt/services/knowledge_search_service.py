@@ -8,6 +8,7 @@ from langchain_elasticsearch import ElasticsearchRetriever
 from apps.model_provider_mgmt.services.embedding_service import EmbeddingService
 from apps.knowledge_mgmt.models import KnowledgeBaseFolder
 from apps.model_provider_mgmt.models import RerankModelChoices
+from apps.model_provider_mgmt.services.rerank_service import RerankService
 from munchkin.components.elasticsearch import ELASTICSEARCH_URL, ELASTICSEARCH_PASSWORD
 
 
@@ -61,10 +62,10 @@ class KnowledgeSearchService:
             if knowledge_base_folder.enable_rerank is False:
                 result = vector_retriever.invoke(query)
             else:
-                if knowledge_base_folder.rerank_model.rerank_model == RerankModelChoices.BCE:
-                    reranker_args = {'model': knowledge_base_folder.rerank_model.rerank_config['model'],
-                                     'top_n': knowledge_base_folder.rerank_top_k}
-                    reranker = BCERerank(**reranker_args)
+                reranker_service = RerankService()
+                reranker = reranker_service.get_reranker(knowledge_base_folder.rerank_model,
+                                                         knowledge_base_folder.rerank_top_k)
+
                 compression_retriever = ContextualCompressionRetriever(
                     base_compressor=reranker, base_retriever=vector_retriever
                 )

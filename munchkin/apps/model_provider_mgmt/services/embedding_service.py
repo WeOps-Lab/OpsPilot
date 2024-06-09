@@ -5,6 +5,9 @@ from apps.model_provider_mgmt.models import EmbedModelChoices, EmbedProvider
 
 
 class EmbeddingService:
+    def embed_content(self, embed_provider: EmbedProvider, content: str):
+        embedding = self.get_embedding(embed_provider)
+        return embedding.embed_query(content)
 
     def get_embedding(self, embed_provider: EmbedProvider):
         embedding = cache.get(embed_provider.embed_model)
@@ -23,6 +26,7 @@ class EmbeddingService:
                         'batch_size': 32,
                     },
                 )
+
             elif embed_provider.embed_model == EmbedModelChoices.OPENAI:
                 embedding = OpenAIEmbeddings(model=model_configs['model'],
                                              openai_api_key=model_configs['openai_api_key'],

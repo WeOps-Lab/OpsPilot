@@ -14,6 +14,11 @@ class RerankProviderAdmin(ModelAdmin):
     list_display_links = ['name']
     ordering = ['id']
     filter_horizontal = []
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'rerank_model', 'enabled', 'rerank_config')
+        }),
+    )
     formfield_overrides = {
         JSONField: {
             "widget": AceWidget(mode="json", theme='chrome', width='700px')

@@ -12,8 +12,35 @@ Embed模型为知识提供向量化的能力，是知识库能够进行语义检
 * [BCEmbedding](https://github.com/netease-youdao/BCEmbedding)
   * bec-embedding-base_v1
 * OpenAI
-  * text-embedding-
+  * text-embedding-ada-002
+    ## LLM模型
 
-## LLM模型
+## API
 
-## LLM技能
+### 文本向量化
+
+> POST /api/embed/embed_content/
+
+```
+{
+  "embed_model_id": 1,
+  "content": "介绍一下你的团队"
+}
+```
+
+### 内容重排序
+
+> POST /api/rerank/rerank_sentences/
+
+```
+{
+  "rerank_id": 1,
+  "query": "介绍一下Rasa",
+  "top_k": 2,
+  "sentences": [
+    "今天天气真好",
+    "Rasa是什么",
+    "Django和Rasa怎么结合起来用"
+  ]
+}
+```
