@@ -10,7 +10,15 @@ from munchkin.components.conversation_mq import CONVERSATION_MQ_HOST, CONVERSATI
 import threading
 
 
-def handle_bot(bot, channel):
+def handle_bot(bot):
+    connection = pika.BlockingConnection(pika.ConnectionParameters(
+        host=CONVERSATION_MQ_HOST, port=CONVERSATION_MQ_PORT,
+        credentials=pika.PlainCredentials(
+            CONVERSATION_MQ_USER, CONVERSATION_MQ_PASSWORD
+        )
+    ))
+    channel = connection.channel()
+
     for method_frame, properties, body in channel.consume(f'bot-id-{bot.id}'):
         message = json.loads(body.decode())
         logger.debug(f'获取到消息:{message}')
@@ -42,20 +50,12 @@ class Command(BaseCommand):
 
         logger.info(f'初始化消息队列连接:[{CONVERSATION_MQ_HOST}:{CONVERSATION_MQ_PORT}]')
 
-        connection = pika.BlockingConnection(pika.ConnectionParameters(
-            host=CONVERSATION_MQ_HOST, port=CONVERSATION_MQ_PORT,
-            credentials=pika.PlainCredentials(
-                CONVERSATION_MQ_USER, CONVERSATION_MQ_PASSWORD
-            )
-        ))
-        channel = connection.channel()
-
         bots = Bot.objects.all()
         logger.info(f'获取到{bots.count()}个机器人,开始消费消息队列......')
 
         threads = []
         for bot in bots:
-            t = threading.Thread(target=handle_bot, args=(bot, channel))
+            t = threading.Thread(target=handle_bot, args=(bot,))
             t.start()
             threads.append(t)
 

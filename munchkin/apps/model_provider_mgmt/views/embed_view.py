@@ -5,7 +5,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 
 from apps.model_provider_mgmt.models import EmbedProvider
-from apps.model_provider_mgmt.services.embedding_service import EmbeddingService
+from apps.model_provider_mgmt.services.embedding_service import emdedding_service
 
 
 class EmbedViewSet(viewsets.ViewSet):
@@ -23,6 +23,5 @@ class EmbedViewSet(viewsets.ViewSet):
         embed_model_id = request.data.get("embed_model_id")
         content = request.data.get("content")
         embed_provider = EmbedProvider.objects.get(id=embed_model_id)
-        service = EmbeddingService()
-        embedding = service.embed_content(embed_provider, content)
+        embedding = emdedding_service.embed_content(embed_provider, content)
         return JsonResponse({"embedding": embedding})

@@ -5,7 +5,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 
 from apps.model_provider_mgmt.models import LLMSkill
-from apps.model_provider_mgmt.services.llm_service import LLMService
+from apps.model_provider_mgmt.services.llm_service import llm_service
 
 
 class LLMViewSet(viewsets.ViewSet):
@@ -32,6 +32,5 @@ class LLMViewSet(viewsets.ViewSet):
         llm_skill_id = request.data.get("llm_skill_id")
         llm_skill = LLMSkill.objects.get(id=llm_skill_id)
 
-        service = LLMService()
-        result = service.chat(llm_skill, user_message, chat_history, super_system_prompt)
+        result = llm_service.chat(llm_skill, user_message, chat_history, super_system_prompt)
         return JsonResponse({"result": result})

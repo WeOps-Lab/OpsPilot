@@ -2,7 +2,6 @@ from apps.model_provider_mgmt.utils.llm_driver import LLMDriver
 from apps.knowledge_mgmt.services.knowledge_search_service import KnowledgeSearchService
 from apps.model_provider_mgmt.models import LLMSkill
 from langchain.memory import ChatMessageHistory
-from loguru import logger
 
 
 class LLMService:
@@ -51,3 +50,6 @@ class LLMService:
             result = result[4:]
 
         return result
+
+
+llm_service = LLMService()

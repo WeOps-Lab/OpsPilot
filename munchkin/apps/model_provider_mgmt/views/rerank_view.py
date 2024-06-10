@@ -5,7 +5,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 
 from apps.model_provider_mgmt.models import RerankProvider
-from apps.model_provider_mgmt.services.rerank_service import RerankService
+from apps.model_provider_mgmt.services.rerank_service import rerank_service
 
 
 class RerankViewSet(viewsets.ViewSet):
@@ -27,9 +27,8 @@ class RerankViewSet(viewsets.ViewSet):
         sentences = request.data.get("sentences")
         query = request.data.get("query")
 
-        service = RerankService()
         reranker = RerankProvider.objects.get(id=rerank_id)
-        results = service.predict(reranker, top_k, sentences, query)
+        results = rerank_service.predict(reranker, top_k, sentences, query)
 
         return JsonResponse({
             "rerank_result": results

@@ -5,10 +5,9 @@ from langchain.retrievers import ContextualCompressionRetriever
 from langchain_core.documents import Document
 from langchain_elasticsearch import ElasticsearchRetriever
 
-from apps.model_provider_mgmt.services.embedding_service import EmbeddingService
 from apps.knowledge_mgmt.models import KnowledgeBaseFolder
-from apps.model_provider_mgmt.models import RerankModelChoices
-from apps.model_provider_mgmt.services.rerank_service import RerankService
+from apps.model_provider_mgmt.services.embedding_service import emdedding_service
+from apps.model_provider_mgmt.services.rerank_service import rerank_service
 from munchkin.components.elasticsearch import ELASTICSEARCH_URL, ELASTICSEARCH_PASSWORD
 
 
@@ -49,7 +48,7 @@ class KnowledgeSearchService:
         docs = []
 
         for knowledge_base_folder in knowledge_base_folders:
-            embedding = EmbeddingService().get_embedding(knowledge_base_folder.embed_model)
+            embedding = emdedding_service.get_embedding(knowledge_base_folder.embed_model)
 
             vector_retriever = ElasticsearchRetriever.from_es_params(
                 index_name=knowledge_base_folder.knowledge_index_name(),
@@ -62,9 +61,8 @@ class KnowledgeSearchService:
             if knowledge_base_folder.enable_rerank is False:
                 result = vector_retriever.invoke(query)
             else:
-                reranker_service = RerankService()
-                reranker = reranker_service.get_reranker(knowledge_base_folder.rerank_model,
-                                                         knowledge_base_folder.rerank_top_k)
+                reranker = rerank_service.get_reranker(knowledge_base_folder.rerank_model,
+                                                       knowledge_base_folder.rerank_top_k)
 
                 compression_retriever = ContextualCompressionRetriever(
                     base_compressor=reranker, base_retriever=vector_retriever

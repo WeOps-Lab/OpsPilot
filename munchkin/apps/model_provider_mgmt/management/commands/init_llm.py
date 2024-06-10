@@ -91,6 +91,7 @@ class Command(BaseCommand):
         llm_skill, created = LLMSkill.objects.get_or_create(
             name='开放问答(GPT3.5-16k)',
             llm_model=llm_model,
+            skill_id='action_llm_fallback',
             enable_conversation_history=True,
         )
         if created:
