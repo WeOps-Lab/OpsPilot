@@ -1,6 +1,9 @@
 FROM ccr.ccs.tencentyun.com/megalab/munchkin-base
 WORKDIR /apps
 
+RUN apt-get install -y pandoc
+RUN apt-get install texlive-fonts-recommended texlive-latex-recommended
+
 ADD ./requirements.in ./requirements.in
 RUN pip-compile -v
 RUN pip-sync -v
