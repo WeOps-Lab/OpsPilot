@@ -80,7 +80,7 @@ OpsPilot为每个Pilot的核心扩展包内置了以下技能：
 
 ```
 {
-  "llm_skill_": 1,
+  "llm_skill_id": 1,
   "user_message": "介绍一下你们团队的开发模式",
   "chat_history": [{"event":"user","text":"hello"},{"event":"bot","text":"hi"}],
   "super_system_prompt": ""
