@@ -5,21 +5,26 @@ from django.dispatch import receiver
 
 from apps.bot_mgmt.models import Bot
 from loguru import logger
+import time
+import threading
+
+
+def restart_service():
+    try:
+        time.sleep(10)
+        logger.info('重启conversation服务')
+        os.system("supervisorctl restart conversation")
+    except Exception:
+        pass
 
 
 @receiver(post_save, sender=Bot)
 def restart_service_after_save(sender, **kwargs):
-    try:
-        logger.info('重启conversation服务')
-        os.system("supervisorctl restart conversation")
-    except Exception:
-        pass
+    thread = threading.Thread(target=restart_service)
+    thread.start()
 
 
 @receiver(post_delete, sender=Bot)
 def restart_service_after_delete(sender, **kwargs):
-    try:
-        logger.info('重启conversation服务')
-        os.system("supervisorctl restart conversation")
-    except Exception:
-        pass
+    thread = threading.Thread(target=restart_service)
+    thread.start()

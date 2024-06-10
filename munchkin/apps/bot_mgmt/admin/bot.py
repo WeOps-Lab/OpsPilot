@@ -12,7 +12,8 @@ from apps.core.utils.kubernetes_client import KubernetesClient
 
 @admin.register(Bot)
 class BotAdmin(ModelAdmin):
-    list_display = ['name', 'assistant_id', 'rasa_model_link', 'channels_link', 'enable_bot_domain', 'bot_domain',
+    list_display = ['name', 'assistant_id', 'rasa_model_link', 'channels_link', 'online', 'enable_bot_domain',
+                    'bot_domain',
                     'enable_ssl',
                     'enable_node_port', 'node_port']
     search_fields = ['name']
@@ -58,6 +59,8 @@ class BotAdmin(ModelAdmin):
         client = KubernetesClient('argo')
         bot = Bot.objects.get(id=object_id)
         client.start_pilot(bot)
+        bot.online = True
+        bot.save()
         messages.success(request, '机器人上线')
         return redirect(reverse('admin:bot_mgmt_bot_changelist'))
 
@@ -65,6 +68,8 @@ class BotAdmin(ModelAdmin):
     def stop_pilot(self, request: HttpRequest, object_id: int):
         client = KubernetesClient('argo')
         client.stop_pilot(object_id)
+        bot = Bot.objects.get(id=object_id)
+        bot.online = False
+        bot.save()
         messages.success(request, '机器人下线')
         return redirect(reverse('admin:bot_mgmt_bot_changelist'))
-
