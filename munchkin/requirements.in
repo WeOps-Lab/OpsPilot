@@ -32,7 +32,7 @@ pydantic==2.5.3
 wrapt==1.16.0
 python-keycloak==3.7.0
 
-django-unfold==0.22.0
+django-unfold==0.25.0
 django-guardian==2.4.0
 django-simple-history==3.5.0
 django-minio-backend==3.6.0
