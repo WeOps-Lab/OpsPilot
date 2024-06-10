@@ -12,3 +12,4 @@ RUN apt-get install pkg-config libssl-dev libffi-dev -y
 RUN apt-get install -y supervisor
 RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 RUN pip install pip-tools
+RUN apt-get install -y pandoc
