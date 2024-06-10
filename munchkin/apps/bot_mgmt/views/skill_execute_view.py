@@ -2,16 +2,8 @@ from django.http import JsonResponse
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.views import APIView
-from rest_framework.viewsets import ModelViewSet
 
-from apps.bot_mgmt.models import Bot
-from apps.bot_mgmt.serializers import BotSerializer
 from apps.bot_mgmt.services.skill_excute_service import SkillExecuteService
-
-
-class BotViewSet(ModelViewSet):
-    serializer_class = BotSerializer
-    queryset = Bot.objects.all()
 
 
 class SkillExecuteView(APIView):

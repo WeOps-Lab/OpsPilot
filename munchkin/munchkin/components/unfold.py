@@ -23,16 +23,17 @@ UNFOLD = {
                     "link": reverse_lazy("admin:contentpack_mgmt_contentpack_changelist"),
                 },
                 {
-                    "title": "对话故事",
+                    "title": "故事",
                     "link": reverse_lazy("admin:contentpack_mgmt_rasastories_changelist"),
+                },
+
+                {
+                    "title": "规则",
+                    "link": reverse_lazy("admin:contentpack_mgmt_rasarules_changelist"),
                 },
                 {
                     "title": "动作",
                     "link": reverse_lazy("admin:contentpack_mgmt_botactions_changelist"),
-                },
-                {
-                    "title": "对话规则",
-                    "link": reverse_lazy("admin:contentpack_mgmt_rasarules_changelist"),
                 },
                 {
                     "title": "意图",
