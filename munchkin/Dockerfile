@@ -1,4 +1,4 @@
-FROM ccr.ccs.tencentyun.com/megalab/pilot-base
+FROM ccr.ccs.tencentyun.com/megalab/munchkin-base
 WORKDIR /apps
 
 ADD ./requirements.in ./requirements.in
@@ -6,7 +6,6 @@ RUN pip-compile -v
 RUN pip-sync -v
 
 ADD ./apps ./apps
-ADD ./models ./models
 ADD ./k8s-templates ./k8s-templates
 ADD ./templates ./templates
 ADD ./munchkin ./munchkin

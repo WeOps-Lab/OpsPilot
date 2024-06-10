@@ -1,0 +1,4 @@
+FROM ccr.ccs.tencentyun.com/megalab/pilot-base
+WORKDIR /apps
+ADD ./models ./models
+
