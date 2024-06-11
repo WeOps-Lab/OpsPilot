@@ -1,10 +1,5 @@
 import openpyxl
 
-
-def get_index_name(knowledge_base_folder_id):
-    return f"knowledge_base_{knowledge_base_folder_id}"
-
-
 def excel_to_dict_all_sheets(excel_file_path, chunk_size=1000):
     # 打开Excel文件
     wb = openpyxl.load_workbook(excel_file_path, read_only=True)

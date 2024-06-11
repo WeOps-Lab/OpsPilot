@@ -40,3 +40,6 @@ celery-inspect:
 
 celery-flower:
 	celery -A munchkin flower
+
+download_models:
+	git clone https://huggingface.co/maidalun1020/bce-embedding-base_v1

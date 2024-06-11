@@ -1,0 +1,4 @@
+from .knowledge_base_folder import KnowledgeBaseFolderAdmin
+from .manual_knowledge import ManualKnowledgeAdmin
+from .file_knowledge import FileKnowledgeAdmin
+from .web_page import WebPageKnowledgeAdmin

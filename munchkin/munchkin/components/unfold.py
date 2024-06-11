@@ -16,7 +16,6 @@ UNFOLD = {
                 "contentpack_mgmt.rasaresponsecorpus",
                 "contentpack_mgmt.rasaentity",
                 "contentpack_mgmt.botactions",
-                "contentpack_mgmt.botactionrule",
             ],
             "items": [
                 {
@@ -24,20 +23,17 @@ UNFOLD = {
                     "link": reverse_lazy("admin:contentpack_mgmt_contentpack_changelist"),
                 },
                 {
-                    "title": "对话故事",
+                    "title": "故事",
                     "link": reverse_lazy("admin:contentpack_mgmt_rasastories_changelist"),
+                },
+
+                {
+                    "title": "规则",
+                    "link": reverse_lazy("admin:contentpack_mgmt_rasarules_changelist"),
                 },
                 {
                     "title": "动作",
                     "link": reverse_lazy("admin:contentpack_mgmt_botactions_changelist"),
-                },
-                {
-                    "title": "动作规则",
-                    "link": reverse_lazy("admin:contentpack_mgmt_botactionrule_changelist"),
-                },
-                {
-                    "title": "对话规则",
-                    "link": reverse_lazy("admin:contentpack_mgmt_rasarules_changelist"),
                 },
                 {
                     "title": "意图",
@@ -61,6 +57,22 @@ UNFOLD = {
                 },
             ]
 
+        },
+        {
+            "models": [
+                "model_provider_mgmt.llmmodel",
+                "model_provider_mgmt.llmskill",
+            ],
+            "items": [
+                {
+                    "title": "LLM模型",
+                    "link": reverse_lazy("admin:model_provider_mgmt_llmmodel_changelist"),
+                },
+                {
+                    "title": "LLM技能",
+                    "link": reverse_lazy("admin:model_provider_mgmt_llmskill_changelist"),
+                }
+            ]
         },
         {
             "models": [
@@ -102,11 +114,21 @@ UNFOLD = {
         {
             "models": [
                 "knowledge_mgmt.fileknowledge",
+                "knowledge_mgmt.manualknowledge",
+                "knowledge_mgmt.webpageknowledge",
             ],
             "items": [
                 {
                     "title": "文件知识",
                     "link": reverse_lazy("admin:knowledge_mgmt_fileknowledge_changelist"),
+                },
+                {
+                    "title": "手工录入",
+                    "link": reverse_lazy("admin:knowledge_mgmt_manualknowledge_changelist"),
+                },
+                {
+                    "title": "网页知识",
+                    "link": reverse_lazy("admin:knowledge_mgmt_webpageknowledge_changelist"),
                 }
             ]
         },
@@ -176,6 +198,10 @@ UNFOLD = {
                         "link": reverse_lazy("admin:bot_mgmt_bot_changelist"),
                     },
                     {
+                        "title": "动作规则",
+                        "link": reverse_lazy("admin:bot_mgmt_botskillrule_changelist"),
+                    },
+                    {
                         "title": "对话记录",
                         "link": reverse_lazy("admin:bot_mgmt_botconversationhistory_changelist"),
                     }
@@ -189,12 +215,12 @@ UNFOLD = {
                         "link": reverse_lazy("admin:model_provider_mgmt_embedprovider_changelist"),
                     },
                     {
-                        "title": "LLM模型",
-                        "link": reverse_lazy("admin:model_provider_mgmt_llmmodel_changelist"),
+                        "title": "Rerank模型",
+                        "link": reverse_lazy("admin:model_provider_mgmt_rerankprovider_changelist"),
                     },
                     {
-                        "title": "LLM技能",
-                        "link": reverse_lazy("admin:model_provider_mgmt_llmskill_changelist"),
+                        "title": "LLM模型",
+                        "link": reverse_lazy("admin:model_provider_mgmt_llmmodel_changelist"),
                     }
                 ]
             },
