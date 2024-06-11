@@ -37,3 +37,5 @@ DJANGO_SUPERUSER_USERNAME=admin DJANGO_SUPERUSER_EMAIL=admin@example.com DJANGO_
 ```
 
 然后在界面上初始化token
+
+![token.png](https://static.cwoa.net/8d7fff2f7b5b463c99dc3b719afb4fc8.png)
