@@ -1,4 +1,5 @@
 import os.path
+import re
 import tempfile
 
 import elasticsearch
@@ -12,7 +13,8 @@ from langchain_elasticsearch import ElasticsearchStore
 from langchain_text_splitters import RecursiveCharacterTextSplitter, MarkdownHeaderTextSplitter
 from loguru import logger
 from tqdm import tqdm
-
+from markdown import markdown
+from bs4 import BeautifulSoup
 from apps.knowledge_mgmt.models import KnowledgeBaseFolder, FileKnowledge, ManualKnowledge, WebPageKnowledge
 from apps.model_provider_mgmt.services.embedding_service import emdedding_service
 from munchkin.components.elasticsearch import ELASTICSEARCH_URL, ELASTICSEARCH_PASSWORD
@@ -66,6 +68,7 @@ def embed_file_knowledgebase(knowledge_base_folder, knowledge):
             markdown_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=headers_to_split_on, strip_headers=False)
             md_header_splits = markdown_splitter.split_text(loader.load()[0].page_content)
 
+            # 提取所有表格
             if knowledge_base_folder.enable_general_parse:
                 # 使用循环分块进行切分
                 text_splitter = RecursiveCharacterTextSplitter(
@@ -130,22 +133,28 @@ def general_embed(knowledge_base_folder_id):
                 if isinstance(knowledge, FileKnowledge):
                     logger.debug(f'开始处理文件知识: {knowledge.title}')
                     knowledge_docs += embed_file_knowledgebase(knowledge_base_folder, knowledge)
+                    for doc in knowledge_docs:
+                        doc.metadata['knowledge_type'] = 'file'
                     logger.info(f'文件知识[{knowledge.title}]共提取[{len(knowledge_docs)}]个文档片段')
 
                 elif isinstance(knowledge, ManualKnowledge):
                     logger.debug(f'开始处理手动知识: {knowledge.title}')
                     knowledge_docs += embed_manual_knowledgebase(knowledge_base_folder, knowledge)
-
+                    for doc in knowledge_docs:
+                        doc.metadata['knowledge_type'] = 'manual'
                     logger.info(f'手动知识[{knowledge.title}]共提取[{len(knowledge_docs)}]个文档片段')
 
                 elif isinstance(knowledge, WebPageKnowledge):
                     logger.debug(f'开始处理网页知识: {knowledge.title}')
                     knowledge_docs += embed_webpage_knowledgebase(knowledge_base_folder, knowledge)
+                    for doc in knowledge_docs:
+                        doc.metadata['knowledge_type'] = 'webpage'
                     logger.info(f'网页知识[{knowledge.title}]共提取[{len(knowledge_docs)}]个文档片段')
 
             for doc in knowledge_docs:
                 doc.metadata['knowledge_id'] = knowledge.id
                 doc.metadata['knowledge_folder_id'] = knowledge_base_folder_id
+                doc.metadata['knowledge_title'] = knowledge.title
                 for key, value in knowledge.custom_metadata.items():
                     doc.metadata[key] = value
 

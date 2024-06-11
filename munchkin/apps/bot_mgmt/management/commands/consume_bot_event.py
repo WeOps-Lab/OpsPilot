@@ -1,46 +1,59 @@
+import datetime
 import json
 
 import pika
 from django.core.management import BaseCommand
 from loguru import logger
+
 from apps.bot_mgmt.models import Bot, BotConversationHistory
-from apps.channel_mgmt.models import ChannelUser, ChannelUserGroup
+from apps.channel_mgmt.models import Channel, ChannelUser, ChannelUserGroup
 from munchkin.components.conversation_mq import CONVERSATION_MQ_HOST, CONVERSATION_MQ_PORT, CONVERSATION_MQ_USER, \
     CONVERSATION_MQ_PASSWORD
-import threading
+
+user_channels = {}
 
 
-def handle_bot(bot):
-    connection = pika.BlockingConnection(pika.ConnectionParameters(
-        host=CONVERSATION_MQ_HOST, port=CONVERSATION_MQ_PORT,
-        credentials=pika.PlainCredentials(
-            CONVERSATION_MQ_USER, CONVERSATION_MQ_PASSWORD
-        )
-    ))
-    channel = connection.channel()
-
-    for method_frame, properties, body in channel.consume(f'bot-id-{bot.id}'):
+def on_message(channel, method_frame, header_frame, body):
+    try:
         message = json.loads(body.decode())
-        logger.debug(f'获取到消息:{message}')
 
         if 'text' in message:
+            logger.debug(f'收到消息:{message}')
+
             sender_id = message['sender_id']
-            channel_user_exists = ChannelUser.objects.filter(user_id=sender_id).exists()
+            if 'input_channel' in message:
+                input_channel = message['input_channel']
+                user_channels[sender_id] = message['input_channel']
+            else:
+                input_channel = user_channels[sender_id]
+
+            assistant_id = message['metadata']['assistant_id']
+            bot = Bot.objects.get(assistant_id=assistant_id)
+            channel_obj = Channel.objects.get(name=input_channel)
+            channel_user_exists = ChannelUser.objects.filter(user_id=sender_id,
+                                                             channel_user_group__channel=channel_obj).exists()
             if channel_user_exists is False:
                 logger.info(f'用户[{sender_id}]不存在,创建用户,并加入默认用户组')
-                channel_user_group = ChannelUserGroup.objects.get(channel=bot.channels.first(),
+
+                channel_user_group = ChannelUserGroup.objects.get(channel=channel_obj,
                                                                   name='默认用户组')
                 ChannelUser.objects.create(channel_user_group=channel_user_group,
                                            user_id=sender_id)
 
-            channel_user = ChannelUser.objects.get(user_id=sender_id)
+            channel_user = ChannelUser.objects.filter(user_id=sender_id).first()
 
             # 创建对话历史
-            BotConversationHistory.objects.create(bot=bot, user=channel_user,
-                                                  created_at=message['timestamp'],
-                                                  conversation_role=message['event'],
-                                                  conversation=message['text'])
-        channel.basic_ack(method_frame.delivery_tag)
+            created_at = datetime.datetime.fromtimestamp(message['timestamp'], tz=datetime.timezone.utc)
+            logger.debug(
+                f'写入消息，完整信息如下: bot={bot}, user={channel_user}, created_at={created_at}, conversation_role={message["event"]}, conversation={message["text"]}')
+
+            BotConversationHistory.objects.get_or_create(bot=bot, user=channel_user,
+                                                         created_at=created_at,
+                                                         conversation_role=message['event'],
+                                                         conversation=message['text'])
+    except Exception as e:
+        logger.error(f'消息处理失败:{e}')
+    channel.basic_ack(delivery_tag=method_frame.delivery_tag)
 
 
 class Command(BaseCommand):
@@ -50,14 +63,16 @@ class Command(BaseCommand):
 
         logger.info(f'初始化消息队列连接:[{CONVERSATION_MQ_HOST}:{CONVERSATION_MQ_PORT}]')
 
-        bots = Bot.objects.all()
-        logger.info(f'获取到{bots.count()}个机器人,开始消费消息队列......')
-
-        threads = []
-        for bot in bots:
-            t = threading.Thread(target=handle_bot, args=(bot,))
-            t.start()
-            threads.append(t)
-
-        for t in threads:
-            t.join()
+        connection = pika.BlockingConnection(pika.ConnectionParameters(
+            host=CONVERSATION_MQ_HOST, port=CONVERSATION_MQ_PORT,
+            credentials=pika.PlainCredentials(
+                CONVERSATION_MQ_USER, CONVERSATION_MQ_PASSWORD
+            )
+        ))
+        channel = connection.channel()
+        channel.basic_consume('pilot', on_message)
+        try:
+            channel.start_consuming()
+        except KeyboardInterrupt:
+            channel.stop_consuming()
+        connection.close()
