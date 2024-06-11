@@ -1,45 +1,39 @@
 # 快速入门
 
-使用以下Docker-Compose可以快速的部署OpsPilot,
+## 部署K3S
 
 ```
-cd ./support-files/docker-compose/
-cp ./.env.example ./.env
-docker-compose up -d
+curl https://releases.rancher.com/install-docker/20.10.sh | sh
+curl -sfL https://get.k3s.io | sh -s - --docker
 ```
 
-执行`docker-compose up -d`，访问5005端口，正常的话，服务就启动完毕了。
+## 部署基础组件
 
-> 注意：投入正式环境使用的时候，需要将Model以及配置文件更换为自己的。
+进入 `support-files/k8s`目录，执行
 
-## 环境变量
+```
+kubectl create ns argo
+kubectl create ns ops-pilot
 
-| 变量名                         | 说明                               | 默认值             |
-|-----------------------------|----------------------------------|-----------------|
-| RUN_MODE                    | 运行模式                             | dev             |
-| CHATGPT_MODEL_MAX_HISTORY   | 对话历史记录最大长度（用于对话总结技能）             | 5               |
-| ENABLE_LLM_SOURCE_DETAIL    | LLM回复的时候，是否回复知识来源                | false           |
-| CELERY_BROKER_URL           | Celery Broker地址,用于长周期任务技能        |                 |
-| RASA_CREDENTIALS            | Rasa认证配置文件名称，Celery任务会使用         | credentials.yml |
-| RASA_ACTION_SERVER_URL      | Rasa Action Server地址，Celery任务会使用 |                 |
-| FASTGPT_ENDPOINT            | FastGPT服务地址                      |                 |
-| FASTGPT_KEY                 | FastGPT服务的Key，用于LLM回复技能          |                 |
-| FASTGPT_CONTENT_SUMMARY_KEY | FastGPT服务的Key，用于对话总结技能           |                 |
-| FASTGPT_TICKET_KEY          | FastGPT服务的Key，用于智能提单技能           |                 |
-| ENABLE_JENKINS_SKILL        | 是否启用Jenkins技能                    | false           |
-| JENKINS_URL                 | Jenkins服务地址                      |                 |
-| JENKINS_USERNAME            | Jenkins用户名                       |                 |
-| JENKINS_PASSWORD            | Jenkins密码                        |                 |
-| CELERY_BROKER_URL           | Celery Broker地址                  |                 |
-| CELERY_RESULT_BACKEND       | Celery Result Backend地址          |                 |
-| RASA_CREDENTIALS            | Rasa认证配置文件名称，Celery任务会使用         | credentials.yml |
-| SUPABASE_URL                | Supabase地址,用于模型训练                |                 |
-| SUPABASE_KEY                | Supabase Key                     |                 |
-| SUPABASE_USERNAME           | Supabase用户名                      |                 |
-| SUPABASE_PASSWORD           | Supabase密码                       |                 |
-| SALT_API_URL                | Salt API地址                       |                 |
-| SALT_API_USERNAME           | Salt API用户名                      |                 |
-| SALT_API_PASSWORD           | Salt API密码                       |                 |
-| FASTGPT_AUTOMATION_KEY      | FastGPT服务的Key，用于自动化技能            |                 |
+kubectl apply -f argy.yml
+kubectl apply -f elasticsearch.yml
+kubectl apply -f minio.yml
+kubectl apply -f postgres.yml
+kubectl apply -f rabbitmq.yml
+```
 
+## 部署Munchkin
 
+```
+kubectl apply -f munchkin.yml
+```
+
+## 初始化Munchkin
+
+首次打开Munchkin，需要先初始化超级管理员的用户名和密码
+
+```
+DJANGO_SUPERUSER_USERNAME=admin DJANGO_SUPERUSER_EMAIL=admin@example.com DJANGO_SUPERUSER_PASSWORD=password python manage.py createsuperuser --noinput
+```
+
+然后在界面上初始化token
