@@ -98,7 +98,7 @@ class BootStrap(object):
                 'username': server_settings.rabbitmq_username,
                 'password': server_settings.rabbitmq_password,
                 'queues': [
-                    f'bot-id-{server_settings.munchkin_bot_id}'
+                    'pilot'
                 ]
             }
         }
