@@ -1,0 +1,7 @@
+version: "3.1"
+
+rules:
+  - rule: chitchat
+    steps:
+      - intent: chitchat
+      - action: utter_chitchat

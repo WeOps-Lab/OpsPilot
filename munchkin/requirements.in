@@ -61,3 +61,6 @@ nanoid==2.0.0
 bcembedding==0.1.3
 fake_useragent==1.5.1
 
+rapidocr-onnxruntime==1.3.22
+PyMuPDF
+

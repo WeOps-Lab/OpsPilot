@@ -1,0 +1,23 @@
+version: "3.1"
+responses:
+  utter_ask_start_ticket:
+    - text: "确认提单？(是/否/修改)"
+      channel: "enterprise_wechat"
+
+    - text: "确认提单？"
+      buttons:
+        - title: "是"
+          payload: "/yes"
+        - title: "否"
+          payload: "/no"
+        - title: "修改"
+          payload: "/revise"
+
+  utter_ask_revise_ticket:
+    - text: "请告诉我您想修改的内容"
+
+  utter_ticket_canceled:
+    - text: "OpsPilot已经取消了本次的提单申请，期待下次为您服务！"
+
+  utter_ticket_submitted:
+    - text: "OpsPilot已经成功为您提交了提单，我们会尽快处理您的请求！"

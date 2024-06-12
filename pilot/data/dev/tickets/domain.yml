@@ -1,0 +1,47 @@
+version: "3.1"
+
+intents:
+  - revise  # 修正工单
+  - start_ticket # 智能提单
+
+actions:
+  - action_start_ticket  # 开始工单
+  - action_ticket_summary # 工单总结
+  - action_revise_ticket # 修正工单
+  - action_set_start_ticket_slot
+  - action_set_finish_ticket_slot
+  - action_set_revise_ticket_slot
+
+entities:
+  - in_ticket_submission
+
+
+slots:
+  in_ticket_submission:
+    type: bool
+    influence_conversation: true
+    initial_value: false
+    mappings:
+      - type: from_entity
+        entity: in_ticket_submission
+
+  ticket_summary:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: custom
+
+
+  revise_ticket:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: revise_ticket_form
+            requested_slot: revise_ticket
+
+forms:
+  revise_ticket_form:
+    required_slots:
+      - revise_ticket

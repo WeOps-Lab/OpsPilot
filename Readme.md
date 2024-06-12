@@ -18,6 +18,12 @@ https://wedoc.canway.net/opspilot/
 
 <img src="./support-files/images/wx.jpg" >
 
-## Star History
+# Inspire by
+
+* [Langchain-Chatchat](https://github.com/chatchat-space/Langchain-Chatchat)
+* [QAnything](https://github.com/netease-youdao/QAnything)
+* [ragflow](https://github.com/infiniflow/ragflow)
+
+# Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=WeOps-Lab/OpsPilot&type=Date)](https://star-history.com/#WeOps-Lab/OpsPilot&Date)

@@ -16,7 +16,6 @@ pilot/endpoints-prod.yml
 pilot/.rasa
 pilot/credentials-prod.yml
 *.zip
-pilot/data
 pilot/graph.html
 
 munchkin/templates/*
