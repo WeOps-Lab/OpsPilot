@@ -1,10 +1,10 @@
 import cv2
-from PIL import Image
+import fitz
 import numpy as np
 import tqdm
+from PIL import Image
 from rapidocr_onnxruntime import RapidOCR
-import fitz 
-import numpy as np
+
 PDF_OCR_THRESHOLD = (0.6, 0.6)
 
 
@@ -34,7 +34,6 @@ def rotate_img(img, angle):
 
 
 def pdf2text(filepath):
-
     ocr = RapidOCR()
     doc = fitz.open(filepath)
     resp = ""

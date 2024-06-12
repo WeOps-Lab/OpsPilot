@@ -62,5 +62,5 @@ bcembedding==0.1.3
 fake_useragent==1.5.1
 
 rapidocr-onnxruntime==1.3.22
-PyMuPDF
+pymupdf==1.24.5
 
