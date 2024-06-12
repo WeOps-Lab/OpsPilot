@@ -1,0 +1,40 @@
+version: "3.1"
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
+
+intents:
+  - scan
+  - summary_content
+  - out_of_scope
+  - EXTERNAL_UTTER
+  - yes
+  - no
+
+
+actions:
+  - action_llm_fallback
+  - action_llm_summary
+  - action_scan
+  - action_external_utter
+
+entities:
+  - content
+
+slots:
+  scan_targets:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: scan_targets_form
+            requested_slot: scan_targets
+
+
+forms:
+  scan_targets_form:
+    required_slots:
+      - scan_targets
+
