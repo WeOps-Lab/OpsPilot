@@ -14,7 +14,6 @@ class LLMSkillAdmin(ModelAdmin):
     search_fields = ['name']
     list_filter = ['llm_model', 'enable_conversation_history', 'enable_rag']
     list_display_links = ['name']
-
     ordering = ['id']
     filter_horizontal = ['knowledge_base_folders']
 
