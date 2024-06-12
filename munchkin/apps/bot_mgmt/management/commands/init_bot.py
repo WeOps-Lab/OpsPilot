@@ -12,7 +12,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         rasa_model = RasaModel.objects.filter(name='核心模型').first()
         ops_pilot, created = Bot.objects.get_or_create(name='OpsPilot', description='智能运维助理',
-                                                       assistant_id='ops_pilot',
+                                                       assistant_id='ops-pilot',
                                                        rasa_model=rasa_model)
         if created:
             llm_skill = LLMSkill.objects.filter(name='开放问答(GPT3.5-16k)').first()
