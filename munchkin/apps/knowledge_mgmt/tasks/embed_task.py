@@ -15,6 +15,11 @@ from loguru import logger
 from tqdm import tqdm
 from markdown import markdown
 from bs4 import BeautifulSoup
+
+from apps.knowledge_mgmt.loader.doc_loader import DocLoader
+from apps.knowledge_mgmt.loader.image_loader import ImageLoader
+from apps.knowledge_mgmt.loader.pdf_loader import PDFLoader
+from apps.knowledge_mgmt.loader.ppt_loader import PPTLoader
 from apps.knowledge_mgmt.models import KnowledgeBaseFolder, FileKnowledge, ManualKnowledge, WebPageKnowledge
 from apps.model_provider_mgmt.services.embedding_service import emdedding_service
 from munchkin.components.elasticsearch import ELASTICSEARCH_URL, ELASTICSEARCH_PASSWORD
@@ -75,14 +80,23 @@ def embed_file_knowledgebase(knowledge_base_folder, knowledge):
                     chunk_size=knowledge_base_folder.general_parse_chunk_size,
                     chunk_overlap=knowledge_base_folder.general_parse_chunk_overlap)
                 docs += text_splitter.split_documents(md_header_splits)
+                return docs
+
+        if file_type in ['.ppt', '.pptx']:
+            loader = PPTLoader(f.name, mode='single')
+        if file_type in ['.pdf']:
+            loader = PDFLoader(f.name, mode='single')
+        if file_type in ['.jpg', '.png']:
+            loader = ImageLoader(f.name, mode='single')
+        if file_type in ['.doc', '.docx']:
+            loader = DocLoader(f.name, mode='single')
         else:
-            # TODO:针对 PPT、Word、Excel、PDF，分别有不同的处理方式，需要更加精细化的处理
-            # TODO: 切分模式现在被固定为了single，需要修改为参数
             loader = UnstructuredFileLoader(f.name, mode='single')
-            text_splitter = RecursiveCharacterTextSplitter(chunk_size=knowledge_base_folder.general_parse_chunk_size,
-                                                           chunk_overlap=knowledge_base_folder.general_parse_chunk_overlap)
-            if knowledge_base_folder.enable_general_parse:
-                docs += text_splitter.split_documents(loader.load())
+
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=knowledge_base_folder.general_parse_chunk_size,
+                                                       chunk_overlap=knowledge_base_folder.general_parse_chunk_overlap)
+        if knowledge_base_folder.enable_general_parse:
+            docs += text_splitter.split_documents(loader.load())
         return docs
 
 
