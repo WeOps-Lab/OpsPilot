@@ -1,7 +1,10 @@
 from django.db import models
 
+from apps.core.models.maintainer_info import MaintainerInfo
+from apps.core.models.time_info import TimeInfo
 
-class ManualKnowledge(models.Model):
+
+class ManualKnowledge(TimeInfo, MaintainerInfo):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255, verbose_name='标题')
     content = models.TextField(verbose_name='内容')
