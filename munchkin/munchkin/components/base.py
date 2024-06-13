@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_jsonform',
     'django_comment_migrate',
     'debug_toolbar',
     'django_select2',
