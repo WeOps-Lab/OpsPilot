@@ -2,10 +2,13 @@ from django.core.validators import FileExtensionValidator
 from django.db import models
 from django_minio_backend import MinioBackend, iso_date_prefix
 
+from apps.core.models.maintainer_info import MaintainerInfo
+from apps.core.models.time_info import TimeInfo
+
 KNKOWLEDGE_TYPES = ['md', 'docx', 'xlsx', 'csv', 'pptx', 'pdf', 'txt']
 
 
-class FileKnowledge(models.Model):
+class FileKnowledge(TimeInfo, MaintainerInfo):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255, verbose_name='文件名称')
     file = models.FileField(verbose_name="文件",
