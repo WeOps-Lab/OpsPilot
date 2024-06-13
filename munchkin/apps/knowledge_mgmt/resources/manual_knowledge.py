@@ -1,5 +1,5 @@
 import json
-import logging
+from loguru import logger
 
 from django import forms
 from import_export.forms import ImportForm, ConfirmImportForm
@@ -14,19 +14,24 @@ class ManualKnowledgeImportForm(ImportForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # 设置 resource 字段为隐藏字段
-        del self.fields['resource']
+        self.fields['resource'].widget = forms.HiddenInput()
+        self.fields['resource'].label = ""  # 设置为一个空字符串
 
 
 class ManualKnowledgeConfirmImportForm(ConfirmImportForm):
-    knowledge_base_folder = forms.CharField(widget=forms.HiddenInput(), required=False)
-
+    knowledge_base_folder = forms.ModelChoiceField(queryset=KnowledgeBaseFolder.objects.all(), required=True, label="请选择需要导入的知识库")
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # 设置 resource 字段为隐藏字段
+        self.fields['knowledge_base_folder'].widget = forms.HiddenInput()
+        self.fields['knowledge_base_folder'].label = ""  # 设置为一个空字符串
 
 class ManualKnowledgeResource(resources.ModelResource):
 
     class Meta:
         model = ManualKnowledge
         import_id_fields = ('title',)
-        fields = ('title', 'content', 'custom_metadata', 'knowledge_base_folder', "created_by", "updated_by")  # 指定导入的字段
+        fields = ('title', 'content', 'custom_metadata', 'knowledge_base_folder', "owner")  # 指定导入的字段
         skip_unchanged = True
         skip_empty = True
         report_skipped = True
@@ -41,14 +46,13 @@ class ManualKnowledgeResource(resources.ModelResource):
             else:
                 row["custom_metadata"] = json.dumps(row.get("custom_metadata", "").split(","))
                 row["knowledge_base_folder"] = kwargs.get("knowledge_base_folder").id
-                row["created_by"] = kwargs.get("created_by").id
-                row["updated_by"] = kwargs.get("updated_by").id
-                logging.log(logging.DEBUG, row)
+                row["owner"] = kwargs.get("owner").id
+                logger.debug(row)
                 cleaned_data.append(row)
 
         dataset.dict = cleaned_data
 
     def after_init_instance(self, instance, new, row, **kwargs):
+        super().after_init_instance(instance, new, row, **kwargs)
         instance.knowledge_base_folder = kwargs["knowledge_base_folder"]
-        instance.created_by = kwargs["created_by"]
-        instance.updated_by = kwargs["updated_by"]
+        instance.owner = kwargs["owner"]
