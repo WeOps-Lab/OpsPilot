@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_comment_migrate',
+    'guardian',
     'debug_toolbar',
     'django_select2',
     'import_export',
@@ -127,3 +128,4 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+
