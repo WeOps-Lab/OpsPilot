@@ -50,7 +50,7 @@ class ManualKnowledgeAdmin(ModelAdmin, ImportExportModelAdmin):
         initial = super().get_confirm_form_initial(request, import_form)
 
         if import_form:
-            initial['knowledge_base_folder'] = import_form.cleaned_data['knowledge_base_folder'].id
+            initial['knowledge_base_folder'] = import_form.cleaned_data['knowledge_base_folder']
         return initial
 
     def get_import_data_kwargs(self, request, *args, **kwargs):
@@ -60,6 +60,5 @@ class ManualKnowledgeAdmin(ModelAdmin, ImportExportModelAdmin):
         form = kwargs.get("form", None)
         if form and hasattr(form, "cleaned_data"):
             kwargs.update({"knowledge_base_folder": form.cleaned_data.get("knowledge_base_folder")})
-            kwargs.update({"created_by": request.user})
-            kwargs.update({"updated_by": request.user})
+            kwargs.update({"owner": request.user})
         return kwargs
