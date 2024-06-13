@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'unfold.contrib.inlines',
     'unfold.contrib.import_export',
     'unfold.contrib.guardian',
+    'guardian',
     'unfold.contrib.simple_history',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -31,7 +32,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_comment_migrate',
-    'guardian',
     'debug_toolbar',
     'django_select2',
     'import_export',
@@ -128,4 +128,3 @@ STORAGES = {
         'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
     },
 }
-

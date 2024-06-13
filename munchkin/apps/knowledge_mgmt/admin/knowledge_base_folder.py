@@ -9,6 +9,7 @@ from unfold.admin import ModelAdmin
 from unfold.contrib.forms.widgets import WysiwygWidget
 from unfold.decorators import action
 
+from apps.core.admin.guarded_admin_base import GuardedAdminBase
 from apps.knowledge_mgmt.models import KnowledgeBaseFolder, FileKnowledge, ManualKnowledge, WebPageKnowledge
 from apps.knowledge_mgmt.tasks.embed_task import general_embed
 
