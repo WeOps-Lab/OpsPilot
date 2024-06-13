@@ -118,14 +118,14 @@ STATIC_ROOT = BASE_DIR / 'assets'
 STATIC_URL = 'assets/'
 
 MEDIA_ROOT = BASE_DIR / 'media'
-MEDIA_URL = "/media/"
+MEDIA_URL = '/media/'
 
 INTERNAL_IPS = ('127.0.0.1',)
 
 WHITENOISE_ROOT = os.path.join(STATIC_ROOT)
 STORAGES = {
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
     },
 }
 
