@@ -9,10 +9,16 @@ from apps.knowledge_mgmt.models import ManualKnowledge, KnowledgeBaseFolder
 
 class ManualKnowledgeImportForm(ImportForm):
     knowledge_base_folder = forms.ModelChoiceField(queryset=KnowledgeBaseFolder.objects.all(), required=True, label="请选择需要导入的知识库")
+    field_order = ["knowledge_base_folder", "import_file", "format"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # 设置 resource 字段为隐藏字段
+        del self.fields['resource']
 
 
 class ManualKnowledgeConfirmImportForm(ConfirmImportForm):
-    knowledge_base_folder = forms.ModelChoiceField(queryset=KnowledgeBaseFolder.objects.all(), required=True)
+    knowledge_base_folder = forms.CharField(widget=forms.HiddenInput(), required=False)
 
 
 class ManualKnowledgeResource(resources.ModelResource):
