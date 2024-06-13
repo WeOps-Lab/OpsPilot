@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.contrib import messages
 from django.db.models import TextField
-from django.forms import Media
 from django.http import HttpRequest
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -9,6 +8,7 @@ from django.utils.html import format_html
 from unfold.admin import ModelAdmin
 from unfold.contrib.forms.widgets import WysiwygWidget
 from unfold.decorators import action
+
 from apps.knowledge_mgmt.models import KnowledgeBaseFolder, FileKnowledge, ManualKnowledge, WebPageKnowledge
 from apps.knowledge_mgmt.tasks.embed_task import general_embed
 
@@ -50,7 +50,7 @@ class KnowledgeBaseFolderAdmin(ModelAdmin):
     list_display_links = ['name']
     ordering = ['id']
     filter_horizontal = []
-    actions_row = ['train_embed']
+    actions = ['train_embed']
     inlines = [FileKnowledgeInline, WebPageKnowledgeInline, ManualKnowledgeInline]
     readonly_fields = ['train_status']
     save_as = True
@@ -80,8 +80,9 @@ class KnowledgeBaseFolderAdmin(ModelAdmin):
     )
 
     @action(description='训练', url_path="train_embed_model")
-    def train_embed(self, request: HttpRequest, object_id: int):
-        general_embed.delay(object_id)
+    def train_embed(self, request: HttpRequest, knowledges):
+        for knowledge in knowledges:
+            general_embed.delay(knowledge.id)
         messages.success(request, '开始训练')
         return redirect(reverse('admin:knowledge_mgmt_knowledgebasefolder_changelist'))
 
