@@ -20,7 +20,7 @@ class BotAdmin(ModelAdmin):
     list_filter = ['name']
     list_display_links = ['name', 'rasa_model_link', 'channels_link']
     ordering = ['id']
-    actions_row = ['start_pilot', 'stop_pilot']
+    actions = ['start_pilot', 'stop_pilot']
     filter_horizontal = ['channels', 'llm_skills']
     fieldsets = (
         ('基本信息', {
@@ -49,27 +49,30 @@ class BotAdmin(ModelAdmin):
     channels_link.short_description = '通道'
 
     def rasa_model_link(self, obj):
+        if obj.rasa_model is None:
+            return '-'
+
         link = reverse("admin:contentpack_mgmt_rasamodel_change", args=[obj.rasa_model.id])
         return format_html('<a href="{}">{}</a>', link, obj.rasa_model)
 
     rasa_model_link.short_description = '模型'
 
     @action(description='上线', url_path="start_pilot")
-    def start_pilot(self, request: HttpRequest, object_id: int):
+    def start_pilot(self, request: HttpRequest, bots):
         client = KubernetesClient('argo')
-        bot = Bot.objects.get(id=object_id)
-        client.start_pilot(bot)
-        bot.online = True
-        bot.save()
+        for bot in bots:
+            client.start_pilot(bot)
+            bot.online = True
+            bot.save()
         messages.success(request, '机器人上线')
         return redirect(reverse('admin:bot_mgmt_bot_changelist'))
 
     @action(description='下线', url_path="stop_pilot")
-    def stop_pilot(self, request: HttpRequest, object_id: int):
+    def stop_pilot(self, request: HttpRequest, bots):
         client = KubernetesClient('argo')
-        client.stop_pilot(object_id)
-        bot = Bot.objects.get(id=object_id)
-        bot.online = False
-        bot.save()
+        for bot in bots:
+            client.stop_pilot(bot.id)
+            bot.online = False
+            bot.save()
         messages.success(request, '机器人下线')
         return redirect(reverse('admin:bot_mgmt_bot_changelist'))
