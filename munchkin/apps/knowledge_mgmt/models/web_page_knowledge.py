@@ -1,7 +1,10 @@
 from django.db import models
 
+from apps.core.models.maintainer_info import MaintainerInfo
+from apps.core.models.time_info import TimeInfo
 
-class WebPageKnowledge(models.Model):
+
+class WebPageKnowledge(TimeInfo, MaintainerInfo):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255, verbose_name='标题')
     url = models.URLField(verbose_name='URL')

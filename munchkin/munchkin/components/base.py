@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'unfold',
     'unfold.contrib.filters',
     'unfold.contrib.forms',
+    'unfold.contrib.inlines',
     'unfold.contrib.import_export',
     'unfold.contrib.guardian',
     'unfold.contrib.simple_history',
@@ -116,13 +117,13 @@ STATIC_ROOT = BASE_DIR / 'assets'
 STATIC_URL = 'assets/'
 
 MEDIA_ROOT = BASE_DIR / 'media'
-MEDIA_URL = "/media/"
+MEDIA_URL = '/media/'
 
 INTERNAL_IPS = ('127.0.0.1',)
 
 WHITENOISE_ROOT = os.path.join(STATIC_ROOT)
 STORAGES = {
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
     },
 }
