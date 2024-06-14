@@ -1,5 +1,7 @@
 from django.db import models
 
+from apps.core.models.maintainer_info import MaintainerInfo
+
 TRAIN_STATUS_CHOICES = [
     (0, '待训练'),
     (1, '处理中'),
@@ -8,7 +10,7 @@ TRAIN_STATUS_CHOICES = [
 ]
 
 
-class KnowledgeBaseFolder(models.Model):
+class KnowledgeBaseFolder(MaintainerInfo):
     id = models.AutoField(primary_key=True)
 
     name = models.CharField(max_length=255, unique=True, verbose_name='名称')

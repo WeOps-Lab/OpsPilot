@@ -8,13 +8,14 @@ from import_export.admin import ImportExportModelAdmin
 from unfold.admin import ModelAdmin
 from unfold.contrib.forms.widgets import WysiwygWidget
 
+from apps.core.admin.guarded_admin_base import GuardedAdminBase
 from apps.knowledge_mgmt.models import ManualKnowledge
 from apps.knowledge_mgmt.resources.manual_knowledge import ManualKnowledgeResource, ManualKnowledgeImportForm, \
     ManualKnowledgeConfirmImportForm
 
 
 @admin.register(ManualKnowledge)
-class ManualKnowledgeAdmin(ModelAdmin, ImportExportModelAdmin):
+class ManualKnowledgeAdmin(GuardedAdminBase, ImportExportModelAdmin):
     list_display = ['title', 'knowledge_base_folder_link']
     search_fields = ['title']
     list_display_links = ['title']

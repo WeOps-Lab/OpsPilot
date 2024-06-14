@@ -3,6 +3,7 @@ from unfold.admin import ModelAdmin
 
 from apps.contentpack_mgmt.models import BotActions, RasaEntity, Intent, RasaRules, \
     RasaStories, RasaResponse, RasaForms, RasaSlots, ContentPack
+from apps.core.admin.guarded_admin_base import GuardedAdminBase
 
 
 class RasaStoriesInline(admin.TabularInline):
@@ -107,7 +108,7 @@ class RasaResponseInline(admin.TabularInline):
 
 
 @admin.register(ContentPack)
-class ContentPackAdmin(ModelAdmin):
+class ContentPackAdmin(GuardedAdminBase):
     list_display = ['name']
     search_fields = ['name']
     list_filter = ['name']
@@ -124,3 +125,9 @@ class ContentPackAdmin(ModelAdmin):
         RasaEntityInline,
         RasaResponseInline
     ]
+
+    fieldsets = (
+        ('基本信息', {
+            'fields': ('name', 'description')
+        }),
+    )

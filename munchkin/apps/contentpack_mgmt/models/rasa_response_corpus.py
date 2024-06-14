@@ -1,7 +1,9 @@
 from django.db import models
 
+from apps.core.models.maintainer_info import MaintainerInfo
 
-class RasaResponseCorpus(models.Model):
+
+class RasaResponseCorpus(MaintainerInfo):
     id = models.AutoField(primary_key=True)
     response = models.ForeignKey('contentpack_mgmt.RasaResponse', on_delete=models.CASCADE, verbose_name='回复')
     corpus = models.TextField(verbose_name='语料')

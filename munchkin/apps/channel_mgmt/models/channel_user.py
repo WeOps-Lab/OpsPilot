@@ -1,7 +1,9 @@
 from django.db import models
 
+from apps.core.models.maintainer_info import MaintainerInfo
 
-class ChannelUser(models.Model):
+
+class ChannelUser(MaintainerInfo):
     id = models.AutoField(primary_key=True)
     channel_user_group = models.ForeignKey('channel_mgmt.ChannelUserGroup', on_delete=models.CASCADE,
                                            verbose_name='通道用户组')

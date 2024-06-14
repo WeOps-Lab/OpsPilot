@@ -51,7 +51,7 @@ class ManualKnowledgeInline(admin.StackedInline):
 
 
 @admin.register(KnowledgeBaseFolder)
-class KnowledgeBaseFolderAdmin(ModelAdmin):
+class KnowledgeBaseFolderAdmin(GuardedAdminBase):
     list_display = ['name', 'description', 'embed_model_link',
                     'enable_text_search', 'enable_vector_search',
                     'train_status', 'train_progress']

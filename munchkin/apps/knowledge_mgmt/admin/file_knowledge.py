@@ -7,11 +7,12 @@ from django_ace import AceWidget
 from unfold.admin import ModelAdmin
 from unfold.contrib.forms.widgets import WysiwygWidget
 
+from apps.core.admin.guarded_admin_base import GuardedAdminBase
 from apps.knowledge_mgmt.models import FileKnowledge, ManualKnowledge, WebPageKnowledge
 
 
 @admin.register(FileKnowledge)
-class FileKnowledgeAdmin(ModelAdmin):
+class FileKnowledgeAdmin(GuardedAdminBase):
     list_display = ['knowledge_base_folder_link', 'title', 'file']
     search_fields = ['knowledge_base_folder', 'title']
     list_display_links = ['title']

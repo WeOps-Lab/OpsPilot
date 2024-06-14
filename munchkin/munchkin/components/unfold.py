@@ -60,22 +60,6 @@ UNFOLD = {
         },
         {
             "models": [
-                "model_provider_mgmt.llmmodel",
-                "model_provider_mgmt.llmskill",
-            ],
-            "items": [
-                {
-                    "title": "LLM模型",
-                    "link": reverse_lazy("admin:model_provider_mgmt_llmmodel_changelist"),
-                },
-                {
-                    "title": "LLM技能",
-                    "link": reverse_lazy("admin:model_provider_mgmt_llmskill_changelist"),
-                }
-            ]
-        },
-        {
-            "models": [
                 "authtoken.tokenproxy",
                 "token_blacklist.blacklistedtoken",
                 "token_blacklist.outstandingtoken",
@@ -213,14 +197,21 @@ UNFOLD = {
                     {
                         "title": "Embed模型",
                         "link": reverse_lazy("admin:model_provider_mgmt_embedprovider_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
                     },
                     {
                         "title": "Rerank模型",
                         "link": reverse_lazy("admin:model_provider_mgmt_rerankprovider_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
                     },
                     {
                         "title": "LLM模型",
                         "link": reverse_lazy("admin:model_provider_mgmt_llmmodel_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
+                    },
+                    {
+                        "title": "LLM技能",
+                        "link": reverse_lazy("admin:model_provider_mgmt_llmskill_changelist"),
                     }
                 ]
             },

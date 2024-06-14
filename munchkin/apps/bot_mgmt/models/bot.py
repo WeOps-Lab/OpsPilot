@@ -2,9 +2,10 @@ from django.db import models
 
 from apps.channel_mgmt.models import Channel, ChannelUser
 from apps.contentpack_mgmt.models import RasaModel
+from apps.core.models.maintainer_info import MaintainerInfo
 
 
-class Bot(models.Model):
+class Bot(MaintainerInfo):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, verbose_name='名称')
     description = models.TextField(blank=True, null=True, verbose_name='描述')
@@ -17,10 +18,10 @@ class Bot(models.Model):
 
     enable_bot_domain = models.BooleanField(verbose_name='启用域名', default=False)
     enable_ssl = models.BooleanField(verbose_name='启用SSL', default=False)
-    bot_domain = models.CharField(max_length=255, verbose_name='域名', default='localhost')
+    bot_domain = models.CharField(max_length=255, verbose_name='域名', blank=True, null=True, unique=True)
 
     enable_node_port = models.BooleanField(verbose_name='启用端口映射', default=False)
-    node_port = models.IntegerField(verbose_name='端口映射', default=5005)
+    node_port = models.IntegerField(verbose_name='端口映射', default=5005, unique=True)
 
     online = models.BooleanField(verbose_name='是否上线', default=False)
 

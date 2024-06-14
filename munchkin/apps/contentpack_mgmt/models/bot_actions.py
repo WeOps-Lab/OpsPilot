@@ -1,9 +1,9 @@
 from django.db import models
 
-from apps.model_provider_mgmt.models import LLMSkill
+from apps.core.models.maintainer_info import MaintainerInfo
 
 
-class BotActions(models.Model):
+class BotActions(MaintainerInfo):
     id = models.AutoField(primary_key=True)
     content_pack = models.ForeignKey('contentpack_mgmt.ContentPack', on_delete=models.CASCADE, verbose_name='扩展包')
 

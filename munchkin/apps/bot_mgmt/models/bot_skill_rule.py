@@ -1,9 +1,10 @@
 from django.db import models
 
 from apps.channel_mgmt.models import ChannelUser
+from apps.core.models.maintainer_info import MaintainerInfo
 
 
-class BotSkillRule(models.Model):
+class BotSkillRule(MaintainerInfo):
     id = models.AutoField(primary_key=True)
     bot_id = models.ForeignKey('bot_mgmt.Bot', on_delete=models.CASCADE, verbose_name='机器人', blank=True, null=True)
     name = models.CharField(max_length=255, verbose_name='规则名称')

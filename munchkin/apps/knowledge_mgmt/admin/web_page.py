@@ -5,11 +5,12 @@ from django.utils.html import format_html
 from django_ace import AceWidget
 from unfold.admin import ModelAdmin
 
+from apps.core.admin.guarded_admin_base import GuardedAdminBase
 from apps.knowledge_mgmt.models import WebPageKnowledge
 
 
 @admin.register(WebPageKnowledge)
-class WebPageKnowledgeAdmin(ModelAdmin):
+class WebPageKnowledgeAdmin(GuardedAdminBase):
     list_display = ['knowledge_base_folder_link', 'title', 'url', 'max_depth']
     search_fields = ['knowledge_base_folder', 'title']
     list_display_links = ['title']

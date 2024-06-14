@@ -1,12 +1,10 @@
 from django.db import models
-from django.utils.functional import cached_property
 
-from apps.core.encoders import PrettyJSONEncoder
-from apps.core.mixinx import EncryptableMixin
+from apps.core.models.maintainer_info import MaintainerInfo
 from apps.knowledge_mgmt.models import KnowledgeBaseFolder
 
 
-class LLMSkill(models.Model):
+class LLMSkill(MaintainerInfo):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, unique=True, verbose_name='名称')
     llm_model = models.ForeignKey('model_provider_mgmt.LLMModel', on_delete=models.CASCADE, verbose_name='LLM模型',

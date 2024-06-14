@@ -7,11 +7,15 @@ from unfold.admin import ModelAdmin
 from unfold.decorators import action
 
 from apps.bot_mgmt.models import Bot
+from apps.channel_mgmt.models import Channel
+from apps.contentpack_mgmt.models import RasaModel
+from apps.core.admin.guarded_admin_base import GuardedAdminBase
 from apps.core.utils.kubernetes_client import KubernetesClient
+from apps.model_provider_mgmt.models import LLMSkill
 
 
 @admin.register(Bot)
-class BotAdmin(ModelAdmin):
+class BotAdmin(GuardedAdminBase):
     list_display = ['name', 'assistant_id', 'rasa_model_link', 'channels_link', 'online', 'enable_bot_domain',
                     'bot_domain',
                     'enable_ssl',
@@ -38,6 +42,18 @@ class BotAdmin(ModelAdmin):
             'fields': ('enable_bot_domain', 'enable_ssl', 'bot_domain', 'enable_node_port', 'node_port'),
         })
     )
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "rasa_model":
+            kwargs["queryset"] = RasaModel.objects.filter(owner=request.user)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        if db_field.name == "channels":
+            kwargs["queryset"] = Channel.objects.filter(owner=request.user)
+        elif db_field.name == "llm_skills":
+            kwargs["queryset"] = LLMSkill.objects.filter(owner=request.user)
+        return super().formfield_for_manytomany(db_field, request, **kwargs)
 
     def channels_link(self, obj):
         links = []

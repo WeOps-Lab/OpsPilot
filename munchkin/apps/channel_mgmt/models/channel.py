@@ -3,6 +3,7 @@ from django.utils.functional import cached_property
 from django_yaml_field import YAMLField
 
 from apps.core.mixinx import EncryptableMixin
+from apps.core.models.maintainer_info import MaintainerInfo
 
 
 class CHANNEL_CHOICES(models.TextChoices):
@@ -13,7 +14,7 @@ class CHANNEL_CHOICES(models.TextChoices):
     GITLAB = ('gitlab', 'GitLab')
 
 
-class Channel(models.Model, EncryptableMixin):
+class Channel(MaintainerInfo, EncryptableMixin):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, verbose_name='名称')
     channel_type = models.CharField(max_length=100, choices=CHANNEL_CHOICES.choices, verbose_name='类型')

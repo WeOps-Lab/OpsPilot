@@ -1,6 +1,7 @@
 from django.db import models
 
 from apps.channel_mgmt.models import ChannelUser
+from apps.core.models.maintainer_info import MaintainerInfo
 
 BOT_CONVERSATION_ROLE_CHOICES = [
     ('user', '用户'),
@@ -8,7 +9,7 @@ BOT_CONVERSATION_ROLE_CHOICES = [
 ]
 
 
-class BotConversationHistory(models.Model):
+class BotConversationHistory(MaintainerInfo):
     id = models.AutoField(primary_key=True)
     bot = models.ForeignKey('bot_mgmt.Bot', on_delete=models.CASCADE, verbose_name='机器人')
     user = models.ForeignKey(ChannelUser, on_delete=models.CASCADE, verbose_name='用户')

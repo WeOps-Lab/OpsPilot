@@ -4,10 +4,11 @@ from django.utils.html import format_html
 from unfold.admin import ModelAdmin
 
 from apps.contentpack_mgmt.models import IntentCorpus
+from apps.core.admin.guarded_admin_base import GuardedAdminBase
 
 
 @admin.register(IntentCorpus)
-class IntentCorpusAdmin(ModelAdmin):
+class IntentCorpusAdmin(GuardedAdminBase):
     list_display = ['content_pack_link', 'intent_link', 'corpus']
     search_fields = ['corpus']
     list_filter = ['intent']

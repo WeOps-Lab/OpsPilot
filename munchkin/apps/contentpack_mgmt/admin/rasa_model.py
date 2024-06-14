@@ -9,11 +9,12 @@ from unfold.decorators import action
 
 from apps.contentpack_mgmt.models import RasaModel
 from apps.contentpack_mgmt.tasks.build_rasa_train_data import build_rasa_train_data
+from apps.core.admin.guarded_admin_base import GuardedAdminBase
 from apps.core.utils.kubernetes_client import KubernetesClient
 
 
 @admin.register(RasaModel)
-class RasaModelAdmin(ModelAdmin):
+class RasaModelAdmin(GuardedAdminBase):
     list_display = ['name', 'train_data_file', 'model_file', 'description']
     search_fields = ['name']
     list_filter = ['name']

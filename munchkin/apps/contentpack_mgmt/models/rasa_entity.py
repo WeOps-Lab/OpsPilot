@@ -1,7 +1,9 @@
 from django.db import models
 
+from apps.core.models.maintainer_info import MaintainerInfo
 
-class RasaEntity(models.Model):
+
+class RasaEntity(MaintainerInfo):
     id = models.AutoField(primary_key=True)
     content_pack = models.ForeignKey('contentpack_mgmt.ContentPack', on_delete=models.CASCADE, verbose_name='扩展包')
     name = models.CharField(max_length=255, verbose_name='实体名称')

@@ -5,11 +5,12 @@ from django_ace import AceWidget
 from django_yaml_field import YAMLField
 from unfold.admin import ModelAdmin
 
-from apps.contentpack_mgmt.models import RasaForms
+from apps.contentpack_mgmt.models import RasaForms, ContentPack
+from apps.core.admin.guarded_admin_base import GuardedAdminBase
 
 
 @admin.register(RasaForms)
-class RasaFormsAdmin(ModelAdmin):
+class RasaFormsAdmin(GuardedAdminBase):
     list_display = ['content_pack_link', 'name']
     search_fields = ['name']
     list_filter = ['content_pack', 'name']
@@ -19,6 +20,17 @@ class RasaFormsAdmin(ModelAdmin):
     formfield_overrides = {YAMLField: {
         "widget": AceWidget(mode="yaml", theme='chrome', width='700px')}
     }
+
+    fieldsets = (
+        (None, {
+            'fields': ('content_pack', 'name', 'form', 'description')
+        }),
+    )
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "content_pack":
+            kwargs["queryset"] = ContentPack.objects.filter(owner=request.user)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     def content_pack_link(self, obj):
         link = reverse("admin:contentpack_mgmt_contentpack_change", args=[obj.content_pack.id])
