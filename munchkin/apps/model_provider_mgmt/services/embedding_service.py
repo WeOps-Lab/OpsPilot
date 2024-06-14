@@ -1,11 +1,10 @@
-from langchain_community.embeddings import FastEmbedEmbeddings, HuggingFaceEmbeddings
-from langchain_openai import OpenAIEmbeddings
-
 from apps.model_provider_mgmt.models import EmbedModelChoices, EmbedProvider
 from langchain.embeddings import CacheBackedEmbeddings
+from langchain_community.embeddings import FastEmbedEmbeddings, HuggingFaceEmbeddings
 from langchain_elasticsearch import ElasticsearchEmbeddingsCache
+from langchain_openai import OpenAIEmbeddings
 
-from munchkin.components.elasticsearch import ELASTICSEARCH_URL, ELASTICSEARCH_PASSWORD
+from munchkin.components.elasticsearch import ELASTICSEARCH_PASSWORD, ELASTICSEARCH_URL
 
 
 class EmbeddingService:
@@ -26,27 +25,27 @@ class EmbeddingService:
         embedding = None
 
         if embed_provider.embed_model == EmbedModelChoices.FASTEMBED:
-            embedding = FastEmbedEmbeddings(model_name=model_configs['model'], cache_dir='models')
+            embedding = FastEmbedEmbeddings(model_name=model_configs["model"], cache_dir="models")
         elif embed_provider.embed_model == EmbedModelChoices.BCEEMBEDDING:
             embedding = HuggingFaceEmbeddings(
-                model_name=model_configs['model'],
+                model_name=model_configs["model"],
                 encode_kwargs={
-                    'normalize_embeddings': True,
-                    'batch_size': 32,
+                    "normalize_embeddings": True,
+                    "batch_size": 32,
                 },
             )
         elif embed_provider.embed_model == EmbedModelChoices.OPENAI:
             embedding = OpenAIEmbeddings(
-                model=model_configs['model'],
-                openai_api_key=model_configs['openai_api_key'],
-                openai_api_base=model_configs['openai_base_url']
+                model=model_configs["model"],
+                openai_api_key=model_configs["openai_api_key"],
+                openai_api_base=model_configs["openai_base_url"],
             )
 
         store = ElasticsearchEmbeddingsCache(
             index_name=embed_provider.name,
             es_url=ELASTICSEARCH_URL,
-            es_user='elastic',
-            es_password=ELASTICSEARCH_PASSWORD
+            es_user="elastic",
+            es_password=ELASTICSEARCH_PASSWORD,
         )
         store_embed = CacheBackedEmbeddings.from_bytes_store(
             underlying_embeddings=embedding,

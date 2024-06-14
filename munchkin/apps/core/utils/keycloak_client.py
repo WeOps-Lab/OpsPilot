@@ -2,15 +2,16 @@ import json
 import logging
 import traceback
 
+from apps.core.entities.user_token_entity import UserTokenEntity
 from keycloak import KeycloakAdmin, KeycloakOpenID
 from singleton_decorator import singleton
-from apps.core.entities.user_token_entity import UserTokenEntity
+
 from munchkin.components.keycloak import (
-    KEYCLOAK_URL,
     KEYCLOAK_ADMIN_PASSWORD,
     KEYCLOAK_ADMIN_USERNAME,
-    KEYCLOAK_REALM,
     KEYCLOAK_CLIENT_ID,
+    KEYCLOAK_REALM,
+    KEYCLOAK_URL,
 )
 
 
@@ -102,23 +103,17 @@ class KeyCloakClient:
     def get_token(self, username: str, password: str) -> UserTokenEntity:
         try:
             token = self.openid_client.token(username, password)
-            return UserTokenEntity(
-                token=token["access_token"], error_message="", success=True
-            )
+            return UserTokenEntity(token=token["access_token"], error_message="", success=True)
         except Exception as e:
             self.logger.error(e)
-            return UserTokenEntity(
-                token=None, error_message="用户名密码不匹配", success=False
-            )
+            return UserTokenEntity(token=None, error_message="用户名密码不匹配", success=False)
 
     def create_user(self, username, password, email, lastname, role_name) -> bool:
         try:
             role = self.realm_client.get_realm_role(role_name)
             user = {
                 "username": username,
-                "credentials": [
-                    {"value": password, "type": "password", "temporary": False}
-                ],
+                "credentials": [{"value": password, "type": "password", "temporary": False}],
                 "email": email,
                 "lastName": lastname,
                 "enabled": True,

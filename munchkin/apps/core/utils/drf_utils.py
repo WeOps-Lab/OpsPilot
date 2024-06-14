@@ -1,5 +1,5 @@
-from rest_framework.pagination import PageNumberPagination
 from apps.core.utils.web_utils import WebUtils
+from rest_framework.pagination import PageNumberPagination
 
 
 class CustomPageNumberPagination(PageNumberPagination):

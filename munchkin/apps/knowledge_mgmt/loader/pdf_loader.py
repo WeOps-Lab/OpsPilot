@@ -9,4 +9,5 @@ class PDFLoader(UnstructuredFileLoader):
 
         text = pdf2text(self.file_path)
         from unstructured.partition.text import partition_text
+
         return partition_text(text=text, **self.unstructured_kwargs)

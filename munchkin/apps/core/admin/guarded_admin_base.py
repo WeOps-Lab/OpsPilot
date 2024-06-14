@@ -1,12 +1,9 @@
 from functools import partial
 
-from guardian.admin import GuardedModelAdmin
-from guardian.shortcuts import (
-    get_objects_for_user,
-    assign_perm,
-)
 from apps.core.admin.OwnerAdminBase import OwnerAdminBase
 from django.db.models import Q
+from guardian.admin import GuardedModelAdmin
+from guardian.shortcuts import assign_perm, get_objects_for_user
 
 
 class GuardedAdminBase(OwnerAdminBase, GuardedModelAdmin):
@@ -87,16 +84,11 @@ class GuardedAdminBase(OwnerAdminBase, GuardedModelAdmin):
 
     # 用户应该拥有他新增的数据行的所有权限
     def save_model(self, request, obj, form, change):
-        if not getattr(obj, 'owner', None):
+        if not getattr(obj, "owner", None):
             obj.owner = request.user
         result = super().save_model(request, obj, form, change)
         if not request.user.is_superuser and not change:
             opts = self.opts
             actions = ["view", "add", "change", "delete"]
-            [
-                assign_perm(
-                    f"{opts.app_label}.{action}_{opts.model_name}", request.user, obj
-                )
-                for action in actions
-            ]
+            [assign_perm(f"{opts.app_label}.{action}_{opts.model_name}", request.user, obj) for action in actions]
         return result

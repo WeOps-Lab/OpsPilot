@@ -4,5 +4,4 @@ router = routers.DefaultRouter()
 
 urlpatterns = router.urls
 
-urlpatterns += [
-]
+urlpatterns += []

@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('bot_mgmt', '0002_initial'),
+        ("bot_mgmt", "0002_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='bot',
-            name='online',
-            field=models.BooleanField(default=False, verbose_name='是否上线'),
+            model_name="bot",
+            name="online",
+            field=models.BooleanField(default=False, verbose_name="是否上线"),
         ),
     ]

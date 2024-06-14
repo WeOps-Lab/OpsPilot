@@ -1,4 +1,4 @@
-from .rerank_provider import RerankProviderAdmin
+from .embed_provider import EmbedProviderAdmin
 from .llm_model import LLMModelAdmin
 from .llm_skill import LLMSkillAdmin
-from .embed_provider import EmbedProviderAdmin
+from .rerank_provider import RerankProviderAdmin
