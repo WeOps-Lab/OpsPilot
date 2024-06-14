@@ -2,6 +2,10 @@ from langchain_community.embeddings import FastEmbedEmbeddings, HuggingFaceEmbed
 from langchain_openai import OpenAIEmbeddings
 
 from apps.model_provider_mgmt.models import EmbedModelChoices, EmbedProvider
+from langchain.embeddings import CacheBackedEmbeddings
+from langchain_elasticsearch import ElasticsearchEmbeddingsCache
+
+from munchkin.components.elasticsearch import ELASTICSEARCH_URL, ELASTICSEARCH_PASSWORD
 
 
 class EmbeddingService:
@@ -10,6 +14,7 @@ class EmbeddingService:
 
     def embed_content(self, embed_provider: EmbedProvider, content: str):
         embedding = self.get_embedding(embed_provider)
+
         return embedding.embed_query(content)
 
     def get_embedding(self, embed_provider: EmbedProvider):
@@ -37,8 +42,19 @@ class EmbeddingService:
                 openai_api_base=model_configs['openai_base_url']
             )
 
-        self.cache[embed_provider.id] = embedding
-        return embedding
+        store = ElasticsearchEmbeddingsCache(
+            index_name=embed_provider.name,
+            es_url=ELASTICSEARCH_URL,
+            es_user='elastic',
+            es_password=ELASTICSEARCH_PASSWORD
+        )
+        store_embed = CacheBackedEmbeddings.from_bytes_store(
+            underlying_embeddings=embedding,
+            document_embedding_cache=store,
+            query_embedding_cache=store,
+        )
+        self.cache[embed_provider.id] = store_embed
+        return store_embed
 
 
 emdedding_service = EmbeddingService()

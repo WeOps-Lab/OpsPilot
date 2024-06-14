@@ -1,11 +1,24 @@
+from elasticsearch import Elasticsearch
 from langchain.chains.conversation.base import ConversationChain
 from langchain.chains.llm import LLMChain
+from langchain.globals import set_llm_cache
 from langchain.memory import ConversationBufferWindowMemory
 from langchain_core.prompts import SystemMessagePromptTemplate, HumanMessagePromptTemplate, ChatPromptTemplate, \
     PromptTemplate
+from langchain_elasticsearch import ElasticsearchCache
 from langchain_openai import ChatOpenAI, OpenAI
 
 from apps.model_provider_mgmt.models import LLMModelChoices
+from munchkin.components.elasticsearch import ELASTICSEARCH_URL, ELASTICSEARCH_PASSWORD
+
+set_llm_cache(
+    ElasticsearchCache(
+        es_url=ELASTICSEARCH_URL,
+        es_user='elastic',
+        es_password=ELASTICSEARCH_PASSWORD,
+        index_name="llm-chat-cache",
+    )
+)
 
 
 class LLMDriver:

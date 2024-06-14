@@ -12,6 +12,7 @@ class WebPageKnowledge(TimeInfo, MaintainerInfo):
                                               null=True,
                                               on_delete=models.CASCADE)
     custom_metadata = models.JSONField(verbose_name='自定义元数据', blank=True, null=True, default=dict)
+    max_depth = models.IntegerField(verbose_name='最大深度', default=1)
 
     def __str__(self):
         return self.title

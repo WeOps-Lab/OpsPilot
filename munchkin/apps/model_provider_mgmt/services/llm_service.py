@@ -16,10 +16,12 @@ class LLMService:
         if super_system_prompt:
             system_skill_prompt = super_system_prompt
 
+        context = ''
+
         if llm_skill.enable_rag:
             knowledge_base_folder_list = llm_skill.knowledge_base_folders.all()
             result = self.knowledge_search_service.search(knowledge_base_folder_list, user_message)
-            context = ''
+
             for r in result:
                 context += r.page_content.replace('{', '').replace('}', '') + '\n'
 
