@@ -16,5 +16,6 @@ include(
     'components/kubernetes.py',
     'components/conversation_mq.py',
     'components/pilot.py',
+    'components/bk_login.py',
     optional('local_settings.py'),
 )
