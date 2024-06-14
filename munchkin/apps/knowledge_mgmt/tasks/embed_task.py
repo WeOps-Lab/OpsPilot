@@ -20,6 +20,7 @@ from apps.knowledge_mgmt.loader.doc_loader import DocLoader
 from apps.knowledge_mgmt.loader.image_loader import ImageLoader
 from apps.knowledge_mgmt.loader.pdf_loader import PDFLoader
 from apps.knowledge_mgmt.loader.ppt_loader import PPTLoader
+from apps.knowledge_mgmt.loader.recursive_url_loader import RecursiveUrlLoader
 from apps.knowledge_mgmt.models import KnowledgeBaseFolder, FileKnowledge, ManualKnowledge, WebPageKnowledge
 from apps.model_provider_mgmt.services.embedding_service import emdedding_service
 from munchkin.components.elasticsearch import ELASTICSEARCH_URL, ELASTICSEARCH_PASSWORD
@@ -38,7 +39,7 @@ def embed_manual_knowledgebase(knowledge_base_folder, knowledge):
 
 def embed_webpage_knowledgebase(knowledge_base_folder, knowledge):
     docs = []
-    loader = AsyncHtmlLoader(knowledge.url)
+    loader = RecursiveUrlLoader(knowledge.url, max_depth=knowledge.max_depth)
     web_docs = loader.load()
     transformer = BeautifulSoupTransformer()
     web_docs = transformer.transform_documents(web_docs)

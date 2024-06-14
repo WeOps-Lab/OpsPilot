@@ -10,7 +10,7 @@ from apps.knowledge_mgmt.models import WebPageKnowledge
 
 @admin.register(WebPageKnowledge)
 class WebPageKnowledgeAdmin(ModelAdmin):
-    list_display = ['knowledge_base_folder_link', 'title', 'url']
+    list_display = ['knowledge_base_folder_link', 'title', 'url', 'max_depth']
     search_fields = ['knowledge_base_folder', 'title']
     list_display_links = ['title']
     list_filter = ['knowledge_base_folder']
@@ -18,7 +18,7 @@ class WebPageKnowledgeAdmin(ModelAdmin):
     filter_horizontal = []
     fieldsets = (
         ('', {
-            'fields': ('knowledge_base_folder', 'title', 'url', 'custom_metadata')
+            'fields': ('knowledge_base_folder', 'title', 'url', 'max_depth', 'custom_metadata')
         }),
     )
 

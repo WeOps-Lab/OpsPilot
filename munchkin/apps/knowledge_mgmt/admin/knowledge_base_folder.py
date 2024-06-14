@@ -29,7 +29,7 @@ class WebPageKnowledgeInline(admin.TabularInline):
     model = WebPageKnowledge
     fieldsets = (
         ('', {
-            'fields': ('title', 'url')
+            'fields': ('title', 'url', 'max_depth')
         }),
     )
     extra = 0

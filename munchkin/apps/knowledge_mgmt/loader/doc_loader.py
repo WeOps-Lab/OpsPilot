@@ -3,10 +3,10 @@ from typing import List
 
 from unstructured.partition.text import partition_text
 
-from apps.knowledge_mgmt.utils.doc import doc2text
-
 
 class DocLoader(UnstructuredFileLoader):
     def _get_elements(self) -> List:
+        from apps.knowledge_mgmt.utils.doc import doc2text
+
         text = doc2text(self.file_path)
         return partition_text(text=text, **self.unstructured_kwargs)
