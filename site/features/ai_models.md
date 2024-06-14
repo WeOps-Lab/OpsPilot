@@ -4,7 +4,7 @@
 
 ## Embed模型
 
-Embed模型为知识提供向量化的能力，是知识库能够进行语义检索的支撑功能。OpsPilot内置以下Embed模型的支持
+Embed模型为知识提供向量化的能力，是知识库能够进行语义检索的支撑功能，OpsPilot内置以下Embed模型：
 
 * [FastEmbed](https://qdrant.github.io/fastembed/)
   * bge-small-zh-v1.5
@@ -16,7 +16,7 @@ Embed模型为知识提供向量化的能力，是知识库能够进行语义检
 
 ## ReRank模型
 
-ReRank模型可以对检索出来的知识进行重排序，让大模型在使用RAG能力的时候，知识检索效果更好。OpsPilot内置以下ReRank模型的支持：
+ReRank模型可以对检索出来的知识进行重排序，让大模型在使用RAG能力的时候，知识检索效果更好。OpsPilot内置以下ReRank模型：
 
 * BCEReranker
   * bce-reranker-base_v1
