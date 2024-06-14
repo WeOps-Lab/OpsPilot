@@ -1,11 +1,8 @@
 from functools import partial
 
-from guardian.admin import GuardedModelAdmin
-from guardian.shortcuts import (
-    get_objects_for_user,
-    assign_perm,
-)
 from apps.core.admin.OwnerAdminBase import OwnerAdminBase
+from guardian.admin import GuardedModelAdmin
+from guardian.shortcuts import assign_perm, get_objects_for_user
 
 
 class GuardedAdminBase(OwnerAdminBase, GuardedModelAdmin):
@@ -15,9 +12,7 @@ class GuardedAdminBase(OwnerAdminBase, GuardedModelAdmin):
     def has_module_permission(self, request):
         if request.user.is_superuser and request.user.is_active:
             return True
-        has_view_perm = partial(
-            request.user.has_perm, "view_%s" % self.opts.model_name
-        )
+        has_view_perm = partial(request.user.has_perm, "view_%s" % self.opts.model_name)
         query_set = self.model.objects.all()
         return any(map(has_view_perm, query_set))
 
@@ -84,10 +79,5 @@ class GuardedAdminBase(OwnerAdminBase, GuardedModelAdmin):
         if not request.user.is_superuser and not change:
             opts = self.opts
             actions = ["view", "add", "change", "delete"]
-            [
-                assign_perm(
-                    f"{opts.app_label}.{action}_{opts.model_name}", request.user, obj
-                )
-                for action in actions
-            ]
+            [assign_perm(f"{opts.app_label}.{action}_{opts.model_name}", request.user, obj) for action in actions]
         return result

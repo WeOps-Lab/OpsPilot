@@ -1,11 +1,10 @@
+from apps.model_provider_mgmt.models import RerankProvider
+from apps.model_provider_mgmt.services.rerank_service import rerank_service
 from django.http import JsonResponse
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets
 from rest_framework.decorators import action
-
-from apps.model_provider_mgmt.models import RerankProvider
-from apps.model_provider_mgmt.services.rerank_service import rerank_service
 
 
 class RerankViewSet(viewsets.ViewSet):
@@ -17,7 +16,10 @@ class RerankViewSet(viewsets.ViewSet):
                 "rerank_id": openapi.Schema(type=openapi.TYPE_INTEGER),
                 "query": openapi.Schema(type=openapi.TYPE_STRING),
                 "top_k": openapi.Schema(type=openapi.TYPE_INTEGER),
-                "sentences": openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.Schema(type=openapi.TYPE_STRING)),
+                "sentences": openapi.Schema(
+                    type=openapi.TYPE_ARRAY,
+                    items=openapi.Schema(type=openapi.TYPE_STRING),
+                ),
             },
         ),
     )
@@ -30,6 +32,4 @@ class RerankViewSet(viewsets.ViewSet):
         reranker = RerankProvider.objects.get(id=rerank_id)
         results = rerank_service.predict(reranker, top_k, sentences, query)
 
-        return JsonResponse({
-            "rerank_result": results
-        })
+        return JsonResponse({"rerank_result": results})

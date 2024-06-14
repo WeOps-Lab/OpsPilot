@@ -11,11 +11,10 @@ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express o
 specific language governing permissions and limitations under the License.
 """
 
+from apps.core.middlewares.bk_token.forms import AuthenticationForm
 from django.conf import settings
 from django.contrib import auth
 from django.core.cache import cache
-
-from apps.core.middlewares.bk_token.forms import AuthenticationForm
 
 try:
     from django.utils.deprecation import MiddlewareMixin
@@ -69,6 +68,10 @@ class LoginRequiredMiddleware(MiddlewareMixin):
                 # 切换新用户, 重新生成session_key.
                 request.session.cycle_key()
             # 登录成功，重新调用自身函数，即可退出
-            cache.set(request.session.session_key, {"bk_token": bk_token}, settings.LOGIN_CACHE_EXPIRED)
+            cache.set(
+                request.session.session_key,
+                {"bk_token": bk_token},
+                settings.LOGIN_CACHE_EXPIRED,
+            )
 
         return user

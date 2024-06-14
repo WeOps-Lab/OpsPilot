@@ -13,13 +13,12 @@ specific language governing permissions and limitations under the License.
 
 import traceback
 
+from apps.core.utils.http import send
 from django.conf import settings
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from loguru import logger
-
-from apps.core.utils.http import send
 
 ROLE_TYPE_ADMIN = "1"
 

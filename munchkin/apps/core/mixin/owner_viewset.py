@@ -1,14 +1,15 @@
-from rest_framework import mixins, viewsets
 from django.db.models import Q
+from rest_framework import mixins, viewsets
 
 
-class OwnerViewSet(mixins.CreateModelMixin,
-                   mixins.RetrieveModelMixin,
-                   mixins.UpdateModelMixin,
-                   mixins.DestroyModelMixin,
-                   mixins.ListModelMixin,
-                   viewsets.GenericViewSet):
-
+class OwnerViewSet(
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet,
+):
     def get_queryset(self):
         """
         This view should return a list of all the records

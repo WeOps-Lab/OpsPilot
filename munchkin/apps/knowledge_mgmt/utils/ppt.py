@@ -1,7 +1,8 @@
-from pptx import Presentation
-from PIL import Image
-import numpy as np
 from io import BytesIO
+
+import numpy as np
+from PIL import Image
+from pptx import Presentation
 from rapidocr_onnxruntime import RapidOCR
 from tqdm import tqdm
 
@@ -30,15 +31,12 @@ def ppt2text(filepath):
             for child_shape in shape.shapes:
                 extract_text(child_shape)
 
-    b_unit = tqdm.tqdm(total=len(prs.slides),
-                       desc="RapidOCRPPTLoader slide index: 1")
+    b_unit = tqdm.tqdm(total=len(prs.slides), desc="RapidOCRPPTLoader slide index: 1")
     # 遍历所有幻灯片
     for slide_number, slide in enumerate(prs.slides, start=1):
-        b_unit.set_description(
-            "RapidOCRPPTLoader slide index: {}".format(slide_number))
+        b_unit.set_description("RapidOCRPPTLoader slide index: {}".format(slide_number))
         b_unit.refresh()
-        sorted_shapes = sorted(slide.shapes,
-                               key=lambda x: (x.top, x.left))  # 从上到下、从左到右遍历
+        sorted_shapes = sorted(slide.shapes, key=lambda x: (x.top, x.left))  # 从上到下、从左到右遍历
         for shape in sorted_shapes:
             extract_text(shape)
         b_unit.update(1)

@@ -1,8 +1,8 @@
+from apps.core.views.user_view import UserView
 from django.conf.global_settings import INSTALLED_APPS
 from django.contrib import admin
-from rest_framework import routers
 from django.urls import include, path
-from apps.core.views.user_view import UserView
+from rest_framework import routers
 
 admin.site.site_title = "Munchkin 管理后台"
 admin.site.site_header = admin.site.site_title
@@ -21,9 +21,10 @@ def get_app_list(self, request, app_label=None):
 
     app_count = len(INSTALLED_APPS)  # 获取app数量
 
-    app_list = sorted(app_dict.values(),
-                      key=lambda x: INSTALLED_APPS.index(x['app_label'])
-                      if x['app_label'] in INSTALLED_APPS else app_count)
+    app_list = sorted(
+        app_dict.values(),
+        key=lambda x: INSTALLED_APPS.index(x["app_label"]) if x["app_label"] in INSTALLED_APPS else app_count,
+    )
     # 如果应用标签(如app1, app2, 在INSTALLED_APPS中，则按其索引排，
     # 否则排最后面
     app_list = list(reversed(app_list))

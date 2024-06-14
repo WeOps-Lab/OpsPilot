@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('knowledge_mgmt', '0009_rename_created_by_fileknowledge_owner_and_more'),
+        ("knowledge_mgmt", "0009_rename_created_by_fileknowledge_owner_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='webpageknowledge',
-            name='max_depth',
-            field=models.IntegerField(default=1, verbose_name='最大深度'),
+            model_name="webpageknowledge",
+            name="max_depth",
+            field=models.IntegerField(default=1, verbose_name="最大深度"),
         ),
     ]
