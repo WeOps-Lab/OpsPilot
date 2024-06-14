@@ -5,10 +5,10 @@ from guardian.shortcuts import (
     get_objects_for_user,
     assign_perm,
 )
-from unfold.admin import ModelAdmin
+from apps.core.admin.OwnerAdminBase import OwnerAdminBase
 
 
-class GuardedAdminBase(ModelAdmin, GuardedModelAdmin):
+class GuardedAdminBase(OwnerAdminBase, GuardedModelAdmin):
 
     # app是否在主页面中显示的话由该函数决定
 
