@@ -5,7 +5,11 @@ django-comment-migrate==0.1.7
 psycopg2-binary==2.9.9
 django-import-export[all]==4.0.7
 django-cors-headers==4.2.0
-langchain==0.2.0
+
+langchain==0.2.4
+langchain-community==0.2.4
+langchain-elasticsearch==0.2.2
+langchain-openai==0.1.7
 
 djangorestframework==3.14.0
 django-filter==23.2
@@ -37,15 +41,14 @@ django-guardian==2.4.0
 django-simple-history==3.5.0
 django-minio-backend==3.6.0
 fastembed==0.2.7
-langchain-community==0.2.0
+
 
 pytest-django==4.8.0
 
 unstructured==0.14.2
 markdown==3.6
 
-langchain-elasticsearch==0.2.1
-langchain-openai==0.1.7
+
 docx2txt==0.8
 
 unstructured[all-docs]

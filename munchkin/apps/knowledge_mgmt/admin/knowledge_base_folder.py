@@ -16,6 +16,12 @@ from apps.knowledge_mgmt.tasks.embed_task import general_embed
 
 class FileKnowledgeInline(admin.TabularInline):
     model = FileKnowledge
+    fieldsets = (
+        ('', {
+            'fields': ('title', 'file')
+        }),
+    )
+    extra = 0
     readonly_fields = ['title']
 
 
@@ -26,6 +32,7 @@ class WebPageKnowledgeInline(admin.TabularInline):
             'fields': ('title', 'url')
         }),
     )
+    extra = 0
 
 
 class ManualKnowledgeInline(admin.StackedInline):
@@ -40,6 +47,7 @@ class ManualKnowledgeInline(admin.StackedInline):
             "widget": WysiwygWidget,
         },
     }
+    extra = 0
 
 
 @admin.register(KnowledgeBaseFolder)
