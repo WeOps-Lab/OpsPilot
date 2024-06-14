@@ -1,7 +1,7 @@
 from django.core.management import BaseCommand
 
 from apps.model_provider_mgmt.models import EmbedProvider, EmbedModelChoices, LLMModel, LLMModelChoices, LLMSkill, \
-    RerankProvider, RerankModelChoices
+    RerankProvider, RerankModelChoices, LLMSkillTypeChoices
 
 
 class Command(BaseCommand):
@@ -92,7 +92,7 @@ class Command(BaseCommand):
         LLMSkill.objects.get_or_create(
             name='开放问答(GPT3.5-16k)',
             llm_model=llm_model,
-            skill_id='action_llm_fallback',
+            skill_id=LLMSkillTypeChoices.OPEN_DOMAIN_QA,
             enable_conversation_history=True,
             defaults={
                 'skill_prompt': prompt
