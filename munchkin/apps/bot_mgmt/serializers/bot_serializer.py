@@ -1,7 +1,6 @@
-from rest_framework import serializers
-
 from apps.bot_mgmt.models import Bot
 from apps.channel_mgmt.serializers import ChannelSerializer
+from rest_framework import serializers
 
 
 class BotSerializer(serializers.ModelSerializer):
@@ -9,4 +8,4 @@ class BotSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Bot
-        fields = '__all__'
+        fields = "__all__"

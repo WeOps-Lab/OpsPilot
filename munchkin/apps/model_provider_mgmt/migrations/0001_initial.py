@@ -2,8 +2,8 @@
 
 import apps.core.encoders
 import apps.core.mixinx
-from django.db import migrations, models
 import django.db.models.deletion
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
@@ -11,69 +11,161 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('knowledge_mgmt', '0001_initial'),
+        ("knowledge_mgmt", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='EmbedProvider',
+            name="EmbedProvider",
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=255, unique=True, verbose_name='名称')),
-                ('embed_model', models.CharField(choices=[('fastembed', 'FastEmbed'), ('openai', 'OpenAI'), ('bceembedding', 'BCEEmbedding')], max_length=255, verbose_name='嵌入模型')),
-                ('embed_config', models.JSONField(blank=True, default=dict, encoder=apps.core.encoders.PrettyJSONEncoder, null=True, verbose_name='嵌入配置')),
-                ('enabled', models.BooleanField(default=True, verbose_name='是否启用')),
+                ("id", models.AutoField(primary_key=True, serialize=False)),
+                (
+                    "name",
+                    models.CharField(max_length=255, unique=True, verbose_name="名称"),
+                ),
+                (
+                    "embed_model",
+                    models.CharField(
+                        choices=[
+                            ("fastembed", "FastEmbed"),
+                            ("openai", "OpenAI"),
+                            ("bceembedding", "BCEEmbedding"),
+                        ],
+                        max_length=255,
+                        verbose_name="嵌入模型",
+                    ),
+                ),
+                (
+                    "embed_config",
+                    models.JSONField(
+                        blank=True,
+                        default=dict,
+                        encoder=apps.core.encoders.PrettyJSONEncoder,
+                        null=True,
+                        verbose_name="嵌入配置",
+                    ),
+                ),
+                ("enabled", models.BooleanField(default=True, verbose_name="是否启用")),
             ],
             options={
-                'verbose_name': 'Embed模型',
-                'verbose_name_plural': 'Embed模型',
+                "verbose_name": "Embed模型",
+                "verbose_name_plural": "Embed模型",
             },
             bases=(models.Model, apps.core.mixinx.EncryptableMixin),
         ),
         migrations.CreateModel(
-            name='LLMModel',
+            name="LLMModel",
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=255, unique=True, verbose_name='名称')),
-                ('llm_model', models.CharField(choices=[('chat-gpt', 'ChatGPT')], max_length=255, verbose_name='LLM模型')),
-                ('llm_config', models.JSONField(blank=True, default=dict, encoder=apps.core.encoders.PrettyJSONEncoder, null=True, verbose_name='LLM配置')),
+                ("id", models.AutoField(primary_key=True, serialize=False)),
+                (
+                    "name",
+                    models.CharField(max_length=255, unique=True, verbose_name="名称"),
+                ),
+                (
+                    "llm_model",
+                    models.CharField(
+                        choices=[("chat-gpt", "ChatGPT")],
+                        max_length=255,
+                        verbose_name="LLM模型",
+                    ),
+                ),
+                (
+                    "llm_config",
+                    models.JSONField(
+                        blank=True,
+                        default=dict,
+                        encoder=apps.core.encoders.PrettyJSONEncoder,
+                        null=True,
+                        verbose_name="LLM配置",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'LLM模型',
-                'verbose_name_plural': 'LLM模型',
+                "verbose_name": "LLM模型",
+                "verbose_name_plural": "LLM模型",
             },
             bases=(models.Model, apps.core.mixinx.EncryptableMixin),
         ),
         migrations.CreateModel(
-            name='RerankProvider',
+            name="RerankProvider",
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=255, unique=True, verbose_name='名称')),
-                ('rerank_model', models.CharField(choices=[('bce', 'BCE')], max_length=255, verbose_name='Rerank模型')),
-                ('rerank_config', models.JSONField(blank=True, default=dict, encoder=apps.core.encoders.PrettyJSONEncoder, null=True, verbose_name='Rerank配置')),
-                ('enabled', models.BooleanField(default=True, verbose_name='是否启用')),
+                ("id", models.AutoField(primary_key=True, serialize=False)),
+                (
+                    "name",
+                    models.CharField(max_length=255, unique=True, verbose_name="名称"),
+                ),
+                (
+                    "rerank_model",
+                    models.CharField(
+                        choices=[("bce", "BCE")],
+                        max_length=255,
+                        verbose_name="Rerank模型",
+                    ),
+                ),
+                (
+                    "rerank_config",
+                    models.JSONField(
+                        blank=True,
+                        default=dict,
+                        encoder=apps.core.encoders.PrettyJSONEncoder,
+                        null=True,
+                        verbose_name="Rerank配置",
+                    ),
+                ),
+                ("enabled", models.BooleanField(default=True, verbose_name="是否启用")),
             ],
             options={
-                'verbose_name': 'Rerank模型',
-                'verbose_name_plural': 'Rerank模型',
+                "verbose_name": "Rerank模型",
+                "verbose_name_plural": "Rerank模型",
             },
             bases=(models.Model, apps.core.mixinx.EncryptableMixin),
         ),
         migrations.CreateModel(
-            name='LLMSkill',
+            name="LLMSkill",
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=255, unique=True, verbose_name='名称')),
-                ('skill_prompt', models.TextField(blank=True, null=True, verbose_name='技能提示词')),
-                ('enable_conversation_history', models.BooleanField(default=False, verbose_name='启用对话历史')),
-                ('conversation_window_size', models.IntegerField(default=10, verbose_name='对话窗口大小')),
-                ('enable_rag', models.BooleanField(default=False, verbose_name='启用RAG')),
-                ('knowledge_base_folders', models.ManyToManyField(blank=True, to='knowledge_mgmt.knowledgebasefolder', verbose_name='知识库')),
-                ('llm_model', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='model_provider_mgmt.llmmodel', verbose_name='LLM模型')),
+                ("id", models.AutoField(primary_key=True, serialize=False)),
+                (
+                    "name",
+                    models.CharField(max_length=255, unique=True, verbose_name="名称"),
+                ),
+                (
+                    "skill_prompt",
+                    models.TextField(blank=True, null=True, verbose_name="技能提示词"),
+                ),
+                (
+                    "enable_conversation_history",
+                    models.BooleanField(default=False, verbose_name="启用对话历史"),
+                ),
+                (
+                    "conversation_window_size",
+                    models.IntegerField(default=10, verbose_name="对话窗口大小"),
+                ),
+                (
+                    "enable_rag",
+                    models.BooleanField(default=False, verbose_name="启用RAG"),
+                ),
+                (
+                    "knowledge_base_folders",
+                    models.ManyToManyField(
+                        blank=True,
+                        to="knowledge_mgmt.knowledgebasefolder",
+                        verbose_name="知识库",
+                    ),
+                ),
+                (
+                    "llm_model",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="model_provider_mgmt.llmmodel",
+                        verbose_name="LLM模型",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'LLM技能管理',
-                'verbose_name_plural': 'LLM技能管理',
+                "verbose_name": "LLM技能管理",
+                "verbose_name_plural": "LLM技能管理",
             },
         ),
     ]

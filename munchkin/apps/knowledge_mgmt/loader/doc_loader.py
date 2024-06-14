@@ -1,6 +1,6 @@
-from langchain_community.document_loaders import UnstructuredFileLoader
 from typing import List
 
+from langchain_community.document_loaders import UnstructuredFileLoader
 from unstructured.partition.text import partition_text
 
 

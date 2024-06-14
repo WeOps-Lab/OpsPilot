@@ -9,11 +9,11 @@ PDF_OCR_THRESHOLD = (0.6, 0.6)
 
 
 def rotate_img(img, angle):
-    '''
+    """
     img   --image
     angle --rotation angle
     return--rotated img
-    '''
+    """
 
     h, w = img.shape[:2]
     rotate_center = (w / 2, h / 2)
@@ -50,14 +50,15 @@ def pdf2text(filepath):
             if xref := img.get("xref"):
                 bbox = img["bbox"]
                 # 检查图片尺寸是否超过设定的阈值
-                if ((bbox[2] - bbox[0]) / (page.rect.width) < PDF_OCR_THRESHOLD[0]
-                        or (bbox[3] - bbox[1]) / (page.rect.height) < PDF_OCR_THRESHOLD[1]):
+                if (bbox[2] - bbox[0]) / (page.rect.width) < PDF_OCR_THRESHOLD[0] or (bbox[3] - bbox[1]) / (
+                    page.rect.height
+                ) < PDF_OCR_THRESHOLD[1]:
                     continue
                 pix = fitz.Pixmap(doc, xref)
                 samples = pix.samples
                 if int(page.rotation) != 0:  # 如果Page有旋转角度，则旋转图片
                     img_array = np.frombuffer(pix.samples, dtype=np.uint8).reshape(pix.height, pix.width, -1)
-                    tmp_img = Image.fromarray(img_array);
+                    tmp_img = Image.fromarray(img_array)
                     ori_img = cv2.cvtColor(np.array(tmp_img), cv2.COLOR_RGB2BGR)
                     rot_img = rotate_img(img=ori_img, angle=360 - page.rotation)
                     img_array = cv2.cvtColor(rot_img, cv2.COLOR_RGB2BGR)

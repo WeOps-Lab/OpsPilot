@@ -1,9 +1,8 @@
 from typing import List
 
+from apps.model_provider_mgmt.models import RerankModelChoices, RerankProvider
 from BCEmbedding.tools.langchain import BCERerank
 from langchain_core.documents import Document
-
-from apps.model_provider_mgmt.models import RerankProvider, RerankModelChoices
 
 
 class RerankService:
@@ -18,10 +17,12 @@ class RerankService:
         compressed_data = reranker.compress_documents(docs, query)
         results = []
         for doc in compressed_data:
-            results.append({
-                'score': doc.metadata.get('relevance_score'),
-                'page_content': doc.page_content
-            })
+            results.append(
+                {
+                    "score": doc.metadata.get("relevance_score"),
+                    "page_content": doc.page_content,
+                }
+            )
         return results
 
     def clean_cache(self, rerank_provider_id):
@@ -29,7 +30,7 @@ class RerankService:
             del self.cache[rerank_provider_id]
 
     def get_reranker(self, rerank_provider: RerankProvider, rerank_top_k):
-        cache_key = f'{rerank_provider.id}_{rerank_top_k}'
+        cache_key = f"{rerank_provider.id}_{rerank_top_k}"
         if cache_key in self.cache:
             return self.cache[cache_key]
 
@@ -38,8 +39,8 @@ class RerankService:
 
         if rerank_provider.rerank_model == RerankModelChoices.BCE:
             reranker_args = {
-                'model': rerank_model_config['model'],
-                'top_n': rerank_top_k
+                "model": rerank_model_config["model"],
+                "top_n": rerank_top_k,
             }
             reranker = BCERerank(**reranker_args)
 

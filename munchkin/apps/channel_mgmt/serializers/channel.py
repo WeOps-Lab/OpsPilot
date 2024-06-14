@@ -1,6 +1,5 @@
-from rest_framework import serializers
-
 from apps.channel_mgmt.models import Channel
+from rest_framework import serializers
 
 
 class ChannelSerializer(serializers.ModelSerializer):
@@ -8,7 +7,7 @@ class ChannelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Channel
-        fields = '__all__'
+        fields = "__all__"
 
     def get_decrypted_channel_config(self, obj):
         return obj.decrypted_channel_config

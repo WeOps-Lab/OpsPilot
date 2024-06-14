@@ -1,80 +1,88 @@
+from apps.model_provider_mgmt.models import (
+    EmbedModelChoices,
+    EmbedProvider,
+    LLMModel,
+    LLMModelChoices,
+    LLMSkill,
+    RerankModelChoices,
+    RerankProvider,
+)
 from django.core.management import BaseCommand
-
-from apps.model_provider_mgmt.models import EmbedProvider, EmbedModelChoices, LLMModel, LLMModelChoices, LLMSkill, \
-    RerankProvider, RerankModelChoices
 
 
 class Command(BaseCommand):
-    help = '初始化模型数据'
+    help = "初始化模型数据"
 
     def handle(self, *args, **options):
-        RerankProvider.objects.get_or_create(name='bce-reranker-base_v1',
-                                             rerank_model=RerankModelChoices.BCE,
-                                             defaults={
-                                                 'rerank_config': {
-                                                     'model': './models/bce-reranker-base_v1'
-                                                 }
-                                             })
-
-        EmbedProvider.objects.get_or_create(name='bce-embedding-base_v1',
-                                            embed_model=EmbedModelChoices.BCEEMBEDDING,
-                                            defaults={
-                                                'embed_config': {
-                                                    'model': './models/bce-embedding-base_v1',
-                                                }
-                                            })
-
-        EmbedProvider.objects.get_or_create(name='text-embedding-ada-002',
-                                            embed_model=EmbedModelChoices.OPENAI,
-                                            defaults={
-                                                'embed_config': {
-                                                    'model': 'text-embedding-ada-002',
-                                                    'openai_api_key': 'your_openai_api_key',
-                                                    'openai_base_url': 'https://api.openai.com',
-                                                }
-                                            })
+        RerankProvider.objects.get_or_create(
+            name="bce-reranker-base_v1",
+            rerank_model=RerankModelChoices.BCE,
+            defaults={"rerank_config": {"model": "./models/bce-reranker-base_v1"}},
+        )
 
         EmbedProvider.objects.get_or_create(
-            name='FastEmbed(BAAI/bge-small-en-v1.5)',
+            name="bce-embedding-base_v1",
+            embed_model=EmbedModelChoices.BCEEMBEDDING,
+            defaults={
+                "embed_config": {
+                    "model": "./models/bce-embedding-base_v1",
+                }
+            },
+        )
+
+        EmbedProvider.objects.get_or_create(
+            name="text-embedding-ada-002",
+            embed_model=EmbedModelChoices.OPENAI,
+            defaults={
+                "embed_config": {
+                    "model": "text-embedding-ada-002",
+                    "openai_api_key": "your_openai_api_key",
+                    "openai_base_url": "https://api.openai.com",
+                }
+            },
+        )
+
+        EmbedProvider.objects.get_or_create(
+            name="FastEmbed(BAAI/bge-small-en-v1.5)",
             embed_model=EmbedModelChoices.FASTEMBED,
             embed_config={
-                'model': 'BAAI/bge-small-en-v1.5',
+                "model": "BAAI/bge-small-en-v1.5",
             },
-            enabled=True
+            enabled=True,
         )
         EmbedProvider.objects.get_or_create(
-            name='FastEmbed(BAAI/bge-small-zh-v1.5)',
+            name="FastEmbed(BAAI/bge-small-zh-v1.5)",
             embed_model=EmbedModelChoices.FASTEMBED,
             embed_config={
-                'model': 'BAAI/bge-small-zh-v1.5',
+                "model": "BAAI/bge-small-zh-v1.5",
             },
-            enabled=True
+            enabled=True,
         )
 
         LLMModel.objects.get_or_create(
-            name='GPT-4 32K',
+            name="GPT-4 32K",
             llm_model=LLMModelChoices.CHAT_GPT,
             defaults={
-                'llm_config': {
-                    'openai_api_key': 'your_openai_api_key',
-                    'openai_base_url': 'https://api.openai.com',
-                    'temperature': 0.7,
-                    'model': 'gpt-4-32k',
+                "llm_config": {
+                    "openai_api_key": "your_openai_api_key",
+                    "openai_base_url": "https://api.openai.com",
+                    "temperature": 0.7,
+                    "model": "gpt-4-32k",
                 }
-            }
+            },
         )
 
         llm_model, created = LLMModel.objects.get_or_create(
-            name='GPT-3.5 Turbo 16K',
+            name="GPT-3.5 Turbo 16K",
             llm_model=LLMModelChoices.CHAT_GPT,
             defaults={
-                'llm_config': {
-                    'openai_api_key': 'your_openai_api_key',
-                    'openai_base_url': 'https://api.openai.com',
-                    'temperature': 0.7,
-                    'model': 'gpt-3.5-turbo-16k',
+                "llm_config": {
+                    "openai_api_key": "your_openai_api_key",
+                    "openai_base_url": "https://api.openai.com",
+                    "temperature": 0.7,
+                    "model": "gpt-3.5-turbo-16k",
                 }
-            }
+            },
         )
 
         prompt = """
@@ -90,11 +98,9 @@ class Command(BaseCommand):
 你的回复：                                 
                 """
         LLMSkill.objects.get_or_create(
-            name='开放问答(GPT3.5-16k)',
+            name="开放问答(GPT3.5-16k)",
             llm_model=llm_model,
-            skill_id='action_llm_fallback',
+            skill_id="action_llm_fallback",
             enable_conversation_history=True,
-            defaults={
-                'skill_prompt': prompt
-            }
+            defaults={"skill_prompt": prompt},
         )

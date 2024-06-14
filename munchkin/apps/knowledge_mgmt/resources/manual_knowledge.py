@@ -1,37 +1,48 @@
 import json
-from loguru import logger
 
+from apps.knowledge_mgmt.models import KnowledgeBaseFolder, ManualKnowledge
 from django import forms
-from import_export.forms import ImportForm, ConfirmImportForm
 from import_export import resources
-from apps.knowledge_mgmt.models import ManualKnowledge, KnowledgeBaseFolder
+from import_export.forms import ConfirmImportForm, ImportForm
+from loguru import logger
 
 
 class ManualKnowledgeImportForm(ImportForm):
-    knowledge_base_folder = forms.ModelChoiceField(queryset=KnowledgeBaseFolder.objects.all(), required=True, label="请选择需要导入的知识库")
+    knowledge_base_folder = forms.ModelChoiceField(
+        queryset=KnowledgeBaseFolder.objects.all(), required=True, label="请选择需要导入的知识库"
+    )
     field_order = ["knowledge_base_folder", "import_file", "format"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # 设置 resource 字段为隐藏字段
-        self.fields['resource'].widget = forms.HiddenInput()
-        self.fields['resource'].label = ""  # 设置为一个空字符串
+        self.fields["resource"].widget = forms.HiddenInput()
+        self.fields["resource"].label = ""  # 设置为一个空字符串
 
 
 class ManualKnowledgeConfirmImportForm(ConfirmImportForm):
-    knowledge_base_folder = forms.ModelChoiceField(queryset=KnowledgeBaseFolder.objects.all(), required=True, label="请选择需要导入的知识库")
+    knowledge_base_folder = forms.ModelChoiceField(
+        queryset=KnowledgeBaseFolder.objects.all(), required=True, label="请选择需要导入的知识库"
+    )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # 设置 resource 字段为隐藏字段
-        self.fields['knowledge_base_folder'].widget = forms.HiddenInput()
-        self.fields['knowledge_base_folder'].label = ""  # 设置为一个空字符串
+        self.fields["knowledge_base_folder"].widget = forms.HiddenInput()
+        self.fields["knowledge_base_folder"].label = ""  # 设置为一个空字符串
+
 
 class ManualKnowledgeResource(resources.ModelResource):
-
     class Meta:
         model = ManualKnowledge
-        import_id_fields = ('title',)
-        fields = ('title', 'content', 'custom_metadata', 'knowledge_base_folder', "owner")  # 指定导入的字段
+        import_id_fields = ("title",)
+        fields = (
+            "title",
+            "content",
+            "custom_metadata",
+            "knowledge_base_folder",
+            "owner",
+        )  # 指定导入的字段
         skip_unchanged = True
         skip_empty = True
         report_skipped = True

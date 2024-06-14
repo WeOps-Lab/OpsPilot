@@ -9,5 +9,3 @@ def img2text(filepath):
         ocr_result = [line[1] for line in result]
         resp += "\n".join(ocr_result)
     return resp
-
-

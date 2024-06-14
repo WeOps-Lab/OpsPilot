@@ -6,23 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('knowledge_mgmt', '0005_webpageknowledge'),
+        ("knowledge_mgmt", "0005_webpageknowledge"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='fileknowledge',
-            name='custom_metadata',
-            field=models.JSONField(blank=True, null=True, verbose_name='自定义元数据'),
+            model_name="fileknowledge",
+            name="custom_metadata",
+            field=models.JSONField(blank=True, null=True, verbose_name="自定义元数据"),
         ),
         migrations.AddField(
-            model_name='manualknowledge',
-            name='custom_metadata',
-            field=models.JSONField(blank=True, null=True, verbose_name='自定义元数据'),
+            model_name="manualknowledge",
+            name="custom_metadata",
+            field=models.JSONField(blank=True, null=True, verbose_name="自定义元数据"),
         ),
         migrations.AddField(
-            model_name='webpageknowledge',
-            name='custom_metadata',
-            field=models.JSONField(blank=True, null=True, verbose_name='自定义元数据'),
+            model_name="webpageknowledge",
+            name="custom_metadata",
+            field=models.JSONField(blank=True, null=True, verbose_name="自定义元数据"),
         ),
     ]

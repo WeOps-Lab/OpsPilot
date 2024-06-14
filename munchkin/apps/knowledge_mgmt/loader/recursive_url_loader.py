@@ -1,28 +1,19 @@
 from typing import Iterator, List, Optional, Set
-from urllib.parse import urljoin, urldefrag
+from urllib.parse import urldefrag, urljoin
 
 import requests
-
 from langchain.docstore.document import Document
 from langchain.document_loaders.base import BaseLoader
 
 
 class RecursiveUrlLoader(BaseLoader):
-
-    def __init__(
-            self,
-            url: str,
-            exclude_dirs: Optional[str] = None,
-            max_depth: int = -1
-    ) -> None:
+    def __init__(self, url: str, exclude_dirs: Optional[str] = None, max_depth: int = -1) -> None:
 
         self.url = url
         self.exclude_dirs = exclude_dirs
         self.max_depth = max_depth
 
-    def get_child_links_recursive(
-            self, url: str, depth: int, visited: Optional[Set[str]] = None
-    ) -> Iterator[Document]:
+    def get_child_links_recursive(self, url: str, depth: int, visited: Optional[Set[str]] = None) -> Iterator[Document]:
         """Recursively get all child links starting with the path of the input URL.
 
         Args:
@@ -35,9 +26,7 @@ class RecursiveUrlLoader(BaseLoader):
         try:
             from bs4 import BeautifulSoup
         except ImportError:
-            raise ImportError(
-                "The BeautifulSoup package is required for the RecursiveUrlLoader."
-            )
+            raise ImportError("The BeautifulSoup package is required for the RecursiveUrlLoader.")
 
         # Exclude the root and parent from a list
         visited = set() if visited is None else visited
@@ -46,9 +35,7 @@ class RecursiveUrlLoader(BaseLoader):
             return None
 
         # Exclude the links that start with any of the excluded directories
-        if self.exclude_dirs and any(
-                url.startswith(exclude_dir) for exclude_dir in self.exclude_dirs
-        ):
+        if self.exclude_dirs and any(url.startswith(exclude_dir) for exclude_dir in self.exclude_dirs):
             return visited
 
         yield from AsyncHtmlLoader(web_path=url).load()
