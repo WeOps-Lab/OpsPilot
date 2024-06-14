@@ -15,3 +15,6 @@ class RerankProviderAdmin(ModelAdmin):
     filter_horizontal = []
     fieldsets = ((None, {"fields": ("name", "rerank_model", "enabled", "rerank_config")}),)
     formfield_overrides = {JSONField: {"widget": AceWidget(mode="json", theme="chrome", width="700px")}}
+
+    def has_module_permission(self, request):
+        return request.user.is_superuser

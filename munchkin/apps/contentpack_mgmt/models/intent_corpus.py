@@ -1,7 +1,8 @@
+from apps.core.models.maintainer_info import MaintainerInfo
 from django.db import models
 
 
-class IntentCorpus(models.Model):
+class IntentCorpus(MaintainerInfo):
     id = models.AutoField(primary_key=True)
     intent = models.ForeignKey("contentpack_mgmt.Intent", on_delete=models.CASCADE, verbose_name="意图")
     corpus = models.TextField(verbose_name="语料")

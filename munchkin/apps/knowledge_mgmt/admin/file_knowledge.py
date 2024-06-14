@@ -1,3 +1,4 @@
+from apps.core.admin.guarded_admin_base import GuardedAdminBase
 from apps.knowledge_mgmt.models import FileKnowledge, ManualKnowledge, WebPageKnowledge
 from django.contrib import admin
 from django.db.models import TextField
@@ -10,7 +11,7 @@ from unfold.contrib.forms.widgets import WysiwygWidget
 
 
 @admin.register(FileKnowledge)
-class FileKnowledgeAdmin(ModelAdmin):
+class FileKnowledgeAdmin(GuardedAdminBase):
     list_display = ["knowledge_base_folder_link", "title", "file"]
     search_fields = ["knowledge_base_folder", "title"]
     list_display_links = ["title"]
@@ -22,10 +23,7 @@ class FileKnowledgeAdmin(ModelAdmin):
     formfield_overrides = {JSONField: {"widget": AceWidget(mode="json", theme="chrome", width="700px")}}
 
     def knowledge_base_folder_link(self, obj):
-        link = reverse(
-            "admin:knowledge_mgmt_knowledgebasefolder_change",
-            args=[obj.knowledge_base_folder.id],
-        )
+        link = reverse("admin:knowledge_mgmt_knowledgebasefolder_change", args=[obj.knowledge_base_folder.id])
         return format_html('<a href="{}">{}</a>', link, obj.knowledge_base_folder)
 
     knowledge_base_folder_link.short_description = "知识库"

@@ -1,3 +1,4 @@
+from apps.core.admin.guarded_admin_base import GuardedAdminBase
 from apps.knowledge_mgmt.models import ManualKnowledge
 from apps.knowledge_mgmt.resources.manual_knowledge import (
     ManualKnowledgeConfirmImportForm,
@@ -16,26 +17,14 @@ from unfold.contrib.forms.widgets import WysiwygWidget
 
 
 @admin.register(ManualKnowledge)
-class ManualKnowledgeAdmin(ModelAdmin, ImportExportModelAdmin):
+class ManualKnowledgeAdmin(GuardedAdminBase, ImportExportModelAdmin):
     list_display = ["title", "knowledge_base_folder_link"]
     search_fields = ["title"]
     list_display_links = ["title"]
     list_filter = ["knowledge_base_folder"]
     ordering = ["id"]
     filter_horizontal = []
-    fieldsets = (
-        (
-            "",
-            {
-                "fields": (
-                    "knowledge_base_folder",
-                    "title",
-                    "content",
-                    "custom_metadata",
-                )
-            },
-        ),
-    )
+    fieldsets = (("", {"fields": ("knowledge_base_folder", "title", "content", "custom_metadata")}),)
     formfield_overrides = {
         TextField: {
             "widget": WysiwygWidget,
@@ -49,10 +38,7 @@ class ManualKnowledgeAdmin(ModelAdmin, ImportExportModelAdmin):
     import_error_display = "traceback"
 
     def knowledge_base_folder_link(self, obj):
-        link = reverse(
-            "admin:knowledge_mgmt_knowledgebasefolder_change",
-            args=[obj.knowledge_base_folder.id],
-        )
+        link = reverse("admin:knowledge_mgmt_knowledgebasefolder_change", args=[obj.knowledge_base_folder.id])
         return format_html('<a href="{}">{}</a>', link, obj.knowledge_base_folder)
 
     knowledge_base_folder_link.short_description = "知识库"

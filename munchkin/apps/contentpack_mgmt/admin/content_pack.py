@@ -9,6 +9,7 @@ from apps.contentpack_mgmt.models import (
     RasaSlots,
     RasaStories,
 )
+from apps.core.admin.guarded_admin_base import GuardedAdminBase
 from django.contrib import admin
 from unfold.admin import ModelAdmin
 
@@ -115,7 +116,7 @@ class RasaResponseInline(admin.TabularInline):
 
 
 @admin.register(ContentPack)
-class ContentPackAdmin(ModelAdmin):
+class ContentPackAdmin(GuardedAdminBase):
     list_display = ["name"]
     search_fields = ["name"]
     list_filter = ["name"]
@@ -132,3 +133,5 @@ class ContentPackAdmin(ModelAdmin):
         RasaEntityInline,
         RasaResponseInline,
     ]
+
+    fieldsets = (("基本信息", {"fields": ("name", "description")}),)

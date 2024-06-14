@@ -1,7 +1,8 @@
+from apps.core.models.maintainer_info import MaintainerInfo
 from django.db import models
 
 
-class RasaResponse(models.Model):
+class RasaResponse(MaintainerInfo):
     id = models.AutoField(primary_key=True)
     content_pack = models.ForeignKey("contentpack_mgmt.ContentPack", on_delete=models.CASCADE, verbose_name="扩展包")
     name = models.CharField(max_length=255, verbose_name="回复名称")

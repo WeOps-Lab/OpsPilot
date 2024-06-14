@@ -37,7 +37,7 @@ class ManualKnowledgeInline(admin.StackedInline):
 
 
 @admin.register(KnowledgeBaseFolder)
-class KnowledgeBaseFolderAdmin(ModelAdmin):
+class KnowledgeBaseFolderAdmin(GuardedAdminBase):
     list_display = [
         "name",
         "description",
@@ -59,27 +59,9 @@ class KnowledgeBaseFolderAdmin(ModelAdmin):
     fieldsets = (
         ("基本信息", {"fields": ("name", "description")}),
         ("Embeding模型", {"fields": ("embed_model",)}),
-        (
-            "分块解析",
-            {
-                "fields": (
-                    "enable_general_parse",
-                    ("general_parse_chunk_size", "general_parse_chunk_overlap"),
-                )
-            },
-        ),
+        ("分块解析", {"fields": ("enable_general_parse", ("general_parse_chunk_size", "general_parse_chunk_overlap"))}),
         ("文本检索", {"fields": ("enable_text_search", "text_search_weight")}),
-        (
-            "向量检索",
-            {
-                "fields": (
-                    "enable_vector_search",
-                    "vector_search_weight",
-                    "rag_k",
-                    "rag_num_candidates",
-                )
-            },
-        ),
+        ("向量检索", {"fields": ("enable_vector_search", "vector_search_weight", "rag_k", "rag_num_candidates")}),
         ("结果重排", {"fields": ("enable_rerank", "rerank_model", "rerank_top_k")}),
     )
 

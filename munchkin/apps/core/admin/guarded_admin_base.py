@@ -1,6 +1,7 @@
 from functools import partial
 
 from apps.core.admin.OwnerAdminBase import OwnerAdminBase
+from django.db.models import Q
 from guardian.admin import GuardedModelAdmin
 from guardian.shortcuts import assign_perm, get_objects_for_user
 
@@ -12,9 +13,7 @@ class GuardedAdminBase(OwnerAdminBase, GuardedModelAdmin):
     def has_module_permission(self, request):
         if request.user.is_superuser and request.user.is_active:
             return True
-        has_view_perm = partial(request.user.has_perm, "view_%s" % self.opts.model_name)
-        query_set = self.model.objects.all()
-        return any(map(has_view_perm, query_set))
+        return request.user.has_perm("view_%s" % self.opts.model_name)
 
     def get_model_perms(self, request):
         return {
@@ -33,6 +32,16 @@ class GuardedAdminBase(OwnerAdminBase, GuardedModelAdmin):
         if request.user.is_authenticated:
             data = data.filter(owner=request.user)
         return data
+
+    def save_related(self, request, form, formsets, change):
+        super().save_related(request, form, formsets, change)
+        if not change:
+            for related_object in form.instance._meta.related_objects:
+                related_set = getattr(form.instance, related_object.get_accessor_name())
+                for obj in related_set.all():
+                    if not obj.owner_id:
+                        obj.owner_id = request.user.id
+                        obj.save()
 
     # 内部用来获取某个用户有权限访问的数据行
     def get_model_objs(self, request, action=None, klass=None):
@@ -59,7 +68,7 @@ class GuardedAdminBase(OwnerAdminBase, GuardedModelAdmin):
         if obj:
             return request.user.has_perm(f"{opts.app_label}.{codename}", obj)
         else:
-            return self.get_model_objs(request, action).exists()
+            return request.user.has_perm(f"{opts.app_label}.{codename}")
 
     # 是否有查看某个数据行的权限
     def has_view_permission(self, request, obj=None):
@@ -75,6 +84,8 @@ class GuardedAdminBase(OwnerAdminBase, GuardedModelAdmin):
 
     # 用户应该拥有他新增的数据行的所有权限
     def save_model(self, request, obj, form, change):
+        if not getattr(obj, "owner", None):
+            obj.owner = request.user
         result = super().save_model(request, obj, form, change)
         if not request.user.is_superuser and not change:
             opts = self.opts

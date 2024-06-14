@@ -1,16 +1,13 @@
+from apps.core.models.maintainer_info import MaintainerInfo
 from apps.knowledge_mgmt.models import KnowledgeBaseFolder
 from django.db import models
 
 
-class LLMSkill(models.Model):
+class LLMSkill(MaintainerInfo):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, unique=True, verbose_name="名称")
     llm_model = models.ForeignKey(
-        "model_provider_mgmt.LLMModel",
-        on_delete=models.CASCADE,
-        verbose_name="LLM模型",
-        blank=True,
-        null=True,
+        "model_provider_mgmt.LLMModel", on_delete=models.CASCADE, verbose_name="LLM模型", blank=True, null=True
     )
     skill_id = models.CharField(max_length=255, verbose_name="技能ID", blank=True, null=True)
     skill_prompt = models.TextField(blank=True, null=True, verbose_name="技能提示词")

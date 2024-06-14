@@ -1,8 +1,9 @@
+from apps.core.models.maintainer_info import MaintainerInfo
 from django.db import models
 from django_yaml_field import YAMLField
 
 
-class RasaSlots(models.Model):
+class RasaSlots(MaintainerInfo):
     id = models.AutoField(primary_key=True)
     content_pack = models.ForeignKey("contentpack_mgmt.ContentPack", on_delete=models.CASCADE, verbose_name="扩展包")
     name = models.CharField(max_length=255, verbose_name="槽位名称")

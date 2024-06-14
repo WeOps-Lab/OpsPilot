@@ -1,9 +1,10 @@
+from apps.core.models.maintainer_info import MaintainerInfo
 from django.db import models
 from django_minio_backend import MinioBackend
 from django_yaml_field import YAMLField
 
 
-class RasaModel(models.Model):
+class RasaModel(MaintainerInfo):
     id = models.AutoField(primary_key=True)
     content_packs = models.ManyToManyField("contentpack_mgmt.ContentPack", verbose_name="扩展包", null=True, blank=True)
     name = models.CharField(max_length=255, verbose_name="模型名称")
