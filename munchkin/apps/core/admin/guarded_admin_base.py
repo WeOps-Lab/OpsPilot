@@ -1,15 +1,11 @@
-from functools import partial
-
-from apps.core.admin.OwnerAdminBase import OwnerAdminBase
-from django.db.models import Q
 from guardian.admin import GuardedModelAdmin
 from guardian.shortcuts import assign_perm, get_objects_for_user
+from unfold.admin import ModelAdmin
 
 
-class GuardedAdminBase(OwnerAdminBase, GuardedModelAdmin):
+class GuardedAdminBase(ModelAdmin, GuardedModelAdmin):
 
     # app是否在主页面中显示的话由该函数决定
-
     def has_module_permission(self, request):
         if request.user.is_superuser and request.user.is_active:
             return True
@@ -22,7 +18,23 @@ class GuardedAdminBase(OwnerAdminBase, GuardedModelAdmin):
             "delete": True,
         }
 
-    # 在显示数据列表额时候，哪些数据显示，哪些不显示，由该函数控制
+    # 内部用来获取某个用户有权限访问的数据行
+    def get_model_objs(self, request, action=None, klass=None):
+        if request.user.is_superuser and request.user.is_active:
+            return super().get_queryset(request)
+
+        opts = self.opts
+        actions = ["view", "add", "change", "delete"]
+        klass = klass if klass else opts.model
+        model_name = klass._meta.model_name
+        return get_objects_for_user(
+            user=request.user,
+            perms=[f"{perm}_{model_name}" for perm in actions],
+            klass=klass,
+            any_perm=True,
+        )
+
+    # 在显示数据列表的时候，哪些数据显示，哪些不显示，由该函数控制
     def get_queryset(self, request):
         if request.user.is_superuser and request.user.is_active:
             return super().get_queryset(request)
@@ -42,22 +54,6 @@ class GuardedAdminBase(OwnerAdminBase, GuardedModelAdmin):
                     if not obj.owner_id:
                         obj.owner_id = request.user.id
                         obj.save()
-
-    # 内部用来获取某个用户有权限访问的数据行
-    def get_model_objs(self, request, action=None, klass=None):
-        if request.user.is_superuser and request.user.is_active:
-            return super().get_queryset(request)
-
-        opts = self.opts
-        actions = ["view", "add", "change", "delete"]
-        klass = klass if klass else opts.model
-        model_name = klass._meta.model_name
-        return get_objects_for_user(
-            user=request.user,
-            perms=[f"{perm}_{model_name}" for perm in actions],
-            klass=klass,
-            any_perm=True,
-        )
 
     # 用来判断某个用户是否有某个数据行的权限
     def has_perm(self, request, obj, action):
@@ -92,3 +88,10 @@ class GuardedAdminBase(OwnerAdminBase, GuardedModelAdmin):
             actions = ["view", "add", "change", "delete"]
             [assign_perm(f"{opts.app_label}.{action}_{opts.model_name}", request.user, obj) for action in actions]
         return result
+
+    def owner_name(self, obj):
+        if obj.owner:
+            return obj.owner.username
+        return '-'
+
+    owner_name.short_description = '所属用户'

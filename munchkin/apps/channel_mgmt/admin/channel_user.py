@@ -8,7 +8,6 @@ from unfold.admin import ModelAdmin
 
 @admin.register(ChannelUser)
 class ChannelUserAdmin(GuardedAdminBase):
-    list_display = ["channel_user_group_link", "user_id", "name"]
     search_fields = ["name"]
     list_filter = ["name"]
     list_display_links = ["channel_user_group_link", "user_id"]
@@ -16,6 +15,12 @@ class ChannelUserAdmin(GuardedAdminBase):
     filter_horizontal = []
 
     fieldsets = ((None, {"fields": ("channel_user_group", "user_id", "name")}),)
+
+    def get_list_display(self, request):
+        list_display = ["channel_user_group", "user_id", "name"]
+        if request.user.is_superuser:
+            list_display.append('owner_name')
+        return list_display
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "channel_user_group":

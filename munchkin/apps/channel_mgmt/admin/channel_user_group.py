@@ -6,12 +6,17 @@ from unfold.admin import ModelAdmin
 
 @admin.register(ChannelUserGroup)
 class ChannelUserGroupAdmin(GuardedAdminBase):
-    list_display = ["channel", "name"]
     search_fields = ["name"]
     list_filter = ["name"]
     list_display_links = ["name"]
     ordering = ["id"]
     filter_horizontal = []
+
+    def get_list_display(self, request):
+        list_display = ["channel", "name"]
+        if request.user.is_superuser:
+            list_display.append('owner_name')
+        return list_display
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "channel":
