@@ -37,14 +37,16 @@ def on_message(channel, method_frame, header_frame, body):
             channel_user_exists = ChannelUser.objects.filter(
                 user_id=sender_id, channel_user_group__channel=channel_obj
             ).exists()
+            channel_user_group = ChannelUserGroup.objects.get(channel=channel_obj, owner=bot.owner,
+                                                              name="默认用户组")
+
             if channel_user_exists is False:
                 logger.info(f"用户[{sender_id}]不存在,创建用户,并加入默认用户组")
 
-                channel_user_group = ChannelUserGroup.objects.get(channel=channel_obj, owner=bot.owner,
-                                                                  name="默认用户组")
                 ChannelUser.objects.create(channel_user_group=channel_user_group, owner=bot.owner, user_id=sender_id)
 
-            channel_user = ChannelUser.objects.filter(user_id=sender_id, channel=channel_obj).first()
+            channel_user = ChannelUser.objects.filter(user_id=sender_id, channel_user_group=channel_user_group,
+                                                      owner=bot.owner).first()
 
             # 创建对话历史
             created_at = datetime.datetime.fromtimestamp(message["timestamp"], tz=datetime.timezone.utc)
