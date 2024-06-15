@@ -10,7 +10,12 @@ from unfold.admin import ModelAdmin
 
 @admin.register(RasaSlots)
 class RasaSlotsAdmin(GuardedAdminBase):
-    list_display = ["content_pack_link", "name"]
+    def get_list_display(self, request):
+        list_display = ["content_pack_link", "name"]
+        if request.user.is_superuser:
+            list_display.append('owner_name')
+        return list_display
+
     search_fields = ["name"]
     list_filter = ["content_pack", "name"]
     list_display_links = ["name"]

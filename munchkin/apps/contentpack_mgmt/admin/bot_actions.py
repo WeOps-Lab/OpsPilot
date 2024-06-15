@@ -1,14 +1,19 @@
-from apps.contentpack_mgmt.models import BotActions, ContentPack
-from apps.core.admin.guarded_admin_base import GuardedAdminBase
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
-from unfold.admin import ModelAdmin
+
+from apps.contentpack_mgmt.models import BotActions, ContentPack
+from apps.core.admin.guarded_admin_base import GuardedAdminBase
 
 
 @admin.register(BotActions)
 class BotActionsAdmin(GuardedAdminBase):
-    list_display = ["content_pack_link", "name"]
+    def get_list_display(self, request):
+        list_display = ["content_pack_link", "name"]
+        if request.user.is_superuser:
+            list_display.append('owner_name')
+        return list_display
+
     search_fields = ["name"]
     list_filter = ["content_pack", "name"]
     list_display_links = ["name"]

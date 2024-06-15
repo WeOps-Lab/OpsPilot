@@ -6,7 +6,12 @@ from unfold.admin import ModelAdmin
 
 @admin.register(RasaResponseCorpus)
 class RasaResponseCorpusAdmin(GuardedAdminBase):
-    list_display = ["response", "corpus"]
+    def get_list_display(self, request):
+        list_display = ["response", "corpus"]
+        if request.user.is_superuser:
+            list_display.append('owner_name')
+        return list_display
+
     search_fields = ["corpus"]
     list_filter = ["response"]
     list_display_links = ["corpus"]

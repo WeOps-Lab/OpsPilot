@@ -1,14 +1,19 @@
-from apps.contentpack_mgmt.models import IntentCorpus
-from apps.core.admin.guarded_admin_base import GuardedAdminBase
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
-from unfold.admin import ModelAdmin
+
+from apps.contentpack_mgmt.models import IntentCorpus
+from apps.core.admin.guarded_admin_base import GuardedAdminBase
 
 
 @admin.register(IntentCorpus)
 class IntentCorpusAdmin(GuardedAdminBase):
-    list_display = ["content_pack_link", "intent_link", "corpus"]
+    def get_list_display(self, request):
+        list_display = ["content_pack_link", "intent_link", "corpus"]
+        if request.user.is_superuser:
+            list_display.append('owner_name')
+        return list_display
+
     search_fields = ["corpus"]
     list_filter = ["intent"]
     list_display_links = ["corpus"]

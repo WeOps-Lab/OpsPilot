@@ -1,0 +1,13 @@
+assistant_id: ops-pilot
+language: zh
+pipeline:
+- case_sensitive: true
+  name: KeywordIntentClassifier
+- ambiguity_threshold: 0.1
+  name: FallbackClassifier
+  threshold: 0.7
+policies:
+- core_fallback_action_name: action_llm_fallback
+  core_fallback_threshold: 0.4
+  name: RulePolicy
+recipe: default.v1

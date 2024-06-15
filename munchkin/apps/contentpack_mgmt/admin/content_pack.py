@@ -1,3 +1,5 @@
+from django.contrib import admin
+
 from apps.contentpack_mgmt.models import (
     BotActions,
     ContentPack,
@@ -10,8 +12,6 @@ from apps.contentpack_mgmt.models import (
     RasaStories,
 )
 from apps.core.admin.guarded_admin_base import GuardedAdminBase
-from django.contrib import admin
-from unfold.admin import ModelAdmin
 
 
 class RasaStoriesInline(admin.TabularInline):
@@ -117,7 +117,12 @@ class RasaResponseInline(admin.TabularInline):
 
 @admin.register(ContentPack)
 class ContentPackAdmin(GuardedAdminBase):
-    list_display = ["name"]
+    def get_list_display(self, request):
+        list_display = ["name"]
+        if request.user.is_superuser:
+            list_display.append('owner_name')
+        return list_display
+
     search_fields = ["name"]
     list_filter = ["name"]
     list_display_links = ["name"]
