@@ -15,12 +15,21 @@ class LLMSkillAdmin(GuardedAdminBase):
             kwargs["queryset"] = KnowledgeBaseFolder.objects.filter(owner=request.user)
         return super().formfield_for_manytomany(db_field, request, **kwargs)
 
-    list_display = ["name", "llm_model_link", "enable_conversation_history", "enable_rag"]
+    list_display = ["skill_id", "name", "llm_model_link", "enable_conversation_history", "enable_rag"]
     search_fields = ["name"]
     list_filter = ["llm_model", "enable_conversation_history", "enable_rag"]
     list_display_links = ["name"]
     ordering = ["id"]
     filter_horizontal = ["knowledge_base_folders"]
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(llm_model__enabled=True)
+
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        if db_field.name == "knowledge_base_folders":
+            kwargs["queryset"] = KnowledgeBaseFolder.objects.filter(owner=request.user)
+        return super().formfield_for_manytomany(db_field, request, **kwargs)
 
     fieldsets = [
         (None, {"fields": ["name", "llm_model", "skill_id", "skill_prompt"]}),

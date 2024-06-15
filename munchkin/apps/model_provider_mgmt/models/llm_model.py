@@ -19,6 +19,7 @@ class LLMModel(models.Model, EncryptableMixin):
         encoder=PrettyJSONEncoder,
         default=dict,
     )
+    enabled = models.BooleanField(default=True, verbose_name="启用")
 
     def __str__(self):
         return self.name
