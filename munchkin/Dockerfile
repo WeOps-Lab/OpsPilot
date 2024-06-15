@@ -20,4 +20,5 @@ ADD ./support-files/supervisor/munchkin.conf /etc/supervisor/conf.d/munchkin.con
 ADD ./support-files/supervisor/celery.conf /etc/supervisor/conf.d/celery.conf
 ADD ./support-files/supervisor/conversation.conf /etc/supervisor/conf.d/conversation.conf
 
+ADD ./support-files ./support-files
 RUN apt-get reinstall supervisor -y
