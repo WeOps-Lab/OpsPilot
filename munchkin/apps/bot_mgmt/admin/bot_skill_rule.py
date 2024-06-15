@@ -9,7 +9,13 @@ from apps.model_provider_mgmt.models import LLMSkill
 
 @admin.register(BotSkillRule)
 class BotSkillRuleAdmin(GuardedAdminBase):
-    list_display = ['name', 'bot_id', 'skill', 'channel']
+
+    def get_list_display(self, request):
+        list_display = ['name', 'bot_id', 'skill', 'channel']
+        if request.user.is_superuser:
+            list_display.append("owner_name")
+        return list_display
+
     search_fields = ['name']
     list_filter = ['name']
     list_display_links = ['name']

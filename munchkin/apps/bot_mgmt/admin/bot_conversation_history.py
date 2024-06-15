@@ -9,7 +9,12 @@ from unfold.admin import ModelAdmin
 
 @admin.register(BotConversationHistory)
 class BotConversationHistoryAdmin(GuardedAdminBase):
-    list_display = ["bot", "channel_link", "user_link", "conversation_role", "short_conversation", "created_at"]
+    def get_list_display(self, request):
+        list_display = ["bot", "channel_link", "user_link", "conversation_role", "short_conversation", "created_at"]
+        if request.user.is_superuser:
+            list_display.append("owner_name")
+        return list_display
+
     search_fields = ["conversation"]
     list_filter = ["bot", "user", "conversation_role", "created_at"]
     list_display_links = ["short_conversation"]

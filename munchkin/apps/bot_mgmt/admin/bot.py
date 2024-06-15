@@ -15,18 +15,23 @@ from unfold.decorators import action
 
 @admin.register(Bot)
 class BotAdmin(GuardedAdminBase):
-    list_display = [
-        "name",
-        "assistant_id",
-        "rasa_model_link",
-        "channels_link",
-        "online",
-        "enable_bot_domain",
-        "bot_domain",
-        "enable_ssl",
-        "enable_node_port",
-        "node_port",
-    ]
+    def get_list_display(self, request):
+        list_display = [
+            "name",
+            "assistant_id",
+            "rasa_model_link",
+            "channels_link",
+            "online",
+            "enable_bot_domain",
+            "bot_domain",
+            "enable_ssl",
+            "enable_node_port",
+            "node_port",
+        ]
+        if request.user.is_superuser:
+            list_display.append("owner_name")
+        return list_display
+
     search_fields = ["name"]
     list_filter = ["name"]
     list_display_links = ["name", "rasa_model_link", "channels_link"]
