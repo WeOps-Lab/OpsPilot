@@ -1,10 +1,3 @@
-from apps.core.admin.guarded_admin_base import GuardedAdminBase
-from apps.knowledge_mgmt.models import ManualKnowledge
-from apps.knowledge_mgmt.resources.manual_knowledge import (
-    ManualKnowledgeConfirmImportForm,
-    ManualKnowledgeImportForm,
-    ManualKnowledgeResource,
-)
 from django.contrib import admin
 from django.db.models import TextField
 from django.forms import JSONField
@@ -12,13 +5,25 @@ from django.urls import reverse
 from django.utils.html import format_html
 from django_ace import AceWidget
 from import_export.admin import ImportExportModelAdmin
-from unfold.admin import ModelAdmin
 from unfold.contrib.forms.widgets import WysiwygWidget
+
+from apps.core.admin.guarded_admin_base import GuardedAdminBase
+from apps.knowledge_mgmt.models import ManualKnowledge
+from apps.knowledge_mgmt.resources.manual_knowledge import (
+    ManualKnowledgeConfirmImportForm,
+    ManualKnowledgeImportForm,
+    ManualKnowledgeResource,
+)
 
 
 @admin.register(ManualKnowledge)
 class ManualKnowledgeAdmin(GuardedAdminBase, ImportExportModelAdmin):
-    list_display = ["title", "knowledge_base_folder_link"]
+    def get_list_display(self, request):
+        list_display = ["title", "knowledge_base_folder_link"]
+        if request.user.is_superuser:
+            list_display.append("owner_name")
+        return list_display
+
     search_fields = ["title"]
     list_display_links = ["title"]
     list_filter = ["knowledge_base_folder"]

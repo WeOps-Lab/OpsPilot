@@ -38,15 +38,20 @@ class ManualKnowledgeInline(admin.StackedInline):
 
 @admin.register(KnowledgeBaseFolder)
 class KnowledgeBaseFolderAdmin(GuardedAdminBase):
-    list_display = [
-        "name",
-        "description",
-        "embed_model_link",
-        "enable_text_search",
-        "enable_vector_search",
-        "train_status",
-        "train_progress",
-    ]
+    def get_list_display(self, request):
+        list_display = [
+            "name",
+            "description",
+            "embed_model_link",
+            "enable_text_search",
+            "enable_vector_search",
+            "train_status",
+            "train_progress",
+        ]
+        if request.user.is_superuser:
+            list_display.append('owner_name')
+        return list_display
+
     search_fields = ["name"]
     list_display_links = ["name"]
     ordering = ["id"]

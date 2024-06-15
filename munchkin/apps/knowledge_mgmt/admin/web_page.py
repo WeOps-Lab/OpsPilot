@@ -10,7 +10,12 @@ from unfold.admin import ModelAdmin
 
 @admin.register(WebPageKnowledge)
 class WebPageKnowledgeAdmin(GuardedAdminBase):
-    list_display = ["knowledge_base_folder_link", "title", "url", "max_depth"]
+    def get_list_display(self, request):
+        list_display = ["knowledge_base_folder_link", "title", "url", "max_depth"]
+        if request.user.is_superuser:
+            list_display.append("owner_name")
+        return list_display
+
     search_fields = ["knowledge_base_folder", "title"]
     list_display_links = ["title"]
     list_filter = ["knowledge_base_folder"]
