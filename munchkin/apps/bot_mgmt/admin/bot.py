@@ -1,16 +1,16 @@
+from django.contrib import admin, messages
+from django.http import HttpRequest
+from django.shortcuts import redirect
+from django.urls import reverse
+from django.utils.html import format_html
+from unfold.decorators import action
+
 from apps.bot_mgmt.models import Bot
 from apps.channel_mgmt.models import Channel
 from apps.contentpack_mgmt.models import RasaModel
 from apps.core.admin.guarded_admin_base import GuardedAdminBase
 from apps.core.utils.kubernetes_client import KubernetesClient
 from apps.model_provider_mgmt.models import LLMSkill
-from django.contrib import admin, messages
-from django.http import HttpRequest
-from django.shortcuts import redirect
-from django.urls import reverse
-from django.utils.html import format_html
-from unfold.admin import ModelAdmin
-from unfold.decorators import action
 
 
 @admin.register(Bot)
