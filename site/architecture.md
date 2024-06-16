@@ -13,4 +13,4 @@
 
 OpsPilot系统架构如下图所示，OpsPilot由Pilot和Munchkin两个关键组件组成，与用户进行连接的是Pilot
 
-![arch.png](https://static.cwoa.net/c5b60fd6e8d249dfb1209e11f4214c49.png)
+![Snipaste_2024-06-16_13-35-47.jpg](https://static.cwoa.net/e17908fe4af74502a18cc22fced23b21.jpg)
