@@ -26,7 +26,7 @@ from utils.llm_driver import LLMDriver
 
 prompt_template = """
 你是一个Rasa的ChatGPT的意图分类引擎，请严格按照以下json格式回复数据：
-{ "intent": {"name": "test", "confidence": 1.0}, intent_ranking: [{"name": "test", "confidence": 1.0}] }
+{ "intent": {"name": "pre_train", "confidence": 1.0}, intent_ranking: [{"name": "pre_train", "confidence": 1.0}] }
 
 你将会接到用户的文本输入，请在以下intent中选择合适的intent，并返回json格式的数据。
 
