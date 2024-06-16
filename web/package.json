@@ -9,18 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@ant-design/cssinjs": "^1.20.0",
-    "@ant-design/icons": "^5.3.7",
-    "@ant-design/nextjs-registry": "^1.0.0",
-    "antd": "^5.18.1",
-    "next": "14.2.4",
     "react": "^18",
-    "react-dom": "^18"
-  },
-  "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "typescript": "^5"
+    "react-dom": "^18",
+    "next": "14.2.4"
   }
 }
