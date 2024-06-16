@@ -70,3 +70,5 @@ pymupdf==1.24.5
 django-jsonform==2.22.0
 
 pre-commit==3.7.1
+
+wechatpy

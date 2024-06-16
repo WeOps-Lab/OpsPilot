@@ -3,10 +3,10 @@ import json
 
 import pika
 from apps.bot_mgmt.models import Bot, BotConversationHistory
-from apps.channel_mgmt.models import Channel, ChannelUser, ChannelUserGroup
+from apps.channel_mgmt.models import Channel, ChannelUser, ChannelUserGroup, CHANNEL_CHOICES
 from django.core.management import BaseCommand
 from loguru import logger
-
+from wechatpy import WeChatClient
 from munchkin.components.conversation_mq import (
     CONVERSATION_MQ_HOST,
     CONVERSATION_MQ_PASSWORD,
@@ -42,8 +42,19 @@ def on_message(channel, method_frame, header_frame, body):
 
             if channel_user_exists is False:
                 logger.info(f"用户[{sender_id}]不存在,创建用户,并加入默认用户组")
+                if channel_obj.channel_type == CHANNEL_CHOICES.ENTERPRISE_WECHAT:
+                    conf = channel_obj.decrypted_channel_config
 
-                ChannelUser.objects.create(channel_user_group=channel_user_group, owner=bot.owner, user_id=sender_id)
+                    wechat_client = WeChatClient(
+                        conf['corp_id'],
+                        conf['secret'],
+                    )
+                    wechat_username = wechat_client.user.get(sender_id)['name']
+                    ChannelUser.objects.create(channel_user_group=channel_user_group, owner=bot.owner,
+                                               user_id=sender_id, name=wechat_username)
+                else:
+                    ChannelUser.objects.create(channel_user_group=channel_user_group, owner=bot.owner,
+                                               user_id=sender_id)
 
             channel_user = ChannelUser.objects.filter(user_id=sender_id, channel_user_group=channel_user_group,
                                                       owner=bot.owner).first()
