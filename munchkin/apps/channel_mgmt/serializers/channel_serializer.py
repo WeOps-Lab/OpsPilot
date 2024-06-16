@@ -3,11 +3,12 @@ from rest_framework import serializers
 
 
 class ChannelSerializer(serializers.ModelSerializer):
-    channel_config = serializers.SerializerMethodField()
+    decrypted_channel_config = serializers.SerializerMethodField()
 
     class Meta:
         model = Channel
-        fields = ['id', 'name', 'channel_type', 'channel_config']
+        fields = "__all__"
 
-    def get_channel_config(self, obj):
-        return str(obj.channel_config)
+    def get_decrypted_channel_config(self, obj):
+        return obj.decrypted_channel_config
+
