@@ -1,9 +1,10 @@
-export default function Home() {
-  return (
-    <>
-      <main>
-         Hello OpsPilot
-      </main>
-    </>
-  );
-}
+import React from 'react';
+import { Button } from 'antd';
+
+const Home = () => (
+  <div className="App">
+    
+  </div>
+);
+
+export default Home;
