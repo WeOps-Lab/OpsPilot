@@ -1,1 +1,2 @@
-from .channel import ChannelSerializer
+from .channel_decrypted_serializer import ChannelDecryptedSerializer
+from .channel_serializer import ChannelSerializer

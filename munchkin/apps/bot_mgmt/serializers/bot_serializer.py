@@ -1,10 +1,10 @@
 from apps.bot_mgmt.models import Bot
-from apps.channel_mgmt.serializers import ChannelSerializer
+from apps.channel_mgmt.serializers import ChannelDecryptedSerializer
 from rest_framework import serializers
 
 
 class BotSerializer(serializers.ModelSerializer):
-    channels = ChannelSerializer(many=True)
+    channels = ChannelDecryptedSerializer(many=True)
 
     class Meta:
         model = Bot
