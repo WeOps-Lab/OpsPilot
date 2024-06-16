@@ -1,0 +1,49 @@
+import React from 'react';
+import { shallow } from 'enzyme';
+
+import assetMock from 'tests-mocks/fileMock';
+import Widget from '../index';
+import WidgetLayout from '../layout';
+
+describe('<Widget />', () => {
+  const profile = assetMock;
+  const handleUserMessage = jest.fn();
+  const newMessageEvent = {
+    target: {
+      message: {
+        value: 'New message'
+      }
+    },
+    preventDefault() {}
+  };
+  const dispatch = jest.fn();
+
+  const widgetComponent = shallow(
+    <Widget.WrappedComponent
+      handleNewUserMessage={handleUserMessage}
+      profileAvatar={profile}
+      dispatch={dispatch}
+      customMessageDelay={() => {}}
+      tooltipSent
+      tooltipDelay={0}
+      socket={{
+        isInitialized: () => true
+      }}
+    />
+  );
+
+  it('should render WidgetLayout', () => {
+    expect(widgetComponent.find(WidgetLayout)).toHaveLength(1);
+  });
+
+  it('should prevent events default behavior', () => {
+    const spyPreventDefault = jest.spyOn(newMessageEvent, 'preventDefault');
+    widgetComponent.instance().handleMessageSubmit(newMessageEvent);
+    expect(spyPreventDefault).toHaveBeenCalled();
+  });
+
+  it('should clear the message input when newMessageEvent', () => {
+    widgetComponent.instance().handleMessageSubmit(newMessageEvent);
+    expect(newMessageEvent.target.message.value).toBe('');
+  });
+});

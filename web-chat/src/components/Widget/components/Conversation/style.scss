@@ -1,0 +1,50 @@
+@import "variables.scss";
+
+@import "common.scss";
+@import "animation.scss";
+
+&.#{$namespace}conversation-container {
+  @include animation(0, 0.5s, slide-in);
+  border-radius: 10px;
+  box-shadow:
+  0 1px 1.5px -1px rgba(0, 0, 0, 0.048),
+  0 2.5px 3.7px -1px rgba(0, 0, 0, 0.069),
+  0 5px 7px -1px rgba(0, 0, 0, 0.085),
+  0 9.7px 12.5px -1px rgba(0, 0, 0, 0.101),
+  0 19.7px 23.4px -1px rgba(0, 0, 0, 0.122),
+  0 54px 56px -1px rgba(0, 0, 0, 0.17)
+;
+
+  overflow: hidden;
+  width: 370px;
+}
+
+.#{$namespace}slide-out {
+  @include animation(0, 0.5s, slide-out);
+}
+
+&.#{$namespace}widget-embedded {
+  .#{$namespace}conversation-container {
+    @include animation(0, 0s, slide-in); // disable animation
+    @include conversation-container-fs;
+    overflow: unsetem;
+  }
+
+  .#{$namespace}slide-out {
+    @include animation(0, 0s, slide-out); // disable animation
+  }
+}
+
+.#{$namespace}full-screen {
+
+  .#{$namespace}conversation-container {
+    border-radius: 0;
+    @include conversation-container-fs;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .#{$namespace}conversation-container {
+    @include conversation-container-fs;
+  }
+}
