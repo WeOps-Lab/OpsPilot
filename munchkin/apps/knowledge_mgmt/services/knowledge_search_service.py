@@ -12,11 +12,11 @@ from munchkin.components.elasticsearch import ELASTICSEARCH_PASSWORD, ELASTICSEA
 
 class KnowledgeSearchService:
     def vector_query(
-        self,
-        search_query: str,
-        embeddings,
-        knowledge_base_folder: KnowledgeBaseFolder,
-        metadata={},
+            self,
+            search_query: str,
+            embeddings,
+            knowledge_base_folder: KnowledgeBaseFolder,
+            metadata={},
     ) -> Dict:
         vector = embeddings.embed_query(search_query)
         es_query = {
@@ -41,7 +41,7 @@ class KnowledgeSearchService:
         es_query["knn"]["filter"] = es_query["query"]["bool"]["filter"]
         return es_query
 
-    def search(self, knowledge_base_folders, query, metadata={}) -> List[Document]:
+    def search(self, knowledge_base_folders, query, metadata={}, score_threshold=0) -> List[Document]:
         docs = []
 
         for knowledge_base_folder in knowledge_base_folders:
@@ -68,6 +68,17 @@ class KnowledgeSearchService:
                 )
                 result = compression_retriever.get_relevant_documents(query)
             for doc in result:
-                docs.append(doc)
+                score = doc.metadata['_score'] * 10
+                if score > score_threshold:
+                    doc_info = {
+                        "content": doc.page_content,
+                        "score": doc.metadata['_score'] * 10,
+                        "knowledge_title": doc.metadata['_source']['metadata']['knowledge_title'],
+                        "knowledge_id": doc.metadata['_source']['metadata']['knowledge_id'],
+                        "knowledge_folder_id": doc.metadata['_source']['metadata']['knowledge_folder_id'],
+                    }
+                    if knowledge_base_folder.enable_rerank:
+                        doc_info["rerank_score"] = doc.metadata["relevance_score"]
+                    docs.append(doc_info)
 
         return docs

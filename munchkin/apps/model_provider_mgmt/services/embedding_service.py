@@ -42,7 +42,7 @@ class EmbeddingService:
             )
 
         store = ElasticsearchEmbeddingsCache(
-            index_name=embed_provider.name,
+            index_name=f'embed-cache-{embed_provider.id}',
             es_url=ELASTICSEARCH_URL,
             es_user="elastic",
             es_password=ELASTICSEARCH_PASSWORD,

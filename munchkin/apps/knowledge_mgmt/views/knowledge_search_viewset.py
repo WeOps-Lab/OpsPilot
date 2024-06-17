@@ -18,6 +18,7 @@ class KnowledgeSearchViewSet(viewsets.ViewSet):
                 ),
                 "query": openapi.Schema(type=openapi.TYPE_STRING),
                 "metadata": openapi.Schema(type=openapi.TYPE_OBJECT),
+                "score_threshold": openapi.Schema(type=openapi.TYPE_NUMBER),
             },
         ),
     )
@@ -27,15 +28,9 @@ class KnowledgeSearchViewSet(viewsets.ViewSet):
         knowledgebase_folder_ids = data.get("knowledgebase_folder_ids")
         query = data.get("query")
         metadata = data.get("metadata", {})
-
+        score_threshold = data.get("score_threshold", 0)
         service = KnowledgeSearchService()
         knowledgebase_folders = KnowledgeBaseFolder.objects.filter(id__in=knowledgebase_folder_ids)
-        docs = service.search(knowledgebase_folders, query, metadata)
-        results = {"chunks": []}
-        for doc in docs:
-            results["chunks"].append(
-                {
-                    "page_content": doc.page_content,
-                }
-            )
+        docs = service.search(knowledgebase_folders, query, metadata, score_threshold)
+        results = {"data": docs}
         return JsonResponse(results)
