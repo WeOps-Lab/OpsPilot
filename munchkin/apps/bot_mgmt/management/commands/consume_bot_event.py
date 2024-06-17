@@ -46,8 +46,8 @@ def on_message(channel, method_frame, header_frame, body):
                     conf = channel_obj.decrypted_channel_config
 
                     wechat_client = WeChatClient(
-                        conf['corp_id'],
-                        conf['secret'],
+                        conf['channels.enterprise_wechat_channel.EnterpriseWechatChannel']['corp_id'],
+                        conf['channels.enterprise_wechat_channel.EnterpriseWechatChannel']['secret'],
                     )
                     wechat_username = wechat_client.user.get(sender_id)['name']
                     ChannelUser.objects.create(channel_user_group=channel_user_group, owner=bot.owner,
