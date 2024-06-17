@@ -6,3 +6,4 @@ from rest_framework.viewsets import ModelViewSet
 class KnowledgeBaseFolderViewSet(ModelViewSet):
     serializer_class = KnowledgeBaseFolderSerializer
     queryset = KnowledgeBaseFolder.objects.all()
+    search_fields = ["name"]

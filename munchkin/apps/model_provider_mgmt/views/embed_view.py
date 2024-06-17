@@ -13,6 +13,7 @@ from rest_framework.decorators import action
 class EmbedProviderViewSet(ModelViewSet):
     serializer_class = EmbedProviderSerializer
     queryset = EmbedProvider.objects.all()
+    search_fields = ["name", "embed_model"]
 
 
 class EmbedViewSet(viewsets.ViewSet):
