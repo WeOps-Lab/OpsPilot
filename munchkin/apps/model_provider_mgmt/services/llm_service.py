@@ -17,13 +17,13 @@ class LLMService:
             system_skill_prompt = super_system_prompt
 
         context = ""
-
+        rag_result = []
         if llm_skill.enable_rag:
             knowledge_base_folder_list = llm_skill.knowledge_base_folders.all()
-            result = self.knowledge_search_service.search(knowledge_base_folder_list, user_message,
-                                                          score_threshold=llm_skill.rag_score_threshold)
+            rag_result = self.knowledge_search_service.search(knowledge_base_folder_list, user_message,
+                                                              score_threshold=llm_skill.rag_score_threshold)
 
-            for r in result:
+            for r in rag_result:
                 context += r['content'].replace("{", "").replace("}", "") + "\n"
 
         if llm_skill.enable_conversation_history:
@@ -52,7 +52,14 @@ class LLMService:
         if result.startswith("AI:"):
             result = result[4:]
 
-        return result
+        if llm_skill.enable_rag_knowledge_source:
+            knowledge_titles = set([x['knowledge_title'] for x in rag_result])
+            result += '\n'
+            result += f'知识库来源: {", ".join(knowledge_titles)}'
+
+        return {
+            "result": result,
+        }
 
 
 llm_service = LLMService()

@@ -73,6 +73,9 @@ class KnowledgeSearchService:
                     doc_info = {
                         "content": doc.page_content,
                         "score": doc.metadata['_score'] * 10,
+                        "knowledge_title": doc.metadata['_source']['metadata']['knowledge_title'],
+                        "knowledge_id": doc.metadata['_source']['metadata']['knowledge_id'],
+                        "knowledge_folder_id": doc.metadata['_source']['metadata']['knowledge_folder_id'],
                     }
                     if knowledge_base_folder.enable_rerank:
                         doc_info["rerank_score"] = doc.metadata["relevance_score"]
