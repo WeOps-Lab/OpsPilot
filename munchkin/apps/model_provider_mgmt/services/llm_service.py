@@ -20,10 +20,11 @@ class LLMService:
 
         if llm_skill.enable_rag:
             knowledge_base_folder_list = llm_skill.knowledge_base_folders.all()
-            result = self.knowledge_search_service.search(knowledge_base_folder_list, user_message)
+            result = self.knowledge_search_service.search(knowledge_base_folder_list, user_message,
+                                                          score_threshold=llm_skill.rag_score_threshold)
 
             for r in result:
-                context += r.page_content.replace("{", "").replace("}", "") + "\n"
+                context += r['content'].replace("{", "").replace("}", "") + "\n"
 
         if llm_skill.enable_conversation_history:
             llm_chat_history = ChatMessageHistory()

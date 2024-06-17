@@ -25,6 +25,7 @@ class LLMSkill(MaintainerInfo):
     conversation_window_size = models.IntegerField(default=10, verbose_name="对话窗口大小")
 
     enable_rag = models.BooleanField(default=False, verbose_name="启用RAG")
+    rag_score_threshold = models.FloatField(default=0.7, verbose_name="RAG分数阈值")
     knowledge_base_folders = models.ManyToManyField(KnowledgeBaseFolder, blank=True, verbose_name="知识库")
 
     def __str__(self):

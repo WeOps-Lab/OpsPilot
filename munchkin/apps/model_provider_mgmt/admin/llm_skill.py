@@ -49,7 +49,7 @@ class LLMSkillAdmin(GuardedAdminBase):
         (
             "知识库",
             {
-                "fields": ["enable_rag", "knowledge_base_folders"],
+                "fields": ["enable_rag", "knowledge_base_folders", "rag_score_threshold"],
             },
         ),
     ]
