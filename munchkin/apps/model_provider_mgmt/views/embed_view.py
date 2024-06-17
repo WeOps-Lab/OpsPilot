@@ -1,10 +1,18 @@
+from rest_framework.viewsets import ModelViewSet
+
 from apps.model_provider_mgmt.models import EmbedProvider
+from apps.model_provider_mgmt.serializers.embed_serializer import EmbedProviderSerializer
 from apps.model_provider_mgmt.services.embedding_service import emdedding_service
 from django.http import JsonResponse
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets
 from rest_framework.decorators import action
+
+
+class EmbedProviderViewSet(ModelViewSet):
+    serializer_class = EmbedProviderSerializer
+    queryset = EmbedProvider.objects.all()
 
 
 class EmbedViewSet(viewsets.ViewSet):
