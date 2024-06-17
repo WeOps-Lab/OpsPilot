@@ -1,8 +1,8 @@
+from apps.core.viewsets.guardian_model_viewset import GuardianModelViewSet
 from apps.knowledge_mgmt.models import ManualKnowledge
-from apps.knowledge_mgmt.serializers import ManualKnowledgeSerializer
-from rest_framework.viewsets import ModelViewSet
+from apps.knowledge_mgmt.serializers.manual_knowledge_serializer import ManualKnowledgeSerializer
 
 
-class ManualKnowledgeSet(ModelViewSet):
+class ManualKnowledgeViewSet(GuardianModelViewSet):
     serializer_class = ManualKnowledgeSerializer
     queryset = ManualKnowledge.objects.all()

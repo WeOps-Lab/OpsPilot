@@ -9,7 +9,7 @@ from unfold.contrib.forms.widgets import WysiwygWidget
 
 from apps.core.admin.guarded_admin_base import GuardedAdminBase
 from apps.knowledge_mgmt.models import ManualKnowledge
-from apps.knowledge_mgmt.resources.manual_knowledge import (
+from apps.knowledge_mgmt.resources.manual_knowledge_resource import (
     ManualKnowledgeConfirmImportForm,
     ManualKnowledgeImportForm,
     ManualKnowledgeResource,
