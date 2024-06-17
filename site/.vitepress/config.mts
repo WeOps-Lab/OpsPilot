@@ -24,6 +24,7 @@ export default defineConfig({
           { text: '简介', link: '/introduction' },
           { text: '快速入门', link: '/quick-start' },
           { text: '系统架构', link: '/architecture' },
+          { text: '模型下载', link: '/models' },
           {
             text: '功能模块',
             link: '#',
