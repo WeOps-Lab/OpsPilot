@@ -6,7 +6,7 @@ from apps.bot_mgmt.models import Bot, BotConversationHistory
 from apps.channel_mgmt.models import Channel, ChannelUser, ChannelUserGroup, CHANNEL_CHOICES
 from django.core.management import BaseCommand
 from loguru import logger
-from wechatpy import WeChatClient
+from wechatpy.enterprise import WeChatClient
 from munchkin.components.conversation_mq import (
     CONVERSATION_MQ_HOST,
     CONVERSATION_MQ_PASSWORD,
