@@ -57,9 +57,7 @@ class LLMService:
             result += '\n'
             result += f'知识库来源: {", ".join(knowledge_titles)}'
 
-        return {
-            "result": result,
-        }
+        return result
 
 
 llm_service = LLMService()
