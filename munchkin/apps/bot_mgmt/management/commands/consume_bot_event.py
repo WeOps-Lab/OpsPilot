@@ -6,7 +6,7 @@ from apps.bot_mgmt.models import Bot, BotConversationHistory
 from apps.channel_mgmt.models import Channel, ChannelUser, ChannelUserGroup, CHANNEL_CHOICES
 from django.core.management import BaseCommand
 from loguru import logger
-from wechatpy import WeChatClient
+from wechatpy.enterprise import WeChatClient
 from munchkin.components.conversation_mq import (
     CONVERSATION_MQ_HOST,
     CONVERSATION_MQ_PASSWORD,
@@ -46,8 +46,8 @@ def on_message(channel, method_frame, header_frame, body):
                     conf = channel_obj.decrypted_channel_config
 
                     wechat_client = WeChatClient(
-                        conf['corp_id'],
-                        conf['secret'],
+                        conf['channels.enterprise_wechat_channel.EnterpriseWechatChannel']['corp_id'],
+                        conf['channels.enterprise_wechat_channel.EnterpriseWechatChannel']['secret'],
                     )
                     wechat_username = wechat_client.user.get(sender_id)['name']
                     ChannelUser.objects.create(channel_user_group=channel_user_group, owner=bot.owner,
