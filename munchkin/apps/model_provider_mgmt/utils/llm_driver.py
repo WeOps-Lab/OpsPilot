@@ -13,6 +13,7 @@ from langchain_elasticsearch import ElasticsearchCache
 from langchain_openai import ChatOpenAI, OpenAI
 
 from munchkin.components.elasticsearch import ELASTICSEARCH_PASSWORD, ELASTICSEARCH_URL
+from loguru import logger
 
 set_llm_cache(
     ElasticsearchCache(
@@ -53,16 +54,18 @@ class LLMDriver:
         chat_prompt = ChatPromptTemplate.from_messages([system_message_prompt, human_message_prompt])
         chain = LLMChain(llm=self.client, prompt=chat_prompt)
 
+        logger.info(f"用户消息: {user_message}, 系统提示: {system_message_prompt}")
         result = chain.run(user_message)
+        logger.info(f"AI回复: {result}")
         return result
 
     def chat_with_history(
-        self,
-        system_message_prompt,
-        user_message,
-        message_history,
-        window_size=10,
-        rag_content="",
+            self,
+            system_message_prompt,
+            user_message,
+            message_history,
+            window_size=10,
+            rag_content="",
     ):
 
         if rag_content:
@@ -72,5 +75,7 @@ class LLMDriver:
         memory = ConversationBufferWindowMemory(memory_key="chat_history", chat_memory=message_history, k=window_size)
         llm_chain = ConversationChain(llm=self.client, prompt=prompt, memory=memory, verbose=True)
 
+        logger.info(f"用户消息: {user_message}, 系统提示: {system_message_prompt}")
         result = llm_chain.predict(input=user_message)
+        logger.info(f"AI回复: {result}")
         return result
