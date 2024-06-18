@@ -12,7 +12,7 @@ class LLMSkillTypeChoices(models.TextChoices):
 
 class LLMSkill(MaintainerInfo):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255, unique=True, verbose_name="名称")
+    name = models.CharField(max_length=255, verbose_name="名称")
     llm_model = models.ForeignKey(
         "model_provider_mgmt.LLMModel", on_delete=models.CASCADE, verbose_name="LLM模型", blank=True, null=True
     )
@@ -36,3 +36,6 @@ class LLMSkill(MaintainerInfo):
     class Meta:
         verbose_name = "LLM技能管理"
         verbose_name_plural = verbose_name
+        constraints = [
+            models.UniqueConstraint(fields=['owner', 'name'], name='unique_owner_name')
+        ]

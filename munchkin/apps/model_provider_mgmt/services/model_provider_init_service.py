@@ -92,6 +92,8 @@ class ModelProviderInitService:
 
         Token.objects.get_or_create(user=self.owner)
 
+        llm_model = LLMModel.objects.get(name="GPT-3.5 Turbo 16K")
+
         prompt = """
         参考信息：
         {chat_history}

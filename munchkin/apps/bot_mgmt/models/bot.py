@@ -18,10 +18,10 @@ class Bot(MaintainerInfo):
 
     enable_bot_domain = models.BooleanField(verbose_name="启用域名", default=False)
     enable_ssl = models.BooleanField(verbose_name="启用SSL", default=False)
-    bot_domain = models.CharField(max_length=255, verbose_name="域名", blank=True, null=True, unique=True)
+    bot_domain = models.CharField(max_length=255, verbose_name="域名", blank=True, null=True)
 
     enable_node_port = models.BooleanField(verbose_name="启用端口映射", default=False)
-    node_port = models.IntegerField(verbose_name="端口映射", default=5005, unique=True)
+    node_port = models.IntegerField(verbose_name="端口映射", default=5005)
 
     online = models.BooleanField(verbose_name="是否上线", default=False)
 

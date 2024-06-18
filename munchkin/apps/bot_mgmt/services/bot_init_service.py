@@ -8,7 +8,6 @@ class BotInitService:
         self.owner = owner
 
     def init(self):
-
         rasa_model, created = RasaModel.objects.get_or_create(name="核心模型", description="核心模型",
                                                               owner=self.owner)
         if created:
@@ -16,16 +15,10 @@ class BotInitService:
                 rasa_model.model_file.save("core_model.tar.gz", f)
             rasa_model.save()
 
-        ops_pilot, created = Bot.objects.get_or_create(
+        Bot.objects.get_or_create(
             name="OpsPilot",
             description="智能运维助理",
             assistant_id="ops-pilot",
             owner=self.owner,
             rasa_model=rasa_model,
         )
-        if created:
-            llm_skill = LLMSkill.objects.filter(name="开放问答(GPT3.5-16k)").first()
-            ops_pilot.llm_skills.add(llm_skill)
-
-            ops_pilot.channels.add(Channel.objects.get(channel_type=CHANNEL_CHOICES.WEB))
-            ops_pilot.save()
