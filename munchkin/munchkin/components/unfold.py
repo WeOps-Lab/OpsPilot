@@ -5,59 +5,6 @@ UNFOLD = {
     "TABS": [
         {
             "models": [
-                "contentpack_mgmt.contentpack",
-                "contentpack_mgmt.rasastories",
-                "contentpack_mgmt.rasarules",
-                "contentpack_mgmt.intent",
-                "contentpack_mgmt.rasaforms",
-                "contentpack_mgmt.rasaslots",
-                "contentpack_mgmt.intentcorpus",
-                "contentpack_mgmt.rasaresponse",
-                "contentpack_mgmt.rasaresponsecorpus",
-                "contentpack_mgmt.rasaentity",
-                "contentpack_mgmt.botactions",
-            ],
-            "items": [
-                {
-                    "title": "扩展包",
-                    "link": reverse_lazy("admin:contentpack_mgmt_contentpack_changelist"),
-                },
-                {
-                    "title": "故事",
-                    "link": reverse_lazy("admin:contentpack_mgmt_rasastories_changelist"),
-                },
-                {
-                    "title": "规则",
-                    "link": reverse_lazy("admin:contentpack_mgmt_rasarules_changelist"),
-                },
-                {
-                    "title": "动作",
-                    "link": reverse_lazy("admin:contentpack_mgmt_botactions_changelist"),
-                },
-                {
-                    "title": "意图",
-                    "link": reverse_lazy("admin:contentpack_mgmt_intent_changelist"),
-                },
-                {
-                    "title": "表单",
-                    "link": reverse_lazy("admin:contentpack_mgmt_rasaforms_changelist"),
-                },
-                {
-                    "title": "槽位",
-                    "link": reverse_lazy("admin:contentpack_mgmt_rasaslots_changelist"),
-                },
-                {
-                    "title": "实体",
-                    "link": reverse_lazy("admin:contentpack_mgmt_rasaentity_changelist"),
-                },
-                {
-                    "title": "回复",
-                    "link": reverse_lazy("admin:contentpack_mgmt_rasaresponse_changelist"),
-                },
-            ],
-        },
-        {
-            "models": [
                 "authtoken.tokenproxy",
                 "token_blacklist.blacklistedtoken",
                 "token_blacklist.outstandingtoken",
@@ -161,6 +108,10 @@ UNFOLD = {
                     {
                         "title": "机器人",
                         "link": reverse_lazy("admin:bot_mgmt_bot_changelist"),
+                    },
+                    {
+                        "title": "模型",
+                        "link": reverse_lazy("admin:bot_mgmt_rasamodel_changelist"),
                     },
                     {
                         "title": "动作规则",

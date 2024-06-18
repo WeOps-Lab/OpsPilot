@@ -1,5 +1,6 @@
-from apps.contentpack_mgmt.models import RasaModel
 from rest_framework import serializers
+
+from apps.bot_mgmt.models import RasaModel
 
 
 class RasaModelSerializer(serializers.ModelSerializer):

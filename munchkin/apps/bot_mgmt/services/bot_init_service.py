@@ -23,3 +23,10 @@ class BotInitService:
 
             ops_pilot.channels.add(Channel.objects.get(channel_type=CHANNEL_CHOICES.WEB))
             ops_pilot.save()
+
+        rasa_model, created = RasaModel.objects.get_or_create(name="核心模型", description="核心模型",
+                                                              owner=self.owner)
+        if created:
+            with open("support-files/data/ops-pilot.tar.gz", "rb") as f:
+                rasa_model.model_file.save("core_model.tar.gz", f)
+            rasa_model.save()

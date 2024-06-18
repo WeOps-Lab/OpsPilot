@@ -1,7 +1,6 @@
 import hashlib
 
-from apps.bot_mgmt.models import Bot
-from apps.contentpack_mgmt.models import RasaModel
+from apps.bot_mgmt.models import Bot, RasaModel
 from django.http import FileResponse
 from django_minio_backend import MinioBackend
 from drf_yasg import openapi

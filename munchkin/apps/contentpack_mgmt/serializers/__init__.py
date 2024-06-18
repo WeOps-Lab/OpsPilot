@@ -1,1 +1,0 @@
-from .rasa_model_serializer import RasaModelSerializer
