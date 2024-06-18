@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 
 from django.core.management import BaseCommand
-
 from apps.model_provider_mgmt.services.model_provider_init_service import ModelProviderInitService
 
 

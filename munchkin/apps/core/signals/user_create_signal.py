@@ -3,10 +3,9 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 
-
 @receiver(post_save, sender=User)
 def user_create_signal(sender, instance, created, **kwargs):
-    if created:
+    if created and instance.username != 'AnonymousUser':
         # 初始化用户权限
         included_code = [
             "bot",
@@ -21,7 +20,6 @@ def user_create_signal(sender, instance, created, **kwargs):
             "manualknowledge",
             "webpageknowledge",
             "rasamodel",
-            "contentpack",
         ]
         all_permission = []
         for code in included_code:

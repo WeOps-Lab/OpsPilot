@@ -5,9 +5,8 @@ from django.urls import reverse
 from django.utils.html import format_html
 from unfold.decorators import action
 
-from apps.bot_mgmt.models import Bot
+from apps.bot_mgmt.models import Bot, RasaModel
 from apps.channel_mgmt.models import Channel
-from apps.contentpack_mgmt.models import RasaModel
 from apps.core.admin.guarded_admin_base import GuardedAdminBase
 from apps.core.utils.kubernetes_client import KubernetesClient
 from apps.model_provider_mgmt.models import LLMSkill
@@ -76,7 +75,7 @@ class BotAdmin(GuardedAdminBase):
         if obj.rasa_model is None:
             return "-"
 
-        link = reverse("admin:contentpack_mgmt_rasamodel_change", args=[obj.rasa_model.id])
+        link = reverse("admin:bot_mgmt_rasamodel_change", args=[obj.rasa_model.id])
         return format_html('<a href="{}">{}</a>', link, obj.rasa_model)
 
     rasa_model_link.short_description = "模型"

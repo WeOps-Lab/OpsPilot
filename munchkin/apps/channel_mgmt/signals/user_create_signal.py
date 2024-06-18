@@ -7,6 +7,6 @@ from apps.channel_mgmt.services.channel_init_service import ChannelInitService
 
 @receiver(post_save, sender=User)
 def user_create_signal(sender, instance, created, **kwargs):
-    if created:
+    if created and instance.username != 'AnonymousUser':
         service = ChannelInitService(owner=instance)
         service.init()

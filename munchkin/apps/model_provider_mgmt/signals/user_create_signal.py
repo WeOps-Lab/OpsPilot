@@ -7,6 +7,6 @@ from apps.model_provider_mgmt.services.model_provider_init_service import ModelP
 
 @receiver(post_save, sender=User)
 def user_create_signal(sender, instance, created, **kwargs):
-    if created:
+    if created and instance.username != 'AnonymousUser':
         service = ModelProviderInitService(owner=instance)
         service.init()

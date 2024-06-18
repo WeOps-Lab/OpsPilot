@@ -1,15 +1,7 @@
-from django.contrib import admin, messages
-from django.http import HttpRequest
-from django.shortcuts import redirect
-from django.urls import reverse
-from django_ace import AceWidget
-from django_yaml_field import YAMLField
-from unfold.decorators import action
+from django.contrib import admin
 
 from apps.bot_mgmt.models import RasaModel
-from apps.contentpack_mgmt.tasks.build_rasa_train_data import build_rasa_train_data
 from apps.core.admin.guarded_admin_base import GuardedAdminBase
-from apps.core.utils.kubernetes_client import KubernetesClient
 
 
 @admin.register(RasaModel)

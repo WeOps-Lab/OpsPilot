@@ -180,20 +180,6 @@ UNFOLD = {
             },
             {
                 "separator": True,
-                "title": "扩展包",
-                "items": [
-                    {
-                        "title": "模型",
-                        "link": reverse_lazy("admin:contentpack_mgmt_rasamodel_changelist"),
-                    },
-                    {
-                        "title": "扩展包",
-                        "link": reverse_lazy("admin:contentpack_mgmt_contentpack_changelist"),
-                    },
-                ],
-            },
-            {
-                "separator": True,
                 "title": "系统管理",
                 "items": [
                     {

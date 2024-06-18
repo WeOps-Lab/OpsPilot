@@ -7,6 +7,6 @@ from apps.bot_mgmt.services.bot_init_service import BotInitService
 
 @receiver(post_save, sender=User)
 def user_create_signal(sender, instance, created, **kwargs):
-    if created:
+    if created and instance.username != 'AnonymousUser':
         service = BotInitService(owner=instance)
         service.init()

@@ -1,6 +1,5 @@
-from apps.bot_mgmt.models import Bot
+from apps.bot_mgmt.models import Bot, RasaModel
 from apps.channel_mgmt.models import CHANNEL_CHOICES, Channel
-from apps.contentpack_mgmt.models import RasaModel
 from apps.model_provider_mgmt.models import LLMSkill
 
 
@@ -9,7 +8,14 @@ class BotInitService:
         self.owner = owner
 
     def init(self):
-        rasa_model = RasaModel.objects.filter(name="核心模型", owner=self.owner).first()
+
+        rasa_model, created = RasaModel.objects.get_or_create(name="核心模型", description="核心模型",
+                                                              owner=self.owner)
+        if created:
+            with open("support-files/data/ops-pilot.tar.gz", "rb") as f:
+                rasa_model.model_file.save("core_model.tar.gz", f)
+            rasa_model.save()
+
         ops_pilot, created = Bot.objects.get_or_create(
             name="OpsPilot",
             description="智能运维助理",
@@ -23,10 +29,3 @@ class BotInitService:
 
             ops_pilot.channels.add(Channel.objects.get(channel_type=CHANNEL_CHOICES.WEB))
             ops_pilot.save()
-
-        rasa_model, created = RasaModel.objects.get_or_create(name="核心模型", description="核心模型",
-                                                              owner=self.owner)
-        if created:
-            with open("support-files/data/ops-pilot.tar.gz", "rb") as f:
-                rasa_model.model_file.save("core_model.tar.gz", f)
-            rasa_model.save()

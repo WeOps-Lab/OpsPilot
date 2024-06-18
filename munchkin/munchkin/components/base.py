@@ -56,7 +56,6 @@ INSTALLED_APPS += [
     "apps.model_provider_mgmt",
     "apps.knowledge_mgmt",
     "apps.channel_mgmt",
-    "apps.contentpack_mgmt",
     "apps.bot_mgmt",
 ]
 MIDDLEWARE = [
