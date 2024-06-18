@@ -37,6 +37,17 @@ export default defineConfig({
               { text: '系统管理', link: '/features/system' },
             ],
           },
+          {
+            text: '技能',
+            link: '#',
+            items: [
+              { text: '日常', link: '/skills/common' },
+              { text: '自动化', link: '/skills/automation' },
+              { text: 'DevOps', link: '/skills/devops' },
+              { text: '安全', link: '/skills/security' },
+              { text: 'ITSM', link: '/skills/itsm' },
+            ],
+          },
         ],
       },
     ],
