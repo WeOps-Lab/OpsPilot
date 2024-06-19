@@ -56,4 +56,4 @@ class EmbeddingService:
         return store_embed
 
 
-emdedding_service = EmbeddingService()
+embedding_service = EmbeddingService()

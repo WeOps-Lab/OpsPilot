@@ -1,15 +1,15 @@
-from apps.core.admin.guarded_admin_base import GuardedAdminBase
-from apps.knowledge_mgmt.models import FileKnowledge, KnowledgeBaseFolder, ManualKnowledge, WebPageKnowledge
-from apps.knowledge_mgmt.tasks.embed_task import general_embed
 from django.contrib import admin, messages
 from django.db.models import TextField
 from django.http import HttpRequest
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.html import format_html
-from unfold.admin import ModelAdmin
 from unfold.contrib.forms.widgets import WysiwygWidget
 from unfold.decorators import action
+
+from apps.core.admin.guarded_admin_base import GuardedAdminBase
+from apps.knowledge_mgmt.models import FileKnowledge, KnowledgeBaseFolder, ManualKnowledge, WebPageKnowledge
+from apps.knowledge_mgmt.tasks.embed_task import general_embed
 
 
 class FileKnowledgeInline(admin.TabularInline):
@@ -65,6 +65,7 @@ class KnowledgeBaseFolderAdmin(GuardedAdminBase):
         ("基本信息", {"fields": ("name", "description")}),
         ("Embeding模型", {"fields": ("embed_model",)}),
         ("分块解析", {"fields": ("enable_general_parse", ("general_parse_chunk_size", "general_parse_chunk_overlap"))}),
+        ("语义分块解析", {"fields": ("enable_semantic_chunck_parse", "semantic_chunk_parse_embedding_model")}),
         ("文本检索", {"fields": ("enable_text_search", "text_search_weight")}),
         ("向量检索", {"fields": ("enable_vector_search", "vector_search_weight", "rag_k", "rag_num_candidates")}),
         ("结果重排", {"fields": ("enable_rerank", "rerank_model", "rerank_top_k")}),

@@ -1,7 +1,7 @@
 from apps.core.viewsets.guardian_model_viewset import GuardianModelViewSet
 from apps.model_provider_mgmt.models import EmbedProvider
 from apps.model_provider_mgmt.serializers.embed_serializer import EmbedProviderSerializer
-from apps.model_provider_mgmt.services.embedding_service import emdedding_service
+from apps.model_provider_mgmt.services.embedding_service import embedding_service
 from django.http import JsonResponse
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -31,5 +31,5 @@ class EmbedViewSet(viewsets.ViewSet):
         embed_model_id = request.data.get("embed_model_id")
         content = request.data.get("content")
         embed_provider = EmbedProvider.objects.get(id=embed_model_id)
-        embedding = emdedding_service.embed_content(embed_provider, content)
+        embedding = embedding_service.embed_content(embed_provider, content)
         return JsonResponse({"embedding": embedding})

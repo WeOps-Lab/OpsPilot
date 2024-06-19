@@ -1,27 +1,26 @@
 import os.path
-import re
 import tempfile
+
 import chardet
 import elasticsearch
+from celery import shared_task
+from dotenv import load_dotenv
+from langchain_community.document_loaders import UnstructuredFileLoader
+from langchain_community.document_transformers import BeautifulSoupTransformer
+from langchain_core.documents import Document
+from langchain_elasticsearch import ElasticsearchStore
+from langchain_experimental.text_splitter import SemanticChunker
+from langchain_text_splitters import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter
+from loguru import logger
+from tqdm import tqdm
+
 from apps.knowledge_mgmt.loader.doc_loader import DocLoader
 from apps.knowledge_mgmt.loader.image_loader import ImageLoader
 from apps.knowledge_mgmt.loader.pdf_loader import PDFLoader
 from apps.knowledge_mgmt.loader.ppt_loader import PPTLoader
 from apps.knowledge_mgmt.loader.recursive_url_loader import RecursiveUrlLoader
 from apps.knowledge_mgmt.models import FileKnowledge, KnowledgeBaseFolder, ManualKnowledge, WebPageKnowledge
-from apps.model_provider_mgmt.services.embedding_service import emdedding_service
-from bs4 import BeautifulSoup
-from dotenv import load_dotenv
-from langchain_community.document_loaders import AsyncHtmlLoader, UnstructuredFileLoader, UnstructuredMarkdownLoader
-from langchain_community.document_transformers import BeautifulSoupTransformer
-from langchain_core.documents import Document
-from langchain_elasticsearch import ElasticsearchStore
-from langchain_text_splitters import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter
-from loguru import logger
-from markdown import markdown
-from tqdm import tqdm
-
-from celery import shared_task
+from apps.model_provider_mgmt.services.embedding_service import embedding_service
 from munchkin.components.elasticsearch import ELASTICSEARCH_PASSWORD, ELASTICSEARCH_URL
 
 load_dotenv()
@@ -88,7 +87,15 @@ def embed_file_knowledgebase(knowledge_base_folder, knowledge):
                     chunk_overlap=knowledge_base_folder.general_parse_chunk_overlap,
                 )
                 docs += text_splitter.split_documents(md_header_splits)
-                return docs
+            if knowledge_base_folder.enable_semantic_chunck_parse:
+                semantic_chunker = SemanticChunker(
+                    embeddings=embedding_service.get_embedding(
+                        knowledge_base_folder.semantic_chunk_parse_embedding_model)
+                )
+                docs += semantic_chunker.split_documents(md_header_splits)
+            for doc in docs:
+                logger.info(doc.page_content)
+            return docs
 
         if file_type in [".ppt", ".pptx"]:
             loader = PPTLoader(f.name, mode="single")
@@ -107,6 +114,12 @@ def embed_file_knowledgebase(knowledge_base_folder, knowledge):
         )
         if knowledge_base_folder.enable_general_parse:
             docs += text_splitter.split_documents(loader.load())
+        if knowledge_base_folder.enable_semantic_chunck_parse:
+            semantic_chunker = SemanticChunker(
+                embeddings=embedding_service.get_embedding(knowledge_base_folder.semantic_chunk_parse_embedding_model)
+            )
+            docs += semantic_chunker.split_documents(loader.load())
+
         return docs
 
 
@@ -130,7 +143,7 @@ def general_embed(knowledge_base_folder_id):
         knowledge_base_folder.save()
 
         logger.info(f"获取Embedding模型: {knowledge_base_folder.embed_model}")
-        embedding = emdedding_service.get_embedding(knowledge_base_folder.embed_model)
+        embedding = embedding_service.get_embedding(knowledge_base_folder.embed_model)
 
         knowledges = []
 
@@ -152,27 +165,26 @@ def general_embed(knowledge_base_folder_id):
         total_knowledges = len(knowledges)
         for index, knowledge in tqdm(enumerate(knowledges)):
             knowledge_docs = []
-            if knowledge_base_folder.enable_general_parse:
-                if isinstance(knowledge, FileKnowledge):
-                    logger.debug(f"开始处理文件知识: {knowledge.title}")
-                    knowledge_docs += embed_file_knowledgebase(knowledge_base_folder, knowledge)
-                    for doc in knowledge_docs:
-                        doc.metadata["knowledge_type"] = "file"
-                    logger.info(f"文件知识[{knowledge.title}]共提取[{len(knowledge_docs)}]个文档片段")
+            if isinstance(knowledge, FileKnowledge):
+                logger.debug(f"开始处理文件知识: {knowledge.title}")
+                knowledge_docs += embed_file_knowledgebase(knowledge_base_folder, knowledge)
+                for doc in knowledge_docs:
+                    doc.metadata["knowledge_type"] = "file"
+                logger.info(f"文件知识[{knowledge.title}]共提取[{len(knowledge_docs)}]个文档片段")
 
-                elif isinstance(knowledge, ManualKnowledge):
-                    logger.debug(f"开始处理手动知识: {knowledge.title}")
-                    knowledge_docs += embed_manual_knowledgebase(knowledge_base_folder, knowledge)
-                    for doc in knowledge_docs:
-                        doc.metadata["knowledge_type"] = "manual"
-                    logger.info(f"手动知识[{knowledge.title}]共提取[{len(knowledge_docs)}]个文档片段")
+            elif isinstance(knowledge, ManualKnowledge):
+                logger.debug(f"开始处理手动知识: {knowledge.title}")
+                knowledge_docs += embed_manual_knowledgebase(knowledge_base_folder, knowledge)
+                for doc in knowledge_docs:
+                    doc.metadata["knowledge_type"] = "manual"
+                logger.info(f"手动知识[{knowledge.title}]共提取[{len(knowledge_docs)}]个文档片段")
 
-                elif isinstance(knowledge, WebPageKnowledge):
-                    logger.debug(f"开始处理网页知识: {knowledge.title}")
-                    knowledge_docs += embed_webpage_knowledgebase(knowledge_base_folder, knowledge)
-                    for doc in knowledge_docs:
-                        doc.metadata["knowledge_type"] = "webpage"
-                    logger.info(f"网页知识[{knowledge.title}]共提取[{len(knowledge_docs)}]个文档片段")
+            elif isinstance(knowledge, WebPageKnowledge):
+                logger.debug(f"开始处理网页知识: {knowledge.title}")
+                knowledge_docs += embed_webpage_knowledgebase(knowledge_base_folder, knowledge)
+                for doc in knowledge_docs:
+                    doc.metadata["knowledge_type"] = "webpage"
+                logger.info(f"网页知识[{knowledge.title}]共提取[{len(knowledge_docs)}]个文档片段")
 
             for doc in knowledge_docs:
                 doc.metadata["knowledge_id"] = knowledge.id

@@ -27,6 +27,12 @@ class KnowledgeBaseFolder(MaintainerInfo):
     general_parse_chunk_size = models.IntegerField(default=256, verbose_name="分块大小")
     general_parse_chunk_overlap = models.IntegerField(default=32, verbose_name="分块重叠")
 
+    enable_semantic_chunck_parse = models.BooleanField(default=False, verbose_name="语义分块解析")
+    semantic_chunk_parse_embedding_model = models.ForeignKey('model_provider_mgmt.EmbedProvider',
+                                                             blank=True, null=True,
+                                                             related_name='semantic_chunk_parse_embedding_model',
+                                                             on_delete=models.CASCADE, verbose_name='嵌入模型')
+
     enable_vector_search = models.BooleanField(default=True, verbose_name="向量检索")
     vector_search_weight = models.FloatField(default=0.1, verbose_name="向量检索权重")
 
