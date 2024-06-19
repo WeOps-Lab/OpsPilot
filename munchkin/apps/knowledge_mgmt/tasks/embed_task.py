@@ -1,7 +1,7 @@
 import os.path
 import re
 import tempfile
-
+import chardet
 import elasticsearch
 from apps.knowledge_mgmt.loader.doc_loader import DocLoader
 from apps.knowledge_mgmt.loader.image_loader import ImageLoader
@@ -55,18 +55,22 @@ def embed_webpage_knowledgebase(knowledge_base_folder, knowledge):
 
 def embed_file_knowledgebase(knowledge_base_folder, knowledge):
     with tempfile.NamedTemporaryFile(delete=False) as f:
-        # 读取文件内容到临时文件
-        content = knowledge.file.read()
-        f.write(content)
 
         docs = []
         # 获取文件类型
         file_type = os.path.splitext(knowledge.file.name)[1]
 
+        if file_type in [".md"]:
+            # 读取文件内容到临时文件
+            content = knowledge.file.read()
+            detected = chardet.detect(content)
+            decoded_content = content.decode(detected['encoding'])
+        else:
+            f.write(knowledge.file.read())
+
         if file_type == ".md":
             # TODO: 需要把Markdown转换为PDF，统一用PDF格式进行处理
             # TODO: 切分模式现在被固定为了single，需要修改为参数
-            loader = UnstructuredMarkdownLoader(f.name, mode="single")
             headers_to_split_on = [
                 ("#", "Header 1"),
                 ("##", "Header 2"),
@@ -74,7 +78,7 @@ def embed_file_knowledgebase(knowledge_base_folder, knowledge):
             ]
 
             markdown_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=headers_to_split_on, strip_headers=False)
-            md_header_splits = markdown_splitter.split_text(loader.load()[0].page_content)
+            md_header_splits = markdown_splitter.split_text(decoded_content)
 
             # 提取所有表格
             if knowledge_base_folder.enable_general_parse:
