@@ -93,8 +93,6 @@ def embed_file_knowledgebase(knowledge_base_folder, knowledge):
                         knowledge_base_folder.semantic_chunk_parse_embedding_model)
                 )
                 docs += semantic_chunker.split_documents(md_header_splits)
-            for doc in docs:
-                logger.info(doc.page_content)
             return docs
 
         if file_type in [".ppt", ".pptx"]:
