@@ -8,5 +8,5 @@ RUN apt-get install pkg-config libssl-dev libffi-dev -y
 RUN apt-get install -y supervisor
 
 RUN pip install pip-tools nltk
-RUN python3 -c "import nltk; nltk.download(['all'])"
+RUN python3 -c "import nltk; nltk.download(['all']);exit()"
 
