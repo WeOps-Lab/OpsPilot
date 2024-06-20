@@ -24,14 +24,13 @@ class EmbeddingService:
                 openai_api_base=model_configs["openai_base_url"],
             )
 
-    def embed_content(self, docs: str):
-        if embed_provider.embed_model in [
+    def embed_content(self, doc: str):
+        if self.embed_provider.embed_model in [
             EmbedModelChoices.BCEEMBEDDING,
             EmbedModelChoices.FASTEMBED
         ]:
-            return self.embed_service.invoke({"content": content})
-        else:
-            return self.embed_service.embed_query(content)
-
-
-embedding_service = EmbeddingService()
+            return self.embed_service.invoke({"doc": doc})
+        if self.embed_provider.embed_model in [
+            EmbedModelChoices.OPENAI
+        ]:
+            return self.embed_service.embed_query(doc)

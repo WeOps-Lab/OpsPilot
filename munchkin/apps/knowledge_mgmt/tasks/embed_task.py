@@ -20,7 +20,7 @@ from apps.knowledge_mgmt.loader.pdf_loader import PDFLoader
 from apps.knowledge_mgmt.loader.ppt_loader import PPTLoader
 from apps.knowledge_mgmt.loader.recursive_url_loader import RecursiveUrlLoader
 from apps.knowledge_mgmt.models import FileKnowledge, KnowledgeBaseFolder, ManualKnowledge, WebPageKnowledge
-from apps.model_provider_mgmt.services.embedding_service import embedding_service
+from apps.model_provider_mgmt.services.embedding_service import EmbeddingService
 from munchkin.components.elasticsearch import ELASTICSEARCH_PASSWORD, ELASTICSEARCH_URL
 
 load_dotenv()
@@ -141,7 +141,6 @@ def general_embed(knowledge_base_folder_id):
         knowledge_base_folder.save()
 
         logger.info(f"获取Embedding模型: {knowledge_base_folder.embed_model}")
-        embedding = embedding_service.get_embedding(knowledge_base_folder.embed_model)
 
         knowledges = []
 
@@ -192,8 +191,18 @@ def general_embed(knowledge_base_folder_id):
                     doc.metadata[key] = value
 
             logger.debug(f"开始生成知识库[{knowledge_base_folder_id}]的Embedding索引")
-            db = ElasticsearchStore.from_documents(knowledge_docs, embedding, es_connection=es, index_name=index_name)
-            db.client.indices.refresh(index=index_name)
+            embedding_service = EmbeddingService(embed_provider=knowledge_base_folder.embed_model)
+            for doc in knowledge_docs:
+                vector = embedding_service.embed_content(doc)
+                # 使用es客户端，把数据写入到es中，vector一列，text一列，metadata一列，source一列
+                es.index(index=index_name, body={
+                    "vector": vector.tolist(),
+                    "text": doc.text,
+                    "metadata": doc.metadata,
+                    "source": doc.source
+                })
+            # 刷新es索引
+            es.indices.refresh(index=index_name)
 
             progress = round((index + 1) / total_knowledges * 100, 2)
             logger.debug(f"知识库[{knowledge_base_folder_id}]的Embedding索引生成进度: {progress:.2f}%")
