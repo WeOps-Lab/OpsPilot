@@ -15,3 +15,7 @@ kubectl apply -f ./depend/postgres.yml
 kubectl apply -f ./depend/rabbitmq.yml
 kubectl apply -f ./depend/elasticsearch.yml
 kubectl apply -f ./depend/minio.yml
+
+kubectl apply -f ./ai-service/bce-embed-server.yml
+kubectl apply -f ./ai-service/bce-rerank-server.yml
+kubectl apply -f ./ai-service/fast-embed-server-zh.yml
