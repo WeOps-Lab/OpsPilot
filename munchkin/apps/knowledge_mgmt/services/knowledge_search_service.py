@@ -3,7 +3,6 @@ from typing import Dict, List
 from langserve import RemoteRunnable
 
 from apps.knowledge_mgmt.models import KnowledgeBaseFolder
-from apps.model_provider_mgmt.services.embedding_service import embedding_service
 from apps.model_provider_mgmt.services.rerank_service import rerank_service
 from langchain.retrievers import ContextualCompressionRetriever
 from langchain_core.documents import Document
@@ -48,7 +47,7 @@ class KnowledgeSearchService:
         docs = []
 
         for knowledge_base_folder in knowledge_base_folders:
-            embedding = embedding_service.get_embedding(knowledge_base_folder.embed_model)
+            embedding = None  # embedding_service.get_embedding(knowledge_base_folder.embed_model)
 
             vector_retriever = ElasticsearchRetriever.from_es_params(
                 index_name=knowledge_base_folder.knowledge_index_name(),
