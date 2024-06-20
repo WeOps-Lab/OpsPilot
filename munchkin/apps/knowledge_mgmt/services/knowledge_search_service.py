@@ -1,5 +1,7 @@
 from typing import Dict, List
 
+from langserve import RemoteRunnable
+
 from apps.knowledge_mgmt.models import KnowledgeBaseFolder
 from apps.model_provider_mgmt.services.embedding_service import embedding_service
 from apps.model_provider_mgmt.services.rerank_service import rerank_service
@@ -8,6 +10,7 @@ from langchain_core.documents import Document
 from langchain_elasticsearch import ElasticsearchRetriever
 
 from munchkin.components.elasticsearch import ELASTICSEARCH_PASSWORD, ELASTICSEARCH_URL
+from loguru import logger
 
 
 class KnowledgeSearchService:
@@ -58,15 +61,11 @@ class KnowledgeSearchService:
             if knowledge_base_folder.enable_rerank is False:
                 result = vector_retriever.invoke(query)
             else:
-                reranker = rerank_service.get_reranker(
-                    knowledge_base_folder.rerank_model,
-                    knowledge_base_folder.rerank_top_k,
-                )
-
-                compression_retriever = ContextualCompressionRetriever(
-                    base_compressor=reranker, base_retriever=vector_retriever
-                )
-                result = compression_retriever.get_relevant_documents(query)
+                search_result = vector_retriever.invoke(query)
+                result = rerank_service.execute(knowledge_base_folder.rerank_model,
+                                                search_result,
+                                                query,
+                                                knowledge_base_folder.rerank_top_k)
             for doc in result:
                 score = doc.metadata['_score'] * 10
                 if score > score_threshold:

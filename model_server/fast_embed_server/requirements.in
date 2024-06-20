@@ -1,0 +1,6 @@
+langserve[server]==0.2.2
+langchain==0.2.5
+loguru==0.7.2
+langchain-community==0.2.5
+python-dotenv==1.0.0
+fastembed==0.2.7

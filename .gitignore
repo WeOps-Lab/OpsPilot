@@ -26,3 +26,7 @@ munchkin/db.sqlite3
 munchkin/nltk_data
 site/node_modules
 site/pnpm-lock.yaml
+
+model_server/bce_rerank_server/models
+model_server/bce_embed_server/models
+model_server/fast_embed_server/models

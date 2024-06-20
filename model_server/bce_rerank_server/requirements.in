@@ -1,0 +1,4 @@
+langserve[server]==0.2.2
+langchain==0.2.5
+bcembedding==0.1.5
+loguru==0.7.2
