@@ -31,14 +31,12 @@ embedding = HuggingFaceEmbeddings(
 )
 
 
-def func(docs: List[Document]) -> List[Document]:
-    for doc in docs:
-        doc.metadata['vector'] = embedding.embed_query(doc.page_content)
-    return docs
+def func(doc: Document) -> List[float]:
+    return embedding.embed_query(doc.page_content)
 
 
 runnable = RunnableLambda(func).with_types(
-    input_type=List[Document], output_type=List[Document]
+    input_type=Document, output_type=List[float]
 )
 
 

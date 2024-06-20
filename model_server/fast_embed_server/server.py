@@ -31,15 +31,11 @@ logger.info(f"Using model: {model_name}")
 embedding = FastEmbedEmbeddings(model_name=model_name, cache_dir="models")
 
 
-def func(docs: List[Document]) -> List[Document]:
-    for doc in docs:
-        doc.metadata['vector'] = embedding.embed_query(doc.page_content)
-    return docs
+def func(doc: Document) -> List[float]:
+    return embedding.embed_query(doc.page_content)
 
 
-runnable = RunnableLambda(func).with_types(
-    input_type=List[Document], output_type=List[Document]
-)
+runnable = RunnableLambda(func).with_types(input_type=Document, output_type=List[float])
 
 add_routes(app, runnable)
 

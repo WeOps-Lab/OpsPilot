@@ -1,9 +1,6 @@
-from typing import List
-
 from langserve import RemoteRunnable
 
 from apps.model_provider_mgmt.models import RerankModelChoices, RerankProvider
-from BCEmbedding.tools.langchain import BCERerank
 
 
 class RerankService:
