@@ -2,3 +2,6 @@ docker build -t ccr.ccs.tencentyun.com/megalab/pilot-base -f ./support-files/doc
 
 cd ./model_server/fast_embed_server
 docker build -t ccr.ccs.tencentyun.com/megalab/fast-embed-server .
+
+cd ../bce_rerank_server
+docker build -t ccr.ccs.tencentyun.com/megalab/bce-rerank-server .
