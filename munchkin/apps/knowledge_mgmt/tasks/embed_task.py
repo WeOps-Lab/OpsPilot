@@ -88,10 +88,8 @@ def embed_file_knowledgebase(knowledge_base_folder, knowledge):
                 )
                 docs += text_splitter.split_documents(md_header_splits)
             if knowledge_base_folder.enable_semantic_chunck_parse:
-                semantic_chunker = SemanticChunker(
-                    embeddings=embedding_service.get_embedding(
-                        knowledge_base_folder.semantic_chunk_parse_embedding_model)
-                )
+                semantic_embedding_model = EmbeddingService(knowledge_base_folder.semantic_chunk_parse_embedding_model)
+                semantic_chunker = SemanticChunker(embeddings=semantic_embedding_model)
                 docs += semantic_chunker.split_documents(md_header_splits)
             return docs
 
@@ -113,9 +111,8 @@ def embed_file_knowledgebase(knowledge_base_folder, knowledge):
         if knowledge_base_folder.enable_general_parse:
             docs += text_splitter.split_documents(loader.load())
         if knowledge_base_folder.enable_semantic_chunck_parse:
-            semantic_chunker = SemanticChunker(
-                embeddings=embedding_service.get_embedding(knowledge_base_folder.semantic_chunk_parse_embedding_model)
-            )
+            semantic_embedding_model = EmbeddingService(knowledge_base_folder.semantic_chunk_parse_embedding_model)
+            semantic_chunker = SemanticChunker(embeddings=semantic_embedding_model)
             docs += semantic_chunker.split_documents(loader.load())
 
         return docs
@@ -162,6 +159,7 @@ def general_embed(knowledge_base_folder_id):
         total_knowledges = len(knowledges)
         for index, knowledge in tqdm(enumerate(knowledges)):
             knowledge_docs = []
+            embedding_service = EmbeddingService(knowledge_base_folder.embed_model)
             if isinstance(knowledge, FileKnowledge):
                 logger.debug(f"开始处理文件知识: {knowledge.title}")
                 knowledge_docs += embed_file_knowledgebase(knowledge_base_folder, knowledge)
@@ -191,17 +189,10 @@ def general_embed(knowledge_base_folder_id):
                     doc.metadata[key] = value
 
             logger.debug(f"开始生成知识库[{knowledge_base_folder_id}]的Embedding索引")
-            embedding_service = EmbeddingService(embed_provider=knowledge_base_folder.embed_model)
-            for doc in tqdm(knowledge_docs):
-                vector = embedding_service.embed_content(doc.page_content)
-                # 使用es客户端，把数据写入到es中，vector一列，text一列，metadata一列，source一列
-                es.index(index=index_name, body={
-                    "vector": vector,
-                    "text": doc.page_content,
-                    "metadata": doc.metadata,
-                })
-            # 刷新es索引
-            es.indices.refresh(index=index_name)
+
+            db = ElasticsearchStore.from_documents(knowledge_docs, embedding=embedding_service, es_connection=es,
+                                                   index_name=index_name)
+            db.client.indices.refresh(index=index_name)
 
             progress = round((index + 1) / total_knowledges * 100, 2)
             logger.debug(f"知识库[{knowledge_base_folder_id}]的Embedding索引生成进度: {progress:.2f}%")

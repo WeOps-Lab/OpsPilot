@@ -3,7 +3,7 @@ from langserve import RemoteRunnable
 from apps.model_provider_mgmt.models import RerankModelChoices, RerankProvider
 
 
-class RerankService:
+class RerankService():
 
     def execute(self, rerank_provider: RerankProvider, docs, query, rerank_top_k):
         reranker = None
@@ -17,6 +17,3 @@ class RerankService:
             }
             return reranker.invoke(params)
         return reranker
-
-
-rerank_service = RerankService()

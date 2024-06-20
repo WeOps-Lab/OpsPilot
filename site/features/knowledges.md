@@ -51,6 +51,7 @@ OpsPilot能够管理知识，包括 `文件知识`、`手工录入`、`网页知
     1
   ],
   "query": "能监控Linux吗",
+  "score_threshold": 0.7,
   "metadata":{
     "doc_type":"text"
   }
@@ -63,4 +64,9 @@ OpsPilot能够管理知识，包括 `文件知识`、`手工录入`、`网页知
 | ------------------------ | -------------------------------- |
 | knowledgebase_folder_ids | 知识库的ID号数组                 |
 | query                    | 搜索语句                         |
+| score_threshold          |                                  |
 | metadata                 | 知识库元数据过滤条件字典，可不填 |
+
+```
+score_threshold
+```

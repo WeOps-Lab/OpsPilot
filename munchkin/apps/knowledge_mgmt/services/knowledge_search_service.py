@@ -1,15 +1,12 @@
 from typing import Dict, List
 
-from langserve import RemoteRunnable
-
-from apps.knowledge_mgmt.models import KnowledgeBaseFolder
-from apps.model_provider_mgmt.services.rerank_service import rerank_service
-from langchain.retrievers import ContextualCompressionRetriever
 from langchain_core.documents import Document
 from langchain_elasticsearch import ElasticsearchRetriever
 
+from apps.knowledge_mgmt.models import KnowledgeBaseFolder
+from apps.model_provider_mgmt.services.embedding_service import EmbeddingService
+from apps.model_provider_mgmt.services.rerank_service import RerankService
 from munchkin.components.elasticsearch import ELASTICSEARCH_PASSWORD, ELASTICSEARCH_URL
-from loguru import logger
 
 
 class KnowledgeSearchService:
@@ -21,6 +18,7 @@ class KnowledgeSearchService:
             metadata={},
     ) -> Dict:
         vector = embeddings.embed_query(search_query)
+
         es_query = {
             "query": {
                 "bool": {
@@ -41,13 +39,14 @@ class KnowledgeSearchService:
         for key, value in metadata.items():
             es_query["query"]["bool"]["filter"].append({"term": {f"metadata.{key}": value}})
         es_query["knn"]["filter"] = es_query["query"]["bool"]["filter"]
+
         return es_query
 
     def search(self, knowledge_base_folders, query, metadata={}, score_threshold=0) -> List[Document]:
         docs = []
 
         for knowledge_base_folder in knowledge_base_folders:
-            embedding = None  # embedding_service.get_embedding(knowledge_base_folder.embed_model)
+            embedding = EmbeddingService(knowledge_base_folder.embed_model)
 
             vector_retriever = ElasticsearchRetriever.from_es_params(
                 index_name=knowledge_base_folder.knowledge_index_name(),
@@ -61,6 +60,8 @@ class KnowledgeSearchService:
                 result = vector_retriever.invoke(query)
             else:
                 search_result = vector_retriever.invoke(query)
+
+                rerank_service = RerankService()
                 result = rerank_service.execute(knowledge_base_folder.rerank_model,
                                                 search_result,
                                                 query,
