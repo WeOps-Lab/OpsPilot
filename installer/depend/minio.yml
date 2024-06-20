@@ -54,15 +54,12 @@ metadata:
 spec:
   selector:
     app: minio
-  type: NodePort
   ports:
     - protocol: TCP
       port: 9000
       targetPort: 9000
       name: http
-      nodePort: 30004
     - protocol: TCP
       port: 9001
       targetPort: 9001
       name: console
-      nodePort: 30005

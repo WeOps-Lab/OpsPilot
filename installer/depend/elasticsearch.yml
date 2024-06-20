@@ -56,9 +56,7 @@ metadata:
 spec:
   selector:
     app: elasticsearch
-  type: NodePort
   ports:
     - protocol: TCP
       port: 9200
       targetPort: 9200
-      nodePort: 30006

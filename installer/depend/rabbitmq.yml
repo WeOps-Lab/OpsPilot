@@ -35,15 +35,12 @@ metadata:
 spec:
   selector:
     app: rabbitmq
-  type: NodePort
   ports:
     - name: amqp
       protocol: TCP
       port: 5672
       targetPort: 5672
-      nodePort: 30001
     - name: http
       protocol: TCP
       port: 15672
       targetPort: 15672
-      nodePort: 30002
