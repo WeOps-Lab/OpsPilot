@@ -32,7 +32,7 @@ embedding = HuggingFaceEmbeddings(
 
 
 def func(doc: Document) -> List[float]:
-    return embedding.embed_query(doc)
+    return embedding.embed_query(doc.page_content)
 
 
 runnable = RunnableLambda(func).with_types(input_type=Document, output_type=List[float])
