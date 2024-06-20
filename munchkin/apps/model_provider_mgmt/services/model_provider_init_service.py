@@ -21,7 +21,7 @@ class ModelProviderInitService:
             RerankProvider.objects.get_or_create(
                 name="bce-reranker-base_v1",
                 rerank_model=RerankModelChoices.BCE,
-                defaults={"rerank_config": {"model": "./models/bce-reranker-base_v1"}},
+                defaults={"rerank_config": {"base_url": "http://bce-rerank-server.ops-pilot:8100"}},
             )
 
             EmbedProvider.objects.get_or_create(
@@ -29,7 +29,7 @@ class ModelProviderInitService:
                 embed_model=EmbedModelChoices.BCEEMBEDDING,
                 defaults={
                     "embed_config": {
-                        "model": "./models/bce-embedding-base_v1",
+                        "base_url": "http://bce-embed-server.ops-pilot:8102",
                     }
                 },
             )
@@ -50,7 +50,7 @@ class ModelProviderInitService:
                 name="FastEmbed(BAAI/bge-small-en-v1.5)",
                 embed_model=EmbedModelChoices.FASTEMBED,
                 embed_config={
-                    "model": "BAAI/bge-small-en-v1.5",
+                    "base_url": "http://fast-embed-server-zh.ops-pilot:8101",
                 },
                 enabled=True,
             )
@@ -58,7 +58,7 @@ class ModelProviderInitService:
                 name="FastEmbed(BAAI/bge-small-zh-v1.5)",
                 embed_model=EmbedModelChoices.FASTEMBED,
                 embed_config={
-                    "model": "BAAI/bge-small-zh-v1.5",
+                    "base_url": "http://fast-embed-server-en.ops-pilot:8101",
                 },
                 enabled=True,
             )
