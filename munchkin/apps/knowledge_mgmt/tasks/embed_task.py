@@ -192,14 +192,13 @@ def general_embed(knowledge_base_folder_id):
 
             logger.debug(f"开始生成知识库[{knowledge_base_folder_id}]的Embedding索引")
             embedding_service = EmbeddingService(embed_provider=knowledge_base_folder.embed_model)
-            for doc in knowledge_docs:
+            for doc in tqdm(knowledge_docs):
                 vector = embedding_service.embed_content(doc.page_content)
                 # 使用es客户端，把数据写入到es中，vector一列，text一列，metadata一列，source一列
                 es.index(index=index_name, body={
-                    "vector": vector.tolist(),
-                    "text": doc.text,
+                    "vector": vector,
+                    "text": doc.page_content,
                     "metadata": doc.metadata,
-                    "source": doc.source
                 })
             # 刷新es索引
             es.indices.refresh(index=index_name)

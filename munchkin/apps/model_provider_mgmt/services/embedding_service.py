@@ -29,7 +29,7 @@ class EmbeddingService:
             EmbedModelChoices.BCEEMBEDDING,
             EmbedModelChoices.FASTEMBED
         ]:
-            return self.embed_service.invoke({"doc": doc})
+            return self.embed_service.invoke(doc)
         if self.embed_provider.embed_model in [
             EmbedModelChoices.OPENAI
         ]:
