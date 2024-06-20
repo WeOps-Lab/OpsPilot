@@ -5,3 +5,6 @@ docker build -t ccr.ccs.tencentyun.com/megalab/fast-embed-server .
 
 cd ../bce_rerank_server
 docker build -t ccr.ccs.tencentyun.com/megalab/bce-rerank-server .
+
+cd ../bce_embed_server
+docker build -t ccr.ccs.tencentyun.com/megalab/bce-embed-server .
