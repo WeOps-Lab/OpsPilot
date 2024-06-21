@@ -73,16 +73,19 @@ def embed_file_knowledgebase(knowledge_base_folder, knowledge):
                     os.remove(tmp_pdf_file)
                 os.remove(tmp_md_file)
             loader = PDFLoader(f.name, mode="single")
-        elif file_type in [".ppt", ".pptx"]:
-            loader = PPTLoader(f.name, mode="single")
-        elif file_type in [".pdf"]:
-            loader = PDFLoader(f.name, mode="single")
-        elif file_type in [".jpg", ".png"]:
-            loader = ImageLoader(f.name, mode="single")
-        elif file_type in [".doc", ".docx"]:
-            loader = DocLoader(f.name, mode="single")
         else:
-            loader = UnstructuredFileLoader(f.name, mode="single")
+            f.write(knowledge.file.read())
+
+            if file_type in [".ppt", ".pptx"]:
+                loader = PPTLoader(f.name, mode="single")
+            if file_type in [".pdf"]:
+                loader = PDFLoader(f.name, mode="single")
+            if file_type in [".jpg", ".png"]:
+                loader = ImageLoader(f.name, mode="single")
+            if file_type in [".doc", ".docx"]:
+                loader = DocLoader(f.name, mode="single")
+            else:
+                loader = UnstructuredFileLoader(f.name, mode="single")
 
         text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=knowledge_base_folder.general_parse_chunk_size,
