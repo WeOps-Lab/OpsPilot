@@ -8,3 +8,6 @@ docker build -t ccr.ccs.tencentyun.com/megalab/bce-rerank-server .
 
 cd ../bce_embed_server
 docker build -t ccr.ccs.tencentyun.com/megalab/bce-embed-server .
+
+cd ../../../pilot
+docker build -t ccr.ccs.tencentyun.com/megalab/pilot.
