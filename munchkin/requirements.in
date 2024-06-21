@@ -48,8 +48,6 @@ pytest-django==4.8.0
 
 unstructured==0.14.2
 markdown==3.6
-
-
 docx2txt==0.8
 
 unstructured[all-docs]
