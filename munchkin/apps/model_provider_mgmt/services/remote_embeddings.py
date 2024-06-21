@@ -3,16 +3,17 @@ from typing import List
 from langchain_core.embeddings import Embeddings
 from langchain_openai import OpenAIEmbeddings
 from langserve import RemoteRunnable
+from tqdm import tqdm
 
 from apps.model_provider_mgmt.models import EmbedProvider, EmbedModelChoices
+import logging
+
+logging.getLogger('httpx').setLevel(logging.CRITICAL)
 
 
 class RemoteRunnableEmbed(RemoteRunnable):
     def embed_query(self, text: str) -> List[float]:
         return self.invoke(text)
-
-    def embed_documents(self, texts: List[str]) -> List[List[float]]:
-        return self.batch(texts)
 
 
 class RemoteEmbeddings(Embeddings):
@@ -33,7 +34,10 @@ class RemoteEmbeddings(Embeddings):
             )
 
     def embed_documents(self, texts: List[str]) -> List[List[float]]:
-        return self.embed_documents(texts)
+        embeddings: List[List[float]] = []
+        for doc in tqdm(texts):
+            embeddings.append(self.embed_query(doc))
+        return embeddings
 
     def embed_query(self, text: str) -> List[float]:
         return self.embedding.embed_query(text)

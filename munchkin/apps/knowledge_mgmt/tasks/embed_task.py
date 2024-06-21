@@ -90,12 +90,17 @@ def embed_file_knowledgebase(knowledge_base_folder, knowledge):
             chunk_size=knowledge_base_folder.general_parse_chunk_size,
             chunk_overlap=knowledge_base_folder.general_parse_chunk_overlap,
         )
-        if knowledge_base_folder.enable_general_parse:
-            docs += text_splitter.split_documents(loader.load())
+
+        docs = loader.load()
         if knowledge_base_folder.enable_semantic_chunck_parse:
+            logger.info(f"开始语义解析文件知识: {knowledge.title}")
             semantic_embedding_model = RemoteEmbeddings(knowledge_base_folder.semantic_chunk_parse_embedding_model)
             semantic_chunker = SemanticChunker(embeddings=semantic_embedding_model)
-            docs += semantic_chunker.split_documents(loader.load())
+            docs = semantic_chunker.split_documents(docs)
+
+        if knowledge_base_folder.enable_general_parse:
+            logger.info(f"开始分块解析文件知识: {knowledge.title}")
+            docs = text_splitter.split_documents(docs)
 
         return docs
 
@@ -171,6 +176,10 @@ def general_embed(knowledge_base_folder_id):
                     doc.metadata[key] = value
 
             logger.debug(f"开始生成知识库[{knowledge_base_folder_id}]的Embedding索引")
+
+            # 清理文档中的空白字符和换行符
+            for doc in knowledge_docs:
+                doc.page_content = doc.page_content.replace("\n", "").replace("\r", "").replace("\t", "").strip()
 
             db = ElasticsearchStore.from_documents(
                 knowledge_docs, embedding=embedding_service, es_connection=es, index_name=index_name
