@@ -11,3 +11,7 @@ docker build -t ccr.ccs.tencentyun.com/megalab/bce-embed-server .
 
 cd ../../../pilot
 docker build -t ccr.ccs.tencentyun.com/megalab/pilot.
+
+cd ../munchkin
+docker build -t ccr.ccs.tencentyun.com/megalab/munchkin-base -f ./Dockerfile.base .
+docker build -t ccr.ccs.tencentyun.com/megalab/munchkin .

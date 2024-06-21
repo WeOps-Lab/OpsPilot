@@ -14,7 +14,7 @@ def markdown_to_pdf_pandoc(markdown_file_path, output_pdf_path):
             "--pdf-engine",
             "xelatex",
             "-V",
-            "CJKmainfont=Microsoft YaHei",
+            "CJKmainfont=WenQuanYi Zen Hei Mono",
             "--template",
             f"{os.path.dirname(os.path.abspath(__file__))}/eisvogel.latex",
             "--listings",
