@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: pilot-{{bot_id}}
-          image: ccr.ccs.tencentyun.com/megalab/pilot:2
+          image: ccr.ccs.tencentyun.com/megalab/pilot
           imagePullPolicy: Never
           command: [ "/bin/bash" ]
           args:
