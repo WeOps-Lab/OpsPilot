@@ -3,5 +3,4 @@ WORKDIR /apps
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get install -y pandoc texlive-latex-base texlive-fonts-recommended texlive-extra-utils texlive-latex-extra texlive-xetex
 RUN apt-get install -y texlive-lang-chinese librsvg2-bin texlive-fonts-extra
-RUN apt-get install -y ttf-mscorefonts-installer
-RUN echo 'ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true' | debconf-set-selections
+RUN apt-get install -y ttf-wqy-zenhei xfonts-wqy fonts-wqy-zenhei
