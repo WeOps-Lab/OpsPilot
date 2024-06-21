@@ -3,7 +3,14 @@ import tempfile
 
 import chardet
 import elasticsearch
-from celery import shared_task
+from apps.core.utils.file_handler import markdown_to_pdf_pandoc
+from apps.knowledge_mgmt.loader.doc_loader import DocLoader
+from apps.knowledge_mgmt.loader.image_loader import ImageLoader
+from apps.knowledge_mgmt.loader.pdf_loader import PDFLoader
+from apps.knowledge_mgmt.loader.ppt_loader import PPTLoader
+from apps.knowledge_mgmt.loader.recursive_url_loader import RecursiveUrlLoader
+from apps.knowledge_mgmt.models import FileKnowledge, KnowledgeBaseFolder, ManualKnowledge, WebPageKnowledge
+from apps.model_provider_mgmt.services.remote_embeddings import RemoteEmbeddings
 from dotenv import load_dotenv
 from langchain_community.document_loaders import UnstructuredFileLoader
 from langchain_community.document_transformers import BeautifulSoupTransformer
@@ -14,13 +21,7 @@ from langchain_text_splitters import MarkdownHeaderTextSplitter, RecursiveCharac
 from loguru import logger
 from tqdm import tqdm
 
-from apps.knowledge_mgmt.loader.doc_loader import DocLoader
-from apps.knowledge_mgmt.loader.image_loader import ImageLoader
-from apps.knowledge_mgmt.loader.pdf_loader import PDFLoader
-from apps.knowledge_mgmt.loader.ppt_loader import PPTLoader
-from apps.knowledge_mgmt.loader.recursive_url_loader import RecursiveUrlLoader
-from apps.knowledge_mgmt.models import FileKnowledge, KnowledgeBaseFolder, ManualKnowledge, WebPageKnowledge
-from apps.model_provider_mgmt.services.remote_embeddings import RemoteEmbeddings
+from celery import shared_task
 from munchkin.components.elasticsearch import ELASTICSEARCH_PASSWORD, ELASTICSEARCH_URL
 
 load_dotenv()
@@ -57,49 +58,28 @@ def embed_file_knowledgebase(knowledge_base_folder, knowledge):
 
         docs = []
         # 获取文件类型
-        file_type = os.path.splitext(knowledge.file.name)[1]
+        file_name, file_type = os.path.splitext(knowledge.file.name)
+        pure_filename = file_name.split("/")[-1]
 
         if file_type in [".md"]:
-            # 读取文件内容到临时文件
-            content = knowledge.file.read()
-            detected = chardet.detect(content)
-            decoded_content = content.decode(detected['encoding'])
-        else:
-            f.write(knowledge.file.read())
-
-        if file_type == ".md":
-            # TODO: 需要把Markdown转换为PDF，统一用PDF格式进行处理
-            # TODO: 切分模式现在被固定为了single，需要修改为参数
-            headers_to_split_on = [
-                ("#", "Header 1"),
-                ("##", "Header 2"),
-                ("###", "Header 3"),
-            ]
-
-            markdown_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=headers_to_split_on, strip_headers=False)
-            md_header_splits = markdown_splitter.split_text(decoded_content)
-
-            # 提取所有表格
-            if knowledge_base_folder.enable_general_parse:
-                # 使用循环分块进行切分
-                text_splitter = RecursiveCharacterTextSplitter(
-                    chunk_size=knowledge_base_folder.general_parse_chunk_size,
-                    chunk_overlap=knowledge_base_folder.general_parse_chunk_overlap,
-                )
-                docs += text_splitter.split_documents(md_header_splits)
-            if knowledge_base_folder.enable_semantic_chunck_parse:
-                semantic_embedding_model = RemoteEmbeddings(knowledge_base_folder.semantic_chunk_parse_embedding_model)
-                semantic_chunker = SemanticChunker(embeddings=semantic_embedding_model)
-                docs += semantic_chunker.split_documents(md_header_splits)
-            return docs
-
-        if file_type in [".ppt", ".pptx"]:
-            loader = PPTLoader(f.name, mode="single")
-        if file_type in [".pdf"]:
+            # 转换成pdf
+            tmp_md_file = pure_filename + ".md"
+            tmp_pdf_file = pure_filename + ".pdf"
+            with open(tmp_md_file, "wb") as file_data:
+                file_data.write(knowledge.file.read())
+                markdown_to_pdf_pandoc(tmp_md_file, tmp_pdf_file)
+                with open(tmp_pdf_file, "rb") as pdf:
+                    f.write(pdf.read())
+                    os.remove(tmp_pdf_file)
+                os.remove(tmp_md_file)
             loader = PDFLoader(f.name, mode="single")
-        if file_type in [".jpg", ".png"]:
+        elif file_type in [".ppt", ".pptx"]:
+            loader = PPTLoader(f.name, mode="single")
+        elif file_type in [".pdf"]:
+            loader = PDFLoader(f.name, mode="single")
+        elif file_type in [".jpg", ".png"]:
             loader = ImageLoader(f.name, mode="single")
-        if file_type in [".doc", ".docx"]:
+        elif file_type in [".doc", ".docx"]:
             loader = DocLoader(f.name, mode="single")
         else:
             loader = UnstructuredFileLoader(f.name, mode="single")
@@ -190,8 +170,9 @@ def general_embed(knowledge_base_folder_id):
 
             logger.debug(f"开始生成知识库[{knowledge_base_folder_id}]的Embedding索引")
 
-            db = ElasticsearchStore.from_documents(knowledge_docs, embedding=embedding_service, es_connection=es,
-                                                   index_name=index_name)
+            db = ElasticsearchStore.from_documents(
+                knowledge_docs, embedding=embedding_service, es_connection=es, index_name=index_name
+            )
             db.client.indices.refresh(index=index_name)
 
             progress = round((index + 1) / total_knowledges * 100, 2)
