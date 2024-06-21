@@ -55,7 +55,13 @@ class ManualKnowledgeResource(resources.ModelResource):
             if not any(row.values()):  # 过滤空数据
                 continue
             else:
-                row["custom_metadata"] = json.dumps(row.get("custom_metadata", "").split(","))
+                custom_metadata = row.get("custom_metadata", "")
+                try:
+                    custom_metadata = json.loads(custom_metadata)
+                except json.JSONDecodeError:
+                    custom_metadata = {"keyword": row.get("custom_metadata", "").split(",")}
+
+                row["custom_metadata"] = json.dumps(custom_metadata)
                 row["knowledge_base_folder"] = kwargs.get("knowledge_base_folder").id
                 row["owner"] = kwargs.get("owner").id
                 logger.debug(row)
