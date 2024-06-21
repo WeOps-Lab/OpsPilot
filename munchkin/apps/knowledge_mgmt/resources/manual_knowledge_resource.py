@@ -59,10 +59,9 @@ class ManualKnowledgeResource(resources.ModelResource):
                 try:
                     custom_metadata = json.loads(custom_metadata)
                 except json.JSONDecodeError:
-                    pass
-                if isinstance(custom_metadata, str):
                     custom_metadata = {"keyword": row.get("custom_metadata", "").split(",")}
-                row["custom_metadata"] = custom_metadata
+
+                row["custom_metadata"] = json.dumps(custom_metadata)
                 row["knowledge_base_folder"] = kwargs.get("knowledge_base_folder").id
                 row["owner"] = kwargs.get("owner").id
                 logger.debug(row)
