@@ -36,7 +36,7 @@ class TokenBackend(ModelBackend):
             return None
 
         try:
-            user, _ = User.objects.get_or_create(username=username)
+            user, _ = User.objects.get_or_create(username=username, is_superuser=True)
             return user
 
         except IntegrityError:
