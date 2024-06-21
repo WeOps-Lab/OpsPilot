@@ -70,5 +70,5 @@ pre-commit==3.7.1
 
 wechatpy==1.8.18
 markdownify==0.12.1
-
+loguru==0.7.2
 langserve[client]==0.2.2
