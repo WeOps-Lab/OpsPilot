@@ -24,7 +24,9 @@ class BotSkillRuleAdmin(GuardedAdminBase):
 
     fieldsets = (
         (None, {
-            'fields': ('name', 'bot_id', 'skill', 'channel', 'rule_user_groups', 'rule_user')
+            'fields': ('name', 'bot_id', 'skill',
+                       'description', 'prompt',
+                       'channel', 'rule_user_groups', 'rule_user')
         }),
     )
 
