@@ -11,7 +11,7 @@ class LLMModelChoices(models.TextChoices):
 class LLMModel(models.Model, EncryptableMixin):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, unique=True, verbose_name="名称")
-    llm_model = models.CharField(max_length=255, choices=LLMModelChoices.choices, verbose_name="LLM模型")
+    llm_model_type = models.CharField(max_length=255, choices=LLMModelChoices.choices, verbose_name="LLM模型类型")
     llm_config = models.JSONField(
         verbose_name="LLM配置",
         blank=True,
@@ -25,7 +25,7 @@ class LLMModel(models.Model, EncryptableMixin):
         return self.name
 
     def save(self, *args, **kwargs):
-        if self.llm_model == LLMModelChoices.CHAT_GPT:
+        if self.llm_model_type == LLMModelChoices.CHAT_GPT:
             self.encrypt_field("openai_api_key", self.llm_config)
         super().save(*args, **kwargs)
 
@@ -33,7 +33,7 @@ class LLMModel(models.Model, EncryptableMixin):
     def decrypted_llm_config(self):
         llm_config_decrypted = self.llm_config.copy()
 
-        if self.llm_model == LLMModelChoices.CHAT_GPT:
+        if self.llm_model_type == LLMModelChoices.CHAT_GPT:
             self.decrypt_field("openai_api_key", llm_config_decrypted)
         return llm_config_decrypted
 

@@ -7,7 +7,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets
 from rest_framework.decorators import action
 
-from apps.model_provider_mgmt.services.embedding_service import EmbeddingService
+from apps.model_provider_mgmt.services.remote_embeddings import RemoteEmbeddings
 
 
 class EmbedProviderViewSet(GuardianModelViewSet):
@@ -32,6 +32,6 @@ class EmbedViewSet(viewsets.ViewSet):
         embed_model_id = request.data.get("embed_model_id")
         content = request.data.get("content")
         embed_provider = EmbedProvider.objects.get(id=embed_model_id)
-        embedding_service = EmbeddingService(embed_provider)
+        embedding_service = RemoteEmbeddings(embed_provider)
         result = embedding_service.embed_query(content)
         return JsonResponse({"embedding": result})

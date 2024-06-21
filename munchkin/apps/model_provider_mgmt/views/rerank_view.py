@@ -1,3 +1,5 @@
+from langchain_core.documents import Document
+
 from apps.model_provider_mgmt.models import RerankProvider
 from apps.model_provider_mgmt.services.rerank_service import RerankService
 from django.http import JsonResponse
@@ -32,6 +34,14 @@ class RerankViewSet(viewsets.ViewSet):
         reranker = RerankProvider.objects.get(id=rerank_id)
 
         rerank_service = RerankService()
-        results = rerank_service.execute(reranker, sentences, query, top_k)
-
-        return JsonResponse({"rerank_result": results})
+        docs = []
+        for sentence in sentences:
+            docs.append(Document(page_content=sentence))
+        results = rerank_service.execute(reranker, docs, query, top_k)
+        response = []
+        for result in results:
+            response.append({
+                'content': result.page_content,
+                'relevance_score': result.metadata['relevance_score']
+            })
+        return JsonResponse({"rerank_result": response})

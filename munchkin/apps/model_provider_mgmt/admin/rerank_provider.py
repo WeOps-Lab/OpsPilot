@@ -7,13 +7,13 @@ from unfold.admin import ModelAdmin
 
 @admin.register(RerankProvider)
 class RerankProviderAdmin(ModelAdmin):
-    list_display = ["name", "rerank_model", "enabled"]
+    list_display = ["name", "rerank_model_type", "enabled"]
     search_fields = ["name"]
-    list_filter = ["rerank_model"]
+    list_filter = ["rerank_model_type"]
     list_display_links = ["name"]
     ordering = ["id"]
     filter_horizontal = []
-    fieldsets = ((None, {"fields": ("name", "rerank_model", "enabled", "rerank_config")}),)
+    fieldsets = ((None, {"fields": ("name", "rerank_model_type", "enabled", "rerank_config")}),)
     formfield_overrides = {JSONField: {"widget": AceWidget(mode="json", theme="chrome", width="700px")}}
 
     def has_module_permission(self, request):

@@ -4,7 +4,7 @@ from langchain_core.documents import Document
 from langchain_elasticsearch import ElasticsearchRetriever
 
 from apps.knowledge_mgmt.models import KnowledgeBaseFolder
-from apps.model_provider_mgmt.services.embedding_service import EmbeddingService
+from apps.model_provider_mgmt.services.remote_embeddings import RemoteEmbeddings
 from apps.model_provider_mgmt.services.rerank_service import RerankService
 from munchkin.components.elasticsearch import ELASTICSEARCH_PASSWORD, ELASTICSEARCH_URL
 
@@ -46,7 +46,7 @@ class KnowledgeSearchService:
         docs = []
 
         for knowledge_base_folder in knowledge_base_folders:
-            embedding = EmbeddingService(knowledge_base_folder.embed_model)
+            embedding = RemoteEmbeddings(knowledge_base_folder.embed_model)
 
             vector_retriever = ElasticsearchRetriever.from_es_params(
                 index_name=knowledge_base_folder.knowledge_index_name(),

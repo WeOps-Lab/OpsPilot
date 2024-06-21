@@ -20,7 +20,7 @@ from apps.knowledge_mgmt.loader.pdf_loader import PDFLoader
 from apps.knowledge_mgmt.loader.ppt_loader import PPTLoader
 from apps.knowledge_mgmt.loader.recursive_url_loader import RecursiveUrlLoader
 from apps.knowledge_mgmt.models import FileKnowledge, KnowledgeBaseFolder, ManualKnowledge, WebPageKnowledge
-from apps.model_provider_mgmt.services.embedding_service import EmbeddingService
+from apps.model_provider_mgmt.services.remote_embeddings import RemoteEmbeddings
 from munchkin.components.elasticsearch import ELASTICSEARCH_PASSWORD, ELASTICSEARCH_URL
 
 load_dotenv()
@@ -88,7 +88,7 @@ def embed_file_knowledgebase(knowledge_base_folder, knowledge):
                 )
                 docs += text_splitter.split_documents(md_header_splits)
             if knowledge_base_folder.enable_semantic_chunck_parse:
-                semantic_embedding_model = EmbeddingService(knowledge_base_folder.semantic_chunk_parse_embedding_model)
+                semantic_embedding_model = RemoteEmbeddings(knowledge_base_folder.semantic_chunk_parse_embedding_model)
                 semantic_chunker = SemanticChunker(embeddings=semantic_embedding_model)
                 docs += semantic_chunker.split_documents(md_header_splits)
             return docs
@@ -111,7 +111,7 @@ def embed_file_knowledgebase(knowledge_base_folder, knowledge):
         if knowledge_base_folder.enable_general_parse:
             docs += text_splitter.split_documents(loader.load())
         if knowledge_base_folder.enable_semantic_chunck_parse:
-            semantic_embedding_model = EmbeddingService(knowledge_base_folder.semantic_chunk_parse_embedding_model)
+            semantic_embedding_model = RemoteEmbeddings(knowledge_base_folder.semantic_chunk_parse_embedding_model)
             semantic_chunker = SemanticChunker(embeddings=semantic_embedding_model)
             docs += semantic_chunker.split_documents(loader.load())
 
@@ -159,7 +159,7 @@ def general_embed(knowledge_base_folder_id):
         total_knowledges = len(knowledges)
         for index, knowledge in tqdm(enumerate(knowledges)):
             knowledge_docs = []
-            embedding_service = EmbeddingService(knowledge_base_folder.embed_model)
+            embedding_service = RemoteEmbeddings(knowledge_base_folder.embed_model)
             if isinstance(knowledge, FileKnowledge):
                 logger.debug(f"开始处理文件知识: {knowledge.title}")
                 knowledge_docs += embed_file_knowledgebase(knowledge_base_folder, knowledge)

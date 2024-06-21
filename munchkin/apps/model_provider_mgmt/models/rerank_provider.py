@@ -5,13 +5,13 @@ from django.utils.functional import cached_property
 
 
 class RerankModelChoices(models.TextChoices):
-    BCE = "bce", "BCE"
+    LANG_SERVE = "langserve", "LangServe"
 
 
 class RerankProvider(models.Model, EncryptableMixin):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, unique=True, verbose_name="名称")
-    rerank_model = models.CharField(max_length=255, choices=RerankModelChoices.choices, verbose_name="Rerank模型")
+    rerank_model_type = models.CharField(max_length=255, choices=RerankModelChoices.choices, verbose_name="模型类型")
     rerank_config = models.JSONField(
         verbose_name="Rerank配置",
         blank=True,

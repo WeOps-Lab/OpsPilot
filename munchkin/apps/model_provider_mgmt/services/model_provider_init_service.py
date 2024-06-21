@@ -8,7 +8,7 @@ from apps.model_provider_mgmt.models import (
     LLMModelChoices,
     LLMSkill,
     RerankModelChoices,
-    RerankProvider, LLMSkillTypeChoices,
+    RerankProvider,
 )
 
 
@@ -20,13 +20,13 @@ class ModelProviderInitService:
         if self.owner.username == "admin":
             RerankProvider.objects.get_or_create(
                 name="bce-reranker-base_v1",
-                rerank_model=RerankModelChoices.BCE,
+                rerank_model_type=RerankModelChoices.LANG_SERVE,
                 defaults={"rerank_config": {"base_url": "http://bce-rerank-server.ops-pilot:8100"}},
             )
 
             EmbedProvider.objects.get_or_create(
                 name="bce-embedding-base_v1",
-                embed_model=EmbedModelChoices.BCEEMBEDDING,
+                embed_model_type=EmbedModelChoices.LANG_SERVE,
                 defaults={
                     "embed_config": {
                         "base_url": "http://bce-embed-server.ops-pilot:8102",
@@ -36,7 +36,7 @@ class ModelProviderInitService:
 
             EmbedProvider.objects.get_or_create(
                 name="text-embedding-ada-002",
-                embed_model=EmbedModelChoices.OPENAI,
+                embed_model_type=EmbedModelChoices.OPENAI,
                 defaults={
                     "embed_config": {
                         "model": "text-embedding-ada-002",
@@ -48,7 +48,7 @@ class ModelProviderInitService:
 
             EmbedProvider.objects.get_or_create(
                 name="FastEmbed(BAAI/bge-small-en-v1.5)",
-                embed_model=EmbedModelChoices.FASTEMBED,
+                embed_model_type=EmbedModelChoices.LANG_SERVE,
                 embed_config={
                     "base_url": "http://fast-embed-server-zh.ops-pilot:8101",
                 },
@@ -56,7 +56,7 @@ class ModelProviderInitService:
             )
             EmbedProvider.objects.get_or_create(
                 name="FastEmbed(BAAI/bge-small-zh-v1.5)",
-                embed_model=EmbedModelChoices.FASTEMBED,
+                embed_model_type=EmbedModelChoices.LANG_SERVE,
                 embed_config={
                     "base_url": "http://fast-embed-server-en.ops-pilot:8101",
                 },
@@ -65,7 +65,7 @@ class ModelProviderInitService:
 
             LLMModel.objects.get_or_create(
                 name="GPT-4 32K",
-                llm_model=LLMModelChoices.CHAT_GPT,
+                llm_model_type=LLMModelChoices.CHAT_GPT,
                 defaults={
                     "llm_config": {
                         "openai_api_key": "your_openai_api_key",
@@ -78,7 +78,7 @@ class ModelProviderInitService:
 
             llm_model, created = LLMModel.objects.get_or_create(
                 name="GPT-3.5 Turbo 16K",
-                llm_model=LLMModelChoices.CHAT_GPT,
+                llm_model_type=LLMModelChoices.CHAT_GPT,
                 enabled=True,
                 defaults={
                     "llm_config": {
@@ -109,7 +109,7 @@ class ModelProviderInitService:
         LLMSkill.objects.get_or_create(
             name="开放问答(GPT3.5-16k)",
             llm_model=llm_model,
-            skill_id=LLMSkillTypeChoices.OPEN_DOMAIN_QA,
+            skill_id='action_llm_fallback',
             enable_conversation_history=True,
             owner=self.owner,
             defaults={"skill_prompt": prompt},
@@ -131,7 +131,7 @@ class ModelProviderInitService:
         LLMSkill.objects.get_or_create(
             name="Jenkins构建异常分析",
             llm_model=llm_model,
-            skill_id=LLMSkillTypeChoices.JENKINS_BUILD_ANALYSIS,
+            skill_id='action_llm_jenkins_build_analysis',
             enable_conversation_history=False,
             owner=self.owner,
             defaults={"skill_prompt": prompt},
@@ -152,7 +152,7 @@ class ModelProviderInitService:
         LLMSkill.objects.get_or_create(
             name="智能提单总结",
             llm_model=llm_model,
-            skill_id=LLMSkillTypeChoices.TICKET_SUMMARY,
+            skill_id='action_llm_ticket_summary',
             enable_conversation_history=False,
             owner=self.owner,
             defaults={"skill_prompt": prompt},
@@ -177,7 +177,7 @@ class ModelProviderInitService:
             name="代码审查",
             llm_model=llm_model,
             owner=self.owner,
-            skill_id=LLMSkillTypeChoices.CODE_REVIEW,
+            skill_id='action_llm_code_review',
             enable_conversation_history=False,
             defaults={"skill_prompt": prompt},
         )

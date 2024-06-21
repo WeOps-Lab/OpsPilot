@@ -7,9 +7,9 @@ from unfold.admin import ModelAdmin
 
 @admin.register(LLMModel)
 class LLMModelAdmin(ModelAdmin):
-    list_display = ["name", "llm_model", "enabled"]
+    list_display = ["name", "llm_model_type", "enabled"]
     search_fields = ["name"]
-    list_filter = ["llm_model"]
+    list_filter = ["llm_model_type"]
     list_display_links = ["name"]
 
     ordering = ["id"]

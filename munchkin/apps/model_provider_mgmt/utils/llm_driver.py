@@ -29,7 +29,7 @@ class LLMDriver:
     def __init__(self, llm_model):
         self.llm_model = llm_model
         llm_config = llm_model.decrypted_llm_config
-        if llm_model.llm_model == LLMModelChoices.CHAT_GPT:
+        if llm_model.llm_model_type == LLMModelChoices.CHAT_GPT:
             self.qa_client = OpenAI(
                 openai_api_key=llm_config["openai_api_key"],
                 openai_api_base=llm_config["openai_base_url"],
