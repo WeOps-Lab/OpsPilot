@@ -41,8 +41,6 @@ django-unfold==0.28.0
 django-guardian==2.4.0
 django-simple-history==3.5.0
 django-minio-backend==3.6.0
-fastembed==0.2.7
-
 
 pytest-django==4.8.0
 
