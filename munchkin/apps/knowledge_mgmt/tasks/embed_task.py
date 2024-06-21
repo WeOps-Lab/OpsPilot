@@ -1,8 +1,18 @@
 import os.path
 import tempfile
 
-import chardet
 import elasticsearch
+from celery import shared_task
+from dotenv import load_dotenv
+from langchain_community.document_loaders import UnstructuredFileLoader
+from langchain_community.document_transformers import BeautifulSoupTransformer
+from langchain_core.documents import Document
+from langchain_elasticsearch import ElasticsearchStore
+from langchain_experimental.text_splitter import SemanticChunker
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from loguru import logger
+from tqdm import tqdm
+
 from apps.core.utils.file_handler import markdown_to_pdf_pandoc
 from apps.knowledge_mgmt.loader.doc_loader import DocLoader
 from apps.knowledge_mgmt.loader.image_loader import ImageLoader
@@ -11,17 +21,6 @@ from apps.knowledge_mgmt.loader.ppt_loader import PPTLoader
 from apps.knowledge_mgmt.loader.recursive_url_loader import RecursiveUrlLoader
 from apps.knowledge_mgmt.models import FileKnowledge, KnowledgeBaseFolder, ManualKnowledge, WebPageKnowledge
 from apps.model_provider_mgmt.services.remote_embeddings import RemoteEmbeddings
-from dotenv import load_dotenv
-from langchain_community.document_loaders import UnstructuredFileLoader
-from langchain_community.document_transformers import BeautifulSoupTransformer
-from langchain_core.documents import Document
-from langchain_elasticsearch import ElasticsearchStore
-from langchain_experimental.text_splitter import SemanticChunker
-from langchain_text_splitters import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter
-from loguru import logger
-from tqdm import tqdm
-
-from celery import shared_task
 from munchkin.components.elasticsearch import ELASTICSEARCH_PASSWORD, ELASTICSEARCH_URL
 
 load_dotenv()
