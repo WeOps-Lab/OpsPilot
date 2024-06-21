@@ -6,3 +6,8 @@ from apps.knowledge_mgmt.serializers.manual_knowledge_serializer import ManualKn
 class ManualKnowledgeViewSet(GuardianModelViewSet):
     serializer_class = ManualKnowledgeSerializer
     queryset = ManualKnowledge.objects.all()
+    search_fields = [
+        "title",
+        "content",
+        "custom_metadata",
+    ]
