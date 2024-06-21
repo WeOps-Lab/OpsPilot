@@ -1,18 +1,18 @@
 from typing import List
 
-from langchain.embeddings import CacheBackedEmbeddings
 from langchain_core.embeddings import Embeddings
-from langchain_elasticsearch import ElasticsearchEmbeddingsCache
 from langchain_openai import OpenAIEmbeddings
 from langserve import RemoteRunnable
 
 from apps.model_provider_mgmt.models import EmbedProvider, EmbedModelChoices
-from munchkin.components.elasticsearch import ELASTICSEARCH_URL, ELASTICSEARCH_PASSWORD
 
 
 class RemoteRunnableEmbed(RemoteRunnable):
     def embed_query(self, text: str) -> List[float]:
         return self.invoke(text)
+
+    def embed_documents(self, texts: List[str]) -> List[List[float]]:
+        return self.batch(texts)
 
 
 class RemoteEmbeddings(Embeddings):
@@ -33,10 +33,7 @@ class RemoteEmbeddings(Embeddings):
             )
 
     def embed_documents(self, texts: List[str]) -> List[List[float]]:
-        embeddings: List[List[float]] = []
-        for doc in texts:
-            embeddings.append(self.embed_query(doc))
-        return embeddings
+        return self.embed_documents(texts)
 
     def embed_query(self, text: str) -> List[float]:
         return self.embedding.embed_query(text)
