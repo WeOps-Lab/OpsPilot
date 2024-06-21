@@ -1,5 +1,4 @@
 from django.contrib import admin
-from unfold.admin import ModelAdmin
 
 from apps.bot_mgmt.models import BotSkillRule, Bot
 from apps.channel_mgmt.models import ChannelUserGroup, ChannelUser
@@ -11,7 +10,7 @@ from apps.model_provider_mgmt.models import LLMSkill
 class BotSkillRuleAdmin(GuardedAdminBase):
 
     def get_list_display(self, request):
-        list_display = ['name', 'bot_id', 'skill', 'channel']
+        list_display = ['name', 'bot_id', 'overwrite_skill_id', 'llm_skill', 'channel']
         if request.user.is_superuser:
             list_display.append("owner_name")
         return list_display
@@ -24,9 +23,8 @@ class BotSkillRuleAdmin(GuardedAdminBase):
 
     fieldsets = (
         (None, {
-            'fields': ('name', 'bot_id', 'skill',
-                       'description', 'prompt',
-                       'channel', 'rule_user_groups', 'rule_user')
+            'fields': ('name', 'bot_id', 'overwrite_skill_id', 'llm_skill',
+                       'description', 'channel', 'rule_user_groups', 'rule_user')
         }),
     )
 

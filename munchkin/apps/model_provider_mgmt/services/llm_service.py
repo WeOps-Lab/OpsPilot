@@ -8,13 +8,11 @@ class LLMService:
     def __init__(self):
         self.knowledge_search_service = KnowledgeSearchService()
 
-    def chat(self, llm_skill: LLMSkill, user_message, chat_history, super_system_prompt=None):
+    def chat(self, llm_skill: LLMSkill, user_message, chat_history):
         llm_model = llm_skill.llm_model
         llm_driver = LLMDriver(llm_model)
 
         system_skill_prompt = llm_skill.skill_prompt
-        if super_system_prompt:
-            system_skill_prompt = super_system_prompt
 
         context = ""
         rag_result = []

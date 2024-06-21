@@ -32,6 +32,7 @@ class LLMViewSet(viewsets.ViewSet):
 
         llm_skill_id = request.data.get("llm_skill_id")
         llm_skill = LLMSkill.objects.get(id=llm_skill_id)
-
-        result = llm_service.chat(llm_skill, user_message, chat_history, super_system_prompt)
+        if super_system_prompt:
+            llm_skill.skill_prompt = super_system_prompt
+        result = llm_service.chat(llm_skill, user_message, chat_history)
         return JsonResponse({"result": result})

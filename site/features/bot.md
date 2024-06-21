@@ -56,7 +56,6 @@
 
 ![机器人规则.png](https://static.cwoa.net/a8fffbd2826644d584597114a6803952.png)
 
-
 ## API
 
 ### 执行机器人对话
@@ -68,6 +67,7 @@
   "bot_id": 1,
   "skill_id": "action_llm_fallback",
   "user_message": "你是谁",
+  "sender_id":"",
   "converation_history": [
   ]
 }
