@@ -2,8 +2,7 @@ FROM ccr.ccs.tencentyun.com/megalab/pilot-base
 WORKDIR /apps
 
 ADD ./requirements.in ./requirements.in
-RUN pip-compile -v
-RUN pip-sync -v
+RUN pip install -r requirements.in
 
 ADD ./actions ./actions
 ADD ./cache ./cache
@@ -16,4 +15,3 @@ ADD ./core ./core
 
 ADD ./support-files/supervisor/ops-pilot.conf /etc/supervisor/conf.d/ops-pilot.conf
 ADD ./support-files/supervisor/ops-pilot-action.conf /etc/supervisor/conf.d/ops-pilot-action.conf
-RUN apt-get install supervisor -y 
