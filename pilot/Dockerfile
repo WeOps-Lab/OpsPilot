@@ -16,4 +16,4 @@ ADD ./core ./core
 
 ADD ./support-files/supervisor/ops-pilot.conf /etc/supervisor/conf.d/ops-pilot.conf
 ADD ./support-files/supervisor/ops-pilot-action.conf /etc/supervisor/conf.d/ops-pilot-action.conf
-RUN apt-get reinstall supervisor -y 
+RUN apt-get install supervisor -y 
