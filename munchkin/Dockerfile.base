@@ -8,3 +8,5 @@ RUN apt-get update && \
     apt-get install -y ttf-wqy-zenhei xfonts-wqy fonts-wqy-zenhei &&\
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+ADD ./models/nltk_data /root/nltk_data
