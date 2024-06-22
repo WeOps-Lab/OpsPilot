@@ -72,3 +72,17 @@
   ]
 }
 ```
+
+### 主动消息推送
+
+> POST /conversations/{sender_id}/trigger_intent
+
+```
+{
+  "name": "EXTERNAL_UTTER",
+  "entities": {
+    "content": "你好呀"
+    "channel": "rest"
+  }
+}
+```

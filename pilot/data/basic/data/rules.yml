@@ -1,3 +1,5 @@
+version: '3.1'
+
 rules:
   - rule: 主动回复
     steps:
@@ -11,4 +13,4 @@ rules:
     steps:
       - intent: out_of_scope
       - action: action_llm_fallback
-version: '3.1'
+

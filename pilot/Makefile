@@ -7,7 +7,7 @@ venv-install:
 	./.venv/bin/pip-sync
 
 train:
-	NUMEXPR_MAX_THREADS=16 rasa train --domain ./data/pre_train/data --data ./data/pre_train/data -c ./data/pre_train/config.yml --fixed-model-name ops-pilot
+	NUMEXPR_MAX_THREADS=16 rasa train --domain ./data/basic/data --data ./data/basic/data -c ./data/basic/config.yml --fixed-model-name ops-pilot
 
 online-train:
 	rasa train --domain ./data/data --data ./data/data -c ./data/config.yml --fixed-model-name ops-pilot

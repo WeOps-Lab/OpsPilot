@@ -21,6 +21,7 @@ class ActionExternalUtter(Action):
             domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
         content = RasaUtils.get_tracker_entity(tracker, 'content')
-        RasaUtils.log_info(tracker, f'接收到主动触发回复请求,内容为: {content}')
+        channel = RasaUtils.get_tracker_entity(tracker, 'channel')
+        RasaUtils.log_info(tracker, f'接收到主动触发回复请求,内容为: {content},通信渠道为: {channel}')
 
         dispatcher.utter_message(content)

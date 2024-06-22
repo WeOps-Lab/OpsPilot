@@ -1,14 +1,17 @@
-actions:
-  - action_llm_fallback
-  - action_external_utter
-entities:
-  - content
-forms: { }
-intents:
-  - out_of_scope
-  - EXTERNAL_UTTER
+version: '3.1'
+
 session_config:
   carry_over_slots_to_new_session: true
   session_expiration_time: 60
-slots: { }
-version: '3.1'
+
+actions:
+  - action_llm_fallback
+  - action_external_utter
+
+entities:
+  - content
+  - channel
+
+intents:
+  - out_of_scope
+  - EXTERNAL_UTTER
