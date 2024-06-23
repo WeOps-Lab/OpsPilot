@@ -54,6 +54,7 @@ class ElasticSearchRetrieverRequest(ElasticSearchRequest):
 
 
 def vector_query(
+        self,
         req: ElasticSearchRetrieverRequest
 ) -> Dict:
     embedding = RemoteEmbeddings(req.embed_model_address)
