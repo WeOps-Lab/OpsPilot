@@ -58,7 +58,7 @@ class ModelProviderInitService:
                 name="FastEmbed(BAAI/bge-small-zh-v1.5)",
                 embed_model_type=EmbedModelChoices.LANG_SERVE,
                 embed_config={
-                    "base_url": "http://fast-embed-server-en.ops-pilot:8101",
+                    "base_url": "http://fast-embed-server-zh.ops-pilot:8101",
                 },
                 enabled=True,
             )
