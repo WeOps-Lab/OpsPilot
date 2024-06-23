@@ -9,6 +9,9 @@ docker build -t ccr.ccs.tencentyun.com/megalab/bce-rerank-server .
 cd ../chunk_server
 docker build -t ccr.ccs.tencentyun.com/megalab/chunk-server .
 
+cd ../rag_server
+docker build -t ccr.ccs.tencentyun.com/megalab/rag-server .
+
 cd ../pandoc_server
 docker build -t ccr.ccs.tencentyun.com/megalab/pandoc-server .
 
@@ -19,5 +22,4 @@ cd ../../../pilot
 docker build -t ccr.ccs.tencentyun.com/megalab/pilot .
 
 cd ../munchkin
-docker build -t ccr.ccs.tencentyun.com/megalab/munchkin-base -f ./Dockerfile.base .
 docker build -t ccr.ccs.tencentyun.com/megalab/munchkin .
