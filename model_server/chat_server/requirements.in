@@ -1,0 +1,8 @@
+loguru==0.7.2
+
+langchain==0.2.5
+langserve[client]==0.2.2
+langserve[server]==0.2.2
+langchain-elasticsearch==0.2.2
+langchain-openai==0.1.7
+langchain-community==0.2.5
