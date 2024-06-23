@@ -1,6 +1,8 @@
 FROM ccr.ccs.tencentyun.com/megalab/munchkin-base
 WORKDIR /apps
 
+ADD ./models/nltk_data /root/nltk_data
+
 ADD ./requirements.in ./requirements.in
 RUN pip install -r requirements.in
 

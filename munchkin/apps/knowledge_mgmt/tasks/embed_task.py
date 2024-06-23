@@ -1,108 +1,15 @@
-import os.path
-import tempfile
-
 import elasticsearch
 from celery import shared_task
 from dotenv import load_dotenv
-from langchain_community.document_loaders import UnstructuredFileLoader
-from langchain_community.document_transformers import BeautifulSoupTransformer
-from langchain_core.documents import Document
 from langchain_elasticsearch import ElasticsearchStore
-from langchain_experimental.text_splitter import SemanticChunker
-from langchain_text_splitters import RecursiveCharacterTextSplitter
 from loguru import logger
 from tqdm import tqdm
 
-from apps.core.utils.file_handler import markdown_to_pdf_pandoc
-from apps.knowledge_mgmt.loader.doc_loader import DocLoader
-from apps.knowledge_mgmt.loader.image_loader import ImageLoader
-from apps.knowledge_mgmt.loader.pdf_loader import PDFLoader
-from apps.knowledge_mgmt.loader.ppt_loader import PPTLoader
-from apps.knowledge_mgmt.loader.recursive_url_loader import RecursiveUrlLoader
 from apps.knowledge_mgmt.models import FileKnowledge, KnowledgeBaseFolder, ManualKnowledge, WebPageKnowledge
 from apps.model_provider_mgmt.services.remote_embeddings import RemoteEmbeddings
 from munchkin.components.elasticsearch import ELASTICSEARCH_PASSWORD, ELASTICSEARCH_URL
 
 load_dotenv()
-
-
-def embed_manual_knowledgebase(knowledge_base_folder, knowledge):
-    docs = []
-    if knowledge_base_folder.enable_general_parse:
-        text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=knowledge_base_folder.general_parse_chunk_size,
-            chunk_overlap=knowledge_base_folder.general_parse_chunk_overlap,
-        )
-        docs += text_splitter.split_documents([Document(knowledge.content)])
-    return docs
-
-
-def embed_webpage_knowledgebase(knowledge_base_folder, knowledge):
-    docs = []
-    loader = RecursiveUrlLoader(knowledge.url, max_depth=knowledge.max_depth)
-    web_docs = loader.load()
-    transformer = BeautifulSoupTransformer()
-    web_docs = transformer.transform_documents(web_docs)
-    if knowledge_base_folder.enable_general_parse:
-        text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=knowledge_base_folder.general_parse_chunk_size,
-            chunk_overlap=knowledge_base_folder.general_parse_chunk_overlap,
-        )
-        docs += text_splitter.split_documents(web_docs)
-    return docs
-
-
-def embed_file_knowledgebase(knowledge_base_folder, knowledge):
-    with tempfile.NamedTemporaryFile(delete=False) as f:
-
-        docs = []
-        # 获取文件类型
-        file_name, file_type = os.path.splitext(knowledge.file.name)
-        pure_filename = file_name.split("/")[-1]
-
-        if file_type in [".md"]:
-            # 转换成pdf
-            tmp_md_file = pure_filename + ".md"
-            tmp_pdf_file = pure_filename + ".pdf"
-            with open(tmp_md_file, "wb") as file_data:
-                file_data.write(knowledge.file.read())
-                markdown_to_pdf_pandoc(tmp_md_file, tmp_pdf_file)
-                with open(tmp_pdf_file, "rb") as pdf:
-                    f.write(pdf.read())
-                    os.remove(tmp_pdf_file)
-                os.remove(tmp_md_file)
-            loader = PDFLoader(f.name, mode="single")
-        else:
-            f.write(knowledge.file.read())
-
-            if file_type in [".ppt", ".pptx"]:
-                loader = PPTLoader(f.name, mode="single")
-            if file_type in [".pdf"]:
-                loader = PDFLoader(f.name, mode="single")
-            if file_type in [".jpg", ".png"]:
-                loader = ImageLoader(f.name, mode="single")
-            if file_type in [".doc", ".docx"]:
-                loader = DocLoader(f.name, mode="single")
-            else:
-                loader = UnstructuredFileLoader(f.name, mode="single")
-
-        text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=knowledge_base_folder.general_parse_chunk_size,
-            chunk_overlap=knowledge_base_folder.general_parse_chunk_overlap,
-        )
-
-        docs = loader.load()
-        if knowledge_base_folder.enable_semantic_chunck_parse:
-            logger.info(f"开始语义解析文件知识: {knowledge.title}")
-            semantic_embedding_model = RemoteEmbeddings(knowledge_base_folder.semantic_chunk_parse_embedding_model)
-            semantic_chunker = SemanticChunker(embeddings=semantic_embedding_model)
-            docs = semantic_chunker.split_documents(docs)
-
-        if knowledge_base_folder.enable_general_parse:
-            logger.info(f"开始分块解析文件知识: {knowledge.title}")
-            docs = text_splitter.split_documents(docs)
-
-        return docs
 
 
 @shared_task
