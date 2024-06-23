@@ -68,7 +68,7 @@
   "skill_id": "action_llm_fallback",
   "user_message": "你是谁",
   "sender_id":"",
-  "converation_history": [
+  "chat_history": [
   ]
 }
 ```
