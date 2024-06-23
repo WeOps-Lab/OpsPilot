@@ -1,4 +1,4 @@
-FROM ccr.ccs.tencentyun.com/megalab/munchkin-base
+FROM ccr.ccs.tencentyun.com/megalab/pilot-base
 WORKDIR /apps
 
 ADD ./requirements.in ./requirements.in
