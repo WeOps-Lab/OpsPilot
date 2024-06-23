@@ -1,0 +1,6 @@
+FILE_CHUNK_SERIVCE_URL = 'http://chunk-server.ops-pilot:8104/file_chunk'
+MANUAL_CHUNK_SERVICE_URL = 'http://chunk-server.ops-pilot:8104/manual_chunk'
+WEB_PAGE_CHUNK_SERVICE_URL = 'http://chunk-server.ops-pilot:8104/webpage_chunk'
+OPENAI_CHAT_SERVICE_URL = 'http://chat-server.ops-pilot:8105/openai'
+REMOTE_INDEX_URL = 'http://rag-server.ops-pilot:8106/elasticsearch_index'
+RAG_SERVER_URL = 'http://rag-server.ops-pilot:8106/elasticsearch_rag'

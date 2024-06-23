@@ -1,7 +1,5 @@
-import elasticsearch
 from celery import shared_task
 from dotenv import load_dotenv
-from langchain_elasticsearch import ElasticsearchStore
 from langserve import RemoteRunnable
 from loguru import logger
 from tqdm import tqdm
@@ -9,30 +7,26 @@ from tqdm import tqdm
 from apps.knowledge_mgmt.models import FileKnowledge, KnowledgeBaseFolder, ManualKnowledge, WebPageKnowledge
 from apps.model_provider_mgmt.services.remote_embeddings import RemoteEmbeddings
 from munchkin.components.elasticsearch import ELASTICSEARCH_PASSWORD, ELASTICSEARCH_URL
+from munchkin.components.remote_service import FILE_CHUNK_SERIVCE_URL, MANUAL_CHUNK_SERVICE_URL, \
+    WEB_PAGE_CHUNK_SERVICE_URL, REMOTE_INDEX_URL
 
 load_dotenv()
 
 
 @shared_task
 def general_embed(knowledge_base_folder_id):
-    logger.info(f"开始生成知识库[{knowledge_base_folder_id}]的Embedding索引")
+    file_remote = RemoteRunnable(FILE_CHUNK_SERIVCE_URL)
+    manual_remote = RemoteRunnable(MANUAL_CHUNK_SERVICE_URL)
+    web_page_remote = RemoteRunnable(WEB_PAGE_CHUNK_SERVICE_URL)
+    remote_indexer = RemoteRunnable(REMOTE_INDEX_URL)
 
     knowledge_base_folder = KnowledgeBaseFolder.objects.get(id=knowledge_base_folder_id)
     index_name = knowledge_base_folder.knowledge_index_name()
-
-    logger.info(f"初始化索引: {index_name}")
-    es = elasticsearch.Elasticsearch(hosts=[ELASTICSEARCH_URL], basic_auth=("elastic", ELASTICSEARCH_PASSWORD))
-
-    if es.indices.exists(index=index_name):
-        logger.info(f"删除已存在的索引: {index_name}")
-        es.indices.delete(index=index_name)
 
     try:
         knowledge_base_folder.train_status = 1
         knowledge_base_folder.train_progress = 0
         knowledge_base_folder.save()
-
-        logger.info(f"获取Embedding模型: {knowledge_base_folder.embed_model}")
 
         knowledges = []
 
@@ -50,10 +44,6 @@ def general_embed(knowledge_base_folder_id):
         logger.info(f"知识库[{knowledge_base_folder_id}]包含[{len(web_page_knowledges)}]个网页知识")
         for obj in web_page_knowledges:
             knowledges.append(obj)
-
-        file_remote = RemoteRunnable('http://chunk-server.ops-pilot:8104/file_chunk')
-        manual_remote = RemoteRunnable('http://chunk-server.ops-pilot:8104/manual_chunk')
-        web_page_remote = RemoteRunnable('http://chunk-server.ops-pilot:8104/webpage_chunk')
 
         total_knowledges = len(knowledges)
         for index, knowledge in tqdm(enumerate(knowledges)):
@@ -125,11 +115,14 @@ def general_embed(knowledge_base_folder_id):
                     doc.metadata[key] = value
 
             logger.debug(f"开始生成知识库[{knowledge_base_folder_id}]的Embedding索引")
-
-            db = ElasticsearchStore.from_documents(
-                knowledge_docs, embedding=embedding_service, es_connection=es, index_name=index_name
-            )
-            db.client.indices.refresh(index=index_name)
+            remote_indexer.invoke({
+                "elasticsearch_url": ELASTICSEARCH_URL,
+                "elasticsearch_password": ELASTICSEARCH_PASSWORD,
+                "embed_model_address": knowledge_base_folder.embed_model.embed_config["base_url"],
+                "index_name": index_name,
+                "index_mode": "overwrite",
+                "docs": knowledge_docs,
+            })
 
             progress = round((index + 1) / total_knowledges * 100, 2)
             logger.debug(f"知识库[{knowledge_base_folder_id}]的Embedding索引生成进度: {progress:.2f}%")

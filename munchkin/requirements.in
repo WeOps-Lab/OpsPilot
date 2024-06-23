@@ -6,11 +6,6 @@ psycopg2-binary==2.9.9
 django-import-export[all]==4.0.7
 django-cors-headers==4.2.0
 
-langchain==0.2.4
-langchain-community==0.2.4
-langchain-elasticsearch==0.2.2
-langchain-openai==0.1.7
-
 djangorestframework==3.14.0
 django-filter==23.2
 djangorestframework_simplejwt==5.3.0
@@ -43,8 +38,6 @@ django-minio-backend==3.6.0
 
 pytest-django==4.8.0
 
-unstructured==0.14.2
-
 django-select2==8.1.2
 django-yaml-field==0.1.0
 django-ace==1.32.4
@@ -57,10 +50,9 @@ nanoid==2.0.0
 fake_useragent==1.5.1
 
 django-jsonform==2.22.0
-
+tqdm==4.66.4
 pre-commit==3.7.1
 
 wechatpy==1.8.18
-markdownify==0.12.1
 loguru==0.7.2
 langserve[client]==0.2.2

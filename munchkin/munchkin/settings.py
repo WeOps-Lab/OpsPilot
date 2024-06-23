@@ -17,5 +17,6 @@ include(
     "components/conversation_mq.py",
     "components/pilot.py",
     "components/bk_login.py",
+    "components/remote_service.py",
     optional("local_settings.py"),
 )

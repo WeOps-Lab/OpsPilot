@@ -1,71 +1,41 @@
-from typing import Dict, List
+from typing import List
 
 from langchain_core.documents import Document
-from langchain_elasticsearch import ElasticsearchRetriever
+from langserve import RemoteRunnable
 
-from apps.knowledge_mgmt.models import KnowledgeBaseFolder
-from apps.model_provider_mgmt.services.remote_embeddings import RemoteEmbeddings
-from apps.model_provider_mgmt.services.rerank_service import RerankService
 from munchkin.components.elasticsearch import ELASTICSEARCH_PASSWORD, ELASTICSEARCH_URL
+from munchkin.components.remote_service import RAG_SERVER_URL
 
 
 class KnowledgeSearchService:
-    def vector_query(
-            self,
-            search_query: str,
-            embeddings,
-            knowledge_base_folder: KnowledgeBaseFolder,
-            metadata={},
-    ) -> Dict:
-        vector = embeddings.embed_query(search_query)
-
-        es_query = {
-            "query": {
-                "bool": {
-                    "must": {"term": {"text": search_query}},
-                    "filter": [],
-                    "boost": knowledge_base_folder.text_search_weight,
-                }
-            },
-            "knn": {
-                "field": "vector",
-                "query_vector": vector,
-                "k": knowledge_base_folder.rag_k,
-                "filter": [],
-                "num_candidates": knowledge_base_folder.rag_num_candidates,
-                "boost": knowledge_base_folder.vector_search_weight,
-            },
-        }
-        for key, value in metadata.items():
-            es_query["query"]["bool"]["filter"].append({"term": {f"metadata.{key}": value}})
-        es_query["knn"]["filter"] = es_query["query"]["bool"]["filter"]
-
-        return es_query
 
     def search(self, knowledge_base_folders, query, metadata={}, score_threshold=0) -> List[Document]:
         docs = []
+        remote_indexer = RemoteRunnable(RAG_SERVER_URL)
 
         for knowledge_base_folder in knowledge_base_folders:
-            embedding = RemoteEmbeddings(knowledge_base_folder.embed_model)
+            embed_model_address = ''
+            if knowledge_base_folder.embed_model:
+                embed_model_address = knowledge_base_folder.embed_model.embed_config["base_url"]
+            rerank_model_address = ''
 
-            vector_retriever = ElasticsearchRetriever.from_es_params(
-                index_name=knowledge_base_folder.knowledge_index_name(),
-                body_func=lambda x: self.vector_query(x, embedding, knowledge_base_folder, metadata),
-                content_field="text",
-                url=ELASTICSEARCH_URL,
-                username="elastic",
-                password=ELASTICSEARCH_PASSWORD,
-            )
-            if knowledge_base_folder.enable_rerank is False:
-                result = vector_retriever.invoke(query)
-            else:
-                search_result = vector_retriever.invoke(query)
-
-                rerank_service = RerankService()
-                result = rerank_service.execute(knowledge_base_folder.rerank_model,
-                                                search_result,
-                                                query,
-                                                knowledge_base_folder.rerank_top_k)
+            if knowledge_base_folder.rerank_model:
+                rerank_model_address = knowledge_base_folder.rerank_model.rerank_config["base_url"]
+            result = remote_indexer.invoke({
+                "elasticsearch_url": ELASTICSEARCH_URL,
+                "elasticsearch_password": ELASTICSEARCH_PASSWORD,
+                "embed_model_address": embed_model_address,
+                "index_name": knowledge_base_folder.knowledge_index_name(),
+                "search_query": query,
+                "metadata_filter": metadata,
+                "text_search_weight": knowledge_base_folder.text_search_weight,
+                "rag_k": knowledge_base_folder.rag_k,
+                "rag_num_candidates": knowledge_base_folder.rag_num_candidates,
+                "vector_search_weight": knowledge_base_folder.vector_search_weight,
+                "enable_rerank": knowledge_base_folder.enable_rerank,
+                "rerank_model_address": rerank_model_address,
+                "rerank_top_k": knowledge_base_folder.rerank_top_k,
+            })
             for doc in result:
                 score = doc.metadata['_score'] * 10
                 if score > score_threshold:

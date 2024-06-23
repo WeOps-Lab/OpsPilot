@@ -1,7 +1,8 @@
+from langserve import RemoteRunnable
+
 from apps.knowledge_mgmt.services.knowledge_search_service import KnowledgeSearchService
-from apps.model_provider_mgmt.models import LLMSkill
-from apps.model_provider_mgmt.utils.llm_driver import LLMDriver
-from langchain.memory import ChatMessageHistory
+from apps.model_provider_mgmt.models import LLMSkill, LLMModelChoices
+from munchkin.components.remote_service import OPENAI_CHAT_SERVICE_URL
 
 
 class LLMService:
@@ -10,9 +11,6 @@ class LLMService:
 
     def chat(self, llm_skill: LLMSkill, user_message, chat_history):
         llm_model = llm_skill.llm_model
-        llm_driver = LLMDriver(llm_model)
-
-        system_skill_prompt = llm_skill.skill_prompt
 
         context = ""
         rag_result = []
@@ -24,31 +22,19 @@ class LLMService:
             for r in rag_result:
                 context += r['content'].replace("{", "").replace("}", "") + "\n"
 
-        if llm_skill.enable_conversation_history:
-            llm_chat_history = ChatMessageHistory()
-
-            for event in chat_history:
-                if event["event"] == "user":
-                    llm_chat_history.add_user_message(event["text"])
-                elif event["event"] == "bot":
-                    llm_chat_history.add_ai_message(event["text"])
-
-            result = llm_driver.chat_with_history(
-                system_message_prompt=system_skill_prompt,
-                user_message=user_message,
-                message_history=llm_chat_history,
-                window_size=llm_skill.conversation_window_size,
-                rag_content=context,
-            )
-        else:
-            system_skill_prompt = system_skill_prompt.replace("{", "").replace("}", "")
-            result = llm_driver.chat(
-                system_message_prompt=system_skill_prompt,
-                user_message=user_message,
-            )
-
-        if result.startswith("AI:"):
-            result = result[4:]
+        if llm_model.llm_model_type == LLMModelChoices.CHAT_GPT:
+            chat_server = RemoteRunnable(OPENAI_CHAT_SERVICE_URL)
+            result = chat_server.invoke({
+                "system_message_prompt": llm_skill.skill_prompt,
+                "openai_api_base": llm_model.decrypted_llm_config['openai_base_url'],
+                "openai_api_key": llm_model.decrypted_llm_config['openai_api_key'],
+                "temperature": llm_model.decrypted_llm_config['temperature'],
+                "model": llm_model.decrypted_llm_config['model'],
+                "user_message": user_message,
+                "chat_history": chat_history,
+                "conversation_window_size": llm_skill.conversation_window_size,
+                "rag_context": context,
+            })
 
         if llm_skill.enable_rag_knowledge_source:
             knowledge_titles = set([x['knowledge_title'] for x in rag_result])
