@@ -35,18 +35,6 @@ class ModelProviderInitService:
             )
 
             EmbedProvider.objects.get_or_create(
-                name="text-embedding-ada-002",
-                embed_model_type=EmbedModelChoices.OPENAI,
-                defaults={
-                    "embed_config": {
-                        "model": "text-embedding-ada-002",
-                        "openai_api_key": "your_openai_api_key",
-                        "openai_base_url": "https://api.openai.com",
-                    }
-                },
-            )
-
-            EmbedProvider.objects.get_or_create(
                 name="FastEmbed(BAAI/bge-small-en-v1.5)",
                 embed_model_type=EmbedModelChoices.LANG_SERVE,
                 embed_config={

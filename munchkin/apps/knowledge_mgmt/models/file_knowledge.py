@@ -1,3 +1,5 @@
+import base64
+
 from apps.core.models.maintainer_info import MaintainerInfo
 from apps.core.models.time_info import TimeInfo
 from django.core.validators import FileExtensionValidator
@@ -28,6 +30,9 @@ class FileKnowledge(TimeInfo, MaintainerInfo):
 
     def __str__(self):
         return self.title
+
+    def get_file_base64(self):
+        return base64.b64encode(self.file.read()).decode('utf-8')
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.title = self.file.name

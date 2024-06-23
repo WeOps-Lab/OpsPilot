@@ -2,6 +2,7 @@ import elasticsearch
 from celery import shared_task
 from dotenv import load_dotenv
 from langchain_elasticsearch import ElasticsearchStore
+from langserve import RemoteRunnable
 from loguru import logger
 from tqdm import tqdm
 
@@ -50,30 +51,71 @@ def general_embed(knowledge_base_folder_id):
         for obj in web_page_knowledges:
             knowledges.append(obj)
 
+        file_remote = RemoteRunnable('http://chunk-server.ops-pilot:8104/file_chunk')
+        manual_remote = RemoteRunnable('http://chunk-server.ops-pilot:8104/manual_chunk')
+        web_page_remote = RemoteRunnable('http://chunk-server.ops-pilot:8104/webpage_chunk')
+
         total_knowledges = len(knowledges)
         for index, knowledge in tqdm(enumerate(knowledges)):
             knowledge_docs = []
             embedding_service = RemoteEmbeddings(knowledge_base_folder.embed_model)
             if isinstance(knowledge, FileKnowledge):
                 logger.debug(f"开始处理文件知识: {knowledge.title}")
-                knowledge_docs += embed_file_knowledgebase(knowledge_base_folder, knowledge)
-                for doc in knowledge_docs:
-                    doc.metadata["knowledge_type"] = "file"
-                logger.info(f"文件知识[{knowledge.title}]共提取[{len(knowledge_docs)}]个文档片段")
+                semantic_embedding_address = ''
+
+                semantic_chunk_parse_embedding_model = knowledge_base_folder.semantic_chunk_parse_embedding_model
+                if semantic_chunk_parse_embedding_model is not None:
+                    semantic_embedding_address = semantic_chunk_parse_embedding_model.embed_config["base_url"]
+
+                remote_docs = file_remote.invoke({
+                    "enable_recursive_chunk_parse": knowledge_base_folder.enable_general_parse,
+                    "recursive_chunk_size": knowledge_base_folder.general_parse_chunk_size,
+                    "recursive_chunk_overlap": knowledge_base_folder.general_parse_chunk_overlap,
+                    "enable_semantic_chunck_parse": knowledge_base_folder.enable_semantic_chunck_parse,
+                    "semantic_embedding_address": semantic_embedding_address,
+                    "file_name": knowledge.file.name,
+                    "file": knowledge.get_file_base64(),
+                    "custom_metadata": {
+                        "knowledge_type": "file",
+                    },
+                })
+                knowledge_docs.extend(remote_docs)
+                logger.info(f"文件知识[{knowledge.title}]共提取[{len(remote_docs)}]个文档片段")
 
             elif isinstance(knowledge, ManualKnowledge):
                 logger.debug(f"开始处理手动知识: {knowledge.title}")
-                knowledge_docs += embed_manual_knowledgebase(knowledge_base_folder, knowledge)
-                for doc in knowledge_docs:
-                    doc.metadata["knowledge_type"] = "manual"
-                logger.info(f"手动知识[{knowledge.title}]共提取[{len(knowledge_docs)}]个文档片段")
+                remote_docs = manual_remote.invoke({
+                    "enable_recursive_chunk_parse": knowledge_base_folder.enable_general_parse,
+                    "recursive_chunk_size": knowledge_base_folder.general_parse_chunk_size,
+                    "recursive_chunk_overlap": knowledge_base_folder.general_parse_chunk_overlap,
+                    "enable_semantic_chunck_parse": knowledge_base_folder.enable_semantic_chunck_parse,
+                    "semantic_embedding_address":
+                        knowledge_base_folder.semantic_chunk_parse_embedding_model.decrypted_embed_config["base_url"],
+                    "content": knowledge.content,
+                    "custom_metadata": {
+                        "knowledge_type": "manual",
+                    },
+                })
+                knowledge_docs.extend(remote_docs)
+                logger.info(f"手动知识[{knowledge.title}]共提取[{len(remote_docs)}]个文档片段")
 
             elif isinstance(knowledge, WebPageKnowledge):
                 logger.debug(f"开始处理网页知识: {knowledge.title}")
-                knowledge_docs += embed_webpage_knowledgebase(knowledge_base_folder, knowledge)
-                for doc in knowledge_docs:
-                    doc.metadata["knowledge_type"] = "webpage"
-                logger.info(f"网页知识[{knowledge.title}]共提取[{len(knowledge_docs)}]个文档片段")
+                web_page_remote.invoke({
+                    "enable_recursive_chunk_parse": knowledge_base_folder.enable_general_parse,
+                    "recursive_chunk_size": knowledge_base_folder.general_parse_chunk_size,
+                    "recursive_chunk_overlap": knowledge_base_folder.general_parse_chunk_overlap,
+                    "enable_semantic_chunck_parse": knowledge_base_folder.enable_semantic_chunck_parse,
+                    "semantic_embedding_address":
+                        knowledge_base_folder.semantic_chunk_parse_embedding_model.decrypted_embed_config["base_url"],
+                    "url": knowledge.url,
+                    "max_depth": 1,
+                    "custom_metadata": {
+                        "knowledge_type": "webpage",
+                    },
+                })
+                knowledge_docs.extend(remote_docs)
+                logger.info(f"网页知识[{knowledge.title}]共提取[{len(remote_docs)}]个文档片段")
 
             for doc in knowledge_docs:
                 doc.metadata["knowledge_id"] = knowledge.id
@@ -83,10 +125,6 @@ def general_embed(knowledge_base_folder_id):
                     doc.metadata[key] = value
 
             logger.debug(f"开始生成知识库[{knowledge_base_folder_id}]的Embedding索引")
-
-            # 清理文档中的空白字符和换行符
-            for doc in knowledge_docs:
-                doc.page_content = doc.page_content.replace("\n", "").replace("\r", "").replace("\t", "").strip()
 
             db = ElasticsearchStore.from_documents(
                 knowledge_docs, embedding=embedding_service, es_connection=es, index_name=index_name

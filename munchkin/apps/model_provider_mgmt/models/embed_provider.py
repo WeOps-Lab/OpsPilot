@@ -6,7 +6,6 @@ from django.utils.functional import cached_property
 
 class EmbedModelChoices(models.TextChoices):
     LANG_SERVE = "lang-serve", "LangServe"
-    OPENAI = "openai", "OpenAI"
 
 
 class EmbedProvider(models.Model, EncryptableMixin):
@@ -21,18 +20,6 @@ class EmbedProvider(models.Model, EncryptableMixin):
         default=dict,
     )
     enabled = models.BooleanField(default=True, verbose_name="是否启用")
-
-    def save(self, *args, **kwargs):
-        if self.embed_model_type == EmbedModelChoices.OPENAI:
-            self.encrypt_field("openai_api_key", self.embed_config)
-        super().save(*args, **kwargs)
-
-    @cached_property
-    def decrypted_embed_config(self):
-        embed_config_decrypted = self.embed_config.copy()
-        if self.embed_model_type == EmbedModelChoices.OPENAI:
-            self.decrypt_field("openai_api_key", embed_config_decrypted)
-        return embed_config_decrypted
 
     def __str__(self):
         return self.name
