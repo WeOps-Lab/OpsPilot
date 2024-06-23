@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pandoc-server
+  namespace: ops-pilot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pandoc-server
+  template:
+    metadata:
+      labels:
+        app: pandoc-server
+    spec:
+      containers:
+        - name: fast-embed-server
+          image: ccr.ccs.tencentyun.com/megalab/pandoc-server
+          ports:
+            - containerPort: 8103
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pandoc-server
+  namespace: ops-pilot
+spec:
+  selector:
+    app: pandoc-server
+  ports:
+    - protocol: TCP
+      port: 8103
+      targetPort: 8103
