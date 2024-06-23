@@ -15,7 +15,7 @@ class SkillExecuteView(APIView):
                 "bot_id": openapi.Schema(type=openapi.TYPE_INTEGER, description="机器人ID"),
                 "skill_id": openapi.Schema(type=openapi.TYPE_STRING, description="技能ID"),
                 "user_message": openapi.Schema(type=openapi.TYPE_STRING, description="用户消息"),
-                "converation_history": openapi.Schema(
+                "chat_history": openapi.Schema(
                     type=openapi.TYPE_ARRAY,
                     description="历史对话",
                     items=openapi.Schema(type=openapi.TYPE_STRING),
@@ -33,7 +33,7 @@ class SkillExecuteView(APIView):
         skill_id = request.data.get("skill_id")
         user_message = request.data.get("user_message")
         sender_id = request.data.get("sender_id", "")
-        converation_history = request.data.get("converation_history", [])
+        converation_history = request.data.get("chat_history", [])
 
         service = SkillExecuteService()
         result = service.execute_skill(bot_id, skill_id, user_message, converation_history, sender_id)
