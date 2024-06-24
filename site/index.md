@@ -12,7 +12,7 @@ hero:
       link: /quick-start
     - theme: alt
       text: 能力概览
-      link: /skills/index
+      link: /architecture
 
 features:
   - title: 🎓知识问答
@@ -28,4 +28,3 @@ features:
   - title: 🎁自动化数据采集
     details: 提供自动化数据采集能力，让OpsPilot的私域知识能够持续更新，提供更好的服务
 ---
-
