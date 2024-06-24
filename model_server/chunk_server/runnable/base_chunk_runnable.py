@@ -12,6 +12,14 @@ from loguru import logger
 class BaseChunkRunnable:
 
     def parse_docs(self, docs: List[Document], request: BaseChunkRequest) -> List[Document]:
+        table_docs = []
+        for doc in docs:
+            if doc.metadata.get("format", "") == "table":
+                table_docs.append(doc)
+
+        for doc in table_docs:
+            docs.remove(doc)
+
         if request.enable_semantic_chunck_parse:
             semantic_embedding_model = RemoteEmbeddings(request.semantic_embedding_address)
             semantic_chunker = SemanticChunker(embeddings=semantic_embedding_model,
@@ -32,5 +40,5 @@ class BaseChunkRunnable:
             doc.page_content = doc.page_content.replace("\n", "").replace("\r", "").replace("\t", "").strip()
             if 'source' in doc.metadata:
                 del doc.metadata["source"]
-
+        docs = docs + table_docs
         return docs

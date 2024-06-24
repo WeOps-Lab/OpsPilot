@@ -41,7 +41,7 @@ class FileChunkRunnable(BaseChunkRunnable):
                 if file_type in [".ppt", ".pptx"]:
                     loader = PPTLoader(f.name, mode="single")
                 elif file_type in [".pdf"]:
-                    loader = PDFLoader(f.name, mode="single")
+                    loader = PDFLoader(f.name)
                 elif file_type in [".jpg", ".png"]:
                     loader = ImageLoader(f.name, mode="single")
                 elif file_type in [".doc", ".docx"]:
