@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: munchkin
+  namespace: ops-pilot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: munchkin
+  template:
+    metadata:
+      labels:
+        app: munchkin
+    spec:
+      volumes:
+        - name: k3s-config
+          hostPath:
+            path: <YOUR_KUBE_CONFIG>
+            type: File
+      initContainers:
+        - name: init-db
+          image: ccr.ccs.tencentyun.com/megalab/munchkin
+          command:
+            - bash
+            - -c
+            - |
+              python3 manage.py makemigrations
+              python3 manage.py migrate
+              python3 manage.py initialize_buckets
+              DJANGO_SUPERUSER_USERNAME=admin DJANGO_SUPERUSER_EMAIL=admin@example.com DJANGO_SUPERUSER_PASSWORD=password python3 manage.py createsuperuser --noinput ; true
+          envFrom:
+            - configMapRef:
+                name: munchkin-config
+      containers:
+        - name: munchkin-app
+          image: ccr.ccs.tencentyun.com/megalab/munchkin
+          ports:
+            - containerPort: 8000
+          command:
+            - bash
+            - -c
+            - |
+              python3 manage.py collectstatic --noinput &&
+              supervisord -n
+          volumeMounts:
+            - name: k3s-config
+              mountPath: /root/.kube/config
+          envFrom:
+            - configMapRef:
+                name: munchkin-config

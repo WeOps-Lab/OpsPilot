@@ -6,14 +6,6 @@
 
 Embed模型为知识提供向量化的能力，是知识库能够进行语义检索的支撑功能，OpsPilot内置以下Embed模型，内置的这些模块可以在“知识管理-知识”中进行使用。
 
-* [FastEmbed](https://qdrant.github.io/fastembed/)
-  * bge-small-zh-v1.5
-  * bge-small-en-v1.5
-* [BCEmbedding](https://github.com/netease-youdao/BCEmbedding)
-  * bec-embedding-base_v1
-* OpenAI
-  * text-embedding-ada-002
-
 ![模型1.png](https://static.cwoa.net/63fca4df4b93470d991944a39573e05a.png)
 
 Embed模型支持新增/编辑和删除等操作，新增模型时需要选择类型（langserver类型是用于使用Embed模型进行语言处理任务的服务类型，可以通过不同的API（如HTTP的RESTful API、GRPC、WebSocket）与服务器进行交互，OpenAI类型是指OpenAI GPT模型的服务类型，通过OpenAI API可与OpenAI服务器进行交互，并使用GPT模型进行自然语言处理任务。）和配置信息（比如基本url）
@@ -26,9 +18,6 @@ ReRank模型可以对检索出来的知识进行重排序，让大模型在使�
 
 OpsPilot内置以下ReRank模型，内置的这些模块可以在“知识管理-知识”中进行使用。
 
-
-* BCEReranker
-  * bce-reranker-base_v1
 
 ![模型2.png](https://static.cwoa.net/1d101b079b8a4c13ad49ba55e0bade60.png)
 
