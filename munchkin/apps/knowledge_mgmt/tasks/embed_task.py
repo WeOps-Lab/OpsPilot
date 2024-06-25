@@ -1,14 +1,18 @@
-from celery import shared_task
+from apps.knowledge_mgmt.models import FileKnowledge, KnowledgeBaseFolder, ManualKnowledge, WebPageKnowledge
+from apps.model_provider_mgmt.services.remote_embeddings import RemoteEmbeddings
 from dotenv import load_dotenv
 from langserve import RemoteRunnable
 from loguru import logger
 from tqdm import tqdm
 
-from apps.knowledge_mgmt.models import FileKnowledge, KnowledgeBaseFolder, ManualKnowledge, WebPageKnowledge
-from apps.model_provider_mgmt.services.remote_embeddings import RemoteEmbeddings
+from celery import shared_task
 from munchkin.components.elasticsearch import ELASTICSEARCH_PASSWORD, ELASTICSEARCH_URL
-from munchkin.components.remote_service import FILE_CHUNK_SERIVCE_URL, MANUAL_CHUNK_SERVICE_URL, \
-    WEB_PAGE_CHUNK_SERVICE_URL, REMOTE_INDEX_URL
+from munchkin.components.remote_service import (
+    FILE_CHUNK_SERIVCE_URL,
+    MANUAL_CHUNK_SERVICE_URL,
+    REMOTE_INDEX_URL,
+    WEB_PAGE_CHUNK_SERVICE_URL,
+)
 
 load_dotenv()
 
@@ -51,59 +55,67 @@ def general_embed(knowledge_base_folder_id):
             embedding_service = RemoteEmbeddings(knowledge_base_folder.embed_model)
             if isinstance(knowledge, FileKnowledge):
                 logger.debug(f"开始处理文件知识: {knowledge.title}")
-                semantic_embedding_address = ''
+                semantic_embedding_address = ""
 
                 semantic_chunk_parse_embedding_model = knowledge_base_folder.semantic_chunk_parse_embedding_model
                 if semantic_chunk_parse_embedding_model is not None:
                     semantic_embedding_address = semantic_chunk_parse_embedding_model.embed_config["base_url"]
 
-                remote_docs = file_remote.invoke({
-                    "enable_recursive_chunk_parse": knowledge_base_folder.enable_general_parse,
-                    "recursive_chunk_size": knowledge_base_folder.general_parse_chunk_size,
-                    "recursive_chunk_overlap": knowledge_base_folder.general_parse_chunk_overlap,
-                    "enable_semantic_chunck_parse": knowledge_base_folder.enable_semantic_chunck_parse,
-                    "semantic_embedding_address": semantic_embedding_address,
-                    "file_name": knowledge.file.name,
-                    "file": knowledge.get_file_base64(),
-                    "custom_metadata": {
-                        "knowledge_type": "file",
-                    },
-                })
+                remote_docs = file_remote.invoke(
+                    {
+                        "enable_recursive_chunk_parse": knowledge_base_folder.enable_general_parse,
+                        "recursive_chunk_size": knowledge_base_folder.general_parse_chunk_size,
+                        "recursive_chunk_overlap": knowledge_base_folder.general_parse_chunk_overlap,
+                        "enable_semantic_chunck_parse": knowledge_base_folder.enable_semantic_chunck_parse,
+                        "semantic_embedding_address": semantic_embedding_address,
+                        "file_name": knowledge.file.name,
+                        "file": knowledge.get_file_base64(),
+                        "custom_metadata": {
+                            "knowledge_type": "file",
+                        },
+                    }
+                )
                 knowledge_docs.extend(remote_docs)
                 logger.info(f"文件知识[{knowledge.title}]共提取[{len(remote_docs)}]个文档片段")
 
             elif isinstance(knowledge, ManualKnowledge):
                 logger.debug(f"开始处理手动知识: {knowledge.title}")
-                remote_docs = manual_remote.invoke({
-                    "enable_recursive_chunk_parse": knowledge_base_folder.enable_general_parse,
-                    "recursive_chunk_size": knowledge_base_folder.general_parse_chunk_size,
-                    "recursive_chunk_overlap": knowledge_base_folder.general_parse_chunk_overlap,
-                    "enable_semantic_chunck_parse": knowledge_base_folder.enable_semantic_chunck_parse,
-                    "semantic_embedding_address":
-                        knowledge_base_folder.semantic_chunk_parse_embedding_model.decrypted_embed_config["base_url"],
-                    "content": knowledge.content,
-                    "custom_metadata": {
-                        "knowledge_type": "manual",
-                    },
-                })
+                remote_docs = manual_remote.invoke(
+                    {
+                        "enable_recursive_chunk_parse": knowledge_base_folder.enable_general_parse,
+                        "recursive_chunk_size": knowledge_base_folder.general_parse_chunk_size,
+                        "recursive_chunk_overlap": knowledge_base_folder.general_parse_chunk_overlap,
+                        "enable_semantic_chunck_parse": knowledge_base_folder.enable_semantic_chunck_parse,
+                        "semantic_embedding_address": knowledge_base_folder.semantic_chunk_parse_embedding_model.embed_config[
+                            "base_url"
+                        ],
+                        "content": knowledge.content,
+                        "custom_metadata": {
+                            "knowledge_type": "manual",
+                        },
+                    }
+                )
                 knowledge_docs.extend(remote_docs)
                 logger.info(f"手动知识[{knowledge.title}]共提取[{len(remote_docs)}]个文档片段")
 
             elif isinstance(knowledge, WebPageKnowledge):
                 logger.debug(f"开始处理网页知识: {knowledge.title}")
-                web_page_remote.invoke({
-                    "enable_recursive_chunk_parse": knowledge_base_folder.enable_general_parse,
-                    "recursive_chunk_size": knowledge_base_folder.general_parse_chunk_size,
-                    "recursive_chunk_overlap": knowledge_base_folder.general_parse_chunk_overlap,
-                    "enable_semantic_chunck_parse": knowledge_base_folder.enable_semantic_chunck_parse,
-                    "semantic_embedding_address":
-                        knowledge_base_folder.semantic_chunk_parse_embedding_model.decrypted_embed_config["base_url"],
-                    "url": knowledge.url,
-                    "max_depth": 1,
-                    "custom_metadata": {
-                        "knowledge_type": "webpage",
-                    },
-                })
+                web_page_remote.invoke(
+                    {
+                        "enable_recursive_chunk_parse": knowledge_base_folder.enable_general_parse,
+                        "recursive_chunk_size": knowledge_base_folder.general_parse_chunk_size,
+                        "recursive_chunk_overlap": knowledge_base_folder.general_parse_chunk_overlap,
+                        "enable_semantic_chunck_parse": knowledge_base_folder.enable_semantic_chunck_parse,
+                        "semantic_embedding_address": knowledge_base_folder.semantic_chunk_parse_embedding_model.embed_config[
+                            "base_url"
+                        ],
+                        "url": knowledge.url,
+                        "max_depth": 1,
+                        "custom_metadata": {
+                            "knowledge_type": "webpage",
+                        },
+                    }
+                )
                 knowledge_docs.extend(remote_docs)
                 logger.info(f"网页知识[{knowledge.title}]共提取[{len(remote_docs)}]个文档片段")
 
@@ -115,14 +127,16 @@ def general_embed(knowledge_base_folder_id):
                     doc.metadata[key] = value
 
             logger.debug(f"开始生成知识库[{knowledge_base_folder_id}]的Embedding索引")
-            remote_indexer.invoke({
-                "elasticsearch_url": ELASTICSEARCH_URL,
-                "elasticsearch_password": ELASTICSEARCH_PASSWORD,
-                "embed_model_address": knowledge_base_folder.embed_model.embed_config["base_url"],
-                "index_name": index_name,
-                "index_mode": "overwrite",
-                "docs": knowledge_docs,
-            })
+            remote_indexer.invoke(
+                {
+                    "elasticsearch_url": ELASTICSEARCH_URL,
+                    "elasticsearch_password": ELASTICSEARCH_PASSWORD,
+                    "embed_model_address": knowledge_base_folder.embed_model.embed_config["base_url"],
+                    "index_name": index_name,
+                    "index_mode": "overwrite",
+                    "docs": knowledge_docs,
+                }
+            )
 
             progress = round((index + 1) / total_knowledges * 100, 2)
             logger.debug(f"知识库[{knowledge_base_folder_id}]的Embedding索引生成进度: {progress:.2f}%")
