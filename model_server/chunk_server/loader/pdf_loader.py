@@ -24,26 +24,25 @@ class PDFLoader:
         return markdown_table
 
     def load(self) -> List[Document]:
-        logger.info(f'开始解析PDF文件：{self.file_path}')
 
         table_docs = []
         text_docs = []
 
         with pdfplumber.open(self.file_path) as pdf:
-            # 解析表格
-            for page in tqdm(pdf.pages):
-                table = page.extract_table()
-
-                if table is not None:
-                    # 如果表格的所有单元格都为空或None，跳过这个表格
-                    if all(not cell or cell.isspace() for row in table for cell in row):
-                        continue
-                    table_docs.append(Document(self.table_to_markdown(table), metadata={"format": "table"}))
-
-            # 解析文本并排除表格部分
-            for page in tqdm(pdf.pages):
-                raw_text = page.extract_text()
+            # 解析文本
+            for page in tqdm(pdf.pages, desc=f"解析PDF文本[{self.file_path}]"):
+                raw_text = page.extract_text().replace("\n", " ").strip()
                 text_docs.append(Document(raw_text))
+
+            # 解析表格
+            for page in tqdm(pdf.pages, desc=f"解析PDF表格[{self.file_path}]"):
+                table_list = page.extract_tables()
+                for table in table_list:
+                    if table is not None:
+                        # 如果表格的所有单元格都为空或None，跳过这个表格
+                        if all(not cell or cell.isspace() for row in table for cell in row):
+                            continue
+                        table_docs.append(Document(self.table_to_markdown(table), metadata={"format": "table"}))
 
             logger.info(f'解析PDF文件完成：{self.file_path}')
 
