@@ -7,14 +7,15 @@ import requests
 from langchain_community.document_loaders import UnstructuredFileLoader
 from langchain_core.documents import Document
 from langchain_core.runnables import RunnableLambda
+from loguru import logger
 
 from loader.doc_loader import DocLoader
+from loader.excel_loader import ExcelLoader
 from loader.image_loader import ImageLoader
 from loader.pdf_loader import PDFLoader
 from loader.ppt_loader import PPTLoader
 from runnable.base_chunk_runnable import BaseChunkRunnable
 from user_types.file_chunk_request import FileChunkRequest
-from loguru import logger
 
 
 class FileChunkRunnable(BaseChunkRunnable):
@@ -49,6 +50,8 @@ class FileChunkRunnable(BaseChunkRunnable):
                     loader = ImageLoader(f.name, mode="single")
                 elif file_type in [".doc", ".docx"]:
                     loader = DocLoader(f.name, mode="single")
+                elif file_type in [".xls", ".xlsx"]:
+                    loader = ExcelLoader(f.name)
                 else:
                     loader = UnstructuredFileLoader(f.name, mode="single")
 

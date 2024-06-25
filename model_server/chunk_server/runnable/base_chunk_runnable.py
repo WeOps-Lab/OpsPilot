@@ -13,6 +13,8 @@ class BaseChunkRunnable:
 
     def parse_docs(self, docs: List[Document], request: BaseChunkRequest) -> List[Document]:
         table_docs = []
+
+        # 所有表格型的内容都不参与内容分割
         for doc in docs:
             if doc.metadata.get("format", "") == "table":
                 table_docs.append(doc)
