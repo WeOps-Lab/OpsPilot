@@ -6,6 +6,7 @@ import numpy as np
 import pdfplumber
 from PIL.Image import Image
 from langchain_core.documents import Document
+from rapid_table import RapidTable
 from rapidocr_onnxruntime import RapidOCR
 from tqdm import tqdm
 from loguru import logger
@@ -15,6 +16,7 @@ class PDFLoader:
 
     def __init__(self, file_path):
         self.ocr = RapidOCR()
+        self.table_engine = RapidTable()
         self.file_path = file_path
 
     def rotate_img(self, img, angle):

@@ -14,7 +14,7 @@ spec:
         app: chat-server
     spec:
       containers:
-        - name: fast-embed-server
+        - name: chat-server
           image: ccr.ccs.tencentyun.com/megalab/chat-server
           ports:
             - containerPort: 8105

@@ -30,3 +30,4 @@ site/pnpm-lock.yaml
 model_server/bce_rerank_server/models
 model_server/bce_embed_server/models
 model_server/fast_embed_server/models
+model_server/chunk_server/models
