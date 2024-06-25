@@ -6,6 +6,9 @@ docker build -t ccr.ccs.tencentyun.com/megalab/fast-embed-server .
 cd ../bce_rerank_server
 docker build -t ccr.ccs.tencentyun.com/megalab/bce-rerank-server .
 
+cd ../bce_embed_server
+docker build -t ccr.ccs.tencentyun.com/megalab/bce-embed-server .
+
 cd ../chunk_server
 docker build -t ccr.ccs.tencentyun.com/megalab/chunk-server .
 
@@ -15,10 +18,9 @@ docker build -t ccr.ccs.tencentyun.com/megalab/rag-server .
 cd ../pandoc_server
 docker build -t ccr.ccs.tencentyun.com/megalab/pandoc-server .
 
-cd ../bce_embed_server
-docker build -t ccr.ccs.tencentyun.com/megalab/bce-embed-server .
 
-cd ../../../pilot
+
+cd ../../pilot
 docker build -t ccr.ccs.tencentyun.com/megalab/pilot .
 
 cd ../munchkin
