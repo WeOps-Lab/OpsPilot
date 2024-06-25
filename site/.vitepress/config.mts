@@ -33,7 +33,6 @@ export default defineConfig({
               { text: 'AI模型', link: '/features/ai_models' },
               { text: '通道管理', link: '/features/channels' },
               { text: '知识管理', link: '/features/knowledges' },
-              { text: '扩展包', link: '/features/contentpack' },
               { text: '系统管理', link: '/features/system' },
             ],
           },

@@ -7,35 +7,50 @@ curl https://releases.rancher.com/install-docker/20.10.sh | sh
 curl -sfL https://get.k3s.io | sh -s - --docker
 ```
 
-## 部署基础组件
-
-进入 `support-files/k8s`目录，执行
+## 获取Pilot镜像
 
 ```
-kubectl create ns argo
-kubectl create ns ops-pilot
+docker pull ccr.ccs.tencentyun.com/megalab/pilot
+```
 
-kubectl apply -f argy.yml
+## 创建命名空间
+
+```
+kubectl create ns ops-pilot
+```
+
+## 部署基础组件
+
+进入 `installer/depend`目录，执行
+
+```
 kubectl apply -f elasticsearch.yml
 kubectl apply -f minio.yml
 kubectl apply -f postgres.yml
 kubectl apply -f rabbitmq.yml
 ```
 
+## 部署服务组件
+
+进入 `installer/ai-service`目录，执行
+
+```
+kubectl apply -f bce-embed-server.yml
+kubectl apply -f bce-rerank-server.yml
+kubectl apply -f chat-server.yml
+kubectl apply -f chunk-server.yml
+kubectl apply -f fast-embed-server-zh.yml
+kubectl apply -f pandoc-server.yml
+kubectl apply -f rag-server.yml
+```
+
 ## 部署Munchkin
 
-```
-kubectl apply -f munchkin.yml
-```
-
-## 初始化Munchkin
-
-首次打开Munchkin，需要先初始化超级管理员的用户名和密码
+进入 `installer/munchkin`目录，执行
 
 ```
-DJANGO_SUPERUSER_USERNAME=admin DJANGO_SUPERUSER_EMAIL=admin@example.com DJANGO_SUPERUSER_PASSWORD=password python manage.py createsuperuser --noinput
+kubectl apply -f ./configmap.yml
+kubectl apply -f ./svc.yml
+kubectl apply -f ./ingress.yml  #修改YOUR_HOST配置
+kubectl apply -f ./munchkin.yml #修改YOUR_KUBE_CONFIG变量
 ```
-
-然后在界面上初始化token
-
-![token.png](https://static.cwoa.net/8d7fff2f7b5b463c99dc3b719afb4fc8.png)
