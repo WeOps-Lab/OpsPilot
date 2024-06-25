@@ -8,6 +8,7 @@ from PIL.Image import Image
 from langchain_core.documents import Document
 from rapidocr_onnxruntime import RapidOCR
 from tqdm import tqdm
+from loguru import logger
 
 
 class PDFLoader:
@@ -41,13 +42,16 @@ class PDFLoader:
         return rotated_img
 
     def load(self) -> List[Document]:
-        docs = []
-        with pdfplumber.open(self.file_path) as pdf:
-            raw_text_list = []
-            table_text_list = []
-            ocr_text_list = []
+        logger.info(f'开始解析PDF文件：{self.file_path}')
 
-            # 处理文本与表格
+        docs = []
+
+        raw_text_list = []
+        table_text_list = []
+        ocr_text_list = []
+
+        with pdfplumber.open(self.file_path) as pdf:
+            # 解析文本和表格
             for page in tqdm(pdf.pages):
                 raw_text_list.append(page.extract_text())
                 table = page.extract_table()
