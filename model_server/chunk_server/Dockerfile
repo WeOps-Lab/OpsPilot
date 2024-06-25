@@ -15,6 +15,8 @@ RUN pip install -r requirements.in
 ADD ./embedding ./embedding
 ADD ./loader ./loader
 ADD ./utils ./utils
+ADD ./runnable ./runnable
+ADD ./user_types ./user_types
 ADD ./server.py ./server.py
 
 CMD ["supervisord", "-n"]
