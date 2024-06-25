@@ -18,7 +18,6 @@ class LLMService:
             knowledge_base_folder_list = llm_skill.knowledge_base_folders.all()
             rag_result = self.knowledge_search_service.search(knowledge_base_folder_list, user_message,
                                                               score_threshold=llm_skill.rag_score_threshold)
-
             for r in rag_result:
                 context += r['content'].replace("{", "").replace("}", "") + "\n"
 

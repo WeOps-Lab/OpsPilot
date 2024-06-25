@@ -83,7 +83,7 @@ class ModelProviderInitService:
         llm_model = LLMModel.objects.get(name="GPT-3.5 Turbo 16K")
 
         prompt = """
-        参考信息：
+对话记录：
         {chat_history}
         ---
         我的问题或指令：
@@ -92,7 +92,9 @@ class ModelProviderInitService:
         请根据上述参考信息回答我的问题或回复我的指令。前面的参考信息可能有用，也可能没用，
         你需要从我给出的参考信息中选出与我的问题最相关的那些，来为你的回答提供依据。
         回答一定要忠于原文，简洁但不丢信息，不要胡乱编造。我的问题或指令是什么语种，你就用什么语种回复,
-        你的回复：                                 
+注意：
+     1. 表格型的背景会以Markdown表格的格式提供
+     2. Excel解析的背景知识，会以： 表头:内容 表头2: 内容  这样的格式提供                             
                         """
         LLMSkill.objects.get_or_create(
             name="开放问答(GPT3.5-16k)",
