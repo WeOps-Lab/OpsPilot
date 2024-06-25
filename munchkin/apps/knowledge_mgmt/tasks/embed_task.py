@@ -1,7 +1,6 @@
 from apps.knowledge_mgmt.models import FileKnowledge, KnowledgeBaseFolder, ManualKnowledge, WebPageKnowledge
 from apps.model_provider_mgmt.services.remote_embeddings import RemoteEmbeddings
 from dotenv import load_dotenv
-from elasticsearch import Elasticsearch
 from langserve import RemoteRunnable
 from loguru import logger
 from tqdm import tqdm
@@ -24,12 +23,9 @@ def general_embed(knowledge_base_folder_id):
     manual_remote = RemoteRunnable(MANUAL_CHUNK_SERVICE_URL)
     web_page_remote = RemoteRunnable(WEB_PAGE_CHUNK_SERVICE_URL)
     remote_indexer = RemoteRunnable(REMOTE_INDEX_URL)
-    es = Elasticsearch(hosts=[ELASTICSEARCH_URL], http_auth=("elastic", ELASTICSEARCH_PASSWORD))
 
     knowledge_base_folder = KnowledgeBaseFolder.objects.get(id=knowledge_base_folder_id)
     index_name = knowledge_base_folder.knowledge_index_name()
-    es.indices.delete(index=index_name, ignore=[400, 404])
-    es.close()
 
     try:
         knowledge_base_folder.train_status = 1
@@ -56,7 +52,7 @@ def general_embed(knowledge_base_folder_id):
         total_knowledges = len(knowledges)
         for index, knowledge in tqdm(enumerate(knowledges)):
             knowledge_docs = []
-            embedding_service = RemoteEmbeddings(knowledge_base_folder.embed_model)
+            
             if isinstance(knowledge, FileKnowledge):
                 logger.debug(f"开始处理文件知识: {knowledge.title}")
                 semantic_embedding_address = ""
