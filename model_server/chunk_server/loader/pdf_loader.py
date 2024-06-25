@@ -1,15 +1,13 @@
 from typing import List
 
 import cv2
-import fitz
 import numpy as np
 import pdfplumber
-from PIL.Image import Image
 from langchain_core.documents import Document
+from loguru import logger
 from rapid_table import RapidTable
 from rapidocr_onnxruntime import RapidOCR
 from tqdm import tqdm
-from loguru import logger
 
 
 class PDFLoader:
@@ -58,43 +56,35 @@ class PDFLoader:
                 raw_text_list.append(page.extract_text())
                 table = page.extract_table()
 
-                if table:
-                    table_text_list.append(table)
-
-            # 移除重复的表格信息
-            table_texts = ['\n'.join([' '.join(row) for row in table_entity]) for table_entity in table_text_list]
-            for i, text in enumerate(raw_text_list):
-                for table_text in table_texts:
-                    if table_text in text:
-                        raw_text_list[i] = text.replace(table_text, ' ')
+                if table is not None:
+                    table_text_list.append(str(table))
 
             # OCR识别图片
-            doc = fitz.open(self.file_path)
-            for i, page in tqdm(enumerate(doc)):
-                img_list = page.get_image_info(xrefs=True)
-                for img in img_list:
-                    if xref := img.get("xref"):
-                        pix = fitz.Pixmap(doc, xref)
-
-                        if int(page.rotation) != 0:
-                            img_array = np.frombuffer(pix.samples, dtype=np.uint8).reshape(pix.height, pix.width, -1)
-                            tmp_img = Image.fromarray(img_array)
-                            ori_img = cv2.cvtColor(np.array(tmp_img), cv2.COLOR_RGB2BGR)
-                            rot_img = self.rotate_img(img=ori_img, angle=360 - page.rotation)
-                            img_array = cv2.cvtColor(rot_img, cv2.COLOR_RGB2BGR)
-                        else:
-                            img_array = np.frombuffer(pix.samples, dtype=np.uint8).reshape(pix.height, pix.width, -1)
-                        result, _ = self.ocr(img_array)
-                        if result:
-                            ocr_result = [line[1] for line in result]
-                            ocr_text_list.append('\n'.join(ocr_result))
-
+            # doc = fitz.open(self.file_path)
+            # for i, page in tqdm(enumerate(doc)):
+            #     img_list = page.get_image_info(xrefs=True)
+            #     for img in img_list:
+            #         if xref := img.get("xref"):
+            #             pix = fitz.Pixmap(doc, xref)
+            #
+            #             if int(page.rotation) != 0:
+            #                 img_array = np.frombuffer(pix.samples, dtype=np.uint8).reshape(pix.height, pix.width, -1)
+            #                 tmp_img = Image.fromarray(img_array)
+            #                 ori_img = cv2.cvtColor(np.array(tmp_img), cv2.COLOR_RGB2BGR)
+            #                 rot_img = self.rotate_img(img=ori_img, angle=360 - page.rotation)
+            #                 img_array = cv2.cvtColor(rot_img, cv2.COLOR_RGB2BGR)
+            #             else:
+            #                 img_array = np.frombuffer(pix.samples, dtype=np.uint8).reshape(pix.height, pix.width, -1)
+            #             result, _ = self.ocr(img_array)
+            #             if result:
+            #                 ocr_result = [line[1] for line in result]
+            #                 ocr_text_list.append('\n'.join(ocr_result))
+            logger.info(f'解析PDF文件完成：{self.file_path}')
             # 组装数据
             for text in raw_text_list:
                 docs.append(Document(text))
 
-            for table_entity in table_text_list:
-                table_text = '\n'.join([' '.join(row) for row in table_entity])
+            for table_text in table_text_list:
                 docs.append(Document(table_text, metadata={"format": "table"}))
 
             for text in ocr_text_list:
