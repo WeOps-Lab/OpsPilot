@@ -11,12 +11,17 @@ docker build -t ccr.ccs.tencentyun.com/megalab/bce-embed-server .
 
 cd ../chunk_server
 docker build -t ccr.ccs.tencentyun.com/megalab/chunk-server .
+docker push ccr.ccs.tencentyun.com/megalab/chunk-server
 
 cd ../rag_server
 docker build -t ccr.ccs.tencentyun.com/megalab/rag-server .
 
 cd ../pandoc_server
 docker build -t ccr.ccs.tencentyun.com/megalab/pandoc-server .
+
+cd ../chat_server
+docker build -t ccr.ccs.tencentyun.com/megalab/chat-server .
+docker push ccr.ccs.tencentyun.com/megalab/chat-server
 
 
 

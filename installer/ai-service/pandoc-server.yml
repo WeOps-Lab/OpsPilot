@@ -14,7 +14,7 @@ spec:
         app: pandoc-server
     spec:
       containers:
-        - name: fast-embed-server
+        - name: pandoc-server
           image: ccr.ccs.tencentyun.com/megalab/pandoc-server
           ports:
             - containerPort: 8103

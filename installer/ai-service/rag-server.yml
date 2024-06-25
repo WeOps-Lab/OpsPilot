@@ -14,7 +14,7 @@ spec:
         app: rag-server
     spec:
       containers:
-        - name: fast-embed-server
+        - name: rag-server
           image: ccr.ccs.tencentyun.com/megalab/rag-server
           ports:
             - containerPort: 8106

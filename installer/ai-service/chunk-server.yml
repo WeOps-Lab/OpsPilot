@@ -14,7 +14,7 @@ spec:
         app: chunk-server
     spec:
       containers:
-        - name: fast-embed-server
+        - name: chunk-server
           image: ccr.ccs.tencentyun.com/megalab/chunk-server
           ports:
             - containerPort: 8104
