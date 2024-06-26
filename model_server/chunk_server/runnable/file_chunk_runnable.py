@@ -49,7 +49,7 @@ class FileChunkRunnable(BaseChunkRunnable):
                 elif file_type in [".jpg", ".png"]:
                     loader = ImageLoader(f.name, mode="single")
                 elif file_type in [".doc", ".docx"]:
-                    loader = DocLoader(f.name, mode="single")
+                    loader = DocLoader(f.name)
                 elif file_type in [".xls", ".xlsx"]:
                     loader = ExcelLoader(f.name)
                 else:

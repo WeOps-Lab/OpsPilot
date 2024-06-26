@@ -1,12 +1,30 @@
-from typing import List
+import docx
+from langchain_core.documents import Document
+from tqdm import tqdm
 
-from langchain_community.document_loaders import UnstructuredFileLoader
-from unstructured.partition.text import partition_text
 
+class DocLoader():
+    def __init__(self, file_path):
+        self.file_path = file_path
 
-class DocLoader(UnstructuredFileLoader):
-    def _get_elements(self) -> List:
-        from utils.doc import doc2text
+    def table_to_md(self, table):
+        md_table = []
 
-        text = doc2text(self.file_path)
-        return partition_text(text=text, **self.unstructured_kwargs)
+        for row in table.rows:
+            md_row = '| ' + ' | '.join(cell.text for cell in row.cells) + ' |'
+            md_table.append(md_row)
+
+        return '\n'.join(md_table)
+
+    def load(self):
+        docs = []
+
+        document = docx.Document(self.file_path)
+        paragraphs = document.paragraphs
+        for paragraph in tqdm(paragraphs):
+            docs.append(Document(paragraph.text))
+
+        tables = document.tables
+        for table in tqdm(tables):
+            docs.append(Document(self.table_to_md(table), metadata={"format": "table"}))
+        return docs
