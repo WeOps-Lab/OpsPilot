@@ -50,9 +50,8 @@ def general_embed(knowledge_base_folder_id):
             knowledges.append(obj)
 
         total_knowledges = len(knowledges)
+        knowledge_docs = []
         for index, knowledge in tqdm(enumerate(knowledges)):
-            knowledge_docs = []
-            
             if isinstance(knowledge, FileKnowledge):
                 logger.debug(f"开始处理文件知识: {knowledge.title}")
                 semantic_embedding_address = ""
@@ -86,9 +85,10 @@ def general_embed(knowledge_base_folder_id):
                         "recursive_chunk_size": knowledge_base_folder.general_parse_chunk_size,
                         "recursive_chunk_overlap": knowledge_base_folder.general_parse_chunk_overlap,
                         "enable_semantic_chunck_parse": knowledge_base_folder.enable_semantic_chunck_parse,
-                        "semantic_embedding_address": knowledge_base_folder.semantic_chunk_parse_embedding_model.embed_config[
-                            "base_url"
-                        ],
+                        "semantic_embedding_address":
+                            knowledge_base_folder.semantic_chunk_parse_embedding_model.embed_config[
+                                "base_url"
+                            ],
                         "content": knowledge.content,
                         "custom_metadata": {
                             "knowledge_type": "manual",
@@ -106,9 +106,10 @@ def general_embed(knowledge_base_folder_id):
                         "recursive_chunk_size": knowledge_base_folder.general_parse_chunk_size,
                         "recursive_chunk_overlap": knowledge_base_folder.general_parse_chunk_overlap,
                         "enable_semantic_chunck_parse": knowledge_base_folder.enable_semantic_chunck_parse,
-                        "semantic_embedding_address": knowledge_base_folder.semantic_chunk_parse_embedding_model.embed_config[
-                            "base_url"
-                        ],
+                        "semantic_embedding_address":
+                            knowledge_base_folder.semantic_chunk_parse_embedding_model.embed_config[
+                                "base_url"
+                            ],
                         "url": knowledge.url,
                         "max_depth": 1,
                         "custom_metadata": {
@@ -126,22 +127,22 @@ def general_embed(knowledge_base_folder_id):
                 for key, value in knowledge.custom_metadata.items():
                     doc.metadata[key] = value
 
-            logger.debug(f"开始生成知识库[{knowledge_base_folder_id}]的Embedding索引")
-            remote_indexer.invoke(
-                {
-                    "elasticsearch_url": ELASTICSEARCH_URL,
-                    "elasticsearch_password": ELASTICSEARCH_PASSWORD,
-                    "embed_model_address": knowledge_base_folder.embed_model.embed_config["base_url"],
-                    "index_name": index_name,
-                    "index_mode": "append",
-                    "docs": knowledge_docs,
-                }
-            )
-
             progress = round((index + 1) / total_knowledges * 100, 2)
             logger.debug(f"知识库[{knowledge_base_folder_id}]的Embedding索引生成进度: {progress:.2f}%")
             knowledge_base_folder.train_progress = progress
             knowledge_base_folder.save()
+
+        logger.debug(f"开始写入知识库[{knowledge_base_folder_id}]")
+        remote_indexer.invoke(
+            {
+                "elasticsearch_url": ELASTICSEARCH_URL,
+                "elasticsearch_password": ELASTICSEARCH_PASSWORD,
+                "embed_model_address": knowledge_base_folder.embed_model.embed_config["base_url"],
+                "index_name": index_name,
+                "index_mode": "overwrite",
+                "docs": knowledge_docs,
+            }
+        )
 
         knowledge_base_folder.train_status = 2
         knowledge_base_folder.train_progress = 100
