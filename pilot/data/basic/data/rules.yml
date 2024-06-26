@@ -5,12 +5,21 @@ rules:
     steps:
       - intent: EXTERNAL_UTTER
       - action: action_external_utter
+
   - rule: Fallback
     steps:
       - intent: nlu_fallback
       - action: action_llm_fallback
+
   - rule: out_of_scope
     steps:
       - intent: out_of_scope
       - action: action_llm_fallback
+
+  - rule: 重置对话
+    steps:
+      - intent: reset
+      - action: utter_restart_conversation
+      - action: action_restart
+
 

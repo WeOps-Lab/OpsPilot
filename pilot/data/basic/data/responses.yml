@@ -1,0 +1,4 @@
+version: "3.1"
+responses:
+  utter_restart_conversation:
+    - text: "对话已重置"

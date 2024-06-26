@@ -18,5 +18,5 @@ class RasaModelAdmin(GuardedAdminBase):
     ordering = ["id"]
 
     fieldsets = (
-        (None, {"fields": ("name", "description", "content_packs")}),
+        (None, {"fields": ("name", 'model_file', "description")}),
     )
