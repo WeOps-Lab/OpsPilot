@@ -2,7 +2,7 @@
 
 OpsPilot是WeOps团队开源的一个基于前沿人工智能技术凝聚而成的智能运维助理。它采用先进的机器学习、深度学习以及前沿的大模型能力来作为AI能力、以丰富的运维整合能力作为支撑，提供智能运维服务
 
-![chatbot.png](https://static.cwoa.net/4c4963e9e7ac4cc2b614299f0626c56c.png)
+![架构图.jpg](https://static.cwoa.net/01adc49936ae41d68dded993461a7dd0.jpg)
 
 OpsPilot包含三大主要能力：
 
