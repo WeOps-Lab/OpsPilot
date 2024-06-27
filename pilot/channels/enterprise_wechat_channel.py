@@ -60,6 +60,7 @@ class EnterpriseWechatChannel(InputChannel):
             credentials.get("token"),
             credentials.get("aes_key"),
             credentials.get("agent_id"),
+            credentials.get("enable_eventbus", False),
         )
 
     async def send_message(self, on_new_message, query, reply_user_id):
