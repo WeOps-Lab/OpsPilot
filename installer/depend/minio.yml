@@ -38,7 +38,7 @@ spec:
     - metadata:
         name: minio-data
       spec:
-        storageClassName: hostpath
+        storageClassName: local-path
         accessModes:
           - ReadWriteOnce
         resources:
