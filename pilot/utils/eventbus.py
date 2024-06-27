@@ -17,6 +17,9 @@ class EventBus:
     def get_notification_event_content(self, event):
         return event['notification_content']
 
+    def get_notification_event_sender_id(self, event):
+        return event['sender_id']
+
     def prepare_eventbus(self):
         connection = pika.BlockingConnection(
             pika.ConnectionParameters(host=server_settings.rabbitmq_host, port=server_settings.rabbitmq_port,

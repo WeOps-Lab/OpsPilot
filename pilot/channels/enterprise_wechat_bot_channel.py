@@ -8,6 +8,9 @@ from requests import Request
 from sanic import Blueprint, response
 
 from utils.eventbus import EventBus
+import os
+
+from loguru import logger
 
 
 class EnterpriseWechatBotChannel(InputChannel):
@@ -19,10 +22,13 @@ class EnterpriseWechatBotChannel(InputChannel):
 
         self.enterprise_bot_url = enterprise_bot_url
         self.secret_token = secret_token
+        self.bot_id = os.getenv('MUNCHKIN_BOT_ID', "")
 
         if enable_eventbus:
+            queue_name = f"enterprise_wechat_bot_channel_{self.bot_id}"
+            logger.info(f"启动Pilot消息总线:[{queue_name}]")
             self.event_bus = EventBus()
-            self.event_bus.consume('enterprise_wechat_bot_channel', self.recieve_event)
+            self.event_bus.consume(queue_name, self.recieve_event)
 
     def send_enterprise_wechat_bot_message(self, url: str, content: str):
         """

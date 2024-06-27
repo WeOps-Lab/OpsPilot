@@ -1,5 +1,6 @@
 import asyncio
 import inspect
+import os
 from typing import Dict, Optional, Text, Any, Callable, Awaitable
 
 from logging import getLogger
@@ -13,6 +14,8 @@ from sanic.request import Request
 from sanic.response import HTTPResponse
 from wechatpy.enterprise import WeChatClient, WeChatCrypto, parse_message
 
+from utils.eventbus import EventBus
+
 logger = getLogger(__name__)
 
 
@@ -20,7 +23,7 @@ class EnterpriseWechatChannel(InputChannel):
     def name(self) -> Text:
         return "enterprise_wechat"
 
-    def __init__(self, corp_id, secret, token, aes_key, agent_id) -> None:
+    def __init__(self, corp_id, secret, token, aes_key, agent_id, enable_eventbus) -> None:
         super().__init__()
 
         self.corp_id = corp_id
@@ -35,6 +38,19 @@ class EnterpriseWechatChannel(InputChannel):
             corp_id,
             secret,
         )
+
+        self.bot_id = os.getenv('MUNCHKIN_BOT_ID', "")
+        if enable_eventbus:
+            queue_name = f"enterprise_wechat_{self.bot_id}"
+            logger.info(f"启动Pilot消息总线:[{queue_name}]")
+            self.event_bus = EventBus()
+            self.event_bus.consume(queue_name, self.recieve_event)
+
+    def recieve_event(self, event):
+        if self.event_bus.is_notification_event(event):
+            reply_user_id = self.event_bus.get_notification_event_sender_id(event)
+            reply_text = self.event_bus.get_notification_event_content(event)
+            self.wechat_client.message.send_markdown(self.agent_id, reply_user_id, reply_text)
 
     @classmethod
     def from_credentials(cls, credentials: Optional[Dict[Text, Any]]) -> "InputChannel":
