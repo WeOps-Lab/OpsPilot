@@ -33,7 +33,7 @@ spec:
     - metadata:
         name: postgres-data
       spec:
-        storageClassName: hostpath
+        storageClassName: local-path
         accessModes:
           - ReadWriteOnce
         resources:

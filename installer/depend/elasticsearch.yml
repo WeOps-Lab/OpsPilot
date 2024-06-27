@@ -42,7 +42,7 @@ spec:
     - metadata:
         name: elasticsearch-data
       spec:
-        storageClassName: hostpath
+        storageClassName: local-path
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
