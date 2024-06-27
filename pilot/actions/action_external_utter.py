@@ -1,3 +1,4 @@
+import json
 import os
 from typing import Text, Dict, Any, List
 
@@ -36,6 +37,6 @@ class ActionExternalUtter(Action):
                 "sender_id": sender_id
             }
             eventbus = EventBus()
-            eventbus.publish(self.queue_name, data)
+            eventbus.publish(json.dumps(data))
         else:
             dispatcher.utter_message(content)
