@@ -6,7 +6,8 @@ from loguru import logger
 from nanoid import generate
 from rest_framework.authtoken.models import Token
 
-from munchkin.components.conversation_mq import CONVERSATION_MQ_PASSWORD, CONVERSATION_MQ_USER
+from munchkin.components.conversation_mq import CONVERSATION_MQ_PASSWORD, CONVERSATION_MQ_USER, CONVERSATION_MQ_HOST, \
+    CONVERSATION_MQ_PORT
 from munchkin.components.kubernetes import KUBE_CONFIG_FILE
 from munchkin.components.pilot import MUNCHKIN_BASE_URL
 
@@ -41,6 +42,8 @@ class KubernetesClient:
             "bot_id": bot.id,
             "api_key": token.key,
             "base_url": MUNCHKIN_BASE_URL,
+            "rabbitmq_host": CONVERSATION_MQ_HOST,
+            "rabbitmq_port": CONVERSATION_MQ_PORT,
             "rabbitmq_user": CONVERSATION_MQ_USER,
             "rabbitmq_password": CONVERSATION_MQ_PASSWORD,
             "enable_ssl": bot.enable_ssl,
