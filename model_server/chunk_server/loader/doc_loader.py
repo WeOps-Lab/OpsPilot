@@ -21,10 +21,10 @@ class DocLoader():
 
         document = docx.Document(self.file_path)
         paragraphs = document.paragraphs
-        for paragraph in tqdm(paragraphs):
+        for paragraph in tqdm(paragraphs, desc=f"解析[{self.file_path}]的段落"):
             docs.append(Document(paragraph.text))
 
         tables = document.tables
-        for table in tqdm(tables):
+        for table in tqdm(tables, desc=f"解析[{self.file_path}]的表格"):
             docs.append(Document(self.table_to_md(table), metadata={"format": "table"}))
         return docs

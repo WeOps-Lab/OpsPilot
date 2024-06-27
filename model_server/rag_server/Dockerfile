@@ -7,6 +7,8 @@ RUN pip install -r requirements.in
 ADD ./conf/service.conf /etc/supervisor/conf.d/service.conf
 ADD ./embedding ./embedding
 
+ADD ./runnable ./runnable
+ADD ./user_types ./user_types
 ADD ./server.py ./server.py
 
 CMD ["supervisord", "-n"]

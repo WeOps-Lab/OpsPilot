@@ -73,8 +73,14 @@ class KnowledgeBaseFolderAdmin(GuardedAdminBase):
 
     @action(description="训练", url_path="train_embed_model")
     def train_embed(self, request: HttpRequest, knowledges):
+        # 检查knowledges是否在 处理中
+        if any(knowledge.train_status == 1 for knowledge in knowledges):
+            messages.error(request, "知识库正在训练中，请稍后再试")
+            return redirect(reverse("admin:knowledge_mgmt_knowledgebasefolder_changelist"))
+
         for knowledge in knowledges:
             general_embed.delay(knowledge.id)
+
         messages.success(request, "开始训练")
         return redirect(reverse("admin:knowledge_mgmt_knowledgebasefolder_changelist"))
 

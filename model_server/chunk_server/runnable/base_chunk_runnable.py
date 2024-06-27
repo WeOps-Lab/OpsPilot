@@ -43,4 +43,7 @@ class BaseChunkRunnable:
             if 'source' in doc.metadata:
                 del doc.metadata["source"]
         docs = docs + table_docs
+
+        logger.info(f'最终文档数：{len(docs)}')
+
         return docs
