@@ -1167,8 +1167,8 @@
     },
     {
       "type": "rectangle",
-      "version": 950,
-      "versionNonce": 998392672,
+      "version": 952,
+      "versionNonce": 1700478742,
       "isDeleted": false,
       "id": "PbaSeIB56dcvY_thMbnBH",
       "fillStyle": "hachure",
@@ -1223,7 +1223,7 @@
           "type": "arrow"
         }
       ],
-      "updated": 1719286295960,
+      "updated": 1719470653893,
       "link": null,
       "locked": false
     },
