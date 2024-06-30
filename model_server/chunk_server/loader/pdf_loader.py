@@ -1,9 +1,14 @@
+import io
+import re
 from typing import List
-
+from numpy import asarray
+import numpy as np
 import pdfplumber
+from PIL import Image
 from langchain_core.documents import Document
 from loguru import logger
 from tqdm import tqdm
+import fitz
 
 
 class PDFLoader:
@@ -23,16 +28,37 @@ class PDFLoader:
 
         return markdown_table
 
+    def remove_unicode_chars(self, text):
+        return re.sub(r'\\u[fF]{1}[0-9a-fA-F]{3}', '', text)
+
     def load(self) -> List[Document]:
 
         table_docs = []
         text_docs = []
 
+        # 解析图片
+        with fitz.Document(self.file_path) as pdf:
+            for page_number in tqdm(range(1, len(pdf) + 1), desc=f"解析PDF图片[{self.file_path}]"):
+                page = pdf[page_number - 1]
+                for image_number, image in enumerate(page.get_images(), start=1):
+                    xref_value = image[0]
+                    base_image = pdf.extract_image(xref_value)
+                    image_bytes = base_image["image"]
+                    pix = Image.open(io.BytesIO(image_bytes))
+                    np_array = asarray(pix)
+
         with pdfplumber.open(self.file_path) as pdf:
+
             # 解析文本
+            full_text = ""
             for page in tqdm(pdf.pages, desc=f"解析PDF文本[{self.file_path}]"):
                 raw_text = page.extract_text().replace("\n", " ").strip()
-                text_docs.append(Document(raw_text))
+                raw_text = self.remove_unicode_chars(raw_text)
+                if raw_text != '':
+                    full_text += raw_text
+
+            if full_text:
+                text_docs.append(Document(full_text))
 
             # 解析表格
             for page in tqdm(pdf.pages, desc=f"解析PDF表格[{self.file_path}]"):
@@ -42,8 +68,11 @@ class PDFLoader:
                         # 如果表格的所有单元格都为空或None，跳过这个表格
                         if all(not cell or cell.isspace() for row in table for cell in row):
                             continue
-                        table_docs.append(Document(self.table_to_markdown(table), metadata={"format": "table"}))
+                        content = self.table_to_markdown(table)
+                        content = self.remove_unicode_chars(content)
+                        table_docs.append(Document(content, metadata={"format": "table"}))
 
             logger.info(f'解析PDF文件完成：{self.file_path}')
 
-        return text_docs + table_docs
+        all_docs = text_docs + table_docs
+        return all_docs

@@ -19,10 +19,12 @@ class DocLoader():
     def load(self):
         docs = []
 
+        full_text = ""
         document = docx.Document(self.file_path)
         paragraphs = document.paragraphs
         for paragraph in tqdm(paragraphs, desc=f"解析[{self.file_path}]的段落"):
-            docs.append(Document(paragraph.text))
+            full_text += paragraph.text.replace('\n', ' ').strip()
+        docs.append(Document(full_text))
 
         tables = document.tables
         for table in tqdm(tables, desc=f"解析[{self.file_path}]的表格"):

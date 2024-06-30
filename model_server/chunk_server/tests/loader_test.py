@@ -10,6 +10,7 @@ class LoaderTest(unittest.TestCase):
     def test_load_pdf(self):
         loader = PDFLoader('./asserts/WeOps用户指南.pdf')
         docs = loader.load()
+        logger.info(f'共[{len(docs)}]个文档')
 
     def test_load_excel(self):
         loader = ExcelLoader('./asserts/需求.xlsx')
