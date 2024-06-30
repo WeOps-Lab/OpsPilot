@@ -8,5 +8,6 @@ RUN pip install -r requirements.in
 
 ADD ./utils ./utils
 ADD ./server.py ./server.py
-
+ADD ./user_types ./user_types
+ADD ./runnable ./runnable
 CMD ["supervisord", "-n"]
