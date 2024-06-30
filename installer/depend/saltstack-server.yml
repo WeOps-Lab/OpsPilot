@@ -23,29 +23,11 @@ spec:
               value: "password"
           volumeMounts:
             - name: saltstack-master-vol
-              mountPath: /etc/salt/master.d
-              subPath: master.d
-            - name: saltstack-master-vol
-              mountPath: /etc/salt/pki/master
+              mountPath: /etc/salt/pki/
               subPath: master-pki
             - name: saltstack-master-vol
-              mountPath: /var/cache/salt/master
-              subPath: master-cache
-            - name: saltstack-master-vol
-              mountPath: /var/log/salt/master
-              subPath: master-logs
-            - name: saltstack-minion-vol
-              mountPath: /etc/salt/minion.d
-              subPath: minion-config
-            - name: saltstack-minion-vol
-              mountPath: /etc/salt/pki/minion
-              subPath: minion-pki
-            - name: saltstack-minion-vol
-              mountPath: /var/cache/salt/minion
-              subPath: minion-cache
-            - name: saltstack-minion-vol
-              mountPath: /var/log/salt/minion
-              subPath: minion-logs            
+              mountPath: /var/cache/salt
+              subPath: master-cache                           
   volumeClaimTemplates:
     - metadata:
         name: saltstack-master-vol
@@ -53,14 +35,7 @@ spec:
         accessModes: [ "ReadWriteOnce" ]
         resources:
           requests:
-            storage: 5Gi            
-    - metadata:
-        name: saltstack-minion-vol
-      spec:
-        accessModes: [ "ReadWriteOnce" ]
-        resources:
-          requests:
-            storage: 1Gi              
+            storage: 5Gi                       
 ---
 apiVersion: v1
 kind: Service
