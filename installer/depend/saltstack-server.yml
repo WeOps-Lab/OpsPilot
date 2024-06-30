@@ -19,29 +19,6 @@ spec:
           env:
             - name: SALTAPI_PASSWORD
               value: "password"
-          volumeMounts:
-            - name: salt-config
-              mountPath: /etc/salt
-            - name: salt-log
-              mountPath: /var/log/salt
-            - name: salt-cache
-              mountPath: /var/cache/salt
-            - name: srv-salt
-              mountPath: /srv/salt
-            - name: srv-pillar
-              mountPath: /srv/pillar
-      volumes:
-        - name: salt-config
-          emptyDir: {}
-        - name: salt-log
-          emptyDir: {}
-        - name: salt-cache
-          emptyDir: {}
-        - name: srv-salt
-          emptyDir: {}
-        - name: srv-pillar
-          emptyDir: {}
-
 ---
 apiVersion: v1
 kind: Service
