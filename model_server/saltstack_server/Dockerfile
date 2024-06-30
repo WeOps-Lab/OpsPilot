@@ -24,6 +24,7 @@ ADD ./config/salt/master /etc/salt/master
 ADD ./config/salt/minion /etc/salt/minion
 ADD ./config/supervisor/salt-master.conf /etc/supervisor/conf.d/salt-master.conf
 ADD ./config/supervisor/salt-api.conf /etc/supervisor/conf.d/salt-api.conf
+ADD ./config/supervisor/salt-minion.conf /etc/supervisor/conf.d/salt-minion.conf
 
 RUN /opt/saltstack/salt/bin/pip install psycopg2-binary sqlalchemy records
 

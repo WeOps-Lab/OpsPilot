@@ -1,9 +1,11 @@
+
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: saltstack-server
   namespace: ops-pilot
 spec:
+  serviceName: "saltstack-server"
   replicas: 1
   selector:
     matchLabels:
@@ -19,6 +21,46 @@ spec:
           env:
             - name: SALTAPI_PASSWORD
               value: "password"
+          volumeMounts:
+            - name: saltstack-master-vol
+              mountPath: /etc/salt/master.d
+              subPath: master.d
+            - name: saltstack-master-vol
+              mountPath: /etc/salt/pki/master
+              subPath: master-pki
+            - name: saltstack-master-vol
+              mountPath: /var/cache/salt/master
+              subPath: master-cache
+            - name: saltstack-master-vol
+              mountPath: /var/log/salt/master
+              subPath: master-logs
+            - name: saltstack-minion-vol
+              mountPath: /etc/salt/minion.d
+              subPath: minion-config
+            - name: saltstack-minion-vol
+              mountPath: /etc/salt/pki/minion
+              subPath: minion-pki
+            - name: saltstack-minion-vol
+              mountPath: /var/cache/salt/minion
+              subPath: minion-cache
+            - name: saltstack-minion-vol
+              mountPath: /var/log/salt/minion
+              subPath: minion-logs            
+  volumeClaimTemplates:
+    - metadata:
+        name: saltstack-master-vol
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 5Gi            
+    - metadata:
+        name: saltstack-minion-vol
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 1Gi              
 ---
 apiVersion: v1
 kind: Service
