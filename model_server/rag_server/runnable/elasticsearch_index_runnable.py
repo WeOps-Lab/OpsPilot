@@ -20,7 +20,12 @@ class ElasticSearchIndexRunnable:
             es.indices.delete(index=req.index_name)
 
         db = ElasticsearchStore.from_documents(
-            req.docs, embedding=embedding_service, es_connection=es, index_name=req.index_name
+            req.docs, embedding=embedding_service,
+            es_connection=es, index_name=req.index_name,
+            bulk_kwargs={
+                "chunk_size": 50,
+                "max_chunk_bytes": 200000000
+            }
         )
         db.client.indices.refresh(index=req.index_name)
         return True
