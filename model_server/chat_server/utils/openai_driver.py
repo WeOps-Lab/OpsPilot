@@ -43,7 +43,10 @@ class OpenAIDriver:
             rag_content="",
     ):
         if rag_content:
-            system_message_prompt = f"\n\n背景知识:{rag_content}\n\n{system_message_prompt}"
+            system_message_prompt = f"""
+                以下是提供给你的背景知识:{rag_content}
+                任务: {system_message_prompt}
+            """
 
         prompt = PromptTemplate(input_variables=["chat_history", "input"], template=system_message_prompt)
         memory = ConversationBufferWindowMemory(memory_key="chat_history", chat_memory=message_history, k=window_size)
