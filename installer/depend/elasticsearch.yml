@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: elasticsearch
-          image: elasticsearch:8.12.1
+          image: ccr.ccs.tencentyun.com/megalab/pilot-elasticsearch
           env:
             - name: discovery.type
               value: "single-node"
