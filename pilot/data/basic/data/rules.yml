@@ -22,4 +22,9 @@ rules:
       - action: utter_restart_conversation
       - action: action_restart
 
+  - rule: 执行自动化技能
+    steps:
+      - intent: execute_automation_skill
+      - action: action_automation
+
 

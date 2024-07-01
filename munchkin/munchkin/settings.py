@@ -18,5 +18,6 @@ include(
     "components/pilot.py",
     "components/bk_login.py",
     "components/remote_service.py",
+    "components/automation.py",
     optional("local_settings.py"),
 )

@@ -28,7 +28,7 @@ tensorboard:
 	tensorboard --logdir ./tensorboard
 
 interactive:
-	rasa interactive -d data/dev -m models/ops-pilot.tar.gz
+	rasa interactive -d data/basic/data -m models/ops-pilot.tar.gz
 
 release:
 	docker build -t ccr.ccs.tencentyun.com/megalab/ops-pilot .
@@ -42,7 +42,7 @@ finetune:
 	NUMEXPR_MAX_THREADS=16 rasa train --finetune  -d data --fixed-model-name ops-pilot --epoch-fraction 0.5
 
 visualize:
-	rasa visualize -d ./configs/bert/data
+	rasa visualize -d ./data/basic/data
 
 DOC_IMAGE_NAME ?= ops-pilot-doc:latest
 .PHONY: build-doc

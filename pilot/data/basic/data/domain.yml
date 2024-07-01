@@ -7,10 +7,10 @@ session_config:
 actions:
   - action_llm_fallback
   - action_external_utter
+  - action_automation
 
 entities:
   - content
-  - channel
 
 intents:
   - out_of_scope
