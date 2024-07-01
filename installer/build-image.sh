@@ -33,3 +33,6 @@ docker build -t ccr.ccs.tencentyun.com/megalab/munchkin .
 
 cd ../depend/elasticsearch
 docker build -t ccr.ccs.tencentyun.com/megalab/pilot-elasticsearch .
+
+cd ./saltstack_server
+docker build -t ccr.ccs.tencentyun.com/megalab/saltstack-server .
