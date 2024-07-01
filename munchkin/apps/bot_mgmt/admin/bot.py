@@ -82,7 +82,7 @@ class BotAdmin(GuardedAdminBase):
 
     @action(description="上线", url_path="start_pilot")
     def start_pilot(self, request: HttpRequest, bots):
-        client = KubernetesClient("argo")
+        client = KubernetesClient()
         for bot in bots:
             client.start_pilot(bot)
             bot.online = True
@@ -92,7 +92,7 @@ class BotAdmin(GuardedAdminBase):
 
     @action(description="下线", url_path="stop_pilot")
     def stop_pilot(self, request: HttpRequest, bots):
-        client = KubernetesClient("argo")
+        client = KubernetesClient()
         for bot in bots:
             client.stop_pilot(bot.id)
             bot.online = False
