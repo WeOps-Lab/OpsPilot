@@ -1,14 +1,14 @@
 import io
 import re
 from typing import List
-from numpy import asarray
-import numpy as np
+
+import fitz
 import pdfplumber
 from PIL import Image
 from langchain_core.documents import Document
 from loguru import logger
+from numpy import asarray
 from tqdm import tqdm
-import fitz
 
 
 class PDFLoader:

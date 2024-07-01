@@ -19,7 +19,7 @@ app.add_middleware(
     expose_headers=["*"],
 )
 
-add_routes(app, FileChunkRunnable().instance(), path="/file_chunk", )
+add_routes(app, FileChunkRunnable().instance(), path="/file_chunk")
 
 add_routes(app, WebPageChunkRunnable().instance(), path="/webpage_chunk")
 

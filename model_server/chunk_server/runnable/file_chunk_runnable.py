@@ -14,6 +14,7 @@ from loader.excel_loader import ExcelLoader
 from loader.image_loader import ImageLoader
 from loader.pdf_loader import PDFLoader
 from loader.ppt_loader import PPTLoader
+from loader.text_loader import TextLoader
 from runnable.base_chunk_runnable import BaseChunkRunnable
 from user_types.file_chunk_request import FileChunkRequest
 
@@ -38,22 +39,20 @@ class FileChunkRunnable(BaseChunkRunnable):
                     files={'file': (pure_filename + file_type, content)}
                 )
                 f.write(response.content)
-                loader = PDFLoader(f.name, mode="single")
+                loader = PDFLoader(f.name)
             else:
                 f.write(content)
 
                 if file_type in [".ppt", ".pptx"]:
-                    loader = PPTLoader(f.name, mode="single")
+                    loader = PPTLoader(f.name)
                 elif file_type in [".pdf"]:
                     loader = PDFLoader(f.name)
-                elif file_type in [".jpg", ".png"]:
-                    loader = ImageLoader(f.name, mode="single")
                 elif file_type in [".doc", ".docx"]:
                     loader = DocLoader(f.name)
                 elif file_type in [".xls", ".xlsx"]:
                     loader = ExcelLoader(f.name)
                 else:
-                    loader = UnstructuredFileLoader(f.name, mode="single")
+                    loader = TextLoader(f.name)
 
             docs = loader.load()
             docs = self.parse_docs(docs, request)
