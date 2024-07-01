@@ -39,7 +39,7 @@ class BaseChunkRunnable:
 
         for doc in docs:
             doc.metadata.update(request.custom_metadata)
-            doc.page_content = doc.page_content.replace("\n", "").replace("\r", "").replace("\t", "").strip()
+            doc.page_content = doc.page_content.replace("\n", " ").replace("\r", " ").replace("\t", " ").strip()
             if 'source' in doc.metadata:
                 del doc.metadata["source"]
         docs = docs + table_docs
