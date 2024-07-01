@@ -30,3 +30,6 @@ docker build -t ccr.ccs.tencentyun.com/megalab/pilot .
 
 cd ../munchkin
 docker build -t ccr.ccs.tencentyun.com/megalab/munchkin .
+
+cd ../depend/elasticsearch
+docker build -t ccr.ccs.tencentyun.com/megalab/pilot-elasticsearch .
