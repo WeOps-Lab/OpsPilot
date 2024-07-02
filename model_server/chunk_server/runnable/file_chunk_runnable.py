@@ -11,7 +11,6 @@ from loguru import logger
 
 from loader.doc_loader import DocLoader
 from loader.excel_loader import ExcelLoader
-from loader.image_loader import ImageLoader
 from loader.pdf_loader import PDFLoader
 from loader.ppt_loader import PPTLoader
 from loader.text_loader import TextLoader

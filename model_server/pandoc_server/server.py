@@ -36,6 +36,8 @@ async def convert(output: Optional[str] = Form(...), file: UploadFile = File(...
                     "--template",
                     "./latex/eisvogel.latex",
                     "--listings",
+                    "-f",
+                    "markdown-raw_tex"
                 ],
                 capture_output=True,
                 text=True,

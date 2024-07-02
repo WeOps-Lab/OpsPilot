@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: prometheus-stack
+data:
+  prometheus.yml: |
+    global:
+        scrape_interval:   15s
+        evaluation_interval: 15s
+---        
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: prometheus
+  namespace: prometheus-stack
+spec:
+  serviceName: prometheus
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus:v2.48.0
+          args:
+            - '--web.enable-lifecycle'
+            - '--web.enable-remote-write-receiver'
+            - '--storage.tsdb.retention.size=10GB'
+            - '--storage.tsdb.retention.time=7d'
+            - '--storage.tsdb.wal-compression'
+            - '--config.file=/etc/prometheus/prometheus.yml'
+            - '--enable-feature=exemplar-storage'
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - name: prometheus-data
+              mountPath: /prometheus
+            - name: config-volume
+              mountPath: /etc/prometheus/prometheus.yml
+              subPath: prometheus.yml
+            - name: localtime-volume
+              mountPath: /etc/localtime
+              readOnly: true
+      volumes:
+        - name: config-volume
+          configMap:
+            name: prometheus-config
+        - name: localtime-volume
+          hostPath:
+            path: /etc/localtime
+  volumeClaimTemplates:
+    - metadata:
+        name: prometheus-data
+      spec:
+        storageClassName: local-path
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+  namespace: prometheus-stack
+spec:
+  selector:
+    app: prometheus
+  ports:
+    - protocol: TCP
+      port: 9090
+      targetPort: 9090
