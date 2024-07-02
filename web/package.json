@@ -15,7 +15,8 @@
     "@ant-design/pro-components": "^2.4.4",
     "@umijs/max": "^4.2.11",
     "antd": "^5.4.0",
-    "antd-style": "^3.6.2"
+    "antd-style": "^3.6.2",
+    "js-cookie": "^3.0.5"
   },
   "devDependencies": {
     "@types/react": "^18.0.33",

@@ -11,7 +11,7 @@ export default defineConfig({
     },
     proxy: {
         '/api': {
-            'target': 'http://127.0.0.1:8000/',
+            'target': 'http://munchkin.japanwest.cloudapp.azure.com/',
             'changeOrigin': true,
         },
     },
@@ -34,6 +34,12 @@ export default defineConfig({
             name: ' CRUD 示例',
             path: '/table',
             component: './Table',
+        },
+        {
+            name: '登录',
+            path: '/login',
+            component: './Login',
+            layout: false,
         },
     ],
     npmClient: 'pnpm',
