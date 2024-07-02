@@ -85,10 +85,9 @@ def general_embed(knowledge_base_folder_id):
                         "recursive_chunk_size": knowledge_base_folder.general_parse_chunk_size,
                         "recursive_chunk_overlap": knowledge_base_folder.general_parse_chunk_overlap,
                         "enable_semantic_chunck_parse": knowledge_base_folder.enable_semantic_chunck_parse,
-                        "semantic_embedding_address":
-                            knowledge_base_folder.semantic_chunk_parse_embedding_model.embed_config[
-                                "base_url"
-                            ],
+                        "semantic_embedding_address": knowledge_base_folder.semantic_chunk_parse_embedding_model.embed_config[
+                            "base_url"
+                        ],
                         "content": knowledge.content,
                         "custom_metadata": {
                             "knowledge_type": "manual",
@@ -100,16 +99,15 @@ def general_embed(knowledge_base_folder_id):
 
             elif isinstance(knowledge, WebPageKnowledge):
                 logger.debug(f"开始处理网页知识: {knowledge.title}")
-                web_page_remote.invoke(
+                remote_docs = web_page_remote.invoke(
                     {
                         "enable_recursive_chunk_parse": knowledge_base_folder.enable_general_parse,
                         "recursive_chunk_size": knowledge_base_folder.general_parse_chunk_size,
                         "recursive_chunk_overlap": knowledge_base_folder.general_parse_chunk_overlap,
                         "enable_semantic_chunck_parse": knowledge_base_folder.enable_semantic_chunck_parse,
-                        "semantic_embedding_address":
-                            knowledge_base_folder.semantic_chunk_parse_embedding_model.embed_config[
-                                "base_url"
-                            ],
+                        "semantic_embedding_address": knowledge_base_folder.semantic_chunk_parse_embedding_model.embed_config[
+                            "base_url"
+                        ],
                         "url": knowledge.url,
                         "max_depth": 1,
                         "custom_metadata": {
