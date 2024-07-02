@@ -7,12 +7,14 @@ session_config:
 actions:
   - action_llm_fallback
   - action_external_utter
-  - action_automation
+  - action_salt_local
 
 entities:
   - content
+  - salt_params
 
 intents:
   - out_of_scope
   - EXTERNAL_UTTER
   - reset
+  - salt_local
