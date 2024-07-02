@@ -1,0 +1,134 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tempo-config
+  namespace: prometheus-stack
+data:
+  tempo.yml: |
+    auth_enabled: false
+
+    server:
+      http_listen_port: 3100
+
+      # Tempo Servr和Tempo Frontend之间的RPC传输限制
+      # grpc_server_max_recv_msg_size: 1000000
+      # grpc_server_max_send_msg_size: 1000000
+      
+    distributor:
+      receivers:             
+        otlp:
+          protocols:
+            http:
+            grpc:
+
+    ingester:
+      trace_idle_period: 10s             
+      
+    compactor:
+      compaction:
+        compaction_window: 1h              
+        max_compaction_objects: 1000000   
+        block_retention: 48h
+        compacted_block_retention: 10m
+
+    storage:
+      trace:
+        backend: local      
+        block:
+          v2_encoding: zstd               
+          version: vParquet3
+        wal:
+          path: /opt/tempo/wal   
+          v2_encoding: snappy      
+        local:
+          path: /opt/tempo
+        pool:
+          max_workers: 100       
+          queue_depth: 10000
+
+    metrics_generator:
+      registry:
+        external_labels:
+          source: tempo
+      storage:
+        path: /opt/tempo/generator/wal
+        remote_write:
+          - url: http://prometheus:9090/api/v1/write
+            send_exemplars: true
+            # basic_auth:
+            #   username: agent
+            #   password:       
+
+    overrides:
+      defaults:
+        metrics_generator:
+          processors: [service-graphs, span-metrics]
+
+    querier:
+      max_concurrent_queries: 50  
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: tempo
+  namespace: prometheus-stack
+spec:
+  serviceName: tempo
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tempo
+  template:
+    metadata:
+      labels:
+        app: tempo
+    spec:
+      containers:
+        - name: tempo
+          image: grafana/tempo:2.3.1
+          args:
+            - '-config.file=/etc/tempo/tempo.yml'
+          ports:
+            - containerPort: 4317
+          volumeMounts:
+            - name: tempo-config
+              mountPath: /etc/tempo
+              readOnly: true
+            - name: tempo-storage
+              mountPath: /opt/tempo
+      volumes:
+        - name: tempo-config
+          configMap:
+            name: tempo-config
+  volumeClaimTemplates:
+    - metadata:
+        name: tempo-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tempo
+  namespace: prometheus-stack
+spec:
+  selector:
+    app: tempo
+  ports:
+    - protocol: TCP
+      port: 4317
+      targetPort: 4317
+      name: tempo-4317
+    - protocol: TCP
+      port: 4318
+      targetPort: 4318
+      name: tempo-4318      
+    - protocol: TCP
+      port: 3100
+      targetPort: 3100
+      name: tempo-3100
