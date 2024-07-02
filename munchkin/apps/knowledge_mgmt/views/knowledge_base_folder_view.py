@@ -24,7 +24,7 @@ class KnowledgeBaseFolderViewSet(GuardianModelViewSet):
             },
         ),
     )
-    @action(methods=["post"], detail=False, url_path="search")
+    @action(methods=["post"], detail=False, url_path="train")
     def train(self, request):
         data = request.data
         knowledgebase_folder_ids = data.get("knowledgebase_folder_ids")
