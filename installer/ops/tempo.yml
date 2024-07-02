@@ -125,6 +125,10 @@ spec:
       targetPort: 4317
       name: tempo-4317
     - protocol: TCP
+      port: 4318
+      targetPort: 4318
+      name: tempo-4318      
+    - protocol: TCP
       port: 3100
       targetPort: 3100
       name: tempo-3100
