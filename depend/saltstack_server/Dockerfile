@@ -5,7 +5,10 @@ FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 # 安装需要的包
-RUN apt-get update && apt-get install -y  supervisor net-tools curl vim jq binutils build-essential patchelf
+RUN apt-get update && \
+    apt-get install -y  supervisor net-tools curl vim jq binutils build-essential patchelf  unzip curl pkg-config iputils-ping wget &&\
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # 添加Salt Stack的源
 RUN curl -fsSL -o /etc/apt/keyrings/salt-archive-keyring-2023.gpg https://repo.saltproject.io/salt/py3/ubuntu/22.04/amd64/SALT-PROJECT-GPG-PUBKEY-2023.gpg 
@@ -21,6 +24,13 @@ RUN mkdir -p /srv/salt
 
 RUN /opt/saltstack/salt/bin/pip install psycopg2-binary sqlalchemy records
 
+
+RUN wget -c "https://github.com/lcvvvv/kscan/releases/download/v1.85/kscan_linux_amd64.zip" &&\
+    unzip kscan_linux_amd64.zip &&\
+    mv kscan_linux_amd64 /usr/bin/kscan &&\
+    chmod +x /usr/bin/kscan &&\
+    rm -rf kscan_linux_amd64.zip
+    
 # 将当前目录的内容复制到容器的/app目录
 ADD ./config/salt/master /etc/salt/master
 ADD ./config/salt/minion /etc/salt/minion

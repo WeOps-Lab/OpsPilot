@@ -4,5 +4,5 @@ from loguru import logger
 
 def test_salt_runner():
     service = AutomationService()
-    result = service.execute_salt_local('cmd.run', '*', 'pwd')
+    result = service.execute_salt_local('cmd.run', 'ops-pilot', 'ping -c 4 www.baidu.com')
     logger.info(result)
