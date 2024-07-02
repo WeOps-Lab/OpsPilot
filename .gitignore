@@ -35,3 +35,5 @@ model_server/chunk_server/tests/asserts/*.pdf
 model_server/chunk_server/tests/asserts/*.xlsx
 model_server/chunk_server/tests/asserts/*.docx
 model_server/chunk_server/tests/asserts/*.pptx
+
+pilot/story_graph.dot
