@@ -35,6 +35,12 @@ export default defineConfig({
             path: '/table',
             component: './Table',
         },
+        {
+            name: '登录',
+            path: '/login',
+            component: './Login',
+            layout: false,
+        },
     ],
     npmClient: 'pnpm',
 });
