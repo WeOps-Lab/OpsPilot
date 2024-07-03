@@ -16,7 +16,13 @@ class FileKnowledgeAdmin(GuardedAdminBase):
     ordering = ["id"]
     filter_horizontal = []
     readonly_fields = ["title"]
-    fieldsets = (("", {"fields": ("knowledge_base_folder", "title", "file", "custom_metadata")}),)
+    fieldsets = (
+        ("", {"fields": ("knowledge_base_folder", "title", "file", "custom_metadata")}),
+        ("分块解析",
+         {"fields": ("enable_general_parse", ("general_parse_chunk_size", "general_parse_chunk_overlap"))}),
+        ("语义分块解析",
+         {"fields": ("enable_semantic_chunck_parse", "semantic_chunk_parse_embedding_model")}),
+    )
     formfield_overrides = {JSONField: {"widget": AceWidget(mode="json", theme="chrome", width="700px")}}
 
     def get_list_display(self, request):

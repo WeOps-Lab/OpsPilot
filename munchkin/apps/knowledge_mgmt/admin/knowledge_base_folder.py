@@ -14,20 +14,35 @@ from apps.knowledge_mgmt.tasks.embed_task import general_embed
 
 class FileKnowledgeInline(admin.TabularInline):
     model = FileKnowledge
-    fieldsets = (("", {"fields": ("title", "file")}),)
+    fieldsets = (("", {"fields": ("title", "file")}),
+                 ("分块解析",
+                  {"fields": ("enable_general_parse", ("general_parse_chunk_size", "general_parse_chunk_overlap"))}),
+                 ("语义分块解析",
+                  {"fields": ("enable_semantic_chunck_parse", "semantic_chunk_parse_embedding_model")}),
+                 )
     extra = 0
     readonly_fields = ["title"]
 
 
 class WebPageKnowledgeInline(admin.TabularInline):
     model = WebPageKnowledge
-    fieldsets = (("", {"fields": ("title", "url", "max_depth")}),)
+    fieldsets = (("", {"fields": ("title", "url", "max_depth")}),
+                 ("分块解析",
+                  {"fields": ("enable_general_parse", ("general_parse_chunk_size", "general_parse_chunk_overlap"))}),
+                 ("语义分块解析",
+                  {"fields": ("enable_semantic_chunck_parse", "semantic_chunk_parse_embedding_model")}),
+                 )
     extra = 0
 
 
 class ManualKnowledgeInline(admin.StackedInline):
     model = ManualKnowledge
-    fieldsets = (("", {"fields": ("title", "content")}),)
+    fieldsets = (("", {"fields": ("title", "content")}),
+                 ("分块解析",
+                  {"fields": ("enable_general_parse", ("general_parse_chunk_size", "general_parse_chunk_overlap"))}),
+                 ("语义分块解析",
+                  {"fields": ("enable_semantic_chunck_parse", "semantic_chunk_parse_embedding_model")}),
+                 )
     formfield_overrides = {
         TextField: {
             "widget": WysiwygWidget,
@@ -64,8 +79,6 @@ class KnowledgeBaseFolderAdmin(GuardedAdminBase):
     fieldsets = (
         ("基本信息", {"fields": ("name", "description")}),
         ("Embeding模型", {"fields": ("embed_model",)}),
-        ("分块解析", {"fields": ("enable_general_parse", ("general_parse_chunk_size", "general_parse_chunk_overlap"))}),
-        ("语义分块解析", {"fields": ("enable_semantic_chunck_parse", "semantic_chunk_parse_embedding_model")}),
         ("文本检索", {"fields": ("enable_text_search", "text_search_weight")}),
         ("向量检索", {"fields": ("enable_vector_search", "vector_search_weight", "rag_k", "rag_num_candidates")}),
         ("结果重排", {"fields": ("enable_rerank", "rerank_model", "rerank_top_k")}),

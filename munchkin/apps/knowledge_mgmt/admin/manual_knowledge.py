@@ -29,7 +29,12 @@ class ManualKnowledgeAdmin(GuardedAdminBase, ImportExportModelAdmin):
     list_filter = ["knowledge_base_folder"]
     ordering = ["id"]
     filter_horizontal = []
-    fieldsets = (("", {"fields": ("knowledge_base_folder", "title", "content", "custom_metadata")}),)
+    fieldsets = (("", {"fields": ("knowledge_base_folder", "title", "content", "custom_metadata")}),
+                 ("分块解析",
+                  {"fields": ("enable_general_parse", ("general_parse_chunk_size", "general_parse_chunk_overlap"))}),
+                 ("语义分块解析",
+                  {"fields": ("enable_semantic_chunck_parse", "semantic_chunk_parse_embedding_model")}),
+                 )
     formfield_overrides = {
         TextField: {
             "widget": WysiwygWidget,

@@ -1,11 +1,10 @@
-from apps.knowledge_mgmt.models import FileKnowledge, KnowledgeBaseFolder, ManualKnowledge, WebPageKnowledge
-from apps.model_provider_mgmt.services.remote_embeddings import RemoteEmbeddings
+from celery import shared_task
 from dotenv import load_dotenv
 from langserve import RemoteRunnable
 from loguru import logger
 from tqdm import tqdm
 
-from celery import shared_task
+from apps.knowledge_mgmt.models import FileKnowledge, KnowledgeBaseFolder, ManualKnowledge, WebPageKnowledge
 from munchkin.components.elasticsearch import ELASTICSEARCH_PASSWORD, ELASTICSEARCH_URL
 from munchkin.components.remote_service import (
     FILE_CHUNK_SERIVCE_URL,
@@ -52,20 +51,21 @@ def general_embed(knowledge_base_folder_id):
         total_knowledges = len(knowledges)
         knowledge_docs = []
         for index, knowledge in tqdm(enumerate(knowledges)):
+            semantic_embedding_address = ""
+
+            semantic_chunk_parse_embedding_model = knowledge.semantic_chunk_parse_embedding_model
+            if semantic_chunk_parse_embedding_model is not None:
+                semantic_embedding_address = semantic_chunk_parse_embedding_model.embed_config["base_url"]
+
             if isinstance(knowledge, FileKnowledge):
                 logger.debug(f"开始处理文件知识: {knowledge.title}")
-                semantic_embedding_address = ""
-
-                semantic_chunk_parse_embedding_model = knowledge_base_folder.semantic_chunk_parse_embedding_model
-                if semantic_chunk_parse_embedding_model is not None:
-                    semantic_embedding_address = semantic_chunk_parse_embedding_model.embed_config["base_url"]
 
                 remote_docs = file_remote.invoke(
                     {
-                        "enable_recursive_chunk_parse": knowledge_base_folder.enable_general_parse,
-                        "recursive_chunk_size": knowledge_base_folder.general_parse_chunk_size,
-                        "recursive_chunk_overlap": knowledge_base_folder.general_parse_chunk_overlap,
-                        "enable_semantic_chunck_parse": knowledge_base_folder.enable_semantic_chunck_parse,
+                        "enable_recursive_chunk_parse": knowledge.enable_general_parse,
+                        "recursive_chunk_size": knowledge.general_parse_chunk_size,
+                        "recursive_chunk_overlap": knowledge.general_parse_chunk_overlap,
+                        "enable_semantic_chunck_parse": knowledge.enable_semantic_chunck_parse,
                         "semantic_embedding_address": semantic_embedding_address,
                         "file_name": knowledge.file.name,
                         "file": knowledge.get_file_base64(),
@@ -79,15 +79,14 @@ def general_embed(knowledge_base_folder_id):
 
             elif isinstance(knowledge, ManualKnowledge):
                 logger.debug(f"开始处理手动知识: {knowledge.title}")
+
                 remote_docs = manual_remote.invoke(
                     {
-                        "enable_recursive_chunk_parse": knowledge_base_folder.enable_general_parse,
-                        "recursive_chunk_size": knowledge_base_folder.general_parse_chunk_size,
-                        "recursive_chunk_overlap": knowledge_base_folder.general_parse_chunk_overlap,
-                        "enable_semantic_chunck_parse": knowledge_base_folder.enable_semantic_chunck_parse,
-                        "semantic_embedding_address": knowledge_base_folder.semantic_chunk_parse_embedding_model.embed_config[
-                            "base_url"
-                        ],
+                        "enable_recursive_chunk_parse": knowledge.enable_general_parse,
+                        "recursive_chunk_size": knowledge.general_parse_chunk_size,
+                        "recursive_chunk_overlap": knowledge.general_parse_chunk_overlap,
+                        "enable_semantic_chunck_parse": knowledge.enable_semantic_chunck_parse,
+                        "semantic_embedding_address": semantic_embedding_address,
                         "content": knowledge.content,
                         "custom_metadata": {
                             "knowledge_type": "manual",
@@ -101,13 +100,11 @@ def general_embed(knowledge_base_folder_id):
                 logger.debug(f"开始处理网页知识: {knowledge.title}")
                 remote_docs = web_page_remote.invoke(
                     {
-                        "enable_recursive_chunk_parse": knowledge_base_folder.enable_general_parse,
-                        "recursive_chunk_size": knowledge_base_folder.general_parse_chunk_size,
-                        "recursive_chunk_overlap": knowledge_base_folder.general_parse_chunk_overlap,
-                        "enable_semantic_chunck_parse": knowledge_base_folder.enable_semantic_chunck_parse,
-                        "semantic_embedding_address": knowledge_base_folder.semantic_chunk_parse_embedding_model.embed_config[
-                            "base_url"
-                        ],
+                        "enable_recursive_chunk_parse": knowledge.enable_general_parse,
+                        "recursive_chunk_size": knowledge.general_parse_chunk_size,
+                        "recursive_chunk_overlap": knowledge.general_parse_chunk_overlap,
+                        "enable_semantic_chunck_parse": knowledge.enable_semantic_chunck_parse,
+                        "semantic_embedding_address": semantic_embedding_address,
                         "url": knowledge.url,
                         "max_depth": 1,
                         "custom_metadata": {
