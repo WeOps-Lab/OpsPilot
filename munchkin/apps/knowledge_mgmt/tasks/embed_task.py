@@ -71,6 +71,9 @@ def general_embed(knowledge_base_folder_id):
                         "file": knowledge.get_file_base64(),
                         "custom_metadata": {
                             "knowledge_type": "file",
+                            "knowledge_id": knowledge.id,
+                            "knowledge_title": knowledge.title,
+                            "knowledge_folder_id": knowledge.knowledge_base_folder.id,
                         },
                     }
                 )
@@ -90,6 +93,9 @@ def general_embed(knowledge_base_folder_id):
                         "content": knowledge.content,
                         "custom_metadata": {
                             "knowledge_type": "manual",
+                            "knowledge_id": knowledge.id,
+                            "knowledge_title": knowledge.title,
+                            "knowledge_folder_id": knowledge.knowledge_base_folder.id,
                         },
                     }
                 )
@@ -109,6 +115,9 @@ def general_embed(knowledge_base_folder_id):
                         "max_depth": 1,
                         "custom_metadata": {
                             "knowledge_type": "webpage",
+                            "knowledge_id": knowledge.id,
+                            "knowledge_title": knowledge.title,
+                            "knowledge_folder_id": knowledge.knowledge_base_folder.id,
                         },
                     }
                 )
@@ -116,9 +125,6 @@ def general_embed(knowledge_base_folder_id):
                 logger.info(f"网页知识[{knowledge.title}]共提取[{len(remote_docs)}]个文档片段")
 
             for doc in knowledge_docs:
-                doc.metadata["knowledge_id"] = knowledge.id
-                doc.metadata["knowledge_folder_id"] = knowledge_base_folder_id
-                doc.metadata["knowledge_title"] = knowledge.title
                 for key, value in knowledge.custom_metadata.items():
                     doc.metadata[key] = value
 

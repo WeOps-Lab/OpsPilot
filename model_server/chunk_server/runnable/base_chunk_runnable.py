@@ -37,12 +37,12 @@ class BaseChunkRunnable:
             docs = text_splitter.split_documents(docs)
             logger.info(f'递归分割后的文档数：{len(docs)}')
 
+        docs = docs + table_docs
         for doc in docs:
             doc.metadata.update(request.custom_metadata)
             doc.page_content = doc.page_content.replace("\n", " ").replace("\r", " ").replace("\t", " ").strip()
             if 'source' in doc.metadata:
                 del doc.metadata["source"]
-        docs = docs + table_docs
 
         logger.info(f'最终文档数：{len(docs)}')
 
