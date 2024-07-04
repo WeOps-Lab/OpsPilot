@@ -49,7 +49,7 @@ class FileChunkRunnable(BaseChunkRunnable):
                 elif file_type in [".doc", ".docx"]:
                     loader = DocLoader(f.name)
                 elif file_type in [".xls", ".xlsx"]:
-                    loader = ExcelLoader(f.name)
+                    loader = ExcelLoader(f.name, request)
                 else:
                     loader = TextLoader(f.name)
 

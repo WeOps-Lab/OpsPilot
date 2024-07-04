@@ -38,6 +38,9 @@ class FileKnowledge(TimeInfo, MaintainerInfo):
                                                              related_name='file_semantic_chunk_parse_embedding_model',
                                                              on_delete=models.CASCADE, verbose_name='嵌入模型')
 
+    excel_header_row_parse = models.BooleanField(default=False, verbose_name="Excel表头+行组合解析")
+    excel_full_content_parse = models.BooleanField(default=True, verbose_name="Excel全内容解析")
+
     def __str__(self):
         return self.title
 
