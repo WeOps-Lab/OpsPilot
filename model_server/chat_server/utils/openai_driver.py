@@ -57,7 +57,7 @@ class OpenAIDriver:
         )
 
         logger.info(
-            f"用户消息: {user_message}, 系统提示: {system_message_prompt} RAG内容: {rag_content}"
+            f"系统提示: {system_message_prompt} RAG内容: {rag_content},用户消息: {user_message}"
         )
         user_message = f"{rag_content} {user_message}"
         result = llm_chain.predict(input=user_message)
