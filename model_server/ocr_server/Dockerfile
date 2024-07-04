@@ -9,5 +9,5 @@ ADD ./requirements.in ./requirements.in
 RUN pip install -r requirements.in
 
 ADD ./server.py ./server.py
-
+ADD ./models ./models
 CMD ["supervisord", "-n"]
