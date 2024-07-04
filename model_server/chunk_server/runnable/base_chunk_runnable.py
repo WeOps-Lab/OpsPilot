@@ -19,7 +19,15 @@ class BaseChunkRunnable:
             if doc.metadata.get("format", "") == "table":
                 table_docs.append(doc)
 
+        image_docs = []
+        for doc in docs:
+            if doc.metadata.get("format", "") == "image":
+                table_docs.append(doc)
+
         for doc in table_docs:
+            docs.remove(doc)
+
+        for doc in image_docs:
             docs.remove(doc)
 
         if request.enable_semantic_chunck_parse:
@@ -37,7 +45,7 @@ class BaseChunkRunnable:
             docs = text_splitter.split_documents(docs)
             logger.info(f'递归分割后的文档数：{len(docs)}')
 
-        docs = docs + table_docs
+        docs = docs + table_docs + image_docs
         for doc in docs:
             doc.metadata.update(request.custom_metadata)
             doc.page_content = doc.page_content.replace("\n", " ").replace("\r", " ").replace("\t", " ").strip()

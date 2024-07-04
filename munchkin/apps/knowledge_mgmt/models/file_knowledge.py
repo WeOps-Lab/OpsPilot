@@ -6,7 +6,7 @@ from django.core.validators import FileExtensionValidator
 from django.db import models
 from django_minio_backend import MinioBackend, iso_date_prefix
 
-KNKOWLEDGE_TYPES = ["md", "docx", "xlsx", "csv", "pptx", "pdf", "txt"]
+KNKOWLEDGE_TYPES = ["md", "docx", "xlsx", "csv", "pptx", "pdf", "txt", "png", "jpg", "jpeg"]
 
 
 class FileKnowledge(TimeInfo, MaintainerInfo):
@@ -40,7 +40,6 @@ class FileKnowledge(TimeInfo, MaintainerInfo):
 
     excel_header_row_parse = models.BooleanField(default=False, verbose_name="Excel表头+行组合解析")
     excel_full_content_parse = models.BooleanField(default=True, verbose_name="Excel全内容解析")
-
 
     def __str__(self):
         return self.title

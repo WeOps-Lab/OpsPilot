@@ -15,5 +15,5 @@ class ImageLoader:
             response = requests.post(self.chunk_request.ocr_provider_address, files={"file": file})
             response.raise_for_status()
             content = response.json()['text']
-            docs.append(Document(content))
+            docs.append(Document(content, metadata={"format": "image"}))
         return docs

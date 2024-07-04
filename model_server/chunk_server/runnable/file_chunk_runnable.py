@@ -50,7 +50,7 @@ class FileChunkRunnable(BaseChunkRunnable):
                     loader = DocLoader(f.name)
                 elif file_type in [".xls", ".xlsx"]:
                     loader = ExcelLoader(f.name, request)
-                elif file_type in [".jpg", ".png"]:
+                elif file_type in [".jpg", ".png", ".jpeg"]:
                     loader = ImageLoader(f.name, request)
                 else:
                     loader = TextLoader(f.name)
