@@ -28,7 +28,8 @@ class ManualKnowledgeViewSet(GuardianModelViewSet):
                 "query": openapi.Schema(type=openapi.TYPE_STRING),
                 "metadata": openapi.Schema(type=openapi.TYPE_OBJECT),
                 "score_threshold": openapi.Schema(type=openapi.TYPE_NUMBER),
-                "docs_return_num": openapi.Schema(type=openapi.TYPE_NUMBER),
+                "page": openapi.Schema(type=openapi.TYPE_NUMBER),
+                "size": openapi.Schema(type=openapi.TYPE_NUMBER),
             },
         ),
     )
@@ -39,16 +40,30 @@ class ManualKnowledgeViewSet(GuardianModelViewSet):
         query = data.get("query")
         metadata = data.get("metadata", {})
         score_threshold = data.get("score_threshold", 0)
-        docs_return_num = data.get("docs_return_num", 10)
+        page = data.get("page", 1)
+        size = data.get("size", 10)
+        start = (page - 1) * size  # 计算开始的记录
         if query:
             service = KnowledgeSearchService()
             knowledgebase_folders = KnowledgeBaseFolder.objects.filter(id__in=knowledgebase_folder_ids)
             docs = service.search(knowledgebase_folders, query, metadata, score_threshold)
             doc_ids = [doc["knowledge_id"] for doc in docs]
-            manual_knowledge = ManualKnowledge.objects.filter(id__in=set(doc_ids))[:docs_return_num]
+            manual_knowledge = ManualKnowledge.objects.filter(id__in=set(doc_ids))
         else:
-            manual_knowledge = ManualKnowledge.objects.all()[:docs_return_num]
+            manual_knowledge = ManualKnowledge.objects.all()
+
+        total = manual_knowledge.count()  # 获取总记录数
+        manual_knowledge = manual_knowledge[start : start + size]  # 应用分页
 
         serializer = ManualKnowledgeSerializer(manual_knowledge, many=True)
-        results = {"result": True, "data": {"count": len(manual_knowledge), "items": serializer.data}}
+        results = {
+            "result": True,
+            "data": {
+                "count": total,  # 返回总记录数
+                "items": serializer.data,
+                "page": page,
+                "size": size,
+                "total_pages": (total + size - 1) // size,  # 计算总页数
+            },
+        }
         return JsonResponse(results)
