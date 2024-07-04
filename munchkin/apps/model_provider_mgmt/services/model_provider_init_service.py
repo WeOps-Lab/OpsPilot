@@ -178,7 +178,7 @@ class ModelProviderInitService:
             defaults={
                 "enabled": True,
                 "ocr_config": {
-                    "base_url": "http://ocr-server.ops-pilot:8109",
+                    "base_url": "http://ocr-server.ops-pilot:8109/paddleocr/ocr",
                 }
             }
         )
