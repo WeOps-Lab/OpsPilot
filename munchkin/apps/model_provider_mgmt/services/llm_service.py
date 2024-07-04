@@ -26,10 +26,10 @@ class LLMService:
             rag_result = self.knowledge_search_service.search(knowledge_base_folder_list, user_message,
                                                               score_threshold=llm_skill.rag_score_threshold)
             for r in rag_result:
-                context += "--------"
-                context += f"知识标题:[{r['knowledge_title']}"
-                context += f"知识内容:[{r['content'].replace('{', '').replace('}', '')}]"
-                context += "--------"
+                context += "--------\n"
+                context += f"知识标题:[{r['knowledge_title']}\n"
+                context += f"知识内容:[{r['content'].replace('{', '').replace('}', '')}]\n"
+                context += "--------\n"
 
         if llm_model.llm_model_type == LLMModelChoices.CHAT_GPT:
             chat_server = RemoteRunnable(OPENAI_CHAT_SERVICE_URL)
