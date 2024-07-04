@@ -4,13 +4,13 @@ import tempfile
 from typing import List
 
 import requests
-from langchain_community.document_loaders import UnstructuredFileLoader
 from langchain_core.documents import Document
 from langchain_core.runnables import RunnableLambda
 from loguru import logger
 
 from loader.doc_loader import DocLoader
 from loader.excel_loader import ExcelLoader
+from loader.image_loader import ImageLoader
 from loader.pdf_loader import PDFLoader
 from loader.ppt_loader import PPTLoader
 from loader.text_loader import TextLoader
@@ -50,6 +50,8 @@ class FileChunkRunnable(BaseChunkRunnable):
                     loader = DocLoader(f.name)
                 elif file_type in [".xls", ".xlsx"]:
                     loader = ExcelLoader(f.name, request)
+                elif file_type in [".jpg", ".png"]:
+                    loader = ImageLoader(f.name, request)
                 else:
                     loader = TextLoader(f.name)
 

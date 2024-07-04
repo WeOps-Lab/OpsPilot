@@ -10,6 +10,7 @@ from apps.model_provider_mgmt.models import (
     RerankModelChoices,
     RerankProvider,
 )
+from apps.model_provider_mgmt.models.ocr_provider import OCRProvider
 
 
 class ModelProviderInitService:
@@ -170,4 +171,14 @@ class ModelProviderInitService:
             skill_id='action_llm_code_review',
             enable_conversation_history=False,
             defaults={"skill_prompt": prompt},
+        )
+
+        OCRProvider.objects.get_or_create(
+            name="PaddleOCR",
+            defaults={
+                "enabled": True,
+                "ocr_config": {
+                    "base_url": "http://ocr-server.ops-pilot:8109",
+                }
+            }
         )

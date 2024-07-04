@@ -84,6 +84,7 @@ class KnowledgeBaseFolderAdmin(GuardedAdminBase):
         ("文本检索", {"fields": ("enable_text_search", "text_search_weight")}),
         ("向量检索", {"fields": ("enable_vector_search", "vector_search_weight", "rag_k", "rag_num_candidates")}),
         ("结果重排", {"fields": ("enable_rerank", "rerank_model", "rerank_top_k")}),
+        ("OCR模型", {"fields": ("ocr_model",)}),
     )
 
     @action(description="训练", url_path="train_embed_model")

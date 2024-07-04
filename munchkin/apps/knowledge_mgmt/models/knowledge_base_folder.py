@@ -42,6 +42,11 @@ class KnowledgeBaseFolder(MaintainerInfo):
     )
     rerank_top_k = models.IntegerField(default=10, verbose_name="Rerank返回结果数量")
 
+    ocr_model = models.ForeignKey('model_provider_mgmt.OCRProvider',
+                                  blank=True, null=True,
+                                  related_name='file_ocr_model',
+                                  on_delete=models.CASCADE, verbose_name='OCR模型')
+
     def __str__(self):
         return self.name
 

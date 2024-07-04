@@ -10,6 +10,8 @@ class BaseChunkRequest(CustomUserType):
     enable_semantic_chunck_parse: bool = Field(False)
     semantic_embedding_address: str = Field("http://fast-embed-server-zh.ops-pilot:8101")
 
+    ocr_provider_address: str = Field("http://ocr-server.ops-pilot:8109")
+
     excel_header_row_parse: bool = Field(False)
     excel_full_content_parse: bool = Field(True)
 

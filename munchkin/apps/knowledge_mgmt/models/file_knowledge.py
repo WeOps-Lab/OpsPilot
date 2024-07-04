@@ -41,6 +41,7 @@ class FileKnowledge(TimeInfo, MaintainerInfo):
     excel_header_row_parse = models.BooleanField(default=False, verbose_name="Excel表头+行组合解析")
     excel_full_content_parse = models.BooleanField(default=True, verbose_name="Excel全内容解析")
 
+
     def __str__(self):
         return self.title
 

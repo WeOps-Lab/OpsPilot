@@ -57,6 +57,10 @@ def general_embed(knowledge_base_folder_id):
             if semantic_chunk_parse_embedding_model is not None:
                 semantic_embedding_address = semantic_chunk_parse_embedding_model.embed_config["base_url"]
 
+            ocr_provider_address = ""
+            if knowledge_base_folder.ocr_model is not None:
+                ocr_provider_address = knowledge_base_folder.ocr_model.ocr_config["base_url"]
+                
             if isinstance(knowledge, FileKnowledge):
                 logger.debug(f"开始处理文件知识: {knowledge.title}")
 
@@ -69,6 +73,7 @@ def general_embed(knowledge_base_folder_id):
                         "semantic_embedding_address": semantic_embedding_address,
                         "excel_header_row_parse": knowledge.excel_header_row_parse,
                         "excel_full_content_parse": knowledge.excel_full_content_parse,
+                        "ocr_provider_address": ocr_provider_address,
                         "file_name": knowledge.file.name,
                         "file": knowledge.get_file_base64(),
                         "custom_metadata": {
