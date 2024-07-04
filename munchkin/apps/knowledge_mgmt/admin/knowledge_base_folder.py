@@ -19,6 +19,8 @@ class FileKnowledgeInline(admin.TabularInline):
                   {"fields": ("enable_general_parse", ("general_parse_chunk_size", "general_parse_chunk_overlap"))}),
                  ("语义分块解析",
                   {"fields": ("enable_semantic_chunck_parse", "semantic_chunk_parse_embedding_model")}),
+                 ("Excel解析",
+                  {"fields": ("excel_header_row_parse", "excel_full_content_parse")}),
                  )
     extra = 0
     readonly_fields = ["title"]
