@@ -12,14 +12,24 @@ class LLMService:
     def chat(self, llm_skill: LLMSkill, user_message, chat_history):
         llm_model = llm_skill.llm_model
 
-        context = ""
+        context = """
+以下是提供给你的背景知识,背景知识的格式如下:
+--------
+知识标题: [标题]
+知识内容: [内容]
+--------
+            
+        """
         rag_result = []
         if llm_skill.enable_rag:
             knowledge_base_folder_list = llm_skill.knowledge_base_folders.all()
             rag_result = self.knowledge_search_service.search(knowledge_base_folder_list, user_message,
                                                               score_threshold=llm_skill.rag_score_threshold)
             for r in rag_result:
-                context += r['content'].replace("{", "").replace("}", "") + "\n"
+                context += "--------"
+                context += f"知识标题:[{r['knowledge_title']}"
+                context += f"知识内容:[{r['content'].replace('{', '').replace('}', '')}]"
+                context += "--------"
 
         if llm_model.llm_model_type == LLMModelChoices.CHAT_GPT:
             chat_server = RemoteRunnable(OPENAI_CHAT_SERVICE_URL)

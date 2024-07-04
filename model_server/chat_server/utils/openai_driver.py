@@ -22,11 +22,15 @@ class OpenAIDriver:
         )
 
     def chat(self, system_message_prompt, user_message):
-        system_message_prompt = SystemMessagePromptTemplate.from_template(system_message_prompt)
+        system_message_prompt = SystemMessagePromptTemplate.from_template(
+            system_message_prompt
+        )
 
         human_template = "{text}"
         human_message_prompt = HumanMessagePromptTemplate.from_template(human_template)
-        chat_prompt = ChatPromptTemplate.from_messages([system_message_prompt, human_message_prompt])
+        chat_prompt = ChatPromptTemplate.from_messages(
+            [system_message_prompt, human_message_prompt]
+        )
         chain = LLMChain(llm=self.client, prompt=chat_prompt)
 
         logger.info(f"用户消息: {user_message}, 系统提示: {system_message_prompt}")
@@ -35,24 +39,27 @@ class OpenAIDriver:
         return result
 
     def chat_with_history(
-            self,
-            system_message_prompt,
-            user_message,
-            message_history,
-            window_size=10,
-            rag_content="",
+        self,
+        system_message_prompt,
+        user_message,
+        message_history,
+        window_size=10,
+        rag_content="",
     ):
-        if rag_content:
-            system_message_prompt = f"""
-                以下是提供给你的背景知识:{rag_content}
-                任务: {system_message_prompt}
-            """
+        prompt = PromptTemplate(
+            input_variables=["chat_history", "input"], template=system_message_prompt
+        )
+        memory = ConversationBufferWindowMemory(
+            memory_key="chat_history", chat_memory=message_history, k=window_size
+        )
+        llm_chain = ConversationChain(
+            llm=self.client, prompt=prompt, memory=memory, verbose=True
+        )
 
-        prompt = PromptTemplate(input_variables=["chat_history", "input"], template=system_message_prompt)
-        memory = ConversationBufferWindowMemory(memory_key="chat_history", chat_memory=message_history, k=window_size)
-        llm_chain = ConversationChain(llm=self.client, prompt=prompt, memory=memory, verbose=True)
-
-        logger.info(f"用户消息: {user_message}, 系统提示: {system_message_prompt}")
+        logger.info(
+            f"用户消息: {user_message}, 系统提示: {system_message_prompt} RAG内容: {rag_content}"
+        )
+        user_message = f"{rag_content} {user_message}"
         result = llm_chain.predict(input=user_message)
         logger.info(f"AI回复: {result}")
         return result
