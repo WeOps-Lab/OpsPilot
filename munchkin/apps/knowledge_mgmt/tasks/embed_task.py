@@ -67,6 +67,8 @@ def general_embed(knowledge_base_folder_id):
                         "recursive_chunk_overlap": knowledge.general_parse_chunk_overlap,
                         "enable_semantic_chunck_parse": knowledge.enable_semantic_chunck_parse,
                         "semantic_embedding_address": semantic_embedding_address,
+                        "excel_header_row_parse": knowledge.excel_header_row_parse,
+                        "excel_full_content_parse": knowledge.excel_full_content_parse,
                         "file_name": knowledge.file.name,
                         "file": knowledge.get_file_base64(),
                         "custom_metadata": {
