@@ -145,6 +145,10 @@ UNFOLD = {
                         "title": "LLM技能",
                         "link": reverse_lazy("admin:model_provider_mgmt_llmskill_changelist"),
                     },
+                    {
+                        "title": "OCR模型",
+                        "link": reverse_lazy("admin:model_provider_mgmt_ocrprovider_changelist"),
+                    }
                 ],
             },
             {
