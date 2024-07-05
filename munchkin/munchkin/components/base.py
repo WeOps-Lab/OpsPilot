@@ -129,3 +129,5 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 524288000
