@@ -4,6 +4,7 @@ import tempfile
 from typing import List
 
 import requests
+from langchain_community.document_loaders import UnstructuredMarkdownLoader
 from langchain_core.documents import Document
 from langchain_core.runnables import RunnableLambda
 from loguru import logger
@@ -31,14 +32,21 @@ class FileChunkRunnable(BaseChunkRunnable):
         pure_filename = file_name.split("/")[-1]
         with tempfile.NamedTemporaryFile(delete=False) as f:
             if file_type in [".md"]:
-                logger.debug(f'[{file_name}]格式为Markdown,转换PDF')
-                response = requests.post(
-                    'http://pandoc-server.ops-pilot:8103/convert',
-                    data={'output': 'pdf'},
-                    files={'file': (pure_filename + file_type, content)}
-                )
-                f.write(response.content)
-                loader = PDFLoader(f.name)
+                try:
+                    logger.debug(f'[{file_name}]格式为Markdown,转换PDF')
+                    response = requests.post(
+                        'http://pandoc-server.ops-pilot:8103/convert',
+                        data={'output': 'pdf'},
+                        files={'file': (pure_filename + file_type, content)}
+                    )
+                    response.raise_for_status()
+                    f.write(response.content)
+                    loader = PDFLoader(f.name)
+                except Exception as e:
+                    logger.warning("Markdown转PDF失败，使用普通文本解析")
+                    f.write(content)
+                    loader = TextLoader(f.name)
+
             else:
                 f.write(content)
 

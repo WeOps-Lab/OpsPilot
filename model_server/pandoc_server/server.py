@@ -44,10 +44,10 @@ async def convert(output: Optional[str] = Form(...), file: UploadFile = File(...
             )
         else:
             subprocess.run(["pandoc", file_name, "-o", f"{file_name}.{output}"], check=True)
+            os.remove(file_name)
     except subprocess.CalledProcessError:
         raise HTTPException(status_code=500, detail="转换失败")
-    finally:
-        os.remove(file_name)
+        
 
     with open(f"{file_name}.{output}", "rb") as f:
         data = io.BytesIO(f.read())
