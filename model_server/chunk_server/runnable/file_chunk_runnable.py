@@ -4,7 +4,6 @@ import tempfile
 from typing import List
 
 import requests
-from langchain_community.document_loaders import UnstructuredMarkdownLoader
 from langchain_core.documents import Document
 from langchain_core.runnables import RunnableLambda
 from loguru import logger
