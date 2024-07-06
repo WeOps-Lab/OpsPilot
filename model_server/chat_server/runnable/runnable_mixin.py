@@ -24,7 +24,7 @@ class RunnableMixin:
             )
             logger.info(
                 f""" 
-                系统信息: {req.system_message_prompt} 
+                系统提示: {req.system_message_prompt} 
                 引用知识:{req.rag_context} 
                 用户信息: {req.user_message} 
                 结果: {result}
@@ -38,7 +38,7 @@ class RunnableMixin:
             )
             logger.info(
                 f"""
-                系统信息: {system_skill_prompt} 
+                系统提示: {system_skill_prompt} 
                 用户信息: {req.user_message} 
                 结果: {result}
                 """
