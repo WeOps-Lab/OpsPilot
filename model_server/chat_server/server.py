@@ -5,6 +5,7 @@ from langserve import add_routes
 from starlette.middleware.cors import CORSMiddleware
 
 from runnable.openai_runnable import OpenAIRunnable
+from runnable.zhipu_runnable import ZhipuRunnable
 
 load_dotenv()
 
@@ -22,6 +23,7 @@ app.add_middleware(
 )
 
 add_routes(app, OpenAIRunnable().instance(), path='/openai')
+add_routes(app, ZhipuRunnable().instance(), path='/zhipu')
 
 if __name__ == "__main__":
     import uvicorn

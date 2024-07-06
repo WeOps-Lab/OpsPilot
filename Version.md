@@ -1,10 +1,9 @@
-# 2.1
+# 2.2
 
-* 手工录入的知识支持导入
-* 支持蓝鲸认证
-* 支持用户数据权限
-* 支持自动获取企业微信通道，
-
-# 2.0
-
-* 大量重构，提供了Munchkin管理端，将OpsPilot分拆为Munchkin与Pilot，引入了K8S架构。
+* [基础服务] 新增SaltStack Server
+* [基础服务] 新增OCR Server
+* [Munchkin] 优化多处RAG解析细节
+* [Munchkin] 支持上传Zip格式的文件知识
+* [Pilot] Pilot新增 `/reset`关键词
+* [ChatServer] 新增 `智谱AI公有云` 支持
+* [ChatServer] 优化日志输出，API调用错误的时候提示异常原因
