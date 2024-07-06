@@ -25,9 +25,7 @@ class BaseDriver:
             )
             chain = LLMChain(llm=self.client, prompt=chat_prompt)
 
-            logger.info(f"用户消息: {user_message}, 系统提示: {system_message_prompt}")
             result = chain.run(user_message)
-            logger.info(f"AI回复: {result}")
             return result
         except Exception as e:
             logger.error(f"聊天出错: {e}")
@@ -52,12 +50,8 @@ class BaseDriver:
                 llm=self.client, prompt=prompt, memory=memory, verbose=True
             )
 
-            logger.info(
-                f"系统提示: {system_message_prompt} RAG内容: {rag_content},用户消息: {user_message}"
-            )
             user_message = f"{rag_content} {user_message}"
             result = llm_chain.predict(input=user_message)
-            logger.info(f"AI回复: {result}")
             return result
         except Exception as e:
             logger.error(f"聊天出错: {e}")

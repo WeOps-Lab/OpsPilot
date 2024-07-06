@@ -23,13 +23,7 @@ class RunnableMixin:
                 rag_content=req.rag_context,
             )
             logger.info(
-                f"""
-                对轮对话模式 
-                系统信息: {req.system_message_prompt} 
-                引用知识:{req.rag_context} 
-                用户信息: {req.user_message}   
-                结果: {result}
-                """)
+                f"多轮对话模式 系统信息: {req.system_message_prompt} 引用知识:{req.rag_context} 用户信息: {req.user_message} 结果: {result}")
             return result
         else:
             system_skill_prompt = req.system_message_prompt.replace("{", "").replace("}", "")
@@ -38,11 +32,6 @@ class RunnableMixin:
                 user_message=req.user_message,
             )
             logger.info(
-                f"""
-                单轮对话模式
-                系统信息: {system_skill_prompt}
-                用户信息: {req.user_message}
-                结果: {result}
-                """
+                f"单轮对话模式 系统信息: {system_skill_prompt} 用户信息: {req.user_message} 结果: {result}"
             )
             return result
