@@ -9,11 +9,10 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-ADD ./conf/service.conf /etc/supervisor/conf.d/service.conf
 ADD ./requirements.in ./requirements.in
-
 RUN pip install -r requirements.in
 
+ADD ./conf/service.conf /etc/supervisor/conf.d/service.conf
 ADD ./latex ./latex
 ADD ./server.py ./server.py
 
