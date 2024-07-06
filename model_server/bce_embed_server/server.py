@@ -1,11 +1,11 @@
-from langchain_community.embeddings import HuggingFaceEmbeddings
-from fastapi import FastAPI
-from langchain_core.runnables import RunnableLambda
-from langserve import add_routes, CustomUserType
-from starlette.middleware.cors import CORSMiddleware
-from langchain_core.documents import Document
 from typing import List
+
+from fastapi import FastAPI
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_core.runnables import RunnableLambda
+from langserve import add_routes
 from loguru import logger
+from starlette.middleware.cors import CORSMiddleware
 
 app = FastAPI(
     title="bec_embed_server",
@@ -36,7 +36,6 @@ def func(doc: str) -> List[float]:
 
 
 runnable = RunnableLambda(func).with_types(input_type=str, output_type=List[float])
-
 
 add_routes(app, runnable)
 

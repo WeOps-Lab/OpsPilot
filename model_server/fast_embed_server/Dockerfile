@@ -3,10 +3,10 @@ WORKDIR /app
 
 ADD ./models ./models
 
-ADD ./conf/service.conf /etc/supervisor/conf.d/service.conf
 ADD ./requirements.in ./requirements.in
-
 RUN pip install -r requirements.in
+
+ADD ./conf/service.conf /etc/supervisor/conf.d/service.conf
 
 ADD ./server.py ./server.py
 
