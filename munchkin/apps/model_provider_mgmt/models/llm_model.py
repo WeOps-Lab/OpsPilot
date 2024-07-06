@@ -6,6 +6,7 @@ from django.utils.functional import cached_property
 
 class LLMModelChoices(models.TextChoices):
     CHAT_GPT = "chat-gpt", "ChatGPT"
+    ZHIPU = "zhipu", "智谱AI"
 
 
 class LLMModel(models.Model, EncryptableMixin):

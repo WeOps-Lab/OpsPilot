@@ -79,32 +79,48 @@ class ModelProviderInitService:
                 },
             )
 
+            LLMModel.objects.get_or_create(
+                name="ChatGLM-4",
+                llm_model_type=LLMModelChoices.ZHIPU,
+                defaults={
+                    "llm_config": {
+                        "api_key": "your_openai_api_key",
+                        "api_base": "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+                        "temperature": 0.7,
+                        "model": "glm-4",
+                    }
+                },
+            )
+
         Token.objects.get_or_create(user=self.owner)
 
         llm_model = LLMModel.objects.get(name="GPT-3.5 Turbo 16K")
 
-        prompt = """
-对话记录：
-        {chat_history}
-        ---
-        我的问题或指令：
-        {input}
-        ---
-        请根据上述参考信息回答我的问题或回复我的指令。前面的参考信息可能有用，也可能没用，
-        你需要从我给出的参考信息中选出与我的问题最相关的那些，来为你的回答提供依据。
-        回答一定要忠于原文，简洁但不丢信息，不要胡乱编造。我的问题或指令是什么语种，你就用什么语种回复,
-注意：
-     1. 表格型的背景会以Markdown表格的格式提供
-     2. Excel解析的背景知识，会以： 表头:内容 表头2: 内容  这样的格式提供                             
-                        """
-        LLMSkill.objects.get_or_create(
-            name="开放问答(GPT3.5-16k)",
-            llm_model=llm_model,
-            skill_id='action_llm_fallback',
-            enable_conversation_history=True,
-            owner=self.owner,
-            defaults={"skill_prompt": prompt},
-        )
+        try:
+            prompt = """
+    对话记录：
+            {chat_history}
+            ---
+            我的问题或指令：
+            {input}
+            ---
+            请根据上述参考信息回答我的问题或回复我的指令。前面的参考信息可能有用，也可能没用，
+            你需要从我给出的参考信息中选出与我的问题最相关的那些，来为你的回答提供依据。
+            回答一定要忠于原文，简洁但不丢信息，不要胡乱编造。我的问题或指令是什么语种，你就用什么语种回复,
+    注意：
+         1. 表格型的背景会以Markdown表格的格式提供
+         2. Excel解析的背景知识，会以： 表头:内容 表头2: 内容  这样的格式提供                             
+                            """
+            LLMSkill.objects.get_or_create(
+                name="开放问答(GPT3.5-16k)",
+                llm_model=llm_model,
+                skill_id='action_llm_fallback',
+                enable_conversation_history=True,
+                owner=self.owner,
+                defaults={"skill_prompt": prompt},
+            )
+        except Exception as e:
+            pass
 
         prompt = """
         你是活泼可爱的天才工程师，你将会接受到Jenkins的构建异常日志，仔细阅读Jenkins的异常构建日志，告诉我为什么构建失败了，可能导致失败的原因是什么，按照以下格式进行回复
