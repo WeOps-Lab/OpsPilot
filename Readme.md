@@ -12,6 +12,20 @@ OpsPilot是WeOps团队开源的
 
 https://wedoc.canway.net/opspilot/
 
+# RoadMap
+
+* [ ] 2.2: RAG细节处理优化，整体代码优化
+* [ ] 2.3:引入aiops-server: 内置经典aiops算法
+* [ ] 2.4: Pilot 消息总线优化
+* [ ] 2.5: Pilot支持接入Gitlab，支持AI Code Review
+* [ ] 2.6: Pilot支持接入Loki、Graylog，提供日志洞察能力
+* [ ] 2.7: Pilot支持接入Prometheus，提供监控指标洞察能力
+* [ ] 2.8: Pilot支持接入SaltStack，提供ChatOps能力
+* [ ] 2.9: Pilot支持接入Kubernetes，提供K8S集群洞察能力
+* [ ] 2.10: Pilot支持接入WeOps Lite,提供CMDB RAG与洞察能力
+* [ ] 2.11: Pilot支持接入Tempo，提供APM洞察能力
+* [ ] 2.12: OpsPilot UI更换，提供更加流畅的UI使用界面
+
 # 讨论群
 
 添加小嘉企微，小嘉拉群里
