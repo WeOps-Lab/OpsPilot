@@ -29,7 +29,6 @@ class LLMService:
                 context += "--------\n"
                 context += f"知识标题:[{r['knowledge_title']}\n"
                 context += f"知识内容:[{r['content'].replace('{', '').replace('}', '')}]\n"
-                context += "--------\n"
 
         if llm_model.llm_model_type == LLMModelChoices.CHAT_GPT:
             chat_server = RemoteRunnable(OPENAI_CHAT_SERVICE_URL)
@@ -48,7 +47,7 @@ class LLMService:
         if llm_skill.enable_rag_knowledge_source:
             knowledge_titles = set([x['knowledge_title'] for x in rag_result])
             result += '\n'
-            result += f'知识库来源: {", ".join(knowledge_titles)}'
+            result += f'引用知识: {", ".join(knowledge_titles)}'
 
         return result
 
