@@ -19,10 +19,10 @@ class KubernetesClient:
         :param kube_config_file: 目标KubeConfig，不填写则获取默认配置文件路径
         """
         self.namespace = namespace
-        if KUBE_CONFIG_FILE == "":
-            config.load_kube_config()
-        else:
+        if KUBE_CONFIG_FILE:
             config.load_kube_config(config_file=KUBE_CONFIG_FILE)
+        else:
+            config.load_incluster_config()
 
         self.core_api = client.CoreV1Api()
         self.app_api = client.AppsV1Api()

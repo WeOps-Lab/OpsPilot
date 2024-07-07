@@ -52,5 +52,6 @@ kubectl apply -f rag-server.yml
 kubectl apply -f ./configmap.yml
 kubectl apply -f ./svc.yml
 kubectl apply -f ./ingress.yml  #修改YOUR_HOST配置
-kubectl apply -f ./munchkin.yml #修改YOUR_KUBE_CONFIG变量
+kubectl apply -f ./munchkin-sa.yml 
+kubectl apply -f ./munchkin.yml 
 ```

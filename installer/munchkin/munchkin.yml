@@ -13,11 +13,6 @@ spec:
       labels:
         app: munchkin
     spec:
-      volumes:
-        - name: k3s-config
-          hostPath:
-            path: <YOUR_KUBE_CONFIG>
-            type: File
       initContainers:
         - name: init-db
           image: ccr.ccs.tencentyun.com/megalab/munchkin
@@ -32,6 +27,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: munchkin-config
+      serviceAccountName: munchkin-client-sa
       containers:
         - name: munchkin-app
           image: ccr.ccs.tencentyun.com/megalab/munchkin
@@ -43,9 +39,6 @@ spec:
             - |
               python3 manage.py collectstatic --noinput &&
               supervisord -n
-          volumeMounts:
-            - name: k3s-config
-              mountPath: /root/.kube/config
           envFrom:
             - configMapRef:
                 name: munchkin-config
