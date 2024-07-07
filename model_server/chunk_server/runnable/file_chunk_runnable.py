@@ -32,17 +32,17 @@ class FileChunkRunnable(BaseChunkRunnable):
         with tempfile.NamedTemporaryFile(delete=False) as f:
             if file_type in [".md"]:
                 try:
-                    logger.debug(f'[{file_name}]格式为Markdown,转换PDF')
+                    logger.debug(f'[{file_name}]格式为Markdown,转换Word格式')
                     response = requests.post(
                         'http://pandoc-server.ops-pilot:8103/convert',
-                        data={'output': 'pdf'},
+                        data={'output': 'docx'},
                         files={'file': (pure_filename + file_type, content)}
                     )
                     response.raise_for_status()
                     f.write(response.content)
-                    loader = PDFLoader(f.name)
+                    loader = DocLoader(f.name)
                 except Exception as e:
-                    logger.warning("Markdown转PDF失败，使用普通文本解析")
+                    logger.warning("Markdown转Word失败，使用普通文本解析")
                     f.write(content)
                     loader = TextLoader(f.name)
 

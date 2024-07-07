@@ -12,6 +12,7 @@ class PPTLoader():
         prs = Presentation(self.file_path)
         for slide_number, slide in tqdm(enumerate(prs.slides, start=1), desc=f"解析[{self.file_path}]的幻灯片"):
             full_text = ""
+
             for shape in slide.shapes:
                 if shape.has_text_frame:
                     for paragraph in shape.text_frame.paragraphs:
@@ -24,4 +25,4 @@ class PPTLoader():
                                 table_content += paragraph.text.strip() + "\n"
                     docs.append(Document(table_content, metadata={"format": "table"}))
             docs.append(Document(full_text.strip()))
-            return docs
+        return docs

@@ -7,6 +7,8 @@ from loguru import logger
 
 from loader.ppt_loader import PPTLoader
 from loader.text_loader import TextLoader
+from user_types.base_chunk_request import BaseChunkRequest
+from user_types.file_chunk_request import FileChunkRequest
 
 
 class LoaderTest(unittest.TestCase):
@@ -16,12 +18,13 @@ class LoaderTest(unittest.TestCase):
         logger.info(f'共[{len(docs)}]个文档')
 
     def test_load_excel(self):
-        loader = ExcelLoader('./asserts/需求.xlsx')
+        req = BaseChunkRequest()
+        loader = ExcelLoader('./asserts/需求.xlsx', req)
         docs = loader.load()
         logger.info(f'共[{len(docs)}]个文档')
 
     def test_load_word(self):
-        loader = DocLoader('./asserts/事件管理用户手册.docx')
+        loader = DocLoader('./asserts/老白教你用分栏.docx')
         docs = loader.load()
         logger.info(f'共[{len(docs)}]个文档')
 
