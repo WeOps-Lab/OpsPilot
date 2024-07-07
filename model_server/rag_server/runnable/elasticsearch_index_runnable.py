@@ -19,12 +19,13 @@ class ElasticSearchIndexRunnable:
             logger.info(f"删除已存在的索引: {req.index_name}")
             es.indices.delete(index=req.index_name)
 
+        logger.info(f"索引文档到Elasticsearch: {req.index_name}")
         db = ElasticsearchStore.from_documents(
             req.docs, embedding=embedding_service,
             es_connection=es, index_name=req.index_name,
             bulk_kwargs={
-                "chunk_size": 50,
-                "max_chunk_bytes": 200000000
+                "chunk_size": req.chunk_size,
+                "max_chunk_bytes": req.max_chunk_bytes
             }
         )
         db.client.indices.refresh(index=req.index_name)

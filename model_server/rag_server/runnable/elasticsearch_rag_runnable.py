@@ -7,6 +7,7 @@ from langserve import RemoteRunnable
 
 from embedding.remote_embeddings import RemoteEmbeddings
 from user_types.elasticsearch_retriever_request import ElasticSearchRetrieverRequest
+from loguru import logger
 
 
 def vector_query(
@@ -64,6 +65,7 @@ class ElasticSearchRagRunnable:
                 "query": req.search_query,
                 "top_n": req.rerank_top_k
             }
+
             result = reranker.invoke(params)
 
         return result
