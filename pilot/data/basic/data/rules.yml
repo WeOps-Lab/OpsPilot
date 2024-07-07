@@ -22,9 +22,3 @@ rules:
       - action: utter_restart_conversation
       - action: action_restart
 
-  - rule: 执行自动化指令
-    steps:
-      - intent: salt_local
-      - action: action_salt_local
-
-

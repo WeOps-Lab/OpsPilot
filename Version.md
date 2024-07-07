@@ -10,3 +10,4 @@
 * [ChunkServer] 优化 Word类型文档解析逻辑，标题和段落在初始拆分的时候合并一个Chunk
 * [ChunkServer] 优化 MD文件转换为Word解析
 * [ChunkServer] 修复 PPT解析过早return的bug
+* [RagServer] 优化 提取索引的Batch大小到
