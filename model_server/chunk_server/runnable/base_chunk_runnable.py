@@ -24,7 +24,7 @@ class BaseChunkRunnable:
         image_docs = []
         for doc in docs:
             if doc.metadata.get("format", "") == "image":
-                table_docs.append(doc)
+                image_docs.append(doc)
         for doc in image_docs:
             docs.remove(doc)
 
