@@ -27,7 +27,7 @@ https://wedoc.canway.net/opspilot/
 * [ ] Pilot supports access to Kubernetes and provides K8S cluster insight capabilities
 * [ ] Pilot supports access to WeOps Lite, providing CMDB RAG and insight capabilities
 * [ ] Pilot supports access to Tempo to provide APM insight capabilities
-* [ ] 2.12: OpsPilot UI replacement, providing a smoother UI interface
+* [ ] OpsPilot UI replacement, providing a smoother UI interface
 
 # Discussion group
 
