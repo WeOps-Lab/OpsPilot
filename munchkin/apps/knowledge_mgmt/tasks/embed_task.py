@@ -1,10 +1,10 @@
-from celery import shared_task
+from apps.knowledge_mgmt.models import FileKnowledge, KnowledgeBaseFolder, ManualKnowledge, WebPageKnowledge
 from dotenv import load_dotenv
 from langserve import RemoteRunnable
 from loguru import logger
 from tqdm import tqdm
 
-from apps.knowledge_mgmt.models import FileKnowledge, KnowledgeBaseFolder, ManualKnowledge, WebPageKnowledge
+from celery import shared_task
 from munchkin.components.elasticsearch import ELASTICSEARCH_PASSWORD, ELASTICSEARCH_URL
 from munchkin.components.remote_service import (
     FILE_CHUNK_SERIVCE_URL,
@@ -60,7 +60,7 @@ def general_embed(knowledge_base_folder_id):
             ocr_provider_address = ""
             if knowledge_base_folder.ocr_model is not None:
                 ocr_provider_address = knowledge_base_folder.ocr_model.ocr_config["base_url"]
-                
+
             if isinstance(knowledge, FileKnowledge):
                 logger.debug(f"开始处理文件知识: {knowledge.title}")
 
@@ -81,6 +81,7 @@ def general_embed(knowledge_base_folder_id):
                             "knowledge_id": knowledge.id,
                             "knowledge_title": knowledge.title,
                             "knowledge_folder_id": knowledge.knowledge_base_folder.id,
+                            **knowledge.custom_metadata,
                         },
                     }
                 )
@@ -103,6 +104,7 @@ def general_embed(knowledge_base_folder_id):
                             "knowledge_id": knowledge.id,
                             "knowledge_title": knowledge.title,
                             "knowledge_folder_id": knowledge.knowledge_base_folder.id,
+                            **knowledge.custom_metadata,
                         },
                     }
                 )
@@ -125,15 +127,12 @@ def general_embed(knowledge_base_folder_id):
                             "knowledge_id": knowledge.id,
                             "knowledge_title": knowledge.title,
                             "knowledge_folder_id": knowledge.knowledge_base_folder.id,
+                            **knowledge.custom_metadata,
                         },
                     }
                 )
                 knowledge_docs.extend(remote_docs)
                 logger.info(f"网页知识[{knowledge.title}]共提取[{len(remote_docs)}]个文档片段")
-
-            for doc in knowledge_docs:
-                for key, value in knowledge.custom_metadata.items():
-                    doc.metadata[key] = value
 
             progress = round((index + 1) / total_knowledges * 100, 2)
             logger.debug(f"知识库[{knowledge_base_folder_id}]的Embedding索引生成进度: {progress:.2f}%")
