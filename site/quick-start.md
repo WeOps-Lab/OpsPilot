@@ -28,6 +28,7 @@ kubectl apply -f elasticsearch.yml
 kubectl apply -f minio.yml
 kubectl apply -f postgres.yml
 kubectl apply -f rabbitmq.yml
+kubectl apply -f pandoc-server.yml
 ```
 
 ## 部署服务组件
@@ -40,9 +41,7 @@ kubectl apply -f bce-rerank-server.yml
 kubectl apply -f chat-server.yml
 kubectl apply -f chunk-server.yml
 kubectl apply -f fast-embed-server-zh.yml
-kubectl apply -f pandoc-server.yml
 kubectl apply -f rag-server.yml
-kubectl apply -f 
 ```
 
 ## 可选组件
