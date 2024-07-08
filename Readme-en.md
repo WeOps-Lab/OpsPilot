@@ -17,16 +17,16 @@ https://wedoc.canway.net/opspilot/
 
 # RoadMap
 
-* [ ] 2.2: RAG detail processing optimization, overall code optimization
-* [ ] 2.3: Introducing aiops-server: built-in classic aiops algorithm
-* [ ] 2.4: Pilot message bus optimization
-* [ ] 2.5: Pilot supports access to Gitlab and AI Code Review
-* [ ] 2.6: Pilot supports access to Loki and Graylog to provide log insight capabilities
-* [ ] 2.7: Pilot supports access to Prometheus to provide monitoring indicator insights.
-* [ ] 2.8: Pilot supports access to SaltStack and provides ChatOps capabilities
-* [ ] 2.9: Pilot supports access to Kubernetes and provides K8S cluster insight capabilities
-* [ ] 2.10: Pilot supports access to WeOps Lite, providing CMDB RAG and insight capabilities
-* [ ] 2.11: Pilot supports access to Tempo to provide APM insight capabilities
+* [ ] RAG detail processing optimization, overall code optimization
+* [ ] Introducing aiops-server: built-in classic aiops algorithm
+* [ ] Pilot message bus optimization
+* [ ] Pilot supports access to Gitlab and AI Code Review
+* [ ] Pilot supports access to Loki and Graylog to provide log insight capabilities
+* [ ] Pilot supports access to Prometheus to provide monitoring indicator insights.
+* [ ] Pilot supports access to SaltStack and provides ChatOps capabilities
+* [ ] Pilot supports access to Kubernetes and provides K8S cluster insight capabilities
+* [ ] Pilot supports access to WeOps Lite, providing CMDB RAG and insight capabilities
+* [ ] Pilot supports access to Tempo to provide APM insight capabilities
 * [ ] 2.12: OpsPilot UI replacement, providing a smoother UI interface
 
 # Discussion group
