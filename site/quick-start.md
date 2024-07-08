@@ -42,6 +42,13 @@ kubectl apply -f chunk-server.yml
 kubectl apply -f fast-embed-server-zh.yml
 kubectl apply -f pandoc-server.yml
 kubectl apply -f rag-server.yml
+kubectl apply -f 
+```
+
+## 可选组件
+
+```
+kubectl apply -f ./saltstack-server.yml
 ```
 
 ## 部署Munchkin
