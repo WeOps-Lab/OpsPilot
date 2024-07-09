@@ -1,3 +1,6 @@
+from apps.core.admin.guarded_admin_base import GuardedAdminBase
+from apps.knowledge_mgmt.models import FileKnowledge, KnowledgeBaseFolder, ManualKnowledge, WebPageKnowledge
+from apps.knowledge_mgmt.tasks.embed_task import general_embed
 from django.contrib import admin, messages
 from django.db.models import TextField
 from django.http import HttpRequest
@@ -7,44 +10,36 @@ from django.utils.html import format_html
 from unfold.contrib.forms.widgets import WysiwygWidget
 from unfold.decorators import action
 
-from apps.core.admin.guarded_admin_base import GuardedAdminBase
-from apps.knowledge_mgmt.models import FileKnowledge, KnowledgeBaseFolder, ManualKnowledge, WebPageKnowledge
-from apps.knowledge_mgmt.tasks.embed_task import general_embed
-
 
 class FileKnowledgeInline(admin.TabularInline):
     model = FileKnowledge
-    fieldsets = (("", {"fields": ("title", "file")}),
-                 ("分块解析",
-                  {"fields": ("enable_general_parse", ("general_parse_chunk_size", "general_parse_chunk_overlap"))}),
-                 ("语义分块解析",
-                  {"fields": ("enable_semantic_chunck_parse", "semantic_chunk_parse_embedding_model")}),
-                 ("Excel解析",
-                  {"fields": ("excel_header_row_parse", "excel_full_content_parse")}),
-                 )
+    fieldsets = (
+        ("", {"fields": ("title", "file")}),
+        ("分块解析", {"fields": ("enable_general_parse", ("general_parse_chunk_size", "general_parse_chunk_overlap"))}),
+        ("语义分块解析", {"fields": ("enable_semantic_chunck_parse", "semantic_chunk_parse_embedding_model")}),
+        ("Excel解析", {"fields": ("excel_header_row_parse", "excel_full_content_parse")}),
+    )
     extra = 0
     readonly_fields = ["title"]
 
 
 class WebPageKnowledgeInline(admin.TabularInline):
     model = WebPageKnowledge
-    fieldsets = (("", {"fields": ("title", "url", "max_depth")}),
-                 ("分块解析",
-                  {"fields": ("enable_general_parse", ("general_parse_chunk_size", "general_parse_chunk_overlap"))}),
-                 ("语义分块解析",
-                  {"fields": ("enable_semantic_chunck_parse", "semantic_chunk_parse_embedding_model")}),
-                 )
+    fieldsets = (
+        ("", {"fields": ("title", "url", "max_depth")}),
+        ("分块解析", {"fields": ("enable_general_parse", ("general_parse_chunk_size", "general_parse_chunk_overlap"))}),
+        ("语义分块解析", {"fields": ("enable_semantic_chunck_parse", "semantic_chunk_parse_embedding_model")}),
+    )
     extra = 0
 
 
 class ManualKnowledgeInline(admin.StackedInline):
     model = ManualKnowledge
-    fieldsets = (("", {"fields": ("title", "content")}),
-                 ("分块解析",
-                  {"fields": ("enable_general_parse", ("general_parse_chunk_size", "general_parse_chunk_overlap"))}),
-                 ("语义分块解析",
-                  {"fields": ("enable_semantic_chunck_parse", "semantic_chunk_parse_embedding_model")}),
-                 )
+    fieldsets = (
+        ("", {"fields": ("title", "content")}),
+        ("分块解析", {"fields": ("enable_general_parse", ("general_parse_chunk_size", "general_parse_chunk_overlap"))}),
+        ("语义分块解析", {"fields": ("enable_semantic_chunck_parse", "semantic_chunk_parse_embedding_model")}),
+    )
     formfield_overrides = {
         TextField: {
             "widget": WysiwygWidget,
@@ -66,7 +61,7 @@ class KnowledgeBaseFolderAdmin(GuardedAdminBase):
             "train_progress",
         ]
         if request.user.is_superuser:
-            list_display.append('owner_name')
+            list_display.append("owner_name")
         return list_display
 
     search_fields = ["name"]
@@ -86,6 +81,10 @@ class KnowledgeBaseFolderAdmin(GuardedAdminBase):
         ("结果重排", {"fields": ("enable_rerank", "rerank_model", "rerank_top_k")}),
         ("OCR模型", {"fields": ("ocr_model",)}),
     )
+
+    def delete_queryset(self, request, queryset):
+        for knowledge in queryset:  # 遍历并使用原生的delete方法, 以调用delete方法同步删除索引
+            knowledge.delete()
 
     @action(description="训练", url_path="train_embed_model")
     def train_embed(self, request: HttpRequest, knowledges):

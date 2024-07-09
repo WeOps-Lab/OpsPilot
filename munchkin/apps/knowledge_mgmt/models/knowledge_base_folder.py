@@ -1,5 +1,8 @@
 from apps.core.models.maintainer_info import MaintainerInfo
+from apps.core.utils.elasticsearch_utils import get_es_client
 from django.db import models
+from elasticsearch import NotFoundError
+from loguru import logger
 
 TRAIN_STATUS_CHOICES = [
     (0, "待训练"),
@@ -42,16 +45,31 @@ class KnowledgeBaseFolder(MaintainerInfo):
     )
     rerank_top_k = models.IntegerField(default=10, verbose_name="Rerank返回结果数量")
 
-    ocr_model = models.ForeignKey('model_provider_mgmt.OCRProvider',
-                                  blank=True, null=True,
-                                  related_name='file_ocr_model',
-                                  on_delete=models.CASCADE, verbose_name='OCR模型')
+    ocr_model = models.ForeignKey(
+        "model_provider_mgmt.OCRProvider",
+        blank=True,
+        null=True,
+        related_name="file_ocr_model",
+        on_delete=models.CASCADE,
+        verbose_name="OCR模型",
+    )
 
     def __str__(self):
         return self.name
 
     def knowledge_index_name(self):
         return f"knowledge_base_{self.id}"
+
+    def delete(self, *args, **kwargs):
+        index_name = self.knowledge_index_name()
+        es_client = get_es_client()
+        try:
+            es_client.indices.delete(index=index_name)
+            logger.info(f"Index {index_name} successfully deleted.")
+        except NotFoundError:
+            logger.info(f"Index {index_name} not found, skipping deletion.")
+
+        return super().delete(*args, **kwargs)  # 调用父类的delete方法来执行实际的删除操作
 
     class Meta:
         verbose_name = "知识库"
