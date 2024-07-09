@@ -1,0 +1,5 @@
+loguru==0.7.2
+langserve[server]==0.2.2
+drain3==0.9.11
+tqdm==4.66.4
+causality==0.0.10

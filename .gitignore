@@ -39,3 +39,4 @@ model_server/chunk_server/tests/asserts/*.pptx
 pilot/story_graph.dot
 model_server/ocr_server/models
 model_server/ocr_server/tests/asserts/
+site/.vitepress/dist    
