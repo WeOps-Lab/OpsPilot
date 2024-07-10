@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: classicfy-aiops-server-server
+  namespace: ops-pilot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: classicfy-aiops-server
+  template:
+    metadata:
+      labels:
+        app: classicfy-aiops-server
+    spec:
+      containers:
+        - name: classicfy-aiops-server
+          image: ccr.ccs.tencentyun.com/megalab/classicfy-aiops-server
+          ports:
+            - containerPort: 8110
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: classicfy-aiops-server
+  namespace: ops-pilot
+spec:
+  selector:
+    app: classicfy-aiops-server
+  ports:
+    - protocol: TCP
+      port: 8110
+      targetPort: 8110
