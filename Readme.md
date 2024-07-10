@@ -17,8 +17,8 @@ https://wedoc.canway.net/opspilot/
 
 # RoadMap
 
-* [ ] RAG细节处理优化，整体代码优化
-* [ ] 引入aiops-server: 内置经典aiops算法
+* [X] RAG细节处理优化，整体代码优化
+* [X] 引入aiops-server: 内置经典aiops算法
 * [ ] Pilot 消息总线优化
 * [ ] Pilot支持接入Gitlab，支持AI Code Review
 * [ ] Pilot支持接入Loki、Graylog，提供日志洞察能力
