@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: classicfy-aiops-server-server
+  name: classicfy-aiops-server
   namespace: ops-pilot
 spec:
   replicas: 1
