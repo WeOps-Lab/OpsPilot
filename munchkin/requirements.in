@@ -56,3 +56,5 @@ pre-commit==3.7.1
 wechatpy==1.8.18
 loguru==0.7.2
 langserve[client]==0.2.2
+
+elasticsearch==8.13.2
