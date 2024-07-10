@@ -51,10 +51,8 @@ export default defineConfig({
               {
                 text: '时序预测',
                 items: [
-                  { text: 'Prophet', link: '/aiops/timeseries/prophet' },
                   { text: 'HoltWinter', link: '/aiops/timeseries/holtwinter' },
                   { text: 'SARIMA', link: '/aiops/timeseries/sarima' },
-                  { text: 'LSTM', link: '/aiops/timeseries/lstm' },
                 ],
               },
               {

@@ -6,3 +6,5 @@ causality==0.0.10
 pyod==2.0.1
 suod==0.1.3
 xgboost==2.1.0
+pmdarima==2.0.4
+numpy==1.26.1

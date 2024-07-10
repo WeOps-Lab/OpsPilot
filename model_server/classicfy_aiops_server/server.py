@@ -14,6 +14,8 @@ from runnable.anomaly_detection.xgbod_runnable import XgbodRunnable
 from runnable.causation.causality_runnable import CausalityRunnable
 from runnable.causation.fpgrowth_runnable import FPGrowthRunnable
 from runnable.logreduce.drain_runnable import DrainRunnable
+from runnable.timeseries.holt_winter_runnable import HoltWinterRunnable
+from runnable.timeseries.sarima_runnable import SarimaRunnable
 
 app = FastAPI(
     title="Classicfy Aiops Server",
@@ -42,6 +44,9 @@ add_routes(app, XgbodRunnable().instance(), path="/anomaly_detection/xgbod")
 add_routes(app, InneRunnable().instance(), path="/anomaly_detection/inne")
 add_routes(app, KpcaRunnable().instance(), path="/anomaly_detection/kpca")
 add_routes(app, OcsSvmRunnable().instance(), path="/anomaly_detection/ocssvm")
+
+add_routes(app, HoltWinterRunnable().instance(), path="/timeseries/holt_winter")
+add_routes(app, SarimaRunnable().instance(), path="/timeseries/sarima")
 
 if __name__ == "__main__":
     import uvicorn
