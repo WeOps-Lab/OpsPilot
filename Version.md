@@ -1,3 +1,7 @@
+# 2.3
+
+* [Classicfy Aiops Server] 新增经典AIOPS算法服务，内置时序预测、异常检查、根因分析、
+
 # 2.2
 
 * [基础服务] 新增SaltStack Server
