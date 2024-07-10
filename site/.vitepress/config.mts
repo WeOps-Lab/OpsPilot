@@ -73,7 +73,7 @@ export default defineConfig({
                 ],
               },
               {
-                text: '日志聚类',
+                text: '模式发现',
                 items: [
                   { text: 'Drain3', link: '/aiops/logreduce/drain3' },
                 ],
