@@ -4,17 +4,20 @@ from typing import List
 
 import fitz
 import pdfplumber
+import requests
 from PIL import Image
 from langchain_core.documents import Document
 from loguru import logger
 from numpy import asarray
 from tqdm import tqdm
+from io import BytesIO
 
 
 class PDFLoader:
 
-    def __init__(self, file_path):
+    def __init__(self, file_path, ocr_provider_address):
         self.file_path = file_path
+        self.ocr_provider_address = ocr_provider_address
 
     def table_to_markdown(self, table: List[List[str]]) -> str:
         # 清理数据并创建Markdown表格
@@ -44,8 +47,18 @@ class PDFLoader:
                     xref_value = image[0]
                     base_image = pdf.extract_image(xref_value)
                     image_bytes = base_image["image"]
-                    pix = Image.open(io.BytesIO(image_bytes))
-                    np_array = asarray(pix)
+                    file = BytesIO(image_bytes)
+                    file_name = f"page_{page_number}_image_{image_number}.png"
+
+                    # 完善这部分的代码
+                    response = requests.post(
+                        self.ocr_provider_address,
+                        files={"file": (file_name, file)}
+                    )
+
+                    response.raise_for_status()
+                    content = response.json()['text']
+                    text_docs.append(Document(content))
 
         with pdfplumber.open(self.file_path) as pdf:
 
