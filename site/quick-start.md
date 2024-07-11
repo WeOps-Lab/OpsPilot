@@ -29,6 +29,7 @@ kubectl apply -f minio.yml
 kubectl apply -f postgres.yml
 kubectl apply -f rabbitmq.yml
 kubectl apply -f pandoc-server.yml
+kubectl apply -f bionics.yml
 ```
 
 ## 部署服务组件
@@ -42,6 +43,7 @@ kubectl apply -f chat-server.yml
 kubectl apply -f chunk-server.yml
 kubectl apply -f fast-embed-server-zh.yml
 kubectl apply -f rag-server.yml
+kubectl apply -f classicfy-aiops-server.yml
 ```
 
 ## 可选组件
