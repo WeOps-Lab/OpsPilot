@@ -33,7 +33,7 @@ class FileKnowledge(TimeInfo, MaintainerInfo):
     general_parse_chunk_overlap = models.IntegerField(default=32, verbose_name="分块重叠")
 
     enable_semantic_chunck_parse = models.BooleanField(default=False, verbose_name="语义分块解析")
-    semantic_chunk_parse_embedding_model = models.ForeignKey('model_provider_mgmt.EmbedProvider',
+    semantic_chunk_parse_embedding_model = models.ForeignKey('model_provider_mgmt.RerankProvider',
                                                              blank=True, null=True,
                                                              related_name='file_semantic_chunk_parse_embedding_model',
                                                              on_delete=models.CASCADE, verbose_name='嵌入模型')
