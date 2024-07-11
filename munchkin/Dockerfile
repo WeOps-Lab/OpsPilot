@@ -2,7 +2,8 @@ FROM ccr.ccs.tencentyun.com/megalab/pilot-base
 WORKDIR /apps
 
 ADD ./requirements.in ./requirements.in
-RUN pip install -r requirements.in
+RUN pip install pip-tools
+RUN pip-compile -v && pip-sync -v
 
 ADD ./apps ./apps
 ADD ./k8s-templates ./k8s-templates
