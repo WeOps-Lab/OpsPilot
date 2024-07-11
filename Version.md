@@ -1,6 +1,7 @@
 # 2.3
 
-* [Classicfy Aiops Server] 新增经典AIOPS算法服务，内置时序预测、异常检查、根因分析、
+* [Classicfy Aiops Server] 新增经典AIOPS算法服务，内置时序预测、异常检查、根因分析、日志聚类算法
+* [Bionics] 新增图表生成服务，负责将时间序列指标生成图片
 
 # 2.2
 
