@@ -12,7 +12,7 @@
     "@opentelemetry/sdk-metrics": "^1.15.2",
     "@opentelemetry/sdk-node": "^0.41.2",
     "ascii-art": "^2.8.5",
-    "canvas": "2.10.0",
+    "canvas": "2.11.2",
     "echarts": "^5.3.3",
     "echarts-themes-js": "^1.0.2",
     "egg": "^2",
