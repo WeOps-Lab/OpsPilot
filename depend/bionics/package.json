@@ -23,9 +23,7 @@
     "autod-egg": "^1",
     "egg-bin": "^4",
     "egg-ci": "^2",
-    "egg-mock": "^4",
-    "eslint": "^8",
-    "eslint-config-egg": "^12"
+    "egg-mock": "^4"
   },
   "engines": {
     "node": ">=16.0.0"
