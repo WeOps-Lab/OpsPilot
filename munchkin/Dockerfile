@@ -2,8 +2,7 @@ FROM ccr.ccs.tencentyun.com/megalab/pilot-base
 WORKDIR /apps
 
 ADD ./requirements.in ./requirements.in
-RUN pip install pip-tools
-RUN pip-compile -v && pip-sync -v
+RUN pip install -r requirements.in
 
 ADD ./apps ./apps
 ADD ./k8s-templates ./k8s-templates
@@ -17,5 +16,3 @@ ADD ./support-files/supervisor/celery.conf /etc/supervisor/conf.d/celery.conf
 ADD ./support-files/supervisor/conversation.conf /etc/supervisor/conf.d/conversation.conf
 
 ADD ./support-files ./support-files
-
-RUN apt-get update && apt-get reinstall -y supervisor && apt-get clean && rm -rf /var/lib/apt/lists/*
