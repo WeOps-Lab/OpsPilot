@@ -36,7 +36,7 @@ export default defineConfig({
             ],
           },
           {
-            text: '技能',
+            text: '场景',
             items: [
               { text: '日常', link: '/skills/common' },
               { text: '自动化', link: '/skills/automation' },

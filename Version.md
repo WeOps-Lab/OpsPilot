@@ -3,6 +3,7 @@
 * [Classicfy Aiops Server] 新增经典AIOPS算法服务，内置时序预测、异常检查、根因分析、日志聚类算法
 * [Bionics] 新增图表生成服务，负责将时间序列指标生成图片
 * [Chunk Server] 新增 支持PDF扫描件识别
+* [Only Office] 新增 Only Office基础服务
 
 # 2.2
 
