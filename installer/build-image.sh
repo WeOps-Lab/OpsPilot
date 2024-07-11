@@ -39,3 +39,6 @@ docker build -t ccr.ccs.tencentyun.com/megalab/pilot-elasticsearch .
 
 cd ./saltstack_server
 docker build -t ccr.ccs.tencentyun.com/megalab/saltstack-server .
+
+cd ./bionics
+docker build -t ccr.ccs.tencentyun.com/megalab/bionics .
