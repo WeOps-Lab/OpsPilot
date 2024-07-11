@@ -18,4 +18,4 @@ ADD ./support-files/supervisor/conversation.conf /etc/supervisor/conf.d/conversa
 
 ADD ./support-files ./support-files
 
-RUN apt-get update && apt-get install -y supervisor && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get reinstall -y supervisor && apt-get clean && rm -rf /var/lib/apt/lists/*
