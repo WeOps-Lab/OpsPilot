@@ -1,4 +1,4 @@
-FROM node:18.8.0
+FROM node:20
 ENV LANG C.UTF-8
 RUN apt-get update \
     && apt-get install -y libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential g++ ttf-wqy-microhei
