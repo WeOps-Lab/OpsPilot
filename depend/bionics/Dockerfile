@@ -1,4 +1,4 @@
-FROM node:18.8.0
+FROM node:22
 ENV LANG C.UTF-8
 RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
 RUN apt-get update \
