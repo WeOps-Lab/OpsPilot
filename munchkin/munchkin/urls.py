@@ -20,7 +20,7 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework import permissions
 from rest_framework_simplejwt.views import TokenBlacklistView, TokenObtainPairView, TokenRefreshView, TokenVerifyView
-
+from loguru import logger
 from munchkin.components.base import DEBUG
 
 urlpatterns = [
@@ -75,6 +75,7 @@ for app_config in apps.get_app_configs():
     try:
         # app_name是apps.开头的，就import这个app的urls.py
         if app_name.startswith("apps."):
+            logger.debug(f"加载[{app_name}]的路由......")
             urls_module = __import__(f"{app_name}.urls", fromlist=["urlpatterns"])
             urlpatterns.append(path("", include(urls_module)))
 

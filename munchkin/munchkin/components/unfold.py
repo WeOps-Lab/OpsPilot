@@ -198,7 +198,10 @@ UNFOLD = {
                         "title": "审计日志",
                         "link": reverse_lazy("admin:auditlog_logentry_changelist"),
                     },
-                    {"title": "令牌管理", "link": reverse_lazy("admin:authtoken_tokenproxy_changelist")},
+                    {
+                        "title": "令牌管理",
+                        "link": reverse_lazy("admin:authtoken_tokenproxy_changelist")
+                    },
                 ],
             },
         ]
