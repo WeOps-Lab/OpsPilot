@@ -22,8 +22,6 @@ def on_message(channel, method_frame, header_frame, body):
         message = json.loads(body.decode())
 
         if "text" in message:
-            logger.debug(f"收到消息:{message}")
-
             sender_id = message["sender_id"]
             if "input_channel" in message:
                 input_channel = message["input_channel"]
@@ -32,7 +30,11 @@ def on_message(channel, method_frame, header_frame, body):
                 input_channel = user_channels[sender_id]
 
             assistant_id = message["metadata"]["assistant_id"]
+
+            logger.debug(f"用户ID:[{sender_id}] BotID:[{assistant_id}] 通道:[{input_channel}] 消息:{message}")
+
             bot = Bot.objects.get(assistant_id=assistant_id)
+
             channel_obj = Channel.objects.get(name=input_channel)
             channel_user_exists = ChannelUser.objects.filter(
                 user_id=sender_id, channel_user_group__channel=channel_obj
@@ -41,7 +43,8 @@ def on_message(channel, method_frame, header_frame, body):
                                                               name="默认用户组")
 
             if channel_user_exists is False:
-                logger.info(f"用户[{sender_id}]不存在,创建用户,并加入默认用户组")
+                logger.info(f"用户[{sender_id}]在[{channel_obj.name}]中不存在,创建用户,并加入默认用户组")
+
                 if channel_obj.channel_type == CHANNEL_CHOICES.ENTERPRISE_WECHAT:
                     conf = channel_obj.decrypted_channel_config
 
