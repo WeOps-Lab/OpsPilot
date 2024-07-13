@@ -10,12 +10,27 @@ actions:
   - action_salt_local
 
 entities:
-  - external_utter_content
-  - external_utter_channel
-  - salt_params
+  - external_utter_content # 主动触达消息内容
+  - external_utter_channel # 主动触达消息渠道
+
+slots:
+  external_utter_content:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: external_utter_content
+
+  external_utter_channel:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: external_utter_channel
 
 intents:
   - out_of_scope
   - EXTERNAL_UTTER
   - reset
   - salt_local
+

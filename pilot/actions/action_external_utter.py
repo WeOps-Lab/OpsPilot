@@ -1,9 +1,7 @@
-import json
-import os
 from typing import Text, Dict, Any, List
 
-import requests
 from rasa_sdk import Action, Tracker
+from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 
 from utils.eventbus import EventBus
@@ -21,8 +19,8 @@ class ActionExternalUtter(Action):
             tracker: Tracker,
             domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
-        external_utter_content = RasaUtils.get_tracker_entity(tracker, 'external_utter_content')
-        external_utter_channel = RasaUtils.get_tracker_entity(tracker, 'external_utter_channel')
+        external_utter_content = tracker.get_slot('external_utter_content')
+        external_utter_channel = tracker.get_slot('external_utter_channel')
 
         RasaUtils.log_info(tracker,
                            f'接收到主动触发回复请求,内容为: {external_utter_content},通信渠道为: {external_utter_channel}')
@@ -35,3 +33,7 @@ class ActionExternalUtter(Action):
             eventbus.publist_notification_event(external_utter_content, sender_id)
         else:
             dispatcher.utter_message(external_utter_content)
+        return [
+            SlotSet("external_utter_content", None),
+            SlotSet("external_utter_channel", None)
+        ]
