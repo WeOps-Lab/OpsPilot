@@ -81,8 +81,8 @@
 {
   "name": "EXTERNAL_UTTER",
   "entities": {
-    "content": "你好呀"
-    "channel": "rest"
+    "external_utter_content": "你好呀"
+    "external_utter_channel": "enterprise_wechat"
   }
 }
 ```
