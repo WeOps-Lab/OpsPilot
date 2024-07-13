@@ -148,6 +148,7 @@ class GitlabReviewChannel(InputChannel):
                     content = handle_push(payload)
             except Exception as e:
                 content = f'Reivew失败: {str(e)}'
+            self.event_bus.publist_notification_event()
             self.event_bus.publish(
                 json.dumps({
                     "notification_content": f'@{payload["user_username"].split("[")[0]} {content}',

@@ -30,6 +30,15 @@ class EventBus:
         channel.exchange_declare(exchange='event_bus', exchange_type='fanout', durable=True)
         return connection, channel
 
+    def publist_notification_event(self, content, sender_id):
+        # 发送通道通知消息
+        data = {
+            "event_type": NOTIFICATION_EVENT,
+            "notification_content": content,
+            "sender_id": sender_id
+        }
+        self.publish(json.dumps(data))
+
     def publish(self, messages: str):
         """
         事件广播

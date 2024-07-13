@@ -10,7 +10,8 @@ actions:
   - action_salt_local
 
 entities:
-  - content
+  - external_utter_content
+  - external_utter_channel
   - salt_params
 
 intents:
