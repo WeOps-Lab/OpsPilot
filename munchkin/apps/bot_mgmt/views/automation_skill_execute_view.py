@@ -5,23 +5,25 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.views import APIView
 from drf_yasg import openapi
 
+from apps.bot_mgmt.models import Bot, AutomationSkill
 from apps.bot_mgmt.services.automation_service import AutomationService
 
 
-class SaltExecuteView(APIView):
+class AutomationSkillExecuteView(APIView):
     @swagger_auto_schema(
-        operation_id="salt_execute",
+        operation_id="automation_skill_execute",
         operation_description="",
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
-                "bot_id": openapi.Schema(type=openapi.TYPE_INTEGER, description="机器人ID"),
+                "bot_id": openapi.Schema(type=openapi.TYPE_STRING, description="机器人ID"),
+                "skill_id": openapi.Schema(type=openapi.TYPE_STRING, description="技能ID"),
                 "params": openapi.Schema(type=openapi.TYPE_STRING, description="参数"),
                 "sender_id": openapi.Schema(type=openapi.TYPE_STRING, description="发送者ID"),
             },
             required=[
                 "bot_id",
-                "params",
+                "skill_id",
             ],
         ),
     )
@@ -29,7 +31,19 @@ class SaltExecuteView(APIView):
         bot_id = request.data.get("bot_id")
         params = request.data.get("params")
         sender_id = request.data.get("sender_id", "")
+        skill_id = request.data.get("skill_id")
+
+        bot = Bot.objects.get(assistant_id=bot_id)
+        automation_skill = bot.automation_skills.get(skill_id=skill_id)
+
+        salt_skill_config = automation_skill.decrypted_skill_config
 
         service = AutomationService()
-        result = service.execute_salt_local('cmd.run', 'ops-pilot', params)
-        return JsonResponse({"result": result})
+        if params:
+            args = params
+        else:
+            args = salt_skill_config['args']
+        result = service.execute_salt_local(
+            salt_skill_config['func'], salt_skill_config['tgt'],
+            args)
+        return JsonResponse(result)

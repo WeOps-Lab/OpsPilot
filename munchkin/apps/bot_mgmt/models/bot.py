@@ -15,6 +15,7 @@ class Bot(MaintainerInfo):
                                    null=True)
 
     llm_skills = models.ManyToManyField("model_provider_mgmt.LLMSkill", verbose_name="LLM技能", blank=True)
+    automation_skills = models.ManyToManyField("bot_mgmt.AutomationSkill", verbose_name="自动化技能", blank=True)
 
     enable_bot_domain = models.BooleanField(verbose_name="启用域名", default=False)
     enable_ssl = models.BooleanField(verbose_name="启用SSL", default=False)

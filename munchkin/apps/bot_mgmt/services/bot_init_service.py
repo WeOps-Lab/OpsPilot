@@ -1,6 +1,4 @@
-from apps.bot_mgmt.models import Bot, RasaModel
-from apps.channel_mgmt.models import CHANNEL_CHOICES, Channel
-from apps.model_provider_mgmt.models import LLMSkill
+from apps.bot_mgmt.models import Bot, RasaModel, AutomationSkill, AUTOMATION_SKILL_CHOICES
 
 
 class BotInitService:
@@ -21,4 +19,18 @@ class BotInitService:
             assistant_id="ops-pilot",
             owner=self.owner,
             rasa_model=rasa_model,
+        )
+
+        AutomationSkill.objects.get_or_create(
+            skill_id="list_jenkins_jobs",
+            skill_type=AUTOMATION_SKILL_CHOICES.SALT_STACK,
+            defaults={
+                "name": "Jenkins任务列表",
+                "skill_config": {
+                    "client": "local",
+                    "tgt": "ops-pilot",
+                    "fun": "cmd.run",
+                    "args": "curl -sS -u <username>:<password> 'http://<jenkins_base_url>/api/json'"
+                },
+            }
         )

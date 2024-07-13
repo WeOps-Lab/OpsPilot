@@ -7,7 +7,7 @@ session_config:
 actions:
   - action_llm_fallback
   - action_external_utter
-  - action_salt_local
+  - action_list_jenkins_jobs
 
 entities:
   - external_utter_content # 主动触达消息内容
@@ -29,8 +29,8 @@ slots:
         entity: external_utter_channel
 
 intents:
-  - out_of_scope
-  - EXTERNAL_UTTER
-  - reset
-  - salt_local
+  - out_of_scope  # 无法识别的意图
+  - EXTERNAL_UTTER # 主动触达消息
+  - reset # 重置对话
+  - list_jenkins_jobs # 列出jenkins所有的构建任务
 
