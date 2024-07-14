@@ -22,6 +22,11 @@ rules:
       - action: utter_restart_conversation
       - action: action_restart
 
+  - rule: 查看帮助
+    steps:
+      - intent: help
+      - action: utter_help
+
   - rule: 列出jenkins所有的构建任务
     steps:
       - intent: list_jenkins_jobs

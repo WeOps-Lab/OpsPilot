@@ -2,3 +2,10 @@ version: "3.1"
 responses:
   utter_restart_conversation:
     - text: "对话已重置"
+
+  utter_help:
+    - text: |
+        我是OpsPilot智能运维助理，可以帮你解决各种运维问题，我还提供了以下技能:
+          * /reset - 重置对话
+          * /help - 查看帮助
+          * /list_jenkins_job - 查看Jenkins任务

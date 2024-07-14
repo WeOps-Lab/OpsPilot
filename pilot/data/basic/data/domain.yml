@@ -32,5 +32,6 @@ intents:
   - out_of_scope  # 无法识别的意图
   - EXTERNAL_UTTER # 主动触达消息
   - reset # 重置对话
+  - help # 查看帮助
   - list_jenkins_jobs # 列出jenkins所有的构建任务
 
