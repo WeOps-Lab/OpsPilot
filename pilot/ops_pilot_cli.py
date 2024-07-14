@@ -22,6 +22,8 @@ class BootStrap(object):
                 'bot_message_evt': 'bot_uttered',
                 'session_persistence': False,
             },
+            'channels.automation_channel.AutomationChannel': {
+            }
         }
         response = requests.get(
             server_settings.munchkin_base_url + f'/api/bot/{server_settings.munchkin_bot_id}',
