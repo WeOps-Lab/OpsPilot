@@ -8,6 +8,7 @@ from rasa.core.channels import InputChannel, UserMessage
 from sanic import Blueprint, Request, HTTPResponse, response
 
 from eventbus.base_eventbus import BaseEventBus
+from integrations.jenkins_integration import JenkinsIntegration
 from utils.munchkin_driver import MunchkinDriver
 from utils.rasa_utils import RasaUtils
 
@@ -21,12 +22,14 @@ class AutomationChannel(InputChannel):
             logger.info(f"接收到自动化事件:{event}")
 
             if event['automation_event'] == 'list_jenkins_jobs':
-                RasaUtils.call_external_utter(event['sender_id'], table_str, event['channel'])
+                result = self.jenkins_integration.list_jenkins_job(event['sender_id'])
+                RasaUtils.call_external_utter(event['sender_id'], result, event['channel'])
 
     def __init__(self, ) -> None:
         super().__init__()
         self.event_bus = BaseEventBus()
         self.event_bus.consume('automation_channel', self.recieve_event)
+        self.jenkins_integration = JenkinsIntegration()
         logger.info('自动化消息通道已启动')
 
     def blueprint(
