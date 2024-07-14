@@ -11,6 +11,7 @@ from sanic import Blueprint, Request, HTTPResponse, response
 from libs import dingtalk_stream
 from libs.dingtalk_stream import AckMessage
 from utils.eventbus import EventBus
+from utils.notification_eventbus import NotificationEventBus
 
 
 class EventHandler(dingtalk_stream.EventHandler):
@@ -60,6 +61,14 @@ class DingTalkChannel(InputChannel):
     def name(self) -> Text:
         return "dingtalk_channel"
 
+    def recieve_event(self, event):
+        if self.event_bus.is_notification_event(event):
+            reply_user_id = self.event_bus.get_notification_event_sender_id(event)
+            reply_text = self.event_bus.get_notification_event_content(event)
+            logger.info(f"收到消息总线通知,目标用户:[{reply_user_id}],内容:[{reply_text}]")
+
+            # 暂未实现
+
     def __init__(self, client_id, client_secret, enable_eventbus) -> None:
         super().__init__()
         self.client_id = client_id
@@ -67,7 +76,7 @@ class DingTalkChannel(InputChannel):
         self.enable_eventbus = enable_eventbus
 
         if self.enable_eventbus:
-            self.event_bus = EventBus()
+            self.event_bus = NotificationEventBus()
             self.event_bus.consume('enterprise_wechat_bot_channel', self.recieve_event)
 
         logger.info('钉钉机器人通道已启动')

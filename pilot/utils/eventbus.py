@@ -15,14 +15,7 @@ class EventBus:
     def is_automation_event(self, event):
         return event['event_type'] == AUTOMATION_EVENT
 
-    def is_notification_event(self, event):
-        return event['event_type'] == NOTIFICATION_EVENT
 
-    def get_notification_event_content(self, event):
-        return event['notification_content']
-
-    def get_notification_event_sender_id(self, event):
-        return event['sender_id']
 
     def prepare_eventbus(self):
         connection = pika.BlockingConnection(
@@ -33,15 +26,6 @@ class EventBus:
         channel = connection.channel()
         channel.exchange_declare(exchange='event_bus', exchange_type='fanout', durable=True)
         return connection, channel
-
-    def publist_notification_event(self, content, sender_id):
-        # 发送通道通知消息
-        data = {
-            "event_type": NOTIFICATION_EVENT,
-            "notification_content": content,
-            "sender_id": sender_id
-        }
-        self.publish(json.dumps(data))
 
     def publish(self, messages: str):
         """

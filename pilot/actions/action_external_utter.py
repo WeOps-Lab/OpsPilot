@@ -4,7 +4,7 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 
-from utils.eventbus import EventBus
+from utils.notification_eventbus import NotificationEventBus
 from utils.rasa_utils import RasaUtils
 
 
@@ -25,14 +25,17 @@ class ActionExternalUtter(Action):
         RasaUtils.log_info(tracker,
                            f'接收到主动触发回复请求,内容为: {external_utter_content},通信渠道为: {external_utter_channel}')
 
-        if external_utter_channel in ["enterprise_wechat"]:
-            RasaUtils.log_info(tracker, "发送通知到消息总线")
-
+        if external_utter_channel in ["enterprise_wechat",
+                                      "enterprise_wechat_bot_channel",
+                                      "dingtalk_channel"]:
+            # 除Web通道外，都发送到消息总线
             sender_id = tracker.sender_id
-            eventbus = EventBus()
+            eventbus = NotificationEventBus()
             eventbus.publist_notification_event(external_utter_content, sender_id)
-        else:
-            dispatcher.utter_message(external_utter_content)
+
+        # Web通道直接回复,其他通道调用了不会触发事件
+        dispatcher.utter_message(external_utter_content)
+
         return [
             SlotSet("external_utter_content", None),
             SlotSet("external_utter_channel", None)

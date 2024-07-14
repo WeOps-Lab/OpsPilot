@@ -1,9 +1,9 @@
 import asyncio
 import inspect
 import os
+from logging import getLogger
 from typing import Dict, Optional, Text, Any, Callable, Awaitable
 
-from logging import getLogger
 from rasa.core.channels.channel import (
     InputChannel,
     CollectingOutputChannel,
@@ -14,7 +14,7 @@ from sanic.request import Request
 from sanic.response import HTTPResponse
 from wechatpy.enterprise import WeChatClient, WeChatCrypto, parse_message
 
-from utils.eventbus import EventBus
+from utils.notification_eventbus import NotificationEventBus
 
 logger = getLogger(__name__)
 
@@ -43,13 +43,15 @@ class EnterpriseWechatChannel(InputChannel):
         if enable_eventbus:
             queue_name = f"enterprise_wechat_{self.bot_id}"
             logger.info(f"启动Pilot消息总线:[{queue_name}]")
-            self.event_bus = EventBus()
+            self.event_bus = NotificationEventBus()
             self.event_bus.consume(queue_name, self.recieve_event)
 
     def recieve_event(self, event):
         if self.event_bus.is_notification_event(event):
             reply_user_id = self.event_bus.get_notification_event_sender_id(event)
             reply_text = self.event_bus.get_notification_event_content(event)
+            logger.info(f"收到消息总线通知,目标用户:[{reply_user_id}],内容:[{reply_text}]")
+
             self.wechat_client.message.send_markdown(self.agent_id, reply_user_id, reply_text)
 
     @classmethod

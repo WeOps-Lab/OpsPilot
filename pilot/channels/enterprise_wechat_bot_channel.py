@@ -12,6 +12,8 @@ import os
 
 from loguru import logger
 
+from utils.notification_eventbus import NotificationEventBus
+
 
 class EnterpriseWechatBotChannel(InputChannel):
     def name(self) -> Text:
@@ -27,7 +29,7 @@ class EnterpriseWechatBotChannel(InputChannel):
         if enable_eventbus:
             queue_name = f"enterprise_wechat_bot_channel_{self.bot_id}"
             logger.info(f"启动Pilot消息总线:[{queue_name}]")
-            self.event_bus = EventBus()
+            self.event_bus = NotificationEventBus()
             self.event_bus.consume(queue_name, self.recieve_event)
 
     def send_enterprise_wechat_bot_message(self, url: str, content: str):
