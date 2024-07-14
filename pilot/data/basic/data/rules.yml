@@ -22,3 +22,8 @@ rules:
       - action: utter_restart_conversation
       - action: action_restart
 
+  - rule: 列出jenkins所有的构建任务
+    steps:
+      - intent: list_jenkins_jobs
+      - action: utter_list_jenkins_jobs
+      - action: action_list_jenkins_jobs

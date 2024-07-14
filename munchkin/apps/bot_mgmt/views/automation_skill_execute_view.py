@@ -33,7 +33,7 @@ class AutomationSkillExecuteView(APIView):
         sender_id = request.data.get("sender_id", "")
         skill_id = request.data.get("skill_id")
 
-        bot = Bot.objects.get(assistant_id=bot_id)
+        bot = Bot.objects.get(id=bot_id)
         automation_skill = bot.automation_skills.get(skill_id=skill_id)
 
         salt_skill_config = automation_skill.decrypted_skill_config
