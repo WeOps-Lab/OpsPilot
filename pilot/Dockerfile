@@ -13,5 +13,6 @@ ADD ./utils ./utils
 ADD ./ops_pilot_cli.py ./ops_pilot_cli.py
 ADD ./core ./core
 ADD ./eventbus ./eventbus
+ADD ./integrations ./integrations
 ADD ./support-files/supervisor/ops-pilot.conf /etc/supervisor/conf.d/ops-pilot.conf
 ADD ./support-files/supervisor/ops-pilot-action.conf /etc/supervisor/conf.d/ops-pilot-action.conf
