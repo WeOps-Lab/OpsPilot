@@ -1,8 +1,9 @@
 # 2.4
 
 * [Pilot] 优化主动消息触达动作
+* [Pilot] 新增 `帮助` 关键词: /help
+* [Pilot] 新增 `查看Jenkins任务列表` 关键词: /list_jenkins_job
 * [Munchkin] 机器人新增自动化技能模块
-* [Munchkin] 新增 `查看Jenkins任务列表` 关键词: /list_jenkins_job
 
 # 2.3
 
