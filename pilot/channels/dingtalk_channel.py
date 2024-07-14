@@ -10,8 +10,7 @@ from sanic import Blueprint, Request, HTTPResponse, response
 
 from libs import dingtalk_stream
 from libs.dingtalk_stream import AckMessage
-from utils.eventbus import EventBus
-from utils.notification_eventbus import NotificationEventBus
+from eventbus.notification_eventbus import NotificationEventBus
 
 
 class EventHandler(dingtalk_stream.EventHandler):

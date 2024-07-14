@@ -1,9 +1,11 @@
 import json
 
-from utils.eventbus import EventBus, NOTIFICATION_EVENT
+from eventbus.base_eventbus import BaseEventBus
+
+NOTIFICATION_EVENT = "notification_event"
 
 
-class NotificationEventBus(EventBus):
+class NotificationEventBus(BaseEventBus):
     def publist_notification_event(self, content, sender_id):
         # 发送通道通知消息总线
         data = {

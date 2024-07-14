@@ -4,7 +4,7 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 
-from utils.notification_eventbus import NotificationEventBus
+from eventbus.notification_eventbus import NotificationEventBus
 from utils.rasa_utils import RasaUtils
 
 

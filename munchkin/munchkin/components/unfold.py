@@ -114,6 +114,10 @@ UNFOLD = {
                         "link": reverse_lazy("admin:bot_mgmt_rasamodel_changelist"),
                     },
                     {
+                        "title": "集成",
+                        "link": reverse_lazy("admin:bot_mgmt_integration_changelist"),
+                    },
+                    {
                         "title": "自动化技能",
                         "link": reverse_lazy("admin:bot_mgmt_automationskill_changelist"),
                     },

@@ -6,12 +6,12 @@ from rasa_sdk.executor import CollectingDispatcher
 from eventbus.automation_eventbus import AutomationEventbus
 
 
-class ActionListJenkinsJobs(Action):
+class ActionBuildJenkinsPipeline(Action):
     def __init__(self) -> None:
         super().__init__()
 
     def name(self) -> Text:
-        return "action_list_jenkins_jobs"
+        return "action_build_jenkins_pipeline"
 
     def run(
             self,
@@ -20,5 +20,6 @@ class ActionListJenkinsJobs(Action):
             domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
         eventbus = AutomationEventbus()
-        eventbus.publish_automation_event("list_jenkins_jobs",
-                                          tracker.sender_id, tracker.get_latest_input_channel())
+        eventbus.publish("build_jenkins_pipeline",
+                         tracker.sender_id,
+                         tracker.get_latest_input_channel())

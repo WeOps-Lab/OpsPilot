@@ -2,14 +2,14 @@ from django.contrib import admin
 from django_ace.widgets import AceWidget
 from django_yaml_field.fields import YAMLField
 
-from apps.bot_mgmt.models import AutomationSkill
+from apps.bot_mgmt.models import Integration
 from apps.core.admin.guarded_admin_base import GuardedAdminBase
 
 
-@admin.register(AutomationSkill)
-class AutomationSkillAdmin(GuardedAdminBase):
+@admin.register(Integration)
+class IntegrationAdmin(GuardedAdminBase):
     def get_list_display(self, request):
-        list_display = ['name', 'skill_type', 'skill_id', 'integration']
+        list_display = ['name', 'integration']
         if request.user.is_superuser:
             list_display.append("owner_name")
         return list_display
@@ -22,6 +22,6 @@ class AutomationSkillAdmin(GuardedAdminBase):
 
     fieldsets = (
         (None, {
-            'fields': ('name', 'integration', 'skill_id', 'skill_type', 'skill_config')
+            'fields': ('name', 'integration', 'integration_config')
         }),
     )

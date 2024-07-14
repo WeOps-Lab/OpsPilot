@@ -2,7 +2,6 @@ import inspect
 import json
 import re
 import threading
-import uuid
 from typing import Text, Optional, Dict, Any, Callable, Awaitable
 from urllib.parse import quote
 
@@ -11,8 +10,7 @@ from loguru import logger
 from rasa.core.channels import InputChannel, UserMessage
 from sanic import Blueprint, Request, HTTPResponse, response
 
-from core.server_settings import server_settings
-from utils.eventbus import EventBus, CODE_REVIEW_EVENT
+from eventbus.base_eventbus import BaseEventBus, CODE_REVIEW_EVENT
 from utils.munchkin_driver import MunchkinDriver
 
 
@@ -27,7 +25,7 @@ class GitlabReviewChannel(InputChannel):
         self.gitlab_url = gitlab_url
 
         self.llm = MunchkinDriver()
-        self.event_bus = EventBus()
+        self.event_bus = BaseEventBus()
 
     @classmethod
     def from_credentials(cls, credentials: Optional[Dict[Text, Any]]) -> "InputChannel":

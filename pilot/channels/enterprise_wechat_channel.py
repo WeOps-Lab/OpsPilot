@@ -14,7 +14,7 @@ from sanic.request import Request
 from sanic.response import HTTPResponse
 from wechatpy.enterprise import WeChatClient, WeChatCrypto, parse_message
 
-from utils.notification_eventbus import NotificationEventBus
+from eventbus.notification_eventbus import NotificationEventBus
 
 logger = getLogger(__name__)
 

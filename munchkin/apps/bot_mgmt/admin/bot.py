@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.utils.html import format_html
 from unfold.decorators import action
 
-from apps.bot_mgmt.models import Bot, RasaModel, AutomationSkill
+from apps.bot_mgmt.models import Bot, RasaModel, AutomationSkill, Integration
 from apps.channel_mgmt.models import Channel
 from apps.core.admin.guarded_admin_base import GuardedAdminBase
 from apps.core.utils.kubernetes_client import KubernetesClient
@@ -36,11 +36,11 @@ class BotAdmin(GuardedAdminBase):
     list_display_links = ["name", "rasa_model_link", "channels_link"]
     ordering = ["id"]
     actions = ["start_pilot", "stop_pilot"]
-    filter_horizontal = ["channels", "llm_skills", "automation_skills"]
+    filter_horizontal = ["channels", "llm_skills", "integration"]
     fieldsets = (
         ("基本信息", {"fields": ("name", "assistant_id", "description")}),
         ("模型设置", {"fields": ("rasa_model",)}),
-        ("自动化技能", {"fields": ("automation_skills",)}),
+        ("集成", {"fields": ("integration",)}),
         ("LLM技能", {"fields": ("llm_skills",)}),
         ("通道", {"fields": ("channels",)}),
         (
@@ -61,8 +61,8 @@ class BotAdmin(GuardedAdminBase):
             kwargs["queryset"] = Channel.objects.filter(owner=request.user)
         elif db_field.name == "llm_skills":
             kwargs["queryset"] = LLMSkill.objects.filter(owner=request.user)
-        elif db_field.name == "automation_skills":
-            kwargs["queryset"] = AutomationSkill.objects.filter(owner=request.user)
+        elif db_field.name == "integration":
+            kwargs["queryset"] = Integration.objects.filter(owner=request.user)
         return super().formfield_for_manytomany(db_field, request, **kwargs)
 
     def channels_link(self, obj):

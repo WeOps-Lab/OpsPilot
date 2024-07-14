@@ -32,3 +32,8 @@ rules:
       - intent: list_jenkins_jobs
       - action: utter_list_jenkins_jobs
       - action: action_list_jenkins_jobs
+
+  - rule: 构建jenkins流水线
+    steps:
+      - intent: build_jenkins_pipeline
+      - action: action_build_jenkins_pipeline

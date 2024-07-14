@@ -7,12 +7,11 @@ from rasa.core.channels import InputChannel, UserMessage
 from requests import Request
 from sanic import Blueprint, response
 
-from utils.eventbus import EventBus
 import os
 
 from loguru import logger
 
-from utils.notification_eventbus import NotificationEventBus
+from eventbus.notification_eventbus import NotificationEventBus
 
 
 class EnterpriseWechatBotChannel(InputChannel):

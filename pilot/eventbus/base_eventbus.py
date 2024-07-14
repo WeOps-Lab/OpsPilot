@@ -7,15 +7,9 @@ from loguru import logger
 from core.server_settings import server_settings
 
 CODE_REVIEW_EVENT = "code_review_event"
-NOTIFICATION_EVENT = "notification_event"
-AUTOMATION_EVENT = "automation_event"
 
 
-class EventBus:
-    def is_automation_event(self, event):
-        return event['event_type'] == AUTOMATION_EVENT
-
-
+class BaseEventBus:
 
     def prepare_eventbus(self):
         connection = pika.BlockingConnection(

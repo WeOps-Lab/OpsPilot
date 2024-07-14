@@ -1,3 +1,4 @@
+import requests
 from rasa_sdk import Tracker
 from loguru import logger
 
@@ -10,6 +11,18 @@ class RasaUtils:
     @staticmethod
     def log_info(tracker: Tracker, content):
         logger.info(f'通道:[{tracker.get_latest_input_channel()}],会话ID:[{tracker.sender_id}]. {content}')
+
+    def call_external_utter(self, sender_id, content, channel):
+        utter_response = requests.post(
+            f'http://127.0.0.1:5005/conversations/{sender_id}/trigger_intent',
+            json={
+                "name": "EXTERNAL_UTTER",
+                "entities": {
+                    "external_utter_content": f"{content}",
+                    "external_utter_channel": f"{channel}"
+                }
+            })
+        utter_response.raise_for_status()
 
     @staticmethod
     def load_chat_history(tracker: Tracker):

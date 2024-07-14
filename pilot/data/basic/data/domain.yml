@@ -8,10 +8,12 @@ actions:
   - action_llm_fallback
   - action_external_utter
   - action_list_jenkins_jobs
+  - action_build_jenkins_pipeline
 
 entities:
   - external_utter_content # 主动触达消息内容
   - external_utter_channel # 主动触达消息渠道
+  - jenkins_pipeline_name # Jenkins流水线名称
 
 slots:
   external_utter_content:
@@ -28,10 +30,19 @@ slots:
       - type: from_entity
         entity: external_utter_channel
 
+  jenkins_pipeline_name:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: jenkins_pipeline_name
+
+
 intents:
   - out_of_scope  # 无法识别的意图
   - EXTERNAL_UTTER # 主动触达消息
   - reset # 重置对话
   - help # 查看帮助
   - list_jenkins_jobs # 列出jenkins所有的构建任务
+  - build_jenkins_pipeline # 构建jenkins流水线
 
