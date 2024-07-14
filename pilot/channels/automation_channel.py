@@ -1,12 +1,10 @@
-import asyncio
 import inspect
 import json
-import threading
-from threading import Thread
-from typing import Text, Optional, Dict, Any, Callable, Awaitable
+from typing import Text, Callable, Awaitable
+
 import requests
 from loguru import logger
-from rasa.core.channels import InputChannel, CollectingOutputChannel, UserMessage
+from rasa.core.channels import InputChannel, UserMessage
 from sanic import Blueprint, Request, HTTPResponse, response
 
 from utils.eventbus import EventBus
