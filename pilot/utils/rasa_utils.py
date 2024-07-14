@@ -12,7 +12,7 @@ class RasaUtils:
     def log_info(tracker: Tracker, content):
         logger.info(f'通道:[{tracker.get_latest_input_channel()}],会话ID:[{tracker.sender_id}]. {content}')
 
-    def call_external_utter(self, sender_id, content, channel):
+    def call_external_utter(sender_id, content, channel):
         utter_response = requests.post(
             f'http://127.0.0.1:5005/conversations/{sender_id}/trigger_intent',
             json={

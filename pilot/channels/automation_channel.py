@@ -18,7 +18,7 @@ class AutomationChannel(InputChannel):
         if self.event_bus.is_automation_event(event):
             logger.info(f"接收到自动化事件:{event}")
 
-            if event['automation_event'] == 'list_jenkins_jobs':
+            if event['skill_id'] == 'list_jenkins_jobs':
                 result = self.jenkins_integration.list_jenkins_job(event['sender_id'])
                 RasaUtils.call_external_utter(event['sender_id'], result, event['channel'])
 
