@@ -1,11 +1,10 @@
+import json
 from typing import Text, Any, Dict, List
 
 from rasa_sdk import Action, Tracker
-from rasa_sdk.events import UserUtteranceReverted
 from rasa_sdk.executor import CollectingDispatcher
 
 from utils.munchkin_driver import MunchkinDriver
-from utils.rasa_utils import RasaUtils
 
 
 class ActionListJenkinsJobs(Action):
@@ -24,6 +23,7 @@ class ActionListJenkinsJobs(Action):
         munchkin = MunchkinDriver()
 
         result = munchkin.automation_skills_execute("list_jenkins_jobs", "", tracker.sender_id)
+
         keys = result['return'][0].keys()
         first_key = list(keys)[0]
 
@@ -38,9 +38,12 @@ class ActionListJenkinsJobs(Action):
             'yellow_anime': '正在构建，上次不稳定',
             'red_anime': '正在构建，上次失败'
         }
-        jobs = result['return'][0][first_key]['jobs']
+        jobs = json.loads(result['return'][0][first_key])['jobs']
         table_str = "| 名称 | 状态 |\n| --- | --- |\n"
         for job in jobs:
-            status = color_map.get(job['color'], '未知')
+            if 'color' not in job:
+                status = '未知'
+            else:
+                status = color_map.get(job['color'], '未知')
             table_str += f"| {job['name']} | {status} |\n"
         dispatcher.utter_message(table_str)

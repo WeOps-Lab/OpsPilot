@@ -2,6 +2,3 @@ version: "3.1"
 responses:
   utter_restart_conversation:
     - text: "对话已重置"
-
-  utter_list_jenkins_jobs:
-    - text: "正在查看Jenkins的所有构建任务,请稍后...."
