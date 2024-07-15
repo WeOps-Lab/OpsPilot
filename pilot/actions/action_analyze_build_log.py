@@ -12,7 +12,7 @@ class ActionAnalyzeBuildLog(Action):
         super().__init__()
 
     def name(self) -> Text:
-        return "analyze_build_log"
+        return "action_analyze_build_log"
 
     def run(
             self,

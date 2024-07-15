@@ -48,4 +48,5 @@ intents:
   - list_jenkins_jobs # 列出jenkins所有的构建任务
   - build_jenkins_pipeline # 构建jenkins流水线
   - jenkins_build_log # 查看jenkins构建日志
+  - analyze_build_log # 分析jenkins构建日志
 
