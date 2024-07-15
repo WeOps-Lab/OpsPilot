@@ -42,7 +42,7 @@ class JenkinsIntegration:
             sender_id)
         keys = result['return'][0].keys()
         first_key = list(keys)[0]
-        return result['return'][0][first_key][:-130]
+        return result['return'][0][first_key][-5000:]
 
     def build_jenkins_job(self, job_name, sender_id):
         # 获取最新的构建号
