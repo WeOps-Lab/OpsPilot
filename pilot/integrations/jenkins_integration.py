@@ -25,6 +25,12 @@ class JenkinsIntegration:
             table_str += f"| {job['name']} | \n"
         return table_str
 
+    def analyze_build_log(self, job_name, sender_id):
+        build_log = self.get_build_log(job_name, sender_id)
+        result = self.munchkin.chat("action_llm_jenkins_build_analysis",
+                                    build_log[-10000:], "", sender_id)
+        return result
+
     def get_build_log(self, job_name, sender_id):
         result = self.munchkin.automation_skills_execute(
             "jenkins_last_build_number",
@@ -42,7 +48,7 @@ class JenkinsIntegration:
             sender_id)
         keys = result['return'][0].keys()
         first_key = list(keys)[0]
-        return result['return'][0][first_key][-5000:]
+        return result['return'][0][first_key]
 
     def build_jenkins_job(self, job_name, sender_id):
         # 获取最新的构建号

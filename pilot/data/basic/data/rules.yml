@@ -42,3 +42,8 @@ rules:
     steps:
       - intent: jenkins_build_log
       - action: action_jenkins_build_log
+
+  - rule: 分析jenkins任务的构建日志
+    steps:
+      - intent: analyze_build_log
+      - action: action_analyze_build_log

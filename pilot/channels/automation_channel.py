@@ -23,9 +23,12 @@ class AutomationChannel(InputChannel):
                 RasaUtils.call_external_utter(event['sender_id'], result, event['channel'])
             elif event['skill_id'] == 'jenkins_build_log':
                 result = self.jenkins_integration.get_build_log(event['params']['job_name'], event['sender_id'])
-                RasaUtils.call_external_utter(event['sender_id'], result, event['channel'])
+                RasaUtils.call_external_utter(event['sender_id'], result[-5000:], event['channel'])
             elif event['skill_id'] == 'build_jenkins_pipeline':
                 result = self.jenkins_integration.build_jenkins_job(event['params']['job_name'], event['sender_id'])
+                RasaUtils.call_external_utter(event['sender_id'], result, event['channel'])
+            elif event['skill_id'] == 'analyze_build_log':
+                result = self.jenkins_integration.analyze_build_log(event['params']['job_name'], event['sender_id'])
                 RasaUtils.call_external_utter(event['sender_id'], result, event['channel'])
 
     def __init__(self, ) -> None:
