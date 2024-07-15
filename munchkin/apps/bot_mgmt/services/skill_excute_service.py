@@ -12,9 +12,11 @@ class SkillExecuteService:
 
         if sender_id:
             # TODO: 要配合pilot改造，把通道带上，暂时不支持用户组和通道过滤
-            if BotSkillRule.objects.filter(rule_user__user_id=sender_id, bot_id=bot).exists():
+            if BotSkillRule.objects.filter(rule_user__user_id=sender_id, bot_id=bot,
+                                           llm_skill__skill_id=action_name).exists():
                 logger.info(f"识别到用户[{sender_id}]的个性化规则,切换系统技能提示词")
-                llm_skill = BotSkillRule.objects.get(rule_user__user_id=sender_id, bot_id=bot).llm_skill
+                llm_skill = BotSkillRule.objects.get(rule_user__user_id=sender_id, bot_id=bot,
+                                                     llm_skill__skill_id=action_name).llm_skill
 
         result = llm_service.chat(llm_skill, user_message, chat_history)
         return result
