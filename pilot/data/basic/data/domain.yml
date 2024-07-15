@@ -9,6 +9,7 @@ actions:
   - action_external_utter
   - action_list_jenkins_jobs
   - action_build_jenkins_pipeline
+  - action_jenkins_build_log
 
 entities:
   - external_utter_content # 主动触达消息内容
@@ -45,4 +46,5 @@ intents:
   - help # 查看帮助
   - list_jenkins_jobs # 列出jenkins所有的构建任务
   - build_jenkins_pipeline # 构建jenkins流水线
+  - jenkins_build_log # 查看jenkins构建日志
 

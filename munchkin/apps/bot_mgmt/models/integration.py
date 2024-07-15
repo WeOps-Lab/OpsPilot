@@ -32,3 +32,7 @@ class Integration(MaintainerInfo, EncryptableMixin):
         self.decrypt_field("token", decrypted_config)
 
         return decrypted_config
+
+    class Meta:
+        verbose_name = "集成"
+        verbose_name_plural = verbose_name

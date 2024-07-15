@@ -28,3 +28,7 @@ class AutomationSkill(MaintainerInfo, EncryptableMixin):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "自动化技能"
+        verbose_name_plural = verbose_name

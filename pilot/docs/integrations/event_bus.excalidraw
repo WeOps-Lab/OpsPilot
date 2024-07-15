@@ -662,16 +662,20 @@
         "type": 3
       },
       "seed": 1660171142,
-      "version": 454,
-      "versionNonce": 1972803802,
+      "version": 455,
+      "versionNonce": 924652558,
       "isDeleted": false,
       "boundElements": [
         {
           "id": "51OCNGCFatqrbyvEFcpp7",
           "type": "arrow"
+        },
+        {
+          "id": "wusHz6D8HJtriW8KBOXsW",
+          "type": "arrow"
         }
       ],
-      "updated": 1720956208084,
+      "updated": 1721013525203,
       "link": null,
       "locked": false
     },
@@ -1241,8 +1245,8 @@
       "type": "arrow",
       "x": 1159.351543449076,
       "y": -593.6271428805605,
-      "width": 255.00847225504208,
-      "height": 1.8914591736165676,
+      "width": 253.00847225504208,
+      "height": 2.8914591736165676,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "#b2f2bb",
@@ -1257,8 +1261,8 @@
         "type": 2
       },
       "seed": 946559174,
-      "version": 313,
-      "versionNonce": 1460623238,
+      "version": 393,
+      "versionNonce": 568254098,
       "isDeleted": false,
       "boundElements": [
         {
@@ -1266,7 +1270,7 @@
           "id": "K1XW2pNceuoBMKWgWJGwS"
         }
       ],
-      "updated": 1720956454277,
+      "updated": 1721013532587,
       "link": null,
       "locked": false,
       "points": [
@@ -1275,20 +1279,20 @@
           0
         ],
         [
-          -255.00847225504208,
-          1.8914591736165676
+          -253.00847225504208,
+          2.8914591736165676
         ]
       ],
       "lastCommittedPoint": null,
       "startBinding": {
         "elementId": "oAeb5oyMrKBsVenkPDjSl",
-        "focus": -0.07460868178048827,
+        "focus": -0.04404582269949069,
         "gap": 11.071594916706317
       },
       "endBinding": {
         "elementId": "P0sBN2js4_EsYjglUICPP",
-        "focus": -0.01310876137855643,
-        "gap": 6.079892414119229
+        "focus": 0.05360512715400565,
+        "gap": 8.079892414119229
       },
       "startArrowhead": null,
       "endArrowhead": "arrow"

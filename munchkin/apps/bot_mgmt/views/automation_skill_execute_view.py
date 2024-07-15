@@ -7,6 +7,7 @@ from drf_yasg import openapi
 
 from apps.bot_mgmt.models import Bot, AutomationSkill
 from apps.bot_mgmt.services.automation_service import AutomationService
+from loguru import logger
 
 
 class AutomationSkillExecuteView(APIView):
@@ -51,7 +52,7 @@ class AutomationSkillExecuteView(APIView):
             # 替换args字符串中的参数,形式为{{key1}}  {{key2}} key是param的key
             for key, value in params.items():
                 args = args.replace("{{" + key + "}}", value)
-
+        logger.info(f"args: {args}")
         result = service.execute_salt_local(
             salt_skill_config['func'], salt_skill_config['tgt'],
             args)

@@ -37,3 +37,8 @@ rules:
     steps:
       - intent: build_jenkins_pipeline
       - action: action_build_jenkins_pipeline
+
+  - rule: 查看jenkins任务的构建日志
+    steps:
+      - intent: jenkins_build_log
+      - action: action_jenkins_build_log
