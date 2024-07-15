@@ -7,7 +7,7 @@ responses:
     - text: "正在查看Jenkins的所有构建任务,请稍后...."
 
   utter_ask_build_jenkins_pipeline_name:
-      - text: "你想构建哪个流水线呢？"
+    - text: "你想构建哪个流水线呢？"
 
   utter_help:
     - text: |
@@ -15,3 +15,5 @@ responses:
           * /reset - 重置对话
           * /help - 查看帮助
           * /list_jenkins_job - 查看Jenkins任务
+          * /jenkins_build_log{"jenkins_pipeline_name": "任务名称"} - 查看Jenkins任务的构建日志
+          * /build_jenkins_pipeline{"jenkins_pipeline_name": "任务名称"} - 构建Jenkins流水线
