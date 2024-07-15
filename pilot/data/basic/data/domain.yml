@@ -10,6 +10,7 @@ actions:
   - action_list_jenkins_jobs
   - action_build_jenkins_pipeline
   - action_jenkins_build_log
+  - action_analyze_build_log
 
 entities:
   - external_utter_content # 主动触达消息内容
