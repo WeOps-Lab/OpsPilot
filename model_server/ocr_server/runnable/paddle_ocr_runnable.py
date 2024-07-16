@@ -36,4 +36,4 @@ class PaddleOcrRunnable:
             return ''
 
     def instance(self):
-        return RunnableLambda(self.execute).with_types(input_type=PaddleOcrRequest, output_type=List[Document])
+        return RunnableLambda(self.execute).with_types(input_type=PaddleOcrRequest, output_type=str)

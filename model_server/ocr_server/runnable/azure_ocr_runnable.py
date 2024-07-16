@@ -37,4 +37,4 @@ class AzureOcrRunnable:
         return content
 
     def instance(self):
-        return RunnableLambda(self.execute).with_types(input_type=AzureOcrRequest, output_type=List[Document])
+        return RunnableLambda(self.execute).with_types(input_type=AzureOcrRequest, output_type=str)
