@@ -194,7 +194,17 @@ class ModelProviderInitService:
             defaults={
                 "enabled": True,
                 "ocr_config": {
-                    "base_url": "http://ocr-server.ops-pilot:8109/paddleocr/ocr",
+                    "base_url": "http://ocr-server.ops-pilot:8109/paddle_ocr",
+                }
+            }
+        )
+
+        OCRProvider.objects.get_or_create(
+            name="AzureOCR",
+            defaults={
+                "enabled": True,
+                "ocr_config": {
+                    "base_url": "http://ocr-server.ops-pilot:8109/azure_ocr",
                 }
             }
         )

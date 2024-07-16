@@ -41,7 +41,7 @@ class PDFLoader:
         table_docs = []
         text_docs = []
 
-        file_remote = RemoteRunnable(self.chunk_request.ocr_provider_address)
+        file_remote = RemoteRunnable(self.ocr_provider_address)
 
         # 解析图片
         with fitz.Document(self.file_path) as pdf:
