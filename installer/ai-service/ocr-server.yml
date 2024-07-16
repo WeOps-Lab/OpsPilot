@@ -18,6 +18,11 @@ spec:
           image: ccr.ccs.tencentyun.com/megalab/ocr-server
           ports:
             - containerPort: 8109
+          env:
+            - name: AZURE_OCR_ENDPOINT
+              value: ""
+            - name: AZURE_OCR_KEY
+              value: "
 ---
 apiVersion: v1
 kind: Service

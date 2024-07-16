@@ -1,4 +1,5 @@
 import base64
+import os
 import time
 from typing import List
 
@@ -14,17 +15,17 @@ from io import BytesIO
 
 class AzureOcrRunnable:
     def __init__(self):
-        pass
+        self.computervision_client = ComputerVisionClient(os.getenv('AZURE_OCR_ENDPOINT'),
+                                                          CognitiveServicesCredentials(os.getenv('AZURE_OCR_KEY')))
 
     def execute(self, request: AzureOcrRequest) -> str:
         base_image = base64.b64decode(request.file)
-        computervision_client = ComputerVisionClient(request.azure_ocr_endpoint,
-                                                     CognitiveServicesCredentials(request.azure_ocr_key))
-        read_response = computervision_client.read_in_stream(BytesIO(base_image), raw=True)
+
+        read_response = self.computervision_client.read_in_stream(BytesIO(base_image), raw=True)
         read_operation_location = read_response.headers["Operation-Location"]
         operation_id = read_operation_location.split("/")[-1]
         while True:
-            read_result = computervision_client.get_read_result(operation_id)
+            read_result = self.computervision_client.get_read_result(operation_id)
             if read_result.status not in ['notStarted', 'running']:
                 break
             time.sleep(1)

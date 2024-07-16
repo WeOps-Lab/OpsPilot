@@ -1,9 +1,12 @@
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from langserve import add_routes
 from starlette.middleware.cors import CORSMiddleware
 
 from runnable.azure_ocr_runnable import AzureOcrRunnable
 from runnable.paddle_ocr_runnable import PaddleOcrRunnable
+
+load_dotenv()
 
 app = FastAPI(
     title="OCR Server",
