@@ -9,4 +9,10 @@ node('ops-pilot'){
             sh 'sudo docker build -t ccr.ccs.tencentyun.com/megalab/pilot-elasticsearch .'
         }
     }
+
+    stage('构建SaltStack Server镜像'){
+        dir('depend/saltstack_server'){
+            sh 'sudo docker build -t ccr.ccs.tencentyun.com/megalab/saltstack-server .'
+        }
+    }
 }
