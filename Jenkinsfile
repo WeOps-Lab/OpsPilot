@@ -3,4 +3,10 @@ node('ops-pilot'){
         git branch: 'main',
             url: 'https://github.com/WeOps-Lab/OpsPilot.git'
     }
+
+    stage('构建elasticsearch镜像'){
+        dir('depend/elasticsearch'){
+            sh 'docker build -t ccr.ccs.tencentyun.com/megalab/pilot-elasticsearch .'
+        }
+    }
 }
