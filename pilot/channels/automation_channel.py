@@ -15,24 +15,25 @@ class AutomationChannel(InputChannel):
     def name(self) -> Text:
         return "automation_channel"
 
-    def handle_build_jenkins_pipeline_thread(self, event):
-        result = self.jenkins_integration.build_jenkins_job(event['params']['job_name'], event['sender_id'])
-        RasaUtils.call_external_utter(event['sender_id'], result, event['channel'])
+    def handle_automation_event(self, event):
+        logger.info(f"接收到自动化事件:{event}")
+        if event['skill_id'] == 'list_jenkins_jobs':
+            result = self.jenkins_integration.list_jenkins_job(event['sender_id'])
+            RasaUtils.call_external_utter(event['sender_id'], result, event['channel'])
+        elif event['skill_id'] == 'jenkins_build_log':
+            result = self.jenkins_integration.get_build_log(event['params']['job_name'], event['sender_id'])
+            RasaUtils.call_external_utter(event['sender_id'], result[-5000:], event['channel'])
+        elif event['skill_id'] == 'build_jenkins_pipeline':
+            result = self.jenkins_integration.build_jenkins_job(event['params']['job_name'], event['sender_id'])
+            RasaUtils.call_external_utter(event['sender_id'], result[-30000:], event['channel'])
+
+        elif event['skill_id'] == 'analyze_build_log':
+            result = self.jenkins_integration.analyze_build_log(event['params']['job_name'], event['sender_id'])
+            RasaUtils.call_external_utter(event['sender_id'], result, event['channel'])
 
     def recieve_event(self, event):
         if self.event_bus.is_automation_event(event):
-            logger.info(f"接收到自动化事件:{event}")
-            if event['skill_id'] == 'list_jenkins_jobs':
-                result = self.jenkins_integration.list_jenkins_job(event['sender_id'])
-                RasaUtils.call_external_utter(event['sender_id'], result, event['channel'])
-            elif event['skill_id'] == 'jenkins_build_log':
-                result = self.jenkins_integration.get_build_log(event['params']['job_name'], event['sender_id'])
-                RasaUtils.call_external_utter(event['sender_id'], result[-5000:], event['channel'])
-            elif event['skill_id'] == 'build_jenkins_pipeline':
-                threading.Thread(target=self.handle_build_jenkins_pipeline_thread, args=(event,)).start()
-            elif event['skill_id'] == 'analyze_build_log':
-                result = self.jenkins_integration.analyze_build_log(event['params']['job_name'], event['sender_id'])
-                RasaUtils.call_external_utter(event['sender_id'], result, event['channel'])
+            threading.Thread(target=self.handle_automation_event, args=(event,)).start()
 
     def __init__(self, ) -> None:
         super().__init__()
