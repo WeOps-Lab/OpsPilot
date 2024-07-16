@@ -14,4 +14,7 @@ RUN pip install -r requirements.in
 
 ADD ./server.py ./server.py
 ADD ./models ./models
+ADD ./user_types ./user_types
+ADD ./runnable ./runnable
+
 CMD ["supervisord", "-n"]

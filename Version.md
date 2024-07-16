@@ -9,6 +9,7 @@
   * /build_jenkins_pipeline: 构建Jenkins任务
 * [Munchkin] 机器人新增自动化技能模块
 * [OCR Server] 新增Azure OCR支持
+
 # 2.3
 
 * [Classicfy Aiops Server] 新增经典AIOPS算法服务，内置时序预测、异常检查、根因分析、日志聚类算法

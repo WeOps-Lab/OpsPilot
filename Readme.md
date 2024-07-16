@@ -19,7 +19,8 @@ https://wedoc.canway.net/opspilot/
 
 * [X] RAG细节处理优化，整体代码优化
 * [X] 引入aiops-server: 内置经典aiops算法
-* [ ] Pilot 消息总线优化
+* [X] Pilot 消息总线优化
+* [ ] Pilot支持集成Jenkins，提供ChatOpsyi'jiyiji
 * [ ] Pilot支持接入Gitlab，支持AI Code Review
 * [ ] Pilot支持接入Loki、Graylog，提供日志洞察能力
 * [ ] Pilot支持接入Prometheus，提供监控指标洞察能力
