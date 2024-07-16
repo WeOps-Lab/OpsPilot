@@ -22,6 +22,7 @@ class FileKnowledgeAdmin(GuardedAdminBase):
          {"fields": ("enable_general_parse", ("general_parse_chunk_size", "general_parse_chunk_overlap"))}),
         ("语义分块解析",
          {"fields": ("enable_semantic_chunck_parse", "semantic_chunk_parse_embedding_model")}),
+        ("OCR增强", {"fields": ("enable_ocr_parse",)}),
         ("Excel解析",
          {"fields": ("excel_header_row_parse", "excel_full_content_parse")}),
     )
