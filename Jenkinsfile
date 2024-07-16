@@ -6,7 +6,7 @@ node('ops-pilot'){
 
     stage('构建elasticsearch镜像'){
         dir('depend/elasticsearch'){
-            sh 'docker build -t ccr.ccs.tencentyun.com/megalab/pilot-elasticsearch .'
+            sh 'sudo docker build -t ccr.ccs.tencentyun.com/megalab/pilot-elasticsearch .'
         }
     }
 }
