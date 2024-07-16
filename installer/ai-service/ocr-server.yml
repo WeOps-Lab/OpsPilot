@@ -22,7 +22,7 @@ spec:
             - name: AZURE_OCR_ENDPOINT
               value: ""
             - name: AZURE_OCR_KEY
-              value: "
+              value: ""
 ---
 apiVersion: v1
 kind: Service

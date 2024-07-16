@@ -1,3 +1,4 @@
+import base64
 import io
 import re
 from typing import List
@@ -7,6 +8,7 @@ import pdfplumber
 import requests
 from PIL import Image
 from langchain_core.documents import Document
+from langserve import RemoteRunnable
 from loguru import logger
 from numpy import asarray
 from tqdm import tqdm
@@ -39,6 +41,8 @@ class PDFLoader:
         table_docs = []
         text_docs = []
 
+        file_remote = RemoteRunnable(self.chunk_request.ocr_provider_address)
+
         # 解析图片
         with fitz.Document(self.file_path) as pdf:
             for page_number in tqdm(range(1, len(pdf) + 1), desc=f"解析PDF图片[{self.file_path}]"):
@@ -48,16 +52,12 @@ class PDFLoader:
                     base_image = pdf.extract_image(xref_value)
                     image_bytes = base_image["image"]
                     file = BytesIO(image_bytes)
-                    file_name = f"page_{page_number}_image_{image_number}.png"
 
                     # 完善这部分的代码
-                    response = requests.post(
-                        self.ocr_provider_address,
-                        files={"file": (file_name, file)}
-                    )
+                    content = file_remote.invoke({
+                        "file": base64.b64encode(file.read()).decode('utf-8'),
+                    })
 
-                    response.raise_for_status()
-                    content = response.json()['text']
                     text_docs.append(Document(content))
 
         with pdfplumber.open(self.file_path) as pdf:

@@ -1,5 +1,8 @@
+import base64
+
 import requests
 from langchain_core.documents import Document
+from langserve import RemoteRunnable
 
 from user_types.file_chunk_request import FileChunkRequest
 
@@ -12,8 +15,9 @@ class ImageLoader:
     def load(self):
         docs = []
         with open(self.path, "rb") as file:
-            response = requests.post(self.chunk_request.ocr_provider_address, files={"file": file})
-            response.raise_for_status()
-            content = response.json()['text']
+            file_remote = RemoteRunnable(self.chunk_request.ocr_provider_address)
+            content = file_remote.invoke({
+                "file": base64.b64encode(file.read()).decode('utf-8'),
+            })
             docs.append(Document(content, metadata={"format": "image"}))
         return docs
