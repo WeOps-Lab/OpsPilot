@@ -1,25 +1,22 @@
 import base64
-import io
 import re
+from io import BytesIO
 from typing import List
 
 import fitz
 import pdfplumber
-import requests
-from PIL import Image
 from langchain_core.documents import Document
 from langserve import RemoteRunnable
 from loguru import logger
-from numpy import asarray
 from tqdm import tqdm
-from io import BytesIO
 
 
 class PDFLoader:
 
-    def __init__(self, file_path, ocr_provider_address):
+    def __init__(self, file_path, ocr_provider_address, enable_ocr_parse):
         self.file_path = file_path
         self.ocr_provider_address = ocr_provider_address
+        self.enable_ocr_parse = enable_ocr_parse
 
     def table_to_markdown(self, table: List[List[str]]) -> str:
         # 清理数据并创建Markdown表格
@@ -41,24 +38,24 @@ class PDFLoader:
         table_docs = []
         text_docs = []
 
-        file_remote = RemoteRunnable(self.ocr_provider_address)
+        if self.enable_ocr_parse:
+            file_remote = RemoteRunnable(self.ocr_provider_address)
+            # 解析图片
+            with fitz.Document(self.file_path) as pdf:
+                for page_number in tqdm(range(1, len(pdf) + 1), desc=f"解析PDF图片[{self.file_path}]"):
+                    page = pdf[page_number - 1]
+                    for image_number, image in enumerate(page.get_images(), start=1):
+                        xref_value = image[0]
+                        base_image = pdf.extract_image(xref_value)
+                        image_bytes = base_image["image"]
+                        file = BytesIO(image_bytes)
 
-        # 解析图片
-        with fitz.Document(self.file_path) as pdf:
-            for page_number in tqdm(range(1, len(pdf) + 1), desc=f"解析PDF图片[{self.file_path}]"):
-                page = pdf[page_number - 1]
-                for image_number, image in enumerate(page.get_images(), start=1):
-                    xref_value = image[0]
-                    base_image = pdf.extract_image(xref_value)
-                    image_bytes = base_image["image"]
-                    file = BytesIO(image_bytes)
+                        # 完善这部分的代码
+                        content = file_remote.invoke({
+                            "file": base64.b64encode(file.read()).decode('utf-8'),
+                        })
 
-                    # 完善这部分的代码
-                    content = file_remote.invoke({
-                        "file": base64.b64encode(file.read()).decode('utf-8'),
-                    })
-
-                    text_docs.append(Document(content))
+                        text_docs.append(Document(content))
 
         with pdfplumber.open(self.file_path) as pdf:
 

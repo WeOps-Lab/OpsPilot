@@ -52,7 +52,7 @@ class FileChunkRunnable(BaseChunkRunnable):
                 if file_type in [".ppt", ".pptx"]:
                     loader = PPTLoader(f.name)
                 elif file_type in [".pdf"]:
-                    loader = PDFLoader(f.name, request.ocr_provider_address)
+                    loader = PDFLoader(f.name, request.ocr_provider_address, request.enable_ocr_parse)
                 elif file_type in [".doc", ".docx"]:
                     loader = DocLoader(f.name)
                 elif file_type in [".xls", ".xlsx"]:
