@@ -15,4 +15,10 @@ node('ops-pilot'){
             sh 'sudo docker build -t ccr.ccs.tencentyun.com/megalab/saltstack-server .'
         }
     }
+
+    stage('构建Bionics镜像'){
+        dir('depend/bionics'){
+            sh 'sudo docker build -t ccr.ccs.tencentyun.com/megalab/bionics .'
+        }
+    }
 }
