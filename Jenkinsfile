@@ -4,19 +4,16 @@ node('ops-pilot'){
             url: 'https://github.com/WeOps-Lab/OpsPilot.git'
     }
 
-    stage('构建elasticsearch镜像'){
+    stage('构建基础服务镜像'){
+
         dir('depend/elasticsearch'){
             sh 'sudo docker build -t ccr.ccs.tencentyun.com/megalab/pilot-elasticsearch .'
         }
-    }
 
-    stage('构建SaltStack Server镜像'){
         dir('depend/saltstack_server'){
             sh 'sudo docker build -t ccr.ccs.tencentyun.com/megalab/saltstack-server .'
         }
-    }
 
-    stage('构建Bionics镜像'){
         dir('depend/bionics'){
             sh 'sudo docker build -t ccr.ccs.tencentyun.com/megalab/bionics .'
         }
