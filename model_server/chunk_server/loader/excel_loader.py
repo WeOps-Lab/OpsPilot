@@ -48,7 +48,7 @@ class ExcelLoader():
                     # 遍历这一行的每一列
                     for col_name, col_value in row.items():
                         # 将列名和列值拼接成一个字符串，然后添加到结果中
-                        row_result += f'{col_name}: {col_value}  '
+                        row_result += f'{sheet_name}  {col_name}: {col_value}  '
 
                     # 将这一行的结果添加到总结果中
                     result.append(Document(row_result.strip(), metadata={"format": "table", "sheet": sheet_name}))
@@ -58,7 +58,8 @@ class ExcelLoader():
 
                 # 读取Excel 的全内容
                 full_content = self.dataframe_to_excel_format_string(df)
-                result.append(Document(full_content, metadata={"format": "table", "sheet": sheet_name}))
+                result.append(
+                    Document(f'{sheet_name} {full_content}', metadata={"format": "table", "sheet": sheet_name}))
 
         # 返回结果
         return result
