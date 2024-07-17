@@ -19,6 +19,12 @@ node('ops-pilot'){
         }
     }
 
+    stage('构建Model Servers'){
+        dir('model_server/chunk_server'){
+            sh 'sudo docker build -t ccr.ccs.tencentyun.com/megalab/chunk-server .'
+        }
+    }
+    
     stage('构建Pilot'){
         dir('pilot'){
             sh 'sudo docker build -t ccr.ccs.tencentyun.com/megalab/pilot .'
