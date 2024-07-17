@@ -58,7 +58,7 @@ class JenkinsIntegration:
                 {"job_name": job_name, "build_number": build_number},
                 sender_id)
             build_status = json.loads(build_result)['result']
-            if build_status in ['SUCCESS', 'FAILURE']:
+            if build_status in ['SUCCESS', 'FAILURE','ABORTED']:
                 logger.info(f'任务[{job_name}]最后一次构建状态：{build_status}，可以开始新的构建任务')
             else:
                 logger.info(f'任务[{job_name}]最后一次构建状态：{build_status}，请等待构建任务完成')

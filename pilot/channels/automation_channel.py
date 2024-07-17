@@ -1,11 +1,12 @@
 import inspect
-from typing import Text, Callable, Awaitable
+from typing import Text, Callable, Awaitable, Optional, Dict, Any
 
 from loguru import logger
 from rasa.core.channels import InputChannel, UserMessage
 from sanic import Blueprint, Request, HTTPResponse, response
 
 from eventbus.automation_eventbus import AutomationEventbus
+from eventbus.notification_eventbus import NotificationEventBus
 from integrations.jenkins_integration import JenkinsIntegration
 from utils.rasa_utils import RasaUtils
 import threading
@@ -14,6 +15,16 @@ import threading
 class AutomationChannel(InputChannel):
     def name(self) -> Text:
         return "automation_channel"
+
+    def __init__(self, secret_token) -> None:
+        super().__init__()
+        self.secret_token = secret_token
+
+    @classmethod
+    def from_credentials(cls, credentials: Optional[Dict[Text, Any]]) -> "InputChannel":
+        return cls(
+            credentials.get("secret_token"),
+        )
 
     def handle_automation_event(self, event):
         logger.info(f"接收到自动化事件:{event}")
@@ -45,6 +56,8 @@ class AutomationChannel(InputChannel):
         self.event_bus = AutomationEventbus()
         self.event_bus.consume('automation_channel', self.process_event)
 
+        self.notification_eventbus = NotificationEventBus()
+
     def blueprint(
             self, on_new_message: Callable[[UserMessage], Awaitable[None]]
     ) -> Blueprint:
@@ -55,6 +68,21 @@ class AutomationChannel(InputChannel):
 
         @hook.route("/", methods=["GET"])
         async def index(request: Request) -> HTTPResponse:
+            return response.json({"status": "ok"})
+
+        @hook.route("/jenkins/notification", methods=["POST"])
+        async def jenkins_notification(request: Request) -> HTTPResponse:
+            if request.args.get('secret_token') != self.secret_token:
+                return response.json({"status": "error"}, status=401)
+            body = request.json
+            job_name = body.get("job_name")
+
+            def execute(analyze_job_name):
+                result = self.jenkins_integration.analyze_build_log(analyze_job_name, "")
+                self.notification_eventbus.publist_notification_event(result, "",
+                                                                      "enterprise_wechat_bot_channel")
+
+            threading.Thread(target=execute, args=job_name).start()
             return response.json({"status": "ok"})
 
         return hook

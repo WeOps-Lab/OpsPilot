@@ -23,6 +23,7 @@ class BootStrap(object):
                 'session_persistence': False,
             },
             'channels.automation_channel.AutomationChannel': {
+                'secret_token': 'ops-pilot'
             }
         }
         response = requests.get(
