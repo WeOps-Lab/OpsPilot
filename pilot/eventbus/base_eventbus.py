@@ -3,6 +3,8 @@ import threading
 
 import pika
 from loguru import logger
+import requests
+from requests.auth import HTTPBasicAuth
 
 from core.server_settings import server_settings
 
@@ -10,11 +12,28 @@ CODE_REVIEW_EVENT = "code_review_event"
 
 
 class BaseEventBus:
+    def __init__(self):
+        self.virtual_host_name = f'pilot_{server_settings.munchkin_bot_id}'
+        self.create_virtual_host(self.virtual_host_name)
+
+    def create_virtual_host(self, vhost_name):
+        logger.info(f"Creating Virtual Host '{vhost_name}'...")
+        url = f"http://{server_settings.rabbitmq_host}:15672/api/vhosts/{vhost_name}"
+        auth = HTTPBasicAuth(server_settings.rabbitmq_username, server_settings.rabbitmq_password)
+        headers = {'content-type': 'application/json'}
+
+        response = requests.put(url, auth=auth, headers=headers)
+
+        if response.status_code == 201:
+            logger.info(f"Virtual Host '{vhost_name}' created successfully.")
+        else:
+            logger.info(f"Failed to create Virtual Host '{vhost_name}'. Status code: {response.status_code}")
 
     def prepare_eventbus(self):
+
         connection = pika.BlockingConnection(
             pika.ConnectionParameters(host=server_settings.rabbitmq_host, port=server_settings.rabbitmq_port,
-
+                                      virtual_host=self.virtual_host_name,
                                       credentials=pika.PlainCredentials(server_settings.rabbitmq_username,
                                                                         server_settings.rabbitmq_password)))
         channel = connection.channel()

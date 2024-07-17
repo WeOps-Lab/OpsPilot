@@ -18,4 +18,9 @@ node('ops-pilot'){
             sh 'sudo docker build -t ccr.ccs.tencentyun.com/megalab/bionics .'
         }
     }
+
+    stage('构建Pilot'){
+        dir('pilot'){
+            sh 'sudo docker build -t ccr.ccs.tencentyun.com/megalab/pilot .'
+    }
 }
