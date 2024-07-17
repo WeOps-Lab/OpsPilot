@@ -16,10 +16,6 @@ class AutomationChannel(InputChannel):
     def name(self) -> Text:
         return "automation_channel"
 
-    def __init__(self, secret_token) -> None:
-        super().__init__()
-        self.secret_token = secret_token
-
     @classmethod
     def from_credentials(cls, credentials: Optional[Dict[Text, Any]]) -> "InputChannel":
         return cls(
@@ -49,7 +45,7 @@ class AutomationChannel(InputChannel):
 
         threading.Thread(target=self.handle_automation_event, args=(event,)).start()
 
-    def __init__(self, ) -> None:
+    def __init__(self, secret_token) -> None:
         super().__init__()
         self.jenkins_integration = JenkinsIntegration()
         logger.info('自动化消息通道已启动')
@@ -57,6 +53,7 @@ class AutomationChannel(InputChannel):
         self.event_bus.consume('automation_channel', self.process_event)
 
         self.notification_eventbus = NotificationEventBus()
+        self.secret_token = secret_token
 
     def blueprint(
             self, on_new_message: Callable[[UserMessage], Awaitable[None]]
