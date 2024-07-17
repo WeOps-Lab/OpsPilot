@@ -2,6 +2,7 @@
 
 * [Pilot] 优化主动消息触达动作
 * [Pilot] 新增 `帮助` 关键词: /help
+* [Pilot] 优化
 * [Pilot] 新增 `查看Jenkins任务列表` 关键词
   * /list_jenkins_jobs: 查看Jenkins任务列表
   * /jenkins_build_log: 查看Jenkins任务日志
