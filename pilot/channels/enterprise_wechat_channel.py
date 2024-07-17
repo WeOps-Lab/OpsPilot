@@ -57,9 +57,10 @@ class EnterpriseWechatChannel(InputChannel):
 
         reply_user_id = self.event_bus.get_notification_event_sender_id(event)
         reply_text = self.event_bus.get_notification_event_content(event)
-        logger.info(f"收到消息总线通知,目标用户:[{reply_user_id}],内容:[{reply_text}]")
 
+        logger.info(f"收到消息总线通知,目标用户:[{reply_user_id}],内容:[{reply_text}]")
         self.wechat_client.message.send_markdown(self.agent_id, reply_user_id, reply_text)
+        logger.debug(f'投递消息成功,目标用户[{reply_user_id}]')
 
     @classmethod
     def from_credentials(cls, credentials: Optional[Dict[Text, Any]]) -> "InputChannel":
