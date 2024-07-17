@@ -75,11 +75,20 @@ class AutomationChannel(InputChannel):
             job_name = body.get("job_name")
 
             def execute(analyze_job_name):
-                result = self.jenkins_integration.analyze_build_log(analyze_job_name, "")
-                self.notification_eventbus.publist_notification_event(result, "",
-                                                                      "enterprise_wechat_bot_channel")
+                build_status = self.jenkins_integration.get_last_build_status(analyze_job_name, "")
+                if build_status == 'FAILURE':
+                    logger.info(f'任务:[{analyze_job_name}] 构建失败，开始分析构建日志')
+                    result = self.jenkins_integration.analyze_build_log(analyze_job_name, "")
+                    notification_msg = f'任务:[{analyze_job_name}] 构建失败，分析结果：{result}'
+                    self.notification_eventbus.publist_notification_event(notification_msg, "",
+                                                                          "enterprise_wechat_bot_channel")
+                else:
+                    logger.info(f'任务:[{analyze_job_name}] 构建成功')
+                    notification_msg = f'任务:[{analyze_job_name}] 构建成功'
+                    self.notification_eventbus.publist_notification_event(notification_msg, "",
+                                                                          "enterprise_wechat_bot_channel")
 
-            threading.Thread(target=execute, args=job_name).start()
+            threading.Thread(target=execute, args=(job_name,)).start()
             return response.json({"status": "ok"})
 
         return hook

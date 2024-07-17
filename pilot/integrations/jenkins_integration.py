@@ -44,6 +44,19 @@ class JenkinsIntegration:
 
         return last_build_log
 
+    def get_last_build_status(self, job_name, sender_id):
+        last_build_number = self.munchkin.execute_single_target_skill(
+            "jenkins_last_build_number",
+            {"job_name": job_name},
+            sender_id)
+
+        build_status = self.munchkin.execute_single_target_skill(
+            "jenkins_build_status",
+            {"job_name": job_name, "build_number": last_build_number},
+            sender_id)
+
+        return json.loads(build_status)['result']
+
     def build_jenkins_job(self, job_name, sender_id):
         try:
             # 获取最后一次的构建号
@@ -58,7 +71,7 @@ class JenkinsIntegration:
                 {"job_name": job_name, "build_number": build_number},
                 sender_id)
             build_status = json.loads(build_result)['result']
-            if build_status in ['SUCCESS', 'FAILURE','ABORTED']:
+            if build_status in ['SUCCESS', 'FAILURE', 'ABORTED']:
                 logger.info(f'任务[{job_name}]最后一次构建状态：{build_status}，可以开始新的构建任务')
             else:
                 logger.info(f'任务[{job_name}]最后一次构建状态：{build_status}，请等待构建任务完成')
