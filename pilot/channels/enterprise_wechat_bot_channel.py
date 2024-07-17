@@ -53,11 +53,11 @@ class EnterpriseWechatBotChannel(InputChannel):
     def process_event(self, event):
         # 接收到不属于通知类型的消息
         if self.event_bus.is_notification_event(event) is False:
-            pass
+            return
 
         # 接受到不属于本通道的消息
         if event['integration'] != "" and event['integration'] != "enterprise_wechat_bot_channel":
-            pass
+            return
 
         self.send_enterprise_wechat_bot_message(self.enterprise_bot_url,
                                                 self.event_bus.get_notification_event_content(event))

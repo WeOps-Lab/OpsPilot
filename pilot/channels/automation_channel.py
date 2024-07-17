@@ -34,7 +34,7 @@ class AutomationChannel(InputChannel):
     def process_event(self, event):
         # 接受到不属于本通道的消息
         if self.event_bus.is_automation_event(event) is False:
-            pass
+            return
 
         threading.Thread(target=self.handle_automation_event, args=(event,)).start()
 

@@ -49,11 +49,11 @@ class EnterpriseWechatChannel(InputChannel):
     def process_event(self, event):
         # 接收到不属于通知类型的消息
         if self.event_bus.is_notification_event(event) is False:
-            pass
+            return
 
         # 接受到不属于本通道的消息
         if event['integration'] != "" and event['integration'] != "enterprise_wechat":
-            pass
+            return
 
         reply_user_id = self.event_bus.get_notification_event_sender_id(event)
         reply_text = self.event_bus.get_notification_event_content(event)
