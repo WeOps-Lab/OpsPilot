@@ -44,15 +44,22 @@ class EnterpriseWechatChannel(InputChannel):
             queue_name = f"enterprise_wechat_{self.bot_id}"
             logger.info(f"启动Pilot消息总线:[{queue_name}]")
             self.event_bus = NotificationEventBus()
-            self.event_bus.consume(queue_name, self.recieve_event)
+            self.event_bus.consume(queue_name, self.process_event)
 
-    def recieve_event(self, event):
-        if self.event_bus.is_notification_event(event):
-            reply_user_id = self.event_bus.get_notification_event_sender_id(event)
-            reply_text = self.event_bus.get_notification_event_content(event)
-            logger.info(f"收到消息总线通知,目标用户:[{reply_user_id}],内容:[{reply_text}]")
+    def process_event(self, event):
+        # 接收到不属于通知类型的消息
+        if self.event_bus.is_notification_event(event) is False:
+            pass
 
-            self.wechat_client.message.send_markdown(self.agent_id, reply_user_id, reply_text)
+        # 接受到不属于本通道的消息
+        if event['integration'] != "" and event['integration'] != "enterprise_wechat":
+            pass
+
+        reply_user_id = self.event_bus.get_notification_event_sender_id(event)
+        reply_text = self.event_bus.get_notification_event_content(event)
+        logger.info(f"收到消息总线通知,目标用户:[{reply_user_id}],内容:[{reply_text}]")
+
+        self.wechat_client.message.send_markdown(self.agent_id, reply_user_id, reply_text)
 
     @classmethod
     def from_credentials(cls, credentials: Optional[Dict[Text, Any]]) -> "InputChannel":

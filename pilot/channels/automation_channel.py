@@ -31,16 +31,19 @@ class AutomationChannel(InputChannel):
             result = self.jenkins_integration.analyze_build_log(event['params']['job_name'], event['sender_id'])
             RasaUtils.call_external_utter(event['sender_id'], result, event['channel'])
 
-    def recieve_event(self, event):
-        if self.event_bus.is_automation_event(event):
-            threading.Thread(target=self.handle_automation_event, args=(event,)).start()
+    def process_event(self, event):
+        # 接受到不属于本通道的消息
+        if self.event_bus.is_automation_event(event) is False:
+            pass
+
+        threading.Thread(target=self.handle_automation_event, args=(event,)).start()
 
     def __init__(self, ) -> None:
         super().__init__()
         self.jenkins_integration = JenkinsIntegration()
         logger.info('自动化消息通道已启动')
         self.event_bus = AutomationEventbus()
-        self.event_bus.consume('automation_channel', self.recieve_event)
+        self.event_bus.consume('automation_channel', self.process_event)
 
     def blueprint(
             self, on_new_message: Callable[[UserMessage], Awaitable[None]]

@@ -6,12 +6,13 @@ NOTIFICATION_EVENT = "notification_event"
 
 
 class NotificationEventBus(BaseEventBus):
-    def publist_notification_event(self, content, sender_id):
+    def publist_notification_event(self, content, sender_id, integration=""):
         # 发送通道通知消息总线
         data = {
             "event_type": NOTIFICATION_EVENT,
             "notification_content": content,
-            "sender_id": sender_id
+            "sender_id": sender_id,
+            "integration": integration
         }
         self.publish(json.dumps(data))
 
