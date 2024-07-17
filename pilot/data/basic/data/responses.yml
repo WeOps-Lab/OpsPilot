@@ -6,6 +6,12 @@ responses:
   utter_list_jenkins_jobs:
     - text: "正在查看Jenkins的所有构建任务,请稍后...."
 
+  utter_build_jenkins_pipeline:
+    - text: "正在构建Jenkins流水线,请稍后...."
+
+  utter_analyze_build_log:
+    - text: "正在分析Jenkins任务的构建日志,请稍后...."
+
   utter_ask_build_jenkins_pipeline_name:
     - text: "你想构建哪个流水线呢？"
 

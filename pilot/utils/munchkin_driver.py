@@ -7,6 +7,12 @@ from loguru import logger
 
 
 class MunchkinDriver:
+    def execute_single_target_skill(self, skill_id, params, sender_id=''):
+        result = self.automation_skills_execute(skill_id, params, sender_id)
+        keys = result['return'][0].keys()
+        first_key = list(keys)[0]
+        return result['return'][0][first_key]
+
     def automation_skills_execute(self, skill_id, params, sender_id=''):
         result = requests.post(server_settings.munchkin_base_url + '/api/bot/automation_skill_execute', data=json.dumps(
             {

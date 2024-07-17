@@ -36,6 +36,7 @@ rules:
   - rule: 构建jenkins流水线
     steps:
       - intent: build_jenkins_pipeline
+      - action: utter_build_jenkins_pipeline
       - action: action_build_jenkins_pipeline
 
   - rule: 查看jenkins任务的构建日志
@@ -46,4 +47,5 @@ rules:
   - rule: 分析jenkins任务的构建日志
     steps:
       - intent: analyze_build_log
+      - action: utter_analyze_build_log
       - action: action_analyze_build_log
