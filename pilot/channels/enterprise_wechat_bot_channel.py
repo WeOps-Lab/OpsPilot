@@ -39,8 +39,8 @@ class EnterpriseWechatBotChannel(InputChannel):
         :return:
         """
         data = {
-            "msgtype": "text",
-            "text": {
+            "msgtype": "markdown",
+            "markdown": {
                 "content": content
             }
         }

@@ -79,7 +79,7 @@ class AutomationChannel(InputChannel):
                 if build_status == 'FAILURE':
                     logger.info(f'任务:[{analyze_job_name}] 构建失败，开始分析构建日志')
                     result = self.jenkins_integration.analyze_build_log(analyze_job_name, "")
-                    notification_msg = f'任务:[{analyze_job_name}] 构建失败，分析结果：{result}'
+                    notification_msg = f'任务:[{analyze_job_name}] 构建失败，分析结果：\n {result}'
                     self.notification_eventbus.publist_notification_event(notification_msg, "",
                                                                           "enterprise_wechat_bot_channel")
                 else:
