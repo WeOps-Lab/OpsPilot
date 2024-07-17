@@ -68,6 +68,7 @@ node('ops-pilot'){
 
     stage('构建Munchkin'){
         dir('munchkin'){
+            sh 'mkdir -p templates'
             sh 'sudo docker build -t ccr.ccs.tencentyun.com/megalab/munchkin .'
         }
     }
