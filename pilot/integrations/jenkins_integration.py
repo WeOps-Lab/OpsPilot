@@ -39,7 +39,7 @@ class JenkinsIntegration:
 
         last_build_log = self.munchkin.execute_single_target_skill(
             "jenkins_build_logs",
-            {"job_name": job_name, "build_number": str(last_build_number)},
+            {"job_name": job_name, "build_number": last_build_number},
             sender_id)
 
         return last_build_log
@@ -55,7 +55,7 @@ class JenkinsIntegration:
             # 查看最后一次构建是否还没有完成，假如还没有完成，则告诉用户等待
             build_result = self.munchkin.execute_single_target_skill(
                 "jenkins_build_status",
-                {"job_name": job_name, "build_number": str(build_number)},
+                {"job_name": job_name, "build_number": build_number},
                 sender_id)
             build_status = json.loads(build_result)['result']
             if build_status in ['SUCCESS', 'FAILURE']:
@@ -70,7 +70,7 @@ class JenkinsIntegration:
                 {"job_name": job_name},
                 sender_id)
 
-            target_build_number = str(build_number + 1)
+            target_build_number = str(int(build_number) + 1)
             # 等待构建完成
             while True:
                 logger.info(f'查询构建任务[{job_name}]  构建号[{target_build_number}]状态')
