@@ -16,6 +16,11 @@ rules:
       - intent: out_of_scope
       - action: action_llm_fallback
 
+  - rule: 切换为联网检索模式
+    steps:
+      - intent: online_search
+      - action: action_online_search
+
   - rule: 重置对话
     steps:
       - intent: reset

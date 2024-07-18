@@ -34,8 +34,10 @@ class SkillExecuteView(APIView):
         user_message = request.data.get("user_message")
         sender_id = request.data.get("sender_id", "")
         converation_history = request.data.get("chat_history", [])
+        enable_online_search = request.data.get("enable_online_search", False)
 
         service = SkillExecuteService()
-        result = service.execute_skill(bot_id, skill_id, user_message, converation_history, sender_id)
+        result = service.execute_skill(bot_id, skill_id, user_message, converation_history, sender_id,
+                                       enable_online_search)
 
         return JsonResponse({"result": result})

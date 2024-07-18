@@ -6,3 +6,4 @@ langserve[server]==0.2.2
 langchain-elasticsearch==0.2.2
 langchain-openai==0.1.7
 langchain-community==0.2.5
+duckduckgo-search==6.2.1

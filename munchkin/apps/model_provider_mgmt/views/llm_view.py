@@ -8,6 +8,7 @@ from rest_framework.decorators import action
 
 
 class LLMViewSet(viewsets.ViewSet):
+
     @action(methods=["post"], detail=False, url_path="execute")
     @swagger_auto_schema(
         request_body=openapi.Schema(

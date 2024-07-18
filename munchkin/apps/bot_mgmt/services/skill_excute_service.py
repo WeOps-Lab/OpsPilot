@@ -4,7 +4,7 @@ from loguru import logger
 
 
 class SkillExecuteService:
-    def execute_skill(self, bot_id, action_name, user_message, chat_history, sender_id):
+    def execute_skill(self, bot_id, action_name, user_message, chat_history, sender_id, enable_online_search=False):
         logger.info(f"执行[{bot_id}]的[{action_name}]动作,发送者ID:[{sender_id}],消息: {user_message}")
 
         bot = Bot.objects.get(id=bot_id)
@@ -18,5 +18,5 @@ class SkillExecuteService:
                 llm_skill = BotSkillRule.objects.get(rule_user__user_id=sender_id, bot_id=bot,
                                                      llm_skill__skill_id=action_name).llm_skill
 
-        result = llm_service.chat(llm_skill, user_message, chat_history)
+        result = llm_service.chat(llm_skill, user_message, chat_history, enable_online_search)
         return result
