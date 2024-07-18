@@ -8,9 +8,18 @@ pipeline{
     }
 
     stages{
-        stage('Example stage 1') {
+        stage('下载代码') {
             steps {
-                sh 'ls'
+                git branch: 'main',
+                    url: 'https://github.com/WeOps-Lab/OpsPilot.git'
+            }
+        }
+
+        stage('构建基础服务镜像') {
+            steps {
+                dir('support-files/docker'){
+                   sh 'sudo docker build -t ccr.ccs.tencentyun.com/megalab/pilot-base -f ./Dockerfile.base .'
+                }
             }
         }
     }
@@ -36,15 +45,7 @@ pipeline{
         }
     }
 }
-    // stage('下载代码'){
-    //     git branch: 'main',
-    //         url: 'https://github.com/WeOps-Lab/OpsPilot.git'
-    // }
-    
-    // stage('构建基础服务镜像'){
-    //     dir('support-files/docker'){
-    //         sh 'sudo docker build -t ccr.ccs.tencentyun.com/megalab/pilot-base -f ./Dockerfile.base .'
-    //     }
+
 
     //     dir('depend/elasticsearch'){
     //         sh 'sudo docker build -t ccr.ccs.tencentyun.com/megalab/pilot-elasticsearch .'
