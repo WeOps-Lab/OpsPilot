@@ -73,26 +73,15 @@ node('ops-pilot'){
         }
     }
 
-    post{
-        success {
-            sh '''
-                curl -X POST $NOTIFICATION_URL \
-                -H 'Content-Type: application/json' \
-                -d '{
-                    "job_name": "OpsPilot",
-                    "extra_msg": ""
-                }'
-            '''
-        }
-        success {
-            sh '''
-                curl -X POST $NOTIFICATION_URL \
-                -H 'Content-Type: application/json' \
-                -d '{
-                    "job_name": "OpsPilot",
-                    "extra_msg": ""
-                }'
-            '''
-        }  
+    stage('发送通知'){
+        sh '''
+            curl -X POST $NOTIFICATION_URL \
+            -H 'Content-Type: application/json' \
+            -d '{
+                "job_name": "OpsPilot",
+                "extra_msg": ""
+            }'
+        '''
     }
+
 }
