@@ -2,6 +2,9 @@
 
 * [Pilot] 优化主动消息触达动作
 * [Pilot] 新增 `帮助` 关键词: /help
+* [Pilot] 新增 联网检索能力：
+  * /online_search - 切换为联网检索模式
+  * /exit_online_search - 退出联网检索模式
 * [Pilot] 优化 使用虚拟队列区分Pilot的消息总线
 * [Pilot] 新增 `查看Jenkins任务列表` 关键词
   * /list_jenkins_jobs: 查看Jenkins任务列表
