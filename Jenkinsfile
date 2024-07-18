@@ -73,15 +73,27 @@ node('ops-pilot'){
     //     }
     // }
     withCredentials([string(credentialsId: 'NOTIFICATION_URL', variable: 'NOTIFICATION_URL')]) {
-        stage('发送通知'){
-            sh '''
-                curl -X POST $NOTIFICATION_URL \
-                -H 'Content-Type: application/json' \
-                -d '{
-                    "job_name": "OpsPilot",
-                    "extra_msg": ""
-                }'
-            '''
+        post{
+            success{
+                sh '''
+                    curl -X POST $NOTIFICATION_URL \
+                    -H 'Content-Type: application/json' \
+                    -d '{
+                        "content": "OpsPilot 构建成功",
+                        "extra_msg": ""
+                    }'
+                '''
+            }
+            failure{
+                sh '''
+                    curl -X POST $NOTIFICATION_URL \
+                    -H 'Content-Type: application/json' \
+                    -d '{
+                        "content": "OpsPilot 构建失败",
+                        "extra_msg": ""
+                    }'
+                '''
+            }
         }
     }
 
