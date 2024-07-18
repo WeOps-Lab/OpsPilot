@@ -64,8 +64,8 @@ class EnterpriseWechatChannel(InputChannel):
         reply_text_list = reply_text.split("\n")
 
         # 30行一个batch进行发送
-        for i in range(0, len(reply_text_list), 30):
-            msg = "\n".join(reply_text_list[i:i + 30])
+        for i in range(0, len(reply_text_list), 50):
+            msg = "\n".join(reply_text_list[i:i + 50])
             self.wechat_client.message.send_markdown(self.agent_id, reply_user_id, msg)
 
         logger.debug(f'投递消息成功,目标用户[{reply_user_id}]')
@@ -107,8 +107,10 @@ class EnterpriseWechatChannel(InputChannel):
                 .replace("bot:", "")
                 .strip()
             )
-
-            self.wechat_client.message.send_markdown(self.agent_id, reply_user_id, reply_text)
+            reply_text_list = reply_text.split("\n")
+            for i in range(0, len(reply_text_list), 50):
+                msg = "\n".join(reply_text_list[i:i + 50])
+                self.wechat_client.message.send_markdown(self.agent_id, reply_user_id, reply_text)
         except Exception as error:
             logger.error(error)
 
