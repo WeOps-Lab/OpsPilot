@@ -8,9 +8,12 @@ pipeline{
     }
 
     stages{
-
+        stage('Example stage 1') {
+            steps {
+            }
+        }
     }
-    
+
     post {
         success{
             sh '''
