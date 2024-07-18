@@ -1,4 +1,33 @@
-node('ops-pilot'){
+pipeline{
+    agent 'ops-pilot'
+    stages {
+
+    }
+    post {
+        withCredentials([string(credentialsId: 'NOTIFICATION_URL', variable: 'NOTIFICATION_URL')]) {
+            success{
+                sh '''
+                    curl -X POST $NOTIFICATION_URL \
+                    -H 'Content-Type: application/json' \
+                    -d '{
+                        "content": "OpsPilot 构建成功",
+                        "extra_msg": ""
+                    }'
+                '''
+            }
+            failure{
+                sh '''
+                    curl -X POST $NOTIFICATION_URL \
+                    -H 'Content-Type: application/json' \
+                    -d '{
+                        "content": "OpsPilot 构建失败",
+                        "extra_msg": ""
+                    }'
+                '''
+            }
+        }
+    }
+}
     // stage('下载代码'){
     //     git branch: 'main',
     //         url: 'https://github.com/WeOps-Lab/OpsPilot.git'
@@ -72,29 +101,3 @@ node('ops-pilot'){
     //         sh 'sudo docker build -t ccr.ccs.tencentyun.com/megalab/munchkin .'
     //     }
     // }
-    withCredentials([string(credentialsId: 'NOTIFICATION_URL', variable: 'NOTIFICATION_URL')]) {
-        post{
-            success{
-                sh '''
-                    curl -X POST $NOTIFICATION_URL \
-                    -H 'Content-Type: application/json' \
-                    -d '{
-                        "content": "OpsPilot 构建成功",
-                        "extra_msg": ""
-                    }'
-                '''
-            }
-            failure{
-                sh '''
-                    curl -X POST $NOTIFICATION_URL \
-                    -H 'Content-Type: application/json' \
-                    -d '{
-                        "content": "OpsPilot 构建失败",
-                        "extra_msg": ""
-                    }'
-                '''
-            }
-        }
-    }
-
-}
