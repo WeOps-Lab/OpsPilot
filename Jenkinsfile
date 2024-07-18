@@ -72,4 +72,19 @@ node('ops-pilot'){
             sh 'sudo docker build -t ccr.ccs.tencentyun.com/megalab/munchkin .'
         }
     }
+
+    post{
+        always{
+            stage('部署结果通知'){
+                sh '''
+                    curl -X POST $NOTIFICATION_URL \
+                    -H 'Content-Type: application/json' \
+                    -d '{
+                        "job_name": "OpsPilot",
+                        "extra_msg": ""
+                    }'
+                '''
+            }
+        }
+    }
 }
