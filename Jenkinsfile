@@ -3,29 +3,27 @@ pipeline{
         label 'ops-pilot'
     
     }
-    stages {
-
+    environment {
+        NOTIFICATION_URL = credentials('NOTIFICATION_URL')
     }
     post {
-        withCredentials([string(credentialsId: 'NOTIFICATION_URL', variable: 'NOTIFICATION_URL')]) {
-            success{
-                sh '''
-                    curl -X POST $NOTIFICATION_URL \
-                    -H 'Content-Type: application/json' \
-                    -d '{
-                        "content": "OpsPilot 构建成功"
-                    }'
-                '''
-            }
-            failure{
-                sh '''
-                    curl -X POST $NOTIFICATION_URL \
-                    -H 'Content-Type: application/json' \
-                    -d '{
-                        "content": "OpsPilot 构建失败"
-                    }'
-                '''
-            }
+        success{
+            sh '''
+                curl -X POST $NOTIFICATION_URL \
+                -H 'Content-Type: application/json' \
+                -d '{
+                    "content": "OpsPilot 构建成功"
+                }'
+            '''
+        }
+        failure{
+            sh '''
+                curl -X POST $NOTIFICATION_URL \
+                -H 'Content-Type: application/json' \
+                -d '{
+                    "content": "OpsPilot 构建失败"
+                }'
+            '''
         }
     }
 }
