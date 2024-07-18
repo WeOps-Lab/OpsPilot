@@ -6,6 +6,11 @@ pipeline{
     environment {
         NOTIFICATION_URL = credentials('NOTIFICATION_URL')
     }
+
+    stages{
+
+    }
+    
     post {
         success{
             sh '''
