@@ -64,11 +64,11 @@ class LLMService:
         if llm_skill.enable_rag_knowledge_source:
             knowledge_titles = set([x['knowledge_title'] for x in rag_result])
             result += '\n'
-            result += f'引用知识: {", ".join(knowledge_titles)}'
+            result += f'引用知识: {", ".join(knowledge_titles)}\n'
 
         if enable_online_search:
             result += '\n'
-            result += f'知识来源:'
+            result += f'网站来源:\n'
             for r in online_search_result:
                 result += f"* [{r.metadata['title']}]({r.metadata['url']})\n"
         return result

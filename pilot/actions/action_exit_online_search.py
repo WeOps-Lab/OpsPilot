@@ -10,7 +10,7 @@ class ActionOnlineSearch(Action):
         super().__init__()
 
     def name(self) -> Text:
-        return "action_online_search"
+        return "action_exit_online_search"
 
     def run(
             self,
@@ -18,5 +18,5 @@ class ActionOnlineSearch(Action):
             tracker: Tracker,
             domain: Dict[Text, Any],
     ) -> List[Dict[Text, Any]]:
-        dispatcher.utter_message(text="已经为您开启联网搜索,使用结束后，可以使用`/exit_online_search`退出此模式")
-        return [SlotSet("enable_online_search", True)]
+        dispatcher.utter_message(text="已经退出联网检索模式")
+        return [SlotSet("enable_online_search", False)]

@@ -21,6 +21,11 @@ rules:
       - intent: online_search
       - action: action_online_search
 
+  - rule: 退出联网检索模式
+    steps:
+      - intent: exit_online_search
+      - action: action_exit_online_search
+
   - rule: 重置对话
     steps:
       - intent: reset
