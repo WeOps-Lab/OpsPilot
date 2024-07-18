@@ -4,7 +4,7 @@ from langserve import RemoteRunnable
 
 from apps.knowledge_mgmt.services.knowledge_search_service import KnowledgeSearchService
 from apps.model_provider_mgmt.models import LLMSkill, LLMModelChoices
-from munchkin.components.remote_service import OPENAI_CHAT_SERVICE_URL, RAG_SERVER_URL
+from munchkin.components.remote_service import OPENAI_CHAT_SERVICE_URL, RAG_SERVER_URL, ONLINE_SEARCH_SERVER_URL
 from langchain_core.documents import Document
 
 
@@ -36,7 +36,7 @@ class LLMService:
                 context += f"知识内容:[{r['content'].replace('{', '').replace('}', '')}]\n"
 
         if enable_online_search:
-            rag_server = RemoteRunnable(RAG_SERVER_URL)
+            rag_server = RemoteRunnable(ONLINE_SEARCH_SERVER_URL)
             online_search_result: List[Document] = rag_server.invoke(
                 {
                     "query": user_message,

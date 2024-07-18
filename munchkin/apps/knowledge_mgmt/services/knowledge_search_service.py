@@ -37,17 +37,17 @@ class KnowledgeSearchService:
                 "rerank_top_k": knowledge_base_folder.rerank_top_k,
             })
             for doc in result:
-                score = doc['metadata']['_score'] * 10
+                score = doc.metadata['_score'] * 10
                 if score > score_threshold:
                     doc_info = {
-                        "content": doc['page_content'],
-                        "score": doc['metadata']['_score'] * 10,
-                        "knowledge_title": doc['metadata']['_source']['metadata']['knowledge_title'],
-                        "knowledge_id": doc['metadata']['_source']['metadata']['knowledge_id'],
-                        "knowledge_folder_id": doc['metadata']['_source']['metadata']['knowledge_folder_id'],
+                        "content": doc.page_content,
+                        "score": doc.metadata['_score'] * 10,
+                        "knowledge_title": doc.metadata['_source']['metadata']['knowledge_title'],
+                        "knowledge_id": doc.metadata['_source']['metadata']['knowledge_id'],
+                        "knowledge_folder_id": doc.metadata['_source']['metadata']['knowledge_folder_id'],
                     }
                     if knowledge_base_folder.enable_rerank:
-                        doc_info["rerank_score"] = doc['metadata']["relevance_score"]
+                        doc_info["rerank_score"] = doc.metadata["relevance_score"]
                     docs.append(doc_info)
 
         return docs
