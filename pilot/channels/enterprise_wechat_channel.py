@@ -110,7 +110,7 @@ class EnterpriseWechatChannel(InputChannel):
             reply_text_list = reply_text.split("\n")
             for i in range(0, len(reply_text_list), 50):
                 msg = "\n".join(reply_text_list[i:i + 50])
-                self.wechat_client.message.send_markdown(self.agent_id, reply_user_id, reply_text)
+                self.wechat_client.message.send_markdown(self.agent_id, reply_user_id, msg)
         except Exception as error:
             logger.error(error)
 
