@@ -1,5 +1,8 @@
 pipeline{
-    agent 'ops-pilot'
+    agent {
+        label 'ops-pilot'
+    
+    }
     stages {
 
     }
@@ -10,8 +13,7 @@ pipeline{
                     curl -X POST $NOTIFICATION_URL \
                     -H 'Content-Type: application/json' \
                     -d '{
-                        "content": "OpsPilot 构建成功",
-                        "extra_msg": ""
+                        "content": "OpsPilot 构建成功"
                     }'
                 '''
             }
@@ -20,8 +22,7 @@ pipeline{
                     curl -X POST $NOTIFICATION_URL \
                     -H 'Content-Type: application/json' \
                     -d '{
-                        "content": "OpsPilot 构建失败",
-                        "extra_msg": ""
+                        "content": "OpsPilot 构建失败"
                     }'
                 '''
             }
