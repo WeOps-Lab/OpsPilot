@@ -24,7 +24,7 @@ features:
   - title: 📲多渠道支持
     details: 提供多渠道接入能力，包括Web、微信、钉钉、企业微信、Slack等，让用户能够在自己熟悉的工具中使用OpsPilot
   - title: 👋丰富的AIOPS模型
-    details: 提供丰富的AIOPS算法能力，包括时序预测、异常检查、根因分析等AIOPS算法及模型
-  - title: 🎁完备的集成能力
-    details: 提供丰富的集成能力，能够与Kubernetes、SaltStack、WeOps Lite等进行系统集成，达到运维自动化驾驶的目标
+    details: 提供丰富的AIOPS算法能力，包括时序预测、异常检查、根因分析等AIOPS算法及模型,提取运维数据的隐性知识
+  - title: 🎁全面的集成能力
+    details: 提供全面的集成能力，能够与Kubernetes、SaltStack、WeOps Lite等进行系统集成，达到运维自动化驾驶的目标
 ---

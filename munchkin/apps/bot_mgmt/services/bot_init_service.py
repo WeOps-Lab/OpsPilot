@@ -1,4 +1,5 @@
-from apps.bot_mgmt.models import Bot, RasaModel, AutomationSkill, AUTOMATION_SKILL_CHOICES
+from apps.bot_mgmt.models import Bot, RasaModel, AutomationSkill, AUTOMATION_SKILL_CHOICES, Integration, \
+    INTEGRATION_CHOICES
 
 
 class BotInitService:
@@ -21,16 +22,87 @@ class BotInitService:
             rasa_model=rasa_model,
         )
 
+        jenkins_integration = Integration.objects.get_or_create(
+            name="jenkins",
+            integration_type=INTEGRATION_CHOICES.JENKINS,
+            defaults={
+                "base_url": "http://<jenkins_base_url>",
+                "username": "<username>",
+                "token": "<token>",
+            }
+        )
+
         AutomationSkill.objects.get_or_create(
             skill_id="list_jenkins_jobs",
             skill_type=AUTOMATION_SKILL_CHOICES.SALT_STACK,
+            integration=jenkins_integration,
             defaults={
                 "name": "Jenkins任务列表",
                 "skill_config": {
                     "client": "local",
                     "tgt": "ops-pilot",
                     "fun": "cmd.run",
-                    "args": "curl -sS -u <username>:<password> 'http://<jenkins_base_url>/api/json'"
+                    "args": "curl -sS -u {{username}}:{{token}} '{{base_url}}/api/json'"
+                },
+            }
+        )
+
+        AutomationSkill.objects.get_or_create(
+            skill_id="jenkins_build_logs",
+            skill_type=AUTOMATION_SKILL_CHOICES.SALT_STACK,
+            integration=jenkins_integration,
+            defaults={
+                "name": "Jenkins构建日志",
+                "skill_config": {
+                    "client": "local",
+                    "tgt": "ops-pilot",
+                    "fun": "cmd.run",
+                    "args": "curl -sS -u {{username}}:{{token}} '{{base_url}}/job/{{job_name}}/{{build_number}}/consoleText'"
+                },
+            }
+        )
+
+        AutomationSkill.objects.get_or_create(
+            skill_id="jenkins_build",
+            skill_type=AUTOMATION_SKILL_CHOICES.SALT_STACK,
+            integration=jenkins_integration,
+            defaults={
+                "name": "Jenkins构建任务",
+                "skill_config": {
+                    "client": "local",
+                    "tgt": "ops-pilot",
+                    "fun": "cmd.run",
+                    "args": "curl -X POST -sS -u {{username}}:{{token}} '{{base_url}}/job/{{job_name}}/build'"
+                },
+            }
+        )
+
+        AutomationSkill.objects.get_or_create(
+            skill_id="jenkins_last_build_number",
+            skill_type=AUTOMATION_SKILL_CHOICES.SALT_STACK,
+            integration=jenkins_integration,
+            defaults={
+                "name": "获取Jenkins最后的构建号",
+                "skill_config": {
+                    "client": "local",
+                    "tgt": "ops-pilot",
+                    "fun": "cmd.run",
+                    "args": "curl -sS -u {{username}}:{{token}} '{{base_url}}/job/{{job_name}}/lastBuild/buildNumber'"
+                },
+            }
+        )
+
+        AutomationSkill.objects.get_or_create(
+            skill_id="jenkins_build_status",
+            skill_type=AUTOMATION_SKILL_CHOICES.SALT_STACK,
+            integration=jenkins_integration,
+            defaults={
+                "name": "Jenkins任务构建状态",
+                "skill_config": {
+                    "client": "local",
+                    "tgt": "ops-pilot",
+                    "fun": "cmd.run",
+                    "args": "curl -sS -u {{username}}:{{token}} '{{base_url}}/job/{{job_name}}/{{build_number}}/api/json'"
                 },
             }
         )
