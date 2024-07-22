@@ -53,6 +53,12 @@ class KnowledgeBaseFolder(MaintainerInfo):
         on_delete=models.CASCADE,
         verbose_name="OCR模型",
     )
+    knowledge_integration = models.ManyToManyField(
+        "KnowledgeIntegration",
+        blank=True,
+        related_name="knowledge_base_folders",
+        verbose_name="知识集成",
+    )
 
     def __str__(self):
         return self.name

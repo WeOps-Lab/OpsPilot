@@ -10,6 +10,8 @@ from django.utils.html import format_html
 from unfold.contrib.forms.widgets import WysiwygWidget
 from unfold.decorators import action
 
+from apps.knowledge_mgmt.tasks.knowledge_integration_task import execute_knowledge_integration
+
 
 class FileKnowledgeInline(admin.TabularInline):
     model = FileKnowledge
@@ -68,14 +70,16 @@ class KnowledgeBaseFolderAdmin(GuardedAdminBase):
     search_fields = ["name"]
     list_display_links = ["name"]
     ordering = ["id"]
-    filter_horizontal = []
-    actions = ["train_embed"]
+    filter_horizontal = ['knowledge_integration']
+    actions = ["train_embed", "knowledge_integration_action"]
+    actions_list = ["knowledge_integration_action"]
     inlines = [FileKnowledgeInline, WebPageKnowledgeInline, ManualKnowledgeInline]
     readonly_fields = ["train_status"]
     save_as = True
 
     fieldsets = (
         ("基本信息", {"fields": ("name", "description")}),
+        ("知识集成", {"fields": ("knowledge_integration",)}),
         ("Embeding模型", {"fields": ("embed_model",)}),
         ("文本检索", {"fields": ("enable_text_search", "text_search_weight")}),
         ("向量检索", {"fields": ("enable_vector_search", "vector_search_weight", "rag_k", "rag_num_candidates")}),
@@ -86,6 +90,10 @@ class KnowledgeBaseFolderAdmin(GuardedAdminBase):
     def delete_queryset(self, request, queryset):
         for knowledge in queryset:  # 遍历并使用原生的delete方法, 以调用delete方法同步删除索引
             knowledge.delete()
+
+    @action(description="知识采集", url_path="knowledge_integration_action")
+    def knowledge_integration_action(self, request: HttpRequest):
+        execute_knowledge_integration.delay()
 
     @action(description="训练", url_path="train_embed_model")
     def train_embed(self, request: HttpRequest, knowledges):

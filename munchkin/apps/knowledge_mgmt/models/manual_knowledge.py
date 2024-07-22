@@ -25,6 +25,8 @@ class ManualKnowledge(TimeInfo, MaintainerInfo):
                                                              blank=True, null=True,
                                                              related_name='manual_semantic_chunk_parse_embedding_model',
                                                              on_delete=models.CASCADE, verbose_name='嵌入模型')
+    knowledge_integration = models.ForeignKey('KnowledgeIntegration', blank=True, null=True, on_delete=models.CASCADE,
+                                              verbose_name='知识集成')
 
     def __str__(self):
         return self.title

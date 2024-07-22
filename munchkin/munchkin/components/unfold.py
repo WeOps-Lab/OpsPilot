@@ -188,6 +188,10 @@ UNFOLD = {
                         "title": "知识",
                         "link": reverse_lazy("admin:knowledge_mgmt_fileknowledge_changelist"),
                     },
+                    {
+                        "title": "知识集成",
+                        "link": reverse_lazy("admin:knowledge_mgmt_knowledgeintegration_changelist"),
+                    }
                 ],
             },
             {

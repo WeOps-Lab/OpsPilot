@@ -12,6 +12,7 @@
   * /analyze_build_log: 分析Jenkins任务日志
   * /build_jenkins_pipeline: 构建Jenkins任务
 * [Munchkin] 机器人新增自动化技能模块
+* [Munchkin] 新增 知识集成 能力，支持自动化采集WeOps知识
 * [OCR Server] 新增Azure OCR支持
 
 # 2.3
