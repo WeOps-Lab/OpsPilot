@@ -7,9 +7,7 @@ from django.utils.functional import cached_property
 
 class KNOWLEDGE_INTEGRATION_CHOICES(models.TextChoices):
     WEOPS = ("weops", "WeOps")
-    PLAYWRIGHT = ("playwright", "Playwright")
-    WEB_SCRAPY = ("simple_web_scrapy", "网站爬虫")
-
+    
 
 class KnowledgeIntegration(MaintainerInfo):
     id = models.AutoField(primary_key=True)
