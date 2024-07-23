@@ -16,16 +16,20 @@ load_dotenv()
 class BootStrap(object):
 
     def get_bot_config_data(self):
+        logger.info(f'获取Pilot[{server_settings.munchkin_bot_id}]配置信息....')
+
         credentials = {
             'socketio': {
                 'user_message_evt': 'user_uttered',
                 'bot_message_evt': 'bot_uttered',
                 'session_persistence': False,
             },
+            # TODO: 后续移动为Munchkin配置
             'channels.automation_channel.AutomationChannel': {
                 'secret_token': 'ops-pilot'
             }
         }
+
         response = requests.get(
             server_settings.munchkin_base_url + f'/api/bot/{server_settings.munchkin_bot_id}',
             headers={
