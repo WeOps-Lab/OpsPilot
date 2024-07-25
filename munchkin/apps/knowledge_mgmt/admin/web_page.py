@@ -1,11 +1,11 @@
-from apps.core.admin.guarded_admin_base import GuardedAdminBase
-from apps.knowledge_mgmt.models import WebPageKnowledge
 from django.contrib import admin
 from django.forms import JSONField
 from django.urls import reverse
 from django.utils.html import format_html
 from django_ace import AceWidget
-from unfold.admin import ModelAdmin
+
+from apps.core.admin.guarded_admin_base import GuardedAdminBase
+from apps.knowledge_mgmt.models import WebPageKnowledge
 
 
 @admin.register(WebPageKnowledge)
