@@ -1,3 +1,7 @@
+# 2.5
+
+* [Munchkin] Django Unfold 升级为0.33.0
+
 # 2.4
 
 * [Pilot] 优化主动消息触达动作
