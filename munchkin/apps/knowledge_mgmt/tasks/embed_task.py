@@ -99,7 +99,7 @@ def general_embed(knowledge_base_folder_id):
                         "recursive_chunk_overlap": knowledge.general_parse_chunk_overlap,
                         "enable_semantic_chunck_parse": knowledge.enable_semantic_chunck_parse,
                         "semantic_embedding_address": semantic_embedding_address,
-                        "content": knowledge.content,
+                        "content": knowledge.title + knowledge.content + str(knowledge.custom_metadata),
                         "custom_metadata": {
                             "knowledge_type": "manual",
                             "knowledge_id": knowledge.id,
