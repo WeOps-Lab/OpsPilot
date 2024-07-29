@@ -1,7 +1,0 @@
-langserve[server]==0.2.2
-loguru==0.7.2
-paddlepaddle==2.6.1
-paddleocr==2.8.0
-paddleclas==2.5.2
-pytest==8.2.2
-azure-cognitiveservices-vision-computervision==0.9.0
