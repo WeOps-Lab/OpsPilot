@@ -22,7 +22,7 @@ class ModelProviderInitService:
             RerankProvider.objects.get_or_create(
                 name="bce-reranker-base_v1",
                 rerank_model_type=RerankModelChoices.LANG_SERVE,
-                defaults={"rerank_config": {"base_url": "http://bce-rerank-server.ops-pilot:8100"}},
+                defaults={"rerank_config": {"base_url": "http://bce-embed-server.ops-pilot/rerank"}},
             )
 
             EmbedProvider.objects.get_or_create(
@@ -30,24 +30,16 @@ class ModelProviderInitService:
                 embed_model_type=EmbedModelChoices.LANG_SERVE,
                 defaults={
                     "embed_config": {
-                        "base_url": "http://bce-embed-server.ops-pilot:8102",
+                        "base_url": "http://bce-embed-server.ops-pilot/embed",
                     }
                 },
             )
 
             EmbedProvider.objects.get_or_create(
-                name="FastEmbed(BAAI/bge-small-en-v1.5)",
-                embed_model_type=EmbedModelChoices.LANG_SERVE,
-                embed_config={
-                    "base_url": "http://fast-embed-server-zh.ops-pilot:8101",
-                },
-                enabled=True,
-            )
-            EmbedProvider.objects.get_or_create(
                 name="FastEmbed(BAAI/bge-small-zh-v1.5)",
                 embed_model_type=EmbedModelChoices.LANG_SERVE,
                 embed_config={
-                    "base_url": "http://fast-embed-server-zh.ops-pilot:8101",
+                    "base_url": "http://fast-embed-server.ops-pilot",
                 },
                 enabled=True,
             )
@@ -194,7 +186,7 @@ class ModelProviderInitService:
             defaults={
                 "enabled": True,
                 "ocr_config": {
-                    "base_url": "http://ocr-server.ops-pilot:8109/paddle_ocr",
+                    "base_url": "http://ocr-server.ops-pilot/paddle_ocr",
                 }
             }
         )
@@ -204,7 +196,7 @@ class ModelProviderInitService:
             defaults={
                 "enabled": True,
                 "ocr_config": {
-                    "base_url": "http://ocr-server.ops-pilot:8109/azure_ocr",
+                    "base_url": "http://ocr-server.ops-pilot/azure_ocr",
                 }
             }
         )
