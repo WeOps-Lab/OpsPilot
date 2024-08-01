@@ -22,13 +22,16 @@ class BotInitService:
             rasa_model=rasa_model,
         )
 
-        jenkins_integration = Integration.objects.get_or_create(
+        jenkins_integration, created = Integration.objects.get_or_create(
             name="jenkins",
-            integration_type=INTEGRATION_CHOICES.JENKINS,
+            integration=INTEGRATION_CHOICES.JENKINS,
             defaults={
-                "base_url": "http://<jenkins_base_url>",
-                "username": "<username>",
-                "token": "<token>",
+                "integration_config": {
+                    "base_url": "http://<jenkins_base_url>",
+                    "username": "<username>",
+                    "token": "<token>",
+                }
+
             }
         )
 

@@ -20,7 +20,6 @@ setup-sample-data:
 init-data:
 	python manage.py init_llm
 	python manage.py init_channel
-	python manage.py init_contentpack
 	python manage.py init_bot
 
 run:
