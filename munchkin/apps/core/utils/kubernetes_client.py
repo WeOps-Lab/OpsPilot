@@ -50,6 +50,7 @@ class KubernetesClient:
             "bot_domain": bot.bot_domain,
             "enable_nodeport": bot.enable_node_port,
             "web_nodeport": bot.node_port,
+            "node_selector": bot.node_selector,
         }
 
         try:

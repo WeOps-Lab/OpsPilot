@@ -12,6 +12,10 @@ spec:
       labels:
         app: pilot-{{bot_id}}
     spec:
+{% if node_selector %}
+      nodeSelector:
+{{ node_selector | indent(8) }}
+{% endif %}
       containers:
         - name: pilot-{{bot_id}}
           image: ccr.ccs.tencentyun.com/megalab/pilot

@@ -46,7 +46,8 @@ class BotAdmin(GuardedAdminBase):
         (
             "高级设置",
             {
-                "fields": ("enable_bot_domain", "enable_ssl", "bot_domain", "enable_node_port", "node_port"),
+                "fields": (
+                "enable_bot_domain", "enable_ssl", "bot_domain", "enable_node_port", "node_port", "node_selector"),
             },
         ),
     )

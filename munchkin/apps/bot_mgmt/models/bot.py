@@ -24,6 +24,8 @@ class Bot(MaintainerInfo):
     enable_node_port = models.BooleanField(verbose_name="启用端口映射", default=False)
     node_port = models.IntegerField(verbose_name="端口映射", default=5005)
 
+    node_selector = models.CharField(max_length=255, verbose_name="节点选择", blank=True, null=True, default="")
+
     online = models.BooleanField(verbose_name="是否上线", default=False)
 
     def __str__(self):
