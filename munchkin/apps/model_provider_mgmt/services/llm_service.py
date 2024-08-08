@@ -51,8 +51,6 @@ class LLMService:
             chat_server = RemoteRunnable(OPENAI_CHAT_SERVICE_URL)
             result = chat_server.invoke({
                 "system_message_prompt": llm_skill.skill_prompt,
-                "openai_api_base": llm_model.decrypted_llm_config['openai_base_url'],
-                "openai_api_key": llm_model.decrypted_llm_config['openai_api_key'],
                 "temperature": llm_model.decrypted_llm_config['temperature'],
                 "model": llm_model.decrypted_llm_config['model'],
                 "user_message": user_message,
