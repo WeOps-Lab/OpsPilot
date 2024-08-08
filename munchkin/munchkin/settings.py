@@ -10,7 +10,6 @@ include(
     "components/rest_framework.py",
     "components/celery.py",
     "components/minio.py",
-    "components/elasticsearch.py",
     "components/unfold.py",
     "components/guardian.py",
     "components/kubernetes.py",
