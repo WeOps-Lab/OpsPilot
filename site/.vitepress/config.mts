@@ -26,6 +26,12 @@ export default defineConfig({
           { text: '快速入门', link: '/quick-start' },
           { text: '系统架构', link: '/architecture' },
           { text: '模型下载', link: '/models' },
+          { 
+            text: 'API', 
+            items:[
+              {text:'RAG Server',link:'/api/rag_server'},
+            ]
+          },
           {
             text: '功能模块',
             items: [
@@ -73,9 +79,7 @@ export default defineConfig({
               },
               {
                 text: '模式发现',
-                items: [
-                  { text: 'Drain3', link: '/aiops/logreduce/drain3' },
-                ],
+                items: [{ text: 'Drain3', link: '/aiops/logreduce/drain3' }],
               },
               {
                 text: '根因分析',
