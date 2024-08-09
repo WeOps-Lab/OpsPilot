@@ -3,6 +3,7 @@ from typing import List
 from langchain_core.documents import Document
 from langserve import RemoteRunnable
 
+from munchkin.components.elasticsearch import ELASTICSEARCH_PASSWORD, ELASTICSEARCH_URL
 from munchkin.components.remote_service import RAG_SERVER_URL
 
 
@@ -21,6 +22,8 @@ class KnowledgeSearchService:
             if knowledge_base_folder.rerank_model:
                 rerank_model_address = knowledge_base_folder.rerank_model.rerank_config["base_url"]
             result = remote_indexer.invoke({
+                "elasticsearch_url": ELASTICSEARCH_URL,
+                "elasticsearch_password": ELASTICSEARCH_PASSWORD,
                 "embed_model_address": embed_model_address,
                 "index_name": knowledge_base_folder.knowledge_index_name(),
                 "search_query": query,

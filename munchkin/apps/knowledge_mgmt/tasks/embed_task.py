@@ -5,6 +5,7 @@ from loguru import logger
 from tqdm import tqdm
 
 from celery import shared_task
+from munchkin.components.elasticsearch import ELASTICSEARCH_PASSWORD, ELASTICSEARCH_URL
 from munchkin.components.remote_service import (
     FILE_CHUNK_SERIVCE_URL,
     MANUAL_CHUNK_SERVICE_URL,
@@ -142,6 +143,8 @@ def general_embed(knowledge_base_folder_id):
         logger.debug(f"开始写入知识库[{knowledge_base_folder_id}]")
         remote_indexer.invoke(
             {
+                "elasticsearch_url": ELASTICSEARCH_URL,
+                "elasticsearch_password": ELASTICSEARCH_PASSWORD,
                 "embed_model_address": knowledge_base_folder.embed_model.embed_config["base_url"],
                 "index_name": index_name,
                 "index_mode": "overwrite",
