@@ -30,6 +30,7 @@ export default defineConfig({
             text: 'API', 
             items:[
               {text:'RAG Server',link:'/api/rag_server'},
+              {text:'Chunk Server',link:'/api/chunk'},
             ]
           },
           {
