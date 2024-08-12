@@ -26,14 +26,14 @@ export default defineConfig({
           { text: '快速入门', link: '/quick-start' },
           { text: '系统架构', link: '/architecture' },
           { text: '模型下载', link: '/models' },
-          {
-            text: 'API',
-            items: [
-              { text: 'RAG Server', link: '/api/rag_server' },
-              { text: 'Chunk Server', link: '/api/chunk' },
-              { text: 'Pandoc Server', link: '/api/pandoc_server' },
-            ],
-          },
+          // {
+          //   text: 'API',
+          //   items: [
+          //     { text: 'RAG Server', link: '/api/rag_server' },
+          //     { text: 'Chunk Server', link: '/api/chunk' },
+          //     { text: 'Pandoc Server', link: '/api/pandoc_server' },
+          //   ],
+          // },
           {
             text: '功能模块',
             items: [
