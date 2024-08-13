@@ -1,27 +1,27 @@
-# 快速入门
+# Quick Start
 
-## 部署K3S
+## Deploy K3S
 
 ```
 curl https://releases.rancher.com/install-docker/20.10.sh | sh
 curl -sfL https://get.k3s.io | sh -s - --docker
 ```
 
-## 获取Pilot镜像
+## Get Pilot image
 
 ```
 docker pull ccr.ccs.tencentyun.com/megalab/pilot
 ```
 
-## 创建命名空间
+## Create namespace
 
 ```
 kubectl create ns ops-pilot
 ```
 
-## 部署基础组件
+## Deploy basic components
 
-进入 `installer/depend`目录，执行
+Enter the `installer/depend` directory and execute
 
 ```
 kubectl apply -f elasticsearch.yml
@@ -32,9 +32,9 @@ kubectl apply -f pandoc-server.yml
 kubectl apply -f bionics.yml
 ```
 
-## 部署服务组件
+## Deploy service components
 
-进入 `installer/ai-service`目录，执行
+Enter the `installer/ai-service` directory and execute
 
 ```
 kubectl apply -f bce-embed-server.yml
@@ -46,20 +46,20 @@ kubectl apply -f rag-server.yml
 kubectl apply -f classicfy-aiops-server.yml
 ```
 
-## 可选组件
+## Optional components
 
 ```
 kubectl apply -f ./saltstack-server.yml
 ```
 
-## 部署Munchkin
+## Deploy Munchkin
 
-进入 `installer/munchkin`目录，执行
+Enter the `installer/munchkin` directory and execute
 
 ```
 kubectl apply -f ./configmap.yml
 kubectl apply -f ./svc.yml
-kubectl apply -f ./ingress.yml  #修改YOUR_HOST配置
-kubectl apply -f ./munchkin-sa.yml 
-kubectl apply -f ./munchkin.yml 
+kubectl apply -f ./ingress.yml #Modify YOUR_HOST configuration
+kubectl apply -f ./munchkin-sa.yml
+kubectl apply -f ./munchkin.yml
 ```

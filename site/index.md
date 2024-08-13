@@ -4,27 +4,27 @@ layout: home
 
 hero:
   name: "OpsPilot"
-  text: "智能运维助理"
+  text: "Virtual SRE"
   tagline: ""
   actions:
     - theme: brand
-      text: 快速入门
+      text: Quick Start
       link: /quick-start
     - theme: alt
-      text: 能力概览
-      link: /architecture
+      text: Introduction
+      link: /introduction
 
 features:
-  - title: 🎓知识问答
-    details: 通过大模型的技术，提供私域知识问答能力，提供服务台门户的知识问答、IM知识问答、工单智能总结能力
+  - title: 🎓Knowledge Q&A
+    details: Leveraging LLM technology to provide domain-specific knowledge Q&A capabilities, including service desk portal knowledge Q&A, IM knowledge Q&A, and intelligent ticket summarization.
   - title: 🚀ChatOps
-    details: 通过NLP技术，Rich Component的能力，让运维操作能够在聊天的过程中被完成，提供服务器状态检查、实时安全扫描等能力
-  - title: 🌟智能引导
-    details: 创新性的结合预测性对话流与大模型，让OpsPilot能够具备对话智能引导能力，引导用户完成智能提单引导、智能故障处置引导等场景
-  - title: 📲多渠道支持
-    details: 提供多渠道接入能力，包括Web、微信、钉钉、企业微信、Slack等，让用户能够在自己熟悉的工具中使用OpsPilot
-  - title: 👋丰富的AIOPS模型
-    details: 提供丰富的AIOPS算法能力，包括时序预测、异常检查、根因分析等AIOPS算法及模型,提取运维数据的隐性知识
-  - title: 🎁全面的集成能力
-    details: 提供全面的集成能力，能够与Kubernetes、SaltStack、WeOps Lite等进行系统集成，达到运维自动化驾驶的目标
+    details: Utilizing NLP technology and Rich Component capabilities, enabling operational tasks to be completed within chat environments. Provides features such as server status checks and real-time security scanning.
+  - title: 🌟Intelligent Guidance
+    details: Innovatively combines predictive dialogue flows with advanced models, enabling OpsPilot to offer intelligent conversational guidance. This includes intelligent ticket submission guidance and smart incident handling guidance
+  - title: 📲Multi-Channel Support
+    details: Offers multi-channel access support, including Web, WeChat, DingTalk, Enterprise WeChat, Slack, and more, allowing users to utilize OpsPilot within their familiar tools.
+  - title: 👋Rich AIOPS Models
+    details: Provides a comprehensive suite of AIOPS algorithms, including time series forecasting, anomaly detection, root cause analysis, and other AIOPS models. Extracts implicit knowledge from operational data.
+  - title: 🎁Comprehensive Integration Capabilities
+    details: Offers extensive integration capabilities, enabling system integration with Kubernetes, SaltStack, WeOps Lite, and more, to achieve the goal of automated operational management.
 ---
