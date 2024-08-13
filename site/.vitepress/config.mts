@@ -30,8 +30,11 @@ export default defineConfig({
             text: 'API',
             items: [
               { text: 'RAG Server', link: '/api/rag_server' },
-              { text: 'Chunk Server', link: '/api/chunk' },
+              { text: 'Chunk Server', link: '/api/chunk_server' },
               { text: 'Pandoc Server', link: '/api/pandoc_server' },
+              { text: 'OCR Server', link: '/api/ocr_server' },
+              { text: 'Fast Embed Server', link: '/api/fast_embed_server' },
+              { text: 'BCE Embed Server', link: '/api/bce_embed_server' },
             ],
           },
           {

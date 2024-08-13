@@ -1,8 +1,38 @@
 Chunk-Server is responsible for knowledge partitioning, supports semantic and length partitioning of files, and has a variety of knowledge partitioning options
 
-# API
-
 ## File Partitioning
+
+### LangServe API
+
+```python
+file_remote = RemoteRunnable(FILE_CHUNK_SERIVCE_URL)
+remote_docs = file_remote.invoke(
+              {
+                  "enable_recursive_chunk_parse": true
+                  "recursive_chunk_size": 128,
+                  "recursive_chunk_overlap": 0,
+                  "enable_semantic_chunck_parse": false,
+                  "enable_ocr_parse": false,
+                  "ocr_provider_address": "",
+                  "semantic_embedding_address": "",
+                  "excel_header_row_parse": false,
+                  "excel_full_content_parse": true,
+                  "file_name": "",
+                  "file": ""#base46 file string,
+                  "custom_metadata": {
+                      "knowledge_type": "file",
+                      "knowledge_id": 1,
+                      "knowledge_title": "",
+                      "knowledge_folder_id": 1,
+                      **knowledge.custom_metadata,
+                  },
+              }
+          )
+```
+
+### Rest API
+
+#### Request
 
 POST: `file_chunk/invode`
 
@@ -19,13 +49,14 @@ POST: `file_chunk/invode`
     "excel_header_row_parse": false,
     "excel_full_content_parse": false,
     "custom_metadata": {
-      
+    
     },
     "file": "",
     "file_name": ""
   }
 }
 ```
+
 | param                        | desc                         |
 | ---------------------------- | ---------------------------- |
 | enable_recursive_chunk_parse | Enable recursive chunk parse |
@@ -41,7 +72,7 @@ POST: `file_chunk/invode`
 | file                         | File to parse,base64 string  |
 | file_name                    | File name                    |
 
-### Response
+#### Response
 
 ```
 {
@@ -60,8 +91,36 @@ POST: `file_chunk/invode`
 
 ## Web Page Scraping And Parsing
 
+### LangServe API
+
+```python
+web_page_remote = RemoteRunnable(WEB_PAGE_CHUNK_SERVICE_URL)
+remote_docs = web_page_remote.invoke(
+              {
+                  "enable_recursive_chunk_parse": true
+                  "recursive_chunk_size": 256,
+                  "recursive_chunk_overlap": 0,
+                  "enable_semantic_chunck_parse": false,
+                  "semantic_embedding_address": "",
+                  "url": "",
+                  "max_depth": 1,
+                  "custom_metadata": {
+                      "knowledge_type": "webpage",
+                      "knowledge_id": knowledge.id,
+                      "knowledge_title": knowledge.title,
+                      "knowledge_folder_id": knowledge.knowledge_base_folder.id,
+                      **knowledge.custom_metadata,
+                  },
+              }
+          )
+```
+
+### Rest API
+
+#### Request
+
 POST: `webpage_chunk/invoke`
-    
+
 ```
 {
     "input":{
@@ -75,13 +134,13 @@ POST: `webpage_chunk/invoke`
         "excel_header_row_parse": false,
         "excel_full_content_parse": false,
         "custom_metadata": {
-        
+      
         },
         "url": "",
         "max_depth": 1,
     }
 }
-``` 
+```
 
 | param                        | desc                         |
 | ---------------------------- | ---------------------------- |
@@ -98,7 +157,7 @@ POST: `webpage_chunk/invoke`
 | url                          | URL to parse                 |
 | max_depth                    | Max depth to parse           |
 
-### Response
+#### Response
 
 ```
 {
@@ -117,8 +176,33 @@ POST: `webpage_chunk/invoke`
 
 ## Manual Content Parsing
 
+### LangServe API
+```python
+manual_remote = RemoteRunnable(MANUAL_CHUNK_SERVICE_URL)
+remote_docs = manual_remote.invoke(
+              {
+                  "enable_recursive_chunk_parse": true,
+                  "recursive_chunk_size": 256,
+                  "recursive_chunk_overlap": 0,
+                  "enable_semantic_chunck_parse": false,
+                  "semantic_embedding_address": "",
+                  "content": "",
+                  "custom_metadata": {
+                      "knowledge_type": "manual",
+                      "knowledge_id": knowledge.id,
+                      "knowledge_title": knowledge.title,
+                      "knowledge_folder_id": knowledge.knowledge_base_folder.id,
+                      **knowledge.custom_metadata,
+                  },
+              }
+          )
+
+```
+### Rest API
+
+#### Request
+
 POST: `manual_chunk/invoke`
-    
 ```
 {
     "input":{
@@ -132,12 +216,12 @@ POST: `manual_chunk/invoke`
         "excel_header_row_parse": false,
         "excel_full_content_parse": false,
         "custom_metadata": {
-        
+      
         },
         "content": ""
     }
 }
-``` 
+```
 
 | param                        | desc                         |
 | ---------------------------- | ---------------------------- |
@@ -153,7 +237,7 @@ POST: `manual_chunk/invoke`
 | custom_metadata              | Custom metadata              |
 | content                      | Content to parse             |
 
-### Response
+#### Response
 
 ```
 {
