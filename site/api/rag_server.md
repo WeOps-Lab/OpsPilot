@@ -1,9 +1,29 @@
 RAG Server is a knowledge management module in OpsPilot, which is responsible for knowledge indexing and retrieval.
 
-# API
-
 ## Elasticsearch Document Index
 
+### LangServe API
+
+```python
+remote_indexer = RemoteRunnable(RAG_SERVER_URL)
+
+knowledge_docs=[]  #here is a Document list
+remote_indexer.invoke(
+            {
+                "elasticsearch_url": ELASTICSEARCH_URL,
+                "elasticsearch_password": ELASTICSEARCH_PASSWORD,
+                "embed_model_address": "",
+                "index_name": index_name,
+                "index_mode": "overwrite",
+                "docs": knowledge_docs,
+            }
+        )
+```
+
+### Rest API 
+
+
+#### Request
 POST: `/elasticsearch_index/invoke`
 
 ```
@@ -44,7 +64,7 @@ POST: `/elasticsearch_index/invoke`
 | max_chunk_bytes        | Max chunk bytes for indexing               |
 | docs                   | Documents to index                         |
 
-### Response
+#### Response
 
 ```
 {
@@ -53,12 +73,33 @@ POST: `/elasticsearch_index/invoke`
 ```
 
 ## Delete Elasticsearch Index
+
 some times we need to delete hole index or some documents in the index
 
-### Request
+### LangServe API
+
+```python
+remote_indexer = RemoteRunnable(RAG_SERVER_URL)
+
+result=remote_indexer.invoke(
+            {
+                "elasticsearch_url": ELASTICSEARCH_URL,
+                "elasticsearch_password": ELASTICSEARCH_PASSWORD,
+                "index_name": index_name,
+                "mode": "delete_index",
+                "metadata_filter": {
+
+                },
+            }
+        )
+```
+
+### Rest API
+
+#### Request
 
 POST: `/elasticsearch_delete/invoke`
-    
+
 ```
 {
     "input":{
@@ -71,20 +112,44 @@ POST: `/elasticsearch_delete/invoke`
 }
 ```
 
-| param | desc |
-| ----- | ---- |
-| elasticsearch_url | ElasticSearch URL |
-| elasticsearch_password | ElasticSearch password |
-| index_name | ElasticSearch index name |
-| mode | delete mode, `delete_index` or `delete_docs` |
-| metadata_filter | Filter document for metadata |
-
+| param                  | desc                                        |
+| ---------------------- | ------------------------------------------- |
+| elasticsearch_url      | ElasticSearch URL                           |
+| elasticsearch_password | ElasticSearch password                      |
+| index_name             | ElasticSearch index name                    |
+| mode                   | delete mode,`delete_index` or `delete_docs` |
+| metadata_filter        | Filter document for metadata                |
 
 ## Elasticsearch RAG
 
 this api is used to retrieve the knowledge from the Elastic Search
 
-### Request
+### LangServe API
+
+```python
+remote_indexer = RemoteRunnable(RAG_SERVER_URL)
+
+result = remote_indexer.invoke({
+                "elasticsearch_url": ELASTICSEARCH_URL,
+                "elasticsearch_password": ELASTICSEARCH_PASSWORD,
+                "embed_model_address": embed_model_address,
+                "index_name": "",
+                "search_query": query,
+                "metadata_filter": {},
+                "text_search_weight": 0.9,
+                "rag_k": 10,
+                "rag_num_candidates": 1000,
+                "vector_search_weight": 0.1,
+                "enable_rerank": false,
+                "rerank_model_address": rerank_model_address,
+                "rerank_top_k": 5,
+            })
+
+```
+
+### Rest API
+
+#### Request
 
 POST: `/elasticsearch_rag/invoke`
 
@@ -134,7 +199,7 @@ POST: `/elasticsearch_rag/invoke`
 | rerank_model_address   | Rerank model address                       |
 | rerank_top_k           | Rerank top k                               |
 
-### Response
+#### Response
 
 ```
 {
@@ -166,7 +231,19 @@ POST: `/elasticsearch_rag/invoke`
 
 ## Network Retrieval
 
-### Request
+### LangServe API
+
+```python
+rag_server = RemoteRunnable(ONLINE_SEARCH_SERVER_URL)
+online_search_result: List[Document] = rag_server.invoke(
+                {
+                    "query": user_message,
+                }
+            )
+```
+
+### Rest API
+#### Request
 
 POST:  `/network_retrieval/invoke`
 
@@ -182,7 +259,7 @@ POST:  `/network_retrieval/invoke`
 | ----- | --------------------------------------- |
 | query | Search statements for networked queries |
 
-### Response
+#### Response
 
 ```
 {
