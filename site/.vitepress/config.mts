@@ -35,6 +35,95 @@ export default defineConfig({
               { text: 'OCR Server', link: '/api/ocr_server' },
               { text: 'Fast Embed Server', link: '/api/fast_embed_server' },
               { text: 'BCE Embed Server', link: '/api/bce_embed_server' },
+              { text: 'Chat Server', link: '/api/chat_server' },
+              { text: 'Bionics', link: '/api/bionics' },
+              { text: 'SaltStack Server', link: '/api/saltstack_server' },
+              {
+                text: 'Classicfy AIOPS Server',
+                link: '/api/classicfy_aiops_server',
+                items: [
+                  {
+                    text: 'Anomaly Detection',
+                    items: [
+                      {
+                        text: 'ABOD',
+                        link: '/api/aiops/anomaly/abod',
+                      },
+                      {
+                        text: 'ECOD',
+                        link: '/api/aiops/anomaly/ecod',
+                      },
+                      {
+                        text: 'IForest',
+                        link: '/api/aiops/anomaly/iforest',
+                      },
+                      {
+                        text: 'INNE',
+                        link: '/api/aiops/anomaly/inne',
+                      },
+                      {
+                        text: 'KNN',
+                        link: '/api/aiops/anomaly/knn',
+                      },
+                      {
+                        text: 'KPCA',
+                        link: '/api/aiops/anomaly/kpca',
+                      },
+                      {
+                        text: 'MAD',
+                        link: '/api/aiops/anomaly/mad',
+                      },
+                      {
+                        text: 'OneClassSVM',
+                        link: '/api/aiops/anomaly/oneclasssvm',
+                      },
+                      {
+                        text: 'SUOD',
+                        link: '/api/aiops/anomaly/suod',
+                      },
+                      {
+                        text: 'XGBOD',
+                        link: '/api/aiops/anomaly/xgbod',
+                      },
+                    ],
+                  },
+                  {
+                    text: 'Causal Analysis',
+                    items: [
+                      {
+                        text: 'FPGrowth',
+                        link: '/api/aiops/causation/fpgrowth',
+                      },
+                      {
+                        text: 'Causality',
+                        link: '/api/aiops/causation/causality',
+                      },
+                    ],
+                  },
+                  {
+                    text: 'Pattern Discovery',
+                    items: [
+                      {
+                        text: 'Drain3',
+                        link: '/api/aiops/logreduce/drain3',
+                      },
+                    ],
+                  },
+                  {
+                    text: 'Timeseries Prediction',
+                    items: [
+                      {
+                        text: 'SARIMA',
+                        link: '/api/aiops/timeseries/sarima',
+                      },
+                      {
+                        text: 'Holt-Winter',
+                        link: '/api/aiops/timeseries/holtwinter',
+                      },
+                    ],
+                  },
+                ],
+              },
             ],
           },
           {
@@ -55,44 +144,6 @@ export default defineConfig({
               { text: 'DevOps', link: '/skills/devops' },
               { text: '安全', link: '/skills/security' },
               { text: 'ITSM', link: '/skills/itsm' },
-            ],
-          },
-          {
-            text: 'AIOPS算法',
-            items: [
-              {
-                text: '时序预测',
-                items: [
-                  { text: 'HoltWinter', link: '/aiops/timeseries/holtwinter' },
-                  { text: 'SARIMA', link: '/aiops/timeseries/sarima' },
-                ],
-              },
-              {
-                text: '异常检测',
-                items: [
-                  { text: 'MAD', link: '/aiops/anomaly/mad' },
-                  { text: 'ABOD', link: '/aiops/anomaly/abod' },
-                  { text: 'SUOD', link: '/aiops/anomaly/suod' },
-                  { text: 'IForest', link: '/aiops/anomaly/iforest' },
-                  { text: 'KNN', link: '/aiops/anomaly/knn' },
-                  { text: 'ECOD', link: '/aiops/anomaly/ecod' },
-                  { text: 'XGBOD', link: '/aiops/anomaly/xgbod' },
-                  { text: 'INNE', link: '/aiops/anomaly/inne' },
-                  { text: 'KPCA', link: '/aiops/anomaly/kpca' },
-                  { text: 'One Class SVM', link: '/aiops/anomaly/oneclasssvm' },
-                ],
-              },
-              {
-                text: '模式发现',
-                items: [{ text: 'Drain3', link: '/aiops/logreduce/drain3' }],
-              },
-              {
-                text: '根因分析',
-                items: [
-                  { text: '概率因果模型', link: '/aiops/causation/causality' },
-                  { text: 'FP-Growth', link: '/aiops/causation/fpgrowth' },
-                ],
-              },
             ],
           },
         ],
