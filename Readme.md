@@ -9,11 +9,11 @@ OpsPilot is an open source intelligent operation and maintenance assistant based
 
 It mainly supports Web, enterprise WeChat and other channels, providing users with extended capabilities in three directions: `Intelligent Q&A`, `ChatOps`, and `Intelligent Guidance`.
 
-# 官方文档
+# Documents
 
 https://wedoc.canway.net/opspilot/
 
-# 讨论群
+# Discus Group
 
 <img src="./support-files/images/wx.jpg" >
 
