@@ -2,6 +2,9 @@
 
 # OpsPilot
 
+* [[English]](./Readme-cn.md)
+* [[中文]](./Readme.md)
+
 OpsPilot is an open source intelligent operation and maintenance assistant based on deep learning and LLM technology developed by the WeOps team. In the form of an operation and maintenance brain, it links various operation and maintenance systems to provide intelligent operation and maintenance capability support.
 
 
