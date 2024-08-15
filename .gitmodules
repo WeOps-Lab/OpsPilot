@@ -1,9 +1,3 @@
-[submodule "infra/rag-server"]
-	path = infra/rag-server
+[submodule "rag-server"]
+	path = rag-server
 	url = https://github.com/WeOps-Lab/rag-server.git
-[submodule "infra/chunk-server"]
-	path = infra/chunk-server
-	url = https://github.com/WeOps-Lab/chunk-server.git
-[submodule "infra/bce-embed-server"]
-	path = infra/bce-embed-server
-	url = https://github.com/WeOps-Lab/bce-embed-server.git
