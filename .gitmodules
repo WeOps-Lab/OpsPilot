@@ -4,3 +4,27 @@
 [submodule "saltstack-server"]
 	path = saltstack-server
 	url = https://github.com/WeOps-Lab/saltstack-server.git
+[submodule "chat-server"]
+	path = chat-server
+	url = https://github.com/WeOps-Lab/chat-server.git
+[submodule "chunk-server"]
+	path = chunk-server
+	url = https://github.com/WeOps-Lab/chunk-server.git
+[submodule "bce-embed-server"]
+	path = bce-embed-server
+	url = https://github.com/WeOps-Lab/bce-embed-server
+[submodule "fast-embed-server"]
+	path = fast-embed-server
+	url = https://github.com/WeOps-Lab/fast-embed-server
+[submodule "ocr-server"]
+	path = ocr-server
+	url = https://github.com/WeOps-Lab/ocr-server
+[submodule "pandoc-server"]
+	path = pandoc-server
+	url = https://github.com/WeOps-Lab/pandoc-server
+[submodule "bionics"]
+	path = bionics
+	url = https://github.com/WeOps-Lab/bionics
+[submodule "classicfy-aiops-server"]
+	path = classicfy-aiops-server
+	url = https://github.com/WeOps-Lab/classicfy-aiops-server
