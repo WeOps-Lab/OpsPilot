@@ -143,6 +143,12 @@ result = remote_indexer.invoke({
                 "enable_rerank": false,
                 "rerank_model_address": rerank_model_address,
                 "rerank_top_k": 5,
+                "enable_hyde_enhance":false,
+                "hyde_enhance_base_url":"",
+                "hyde_enhance_api_key":"",
+                "hyde_enhance_temperature":0.7,
+                "hyde_enhance_model":"",
+                "hyde_prompt_key":"",
             })
 
 ```
@@ -174,30 +180,44 @@ POST: `/elasticsearch_rag/invoke`
     },
     "enable_rerank": false,
     "rerank_model_address":"",
-    "rerank_top_k": 5
+    "rerank_top_k": 5,
+    "enable_hyde_enhance":false,
+    "hyde_enhance_base_url":"",
+    "hyde_enhance_api_key":"",
+    "hyde_enhance_temperature":0.7,
+    "hyde_enhance_model":"",
+    "hyde_prompt_key":"",
+
   }
 }
 ```
 
-| param                  | desc                                       |
-| ---------------------- | ------------------------------------------ |
-| elasticsearch_url      | ElasticSearch URL                          |
-| elasticsearch_password | ElasticSearch password                     |
-| embed_model_address    | Embedding model address ,for vector search |
-| enable_term_search     | Enable ElasticSearch full text search      |
-| enable_vector_search   | Enable ElasticSearch vector search         |
-| index_name             | RAG ElasticSearch index name               |
-| search_query           | Search query                               |
-| text_search_weight     | Weight for full text search                |
-| rag_k                  | Number of top k documents to retrieve      |
-| size                   | Number of documents to retrieve            |
-| rag_num_candidates     | Number of candidates for elasticsearch knn |
-| rag_num_passages       | Number of passages for knn                 |
-| vector_search_weight   | Weight for vector search                   |
-| metadata_filter        | Filter document for metadata               |
-| enable_rerank          | Enable rerank                              |
-| rerank_model_address   | Rerank model address                       |
-| rerank_top_k           | Rerank top k                               |
+| param                    | desc                                       |
+| ------------------------ | ------------------------------------------ |
+| elasticsearch_url        | ElasticSearch URL                          |
+| elasticsearch_password   | ElasticSearch password                     |
+| embed_model_address      | Embedding model address ,for vector search |
+| enable_term_search       | Enable ElasticSearch full text search      |
+| enable_vector_search     | Enable ElasticSearch vector search         |
+| index_name               | RAG ElasticSearch index name               |
+| search_query             | Search query                               |
+| text_search_weight       | Weight for full text search                |
+| rag_k                    | Number of top k documents to retrieve      |
+| size                     | Number of documents to retrieve            |
+| rag_num_candidates       | Number of candidates for elasticsearch knn |
+| rag_num_passages         | Number of passages for knn                 |
+| vector_search_weight     | Weight for vector search                   |
+| metadata_filter          | Filter document for metadata               |
+| enable_rerank            | Enable rerank                              |
+| rerank_model_address     | Rerank model address                       |
+| rerank_top_k             | Rerank top k                               |
+| enable_hyde_enhance      | Enable hyde enhance                        |
+| hyde_enhance_base_url    | Hyde enhance base url                      |
+| hyde_enhance_api_key     | Hyde enhance api key                       |
+| hyde_enhance_temperature | Hyde enhance temperature                   |
+| hyde_enhance_model       | Hyde enhance model                         |
+| hyde_prompt_key          | Hyde prompt key                            |
+
 
 #### Response
 
