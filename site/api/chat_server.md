@@ -29,17 +29,18 @@ result = chat_server.invoke({
         })
 ```
 
-| param                    | desc                                                 |
-| ------------------------ | ---------------------------------------------------- |
-| system_message_prompt    | The prompt to be used to generate the system message |
-| openai_api_base          | The base URL for the OpenAI API                      |
-| openai_api_key           | The API key for the OpenAI API                       |
-| temperature              | The temperature to be used for the OpenAI API        |
-| model                    | The model to be used for the OpenAI API              |
-| user_message             | The message from the user                            |
-| chat_history             | The chat history                                     |
-| conversation_window_size | The size of the conversation window                  |
-| rag_context              | background on the use of LLM                         |
+| param                    | desc                                                                                                                                                     |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| system_message_prompt    | The prompt to be used to generate the system message                                                                                                     |
+| openai_api_base          | The base URL for the OpenAI API                                                                                                                          |
+| openai_api_key           | The API key for the OpenAI API                                                                                                                           |
+| temperature              | The temperature to be used for the OpenAI API                                                                                                            |
+| model                    | The model to be used for the OpenAI API                                                                                                                  |
+| user_message             | The message from the user                                                                                                                                |
+| chat_history             | The chat history                                                                                                                                         |
+| conversation_window_size | The size of the conversation window                                                                                                                      |
+| rag_context              | background on the use of LLM                                                                                                                             |
+| tools                    | when given tools,the chat server will change to llm agent mode,tools is a list of tools that the agent can use,for example ["shell","duckduckgo-search"] |
 
 
 ## Zhipu Chat
@@ -69,17 +70,18 @@ result = chat_server.invoke({
         })
 ```
 
-| param                    | desc                                                 |
-| ------------------------ | ---------------------------------------------------- |
-| system_message_prompt    | The prompt to be used to generate the system message |
-| api_base                 | The base URL for the Zhipu API                       |
-| api_key                  | The API key for the Zhipu API                        |
-| temperature              | The temperature to be used for the Zhipu API         |
-| model                    | The model to be used for the Zhipu API               |
-| user_message             | The message from the user                            |
-| chat_history             | The chat history                                     |
-| conversation_window_size | The size of the conversation window                  |
-| rag_context              | background on the use of LLM                         |
+| param                    | desc                                                                                                                                                     |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| system_message_prompt    | The prompt to be used to generate the system message                                                                                                     |
+| api_base                 | The base URL for the Zhipu API                                                                                                                           |
+| api_key                  | The API key for the Zhipu API                                                                                                                            |
+| temperature              | The temperature to be used for the Zhipu API                                                                                                             |
+| model                    | The model to be used for the Zhipu API                                                                                                                   |
+| user_message             | The message from the user                                                                                                                                |
+| chat_history             | The chat history                                                                                                                                         |
+| conversation_window_size | The size of the conversation window                                                                                                                      |
+| rag_context              | background on the use of LLM                                                                                                                             |
+| tools                    | when given tools,the chat server will change to llm agent mode,tools is a list of tools that the agent can use,for example ["shell","duckduckgo-search"] |
 ```
 
 
