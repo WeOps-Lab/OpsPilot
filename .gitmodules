@@ -28,3 +28,6 @@
 [submodule "classicfy-aiops-server"]
 	path = classicfy-aiops-server
 	url = https://github.com/WeOps-Lab/classicfy-aiops-server
+[submodule "FastChat"]
+	path = FastChat
+	url = https://github.com/WeOps-Lab/FastChat
