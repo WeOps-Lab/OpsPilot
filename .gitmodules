@@ -31,3 +31,4 @@
 [submodule "FastChat"]
 	path = FastChat
 	url = https://github.com/WeOps-Lab/FastChat
+	branch = weops
