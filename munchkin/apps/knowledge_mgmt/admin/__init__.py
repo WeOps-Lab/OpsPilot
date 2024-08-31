@@ -1,5 +1,0 @@
-from .file_knowledge import FileKnowledgeAdmin
-from .knowledge_base_folder import KnowledgeBaseFolderAdmin
-from .manual_knowledge import ManualKnowledgeAdmin
-from .web_page import WebPageKnowledgeAdmin
-from .knowledge_integration import KnowledgeIntegrationAdmin

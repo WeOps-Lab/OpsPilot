@@ -1,7 +1,0 @@
-FILE_CHUNK_SERIVCE_URL = 'http://chunk-server.ops-pilot/file_chunk'
-MANUAL_CHUNK_SERVICE_URL = 'http://chunk-server.ops-pilot/manual_chunk'
-WEB_PAGE_CHUNK_SERVICE_URL = 'http://chunk-server.ops-pilot/webpage_chunk'
-OPENAI_CHAT_SERVICE_URL = 'http://chat-server.ops-pilot/openai'
-REMOTE_INDEX_URL = 'http://rag-server.ops-pilot/elasticsearch_index'
-RAG_SERVER_URL = 'http://rag-server.ops-pilot/elasticsearch_rag'
-ONLINE_SEARCH_SERVER_URL = 'http://rag-server.ops-pilot/online_search'
