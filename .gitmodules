@@ -1,9 +1,6 @@
 [submodule "rag-server"]
 	path = rag-server
 	url = https://github.com/WeOps-Lab/rag-server.git
-[submodule "saltstack-server"]
-	path = saltstack-server
-	url = https://github.com/WeOps-Lab/saltstack-server.git
 [submodule "chat-server"]
 	path = chat-server
 	url = https://github.com/WeOps-Lab/chat-server.git
