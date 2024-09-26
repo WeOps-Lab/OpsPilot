@@ -35,3 +35,6 @@
 [submodule "munchkin"]
 	path = munchkin
 	url = https://github.com/WeOps-Lab/munchkin.git
+[submodule "pilot"]
+	path = pilot
+	url = https://github.com/WeOps-Lab/pilot.git
