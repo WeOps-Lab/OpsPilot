@@ -34,3 +34,6 @@
 [submodule "pilot"]
 	path = pilot
 	url = https://github.com/WeOps-Lab/pilot.git
+[submodule "kube-service"]
+	path = kube-service
+	url = https://github.com/WeOps-Lab/kube-service
