@@ -1,4 +1,5 @@
-<img src="https://wedoc.canway.net/imgs/img/嘉为蓝鲸.jpg" >
+> ⚠️ **重要提示**  
+> 本项目 **OpsPilot** 已于近期 **合并至 [TencentBlueKing/bk-lite](https://github.com/TencentBlueKing/bk-lite/)** 仓库。后续的开发和维护将在新仓库中进行，欢迎前往新仓库查看最新进展与文档。
 
 # OpsPilot
 
@@ -7,6 +8,7 @@
 
 OpsPilot is an open source intelligent operation and maintenance assistant based on deep learning and LLM technology developed by the WeOps team. In the form of an operation and maintenance brain, it links various operation and maintenance systems to provide intelligent operation and maintenance capability support.
 
+<img src="https://wedoc.canway.net/imgs/img/嘉为蓝鲸.jpg" >
 
 <img src="./support-files/images/main.jpg" >
 
